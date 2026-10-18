@@ -35,8 +35,9 @@ const NOW = Date.UTC(2026, 6, 15, 9, 0); // 15.07.2026 11:00 MESZ: fixed clock, 
   const base = { kids: false, course: 'am Wind', seaDir: null, seaH: 0, trend: false, season: 'sommer', pegel: 0, sicht: 'gut', now: NOW };
   const E = (st) => ev((s) => {
     const r = SKIPPER.evaluate(s);
-    return { gates: r.gates, info: r.info, general: r.general, overall: r.overall, reff: r.reff, pegel: r.pegel, missing: r.missing, rec: r.rec && { green: r.rec.green && r.rec.green.h.id, far: r.rec.far }, T: r.T };
+    return { gates: r.gates, info: r.info, bridges: r.bridges, general: r.general, overall: r.overall, reff: r.reff, pegel: r.pegel, missing: r.missing, rec: r.rec && { green: r.rec.green && r.rec.green.h.id, far: r.rec.far }, T: r.T };
   }, st);
+  const bridge = (r, id) => r.bridges.find(g => g.id === id);
   const gate = (r, id) => r.gates.find(g => g.id === id);
   const hs = (id, st) => ev(({ id, st }) => { const h = SKIPPER.DATA.find(x => x.id === id); return SKIPPER.harborStatus(h, st); }, { id, st });
   const hsX = (h, st) => ev(({ h, st }) => SKIPPER.harborStatus(h, st), { h, st });
@@ -84,14 +85,14 @@ const NOW = Date.UTC(2026, 6, 15, 9, 0); // 15.07.2026 11:00 MESZ: fixed clock, 
   }
   // 4
   {
-    const p = await posOf('de-barhoeft');
+    const p = await posOf('de-heiligenhafen-marina');
     const st = { ...base, pos: p, dir: 'W', windTrue: 5, gust: 8 };
     const n = await E({ ...st, sicht: 'nebel' }), g = await E({ ...st, gewitter: true }), c = await E(st);
     check('4  Nebel -> overall mind. gelb; Gewitter -> mind. gelb; Kontrolle grün', ['y', 'r'].includes(n.overall.level) && ['y', 'r'].includes(g.overall.level) && c.overall.level === 'g' && /Radar\/AIS/.test(n.general.text) && /Hafen vorher erreichen/.test(g.general.text), JSON.stringify([n.overall.level, g.overall.level, c.overall.level]));
   }
   // 5
   {
-    const p = await posOf('de-barhoeft');
+    const p = await posOf('de-heiligenhafen-marina');
     const r = {};
     for (const v of [0, -60, -100, 100, 150]) r[v] = await E({ ...base, pos: p, dir: 'W', windTrue: 5, gust: 8, pegel: v });
     const ok = r[0].pegel === null && r[-60].pegel && r[-60].pegel.level === 'i' && r[-60].info.some(i => i.id === 'pegel') && r[-60].overall.level === 'g'
@@ -146,8 +147,8 @@ const NOW = Date.UTC(2026, 6, 15, 9, 0); // 15.07.2026 11:00 MESZ: fixed clock, 
     const d = await ev((p) => SKIPPER.haversineNm(p, SKIPPER.BRIDGES.find(b => b.id === 'dk-bro-storeb-ltsbroen-vestbroen')), p);
     const a = await E({ ...base, pos: p, dir: 'W', windTrue: 8, gust: 10 });
     const b = await E({ ...base, pos: p, dir: 'W', windTrue: 8, gust: 10, boat: { mast: 15 } });
-    const ga = gate(a, 'bridge-' + vb.id), gb = gate(b, 'bridge-' + vb.id);
-    check('10 3 sm vor Storebælt-Vestbro (18 m): Mast 18,5 -> Gate rot "passt nicht"; Mast 15 -> kein rot', Math.abs(d - 3) < 0.1 && ga?.level === 'r' && /passt nicht/.test(ga.text) && (!gb || gb.level !== 'r'), JSON.stringify({ d, ga, gb }));
+    const ga = bridge(a, 'bridge-' + vb.id), gb = bridge(b, 'bridge-' + vb.id);
+    check('10 3 sm vor Storebælt-Vestbro (18 m): Mast 18,5 -> Gate rot "passt nicht"; Mast 15 -> kein rot; overall bleibt g trotz roter Brücke', Math.abs(d - 3) < 0.1 && ga?.level === 'r' && /passt nicht/.test(ga.text) && (!gb || gb.level !== 'r') && a.overall.level === 'g' && a.bridges.some(x => x.level === 'r'), JSON.stringify({ d, ga, gb }));
   }
   // 11
   {
@@ -156,15 +157,15 @@ const NOW = Date.UTC(2026, 6, 15, 9, 0); // 15.07.2026 11:00 MESZ: fixed clock, 
     const id = 'bridge-' + far.id;
     const a = await E({ ...base, pos: p, dir: 'W', windTrue: 8, gust: 10 });
     const b = await E({ ...base, pos: p, dir: 'W', windTrue: 8, gust: 10, pegel: 60 });
-    const ia = a.info.find(i => i.id === id), gb = gate(b, id);
-    check('11 Farø-Brücke 20,0 m: 18,5+1,0 -> nicht rot, Info "Reserve 0,5 m"; Pegel +60 cm -> 19,4 < 19,5 rot', !gate(a, id) && ia && /Reserve 0,5 m/.test(ia.text) && gb?.level === 'r', JSON.stringify({ ia, gb }));
+    const ia = bridge(a, id), gb = bridge(b, id);
+    check('11 Farø-Brücke 20,0 m: 18,5+1,0 -> nicht rot, Info "Reserve 0,5 m"; Pegel +60 cm -> 19,4 < 19,5 rot', ia && ia.level !== 'r' && /Reserve 0,5 m/.test(ia.text) && gb?.level === 'r', JSON.stringify({ ia, gb }));
   }
   // 12
   {
     const br = await ev(() => SKIPPER.BRIDGES.find(b => b.id === 'de-bro-wittow-freileitung'));
     const p = { lat: br.lat - 1 / 60, lon: br.lon };
     const a = await E({ ...base, pos: p, dir: 'W', windTrue: 8, gust: 10 });
-    const g = gate(a, 'bridge-de-bro-wittow-freileitung');
+    const g = bridge(a, 'bridge-de-bro-wittow-freileitung');
     check('12 Freileitung Wittow: Höhe unbekannt -> gelb "Durchfahrtshöhe unbekannt"', g?.level === 'y' && /Durchfahrtshöhe unbekannt/.test(g.text), JSON.stringify(g));
   }
   // 13
@@ -302,7 +303,7 @@ const NOW = Date.UTC(2026, 6, 15, 9, 0); // 15.07.2026 11:00 MESZ: fixed clock, 
     const fs = await ev(() => SKIPPER.BRIDGES.find(b => b.id === 'de-bro-fehmarnsund'));
     const p = { lat: fs.lat - 3 / 60, lon: fs.lon };
     const a = await E({ ...base, pos: p, dir: 'W', windTrue: 8, gust: 10 });
-    const g = gate(a, 'bridge-de-bro-fehmarnsund');
+    const g = bridge(a, 'bridge-de-bro-fehmarnsund');
     const syn = await ev(() => {
       const mk = (h, v) => Object.assign({}, SKIPPER.BRIDGES.find(b => b.id === 'dk-bro-storeb-ltsbroen-vestbroen'), { clearanceClosed_m: h, verified: { clearance: v } });
       return { ok: SKIPPER.bridgeCheck(mk(30, true), undefined, 0), unv: SKIPPER.bridgeCheck(mk(30, false), undefined, 0), near: SKIPPER.bridgeCheck(mk(20, false), undefined, 0) };

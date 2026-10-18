@@ -366,12 +366,12 @@ nav button .ic{font-size:1.2rem}
 <!-- ============ NOTFALL ============ -->
 <section class="screen" id="scr-notfall">
   <h2 style="color:var(--emerg)">Notfall</h2>
-  <div class="note" id="nf-area"></div>
-  <div id="nf-nums"></div>
-
   <div class="dsc"><div class="bt">UKW-DSC-Distress zuerst</div>
     <p style="margin-top:4px"><b>Rote DSC-Distress-Taste 5 Sekunden halten</b> → danach MAYDAY auf <b>CH 16</b> sprechen.</p>
     <p class="note">MMSI muss im Gerät programmiert sein.</p></div>
+
+  <div class="note" id="nf-area"></div>
+  <div id="nf-nums"></div>
 
   <h2>Meine Position (für den Notruf)</h2>
   <button class="btn prim" id="btn-mypos" style="min-height:64px">◎ Meine Position</button>
@@ -796,8 +796,8 @@ function crossingGate(s,T,pos,id,def,titles){
   return {id:id,level:'r',title:titles(pos),text:titles.text+' Auslöser: '+why.join('; ')+'. (Schwellen: Faustregel)'};
 }
 function gates(s,pos,T){
-  var out=[],info=[];
-  if(!pos)return {gates:out,info:info};
+  var out=[],info=[],bridges=[];
+  if(!pos)return {gates:out,info:info,bridges:bridges};
   var G=CONST.gates;
   // 1 Bornholm
   var tb=function(p){return p.lon>=G.bornholm.islandLon?'ÜBERFAHRT NICHT BEGINNEN – AUF BORNHOLM BLEIBEN':'BORNHOLM-ÜBERFAHRT NICHT BEGINNEN';};
@@ -822,9 +822,10 @@ function gates(s,pos,T){
     if(d>CONST.bridgeNearNm)return;
     var c=bridgeCheck(b,s.boat,s.pegel),id='bridge-'+b.id,dd=' (≈ '+nm1(d)+' sm)';
     var txt=c.text+dd+(c.note?' · Hinweis aus den Daten: '+c.note:'');
-    if(c.level==='r'||c.level==='y')out.push({id:id,level:c.level,title:c.level==='r'?'BRÜCKE: MAST PASST NICHT':'BRÜCKE IN DER NÄHE',text:txt});
-    else if(c.level==='n')out.push({id:id,level:'y',title:'BRÜCKE IN DER NÄHE: BOOTSDATEN FEHLEN',text:txt});
-    else info.push(infoItem(id,'Brücke in der Nähe: '+b.name,txt));
+    // bridges never colour the overall light; they get their own block
+    if(c.level==='r'||c.level==='y')bridges.push({id:id,level:c.level,title:c.level==='r'?'MAST PASST NICHT':'PRÜFEN',text:txt});
+    else if(c.level==='n')bridges.push({id:id,level:'y',title:'BOOTSDATEN FEHLEN',text:txt});
+    else bridges.push({id:id,level:c.level==='g'?'g':'i',title:b.name,text:txt});
   });
   // 5 hazards near (centre point only) + region-matched hazards without geometry
   var nh=nearestOf(pos,DATA).item,toks=tokensOfRegion(nh.region),shown=0;
@@ -859,7 +860,7 @@ function gates(s,pos,T){
   }
   // season info
   if(T.season)info.push(infoItem('saison','Vor-/Nachsaison','Kälteschock – Rettungsweste tragen; früher Sonnenuntergang; viele Häfen/Services geschlossen.'));
-  return {gates:out,info:info};
+  return {gates:out,info:info,bridges:bridges};
 }
 
 /* ---------- harbour status ---------- */
@@ -1046,7 +1047,7 @@ function evaluate(raw){
   res.reff=reffStufe(s);
   res.general=generalLevel(s);
   var g=gates(s,s.pos,T);
-  res.gates=g.gates;res.info=g.info;
+  res.gates=g.gates;res.info=g.info;res.bridges=g.bridges;
   res.pegel=pegelLevel(s);
   if(res.pegel&&res.pegel.level==='i')res.info.push(infoItem('pegel','Niedrigwasser',res.pegel.text));
   var best=null;
@@ -1325,6 +1326,13 @@ function renderResult(res){
   if(res.general&&res.overall!==res.general)h+=banner(res.general.level,'Unterwegs: '+res.general.title,res.general.text);
   if(res.general&&res.missing.length&&res.overall===res.general)h+=banner(res.general.level,res.general.title,res.general.text+' (vorläufig – Eingaben unvollständig)');
   res.info.forEach(function(i){h+=infoBox(i);});
+  if(res.bridges&&res.bridges.length){
+    h+='<h2>Brücken in der Nähe</h2>';
+    res.bridges.forEach(function(b){
+      if(b.level==='r'||b.level==='y')h+=banner(b.level,'Brücke: '+b.title,b.text);
+      else h+=infoBox({title:'Brücke: '+b.title,text:b.text});
+    });
+  }
   if(res.reff){
     h+='<div class="card"><div class="t">Segelführung</div><div class="reffnum">'+esc(res.reff.name)+'</div>'
       +'<div class="note">scheinbar ≈ '+res.reff.apparent+' kn (Näherung: Böen '+s.gust+' kn × '+CONST.courseFactor[s.course]+' „'+s.course+'“) · Schwellen '+res.reff.thresholds.join('/')+' kn'+esc(offsetNote(res.T))+'</div></div>';
@@ -1495,12 +1503,16 @@ function renderMayday(){
 function renderNotfall(res){
   var s=res.state,now=s.now;
   $('nf-area').textContent=res.seaArea?res.seaArea.label:(s.pos?'':'Position wählen für Seegebiet und Länderreihenfolge.');
-  var nums=emergencyNumbers(s.pos);
-  var h='<a class="bigbtn alt" href="tel:112"><span class="n disp">112</span><span class="l"><b>Europanotruf</b><br>Nur mit Mobilfunknetz, küstennah – auf See oft keins. Primär UKW.</span></a>';
-  nums.forEach(function(n){
-    var tel=n.tel||(telHref(n.num)||'').replace(/^tel:/,'');
-    h+='<a class="bigbtn" href="tel:'+esc(tel)+'"><span class="n sm disp">'+esc(n.num)+'</span><span class="l"><b>'+esc(n.title)+'</b> · '+esc(n.country)+'<br>'+esc(n.sub)+'</span></a>';
-  });
+  var nums=emergencyNumbers(s.pos),ord=s.pos?countryOf(s.pos):[];
+  // numbers of the countries at the position first, then 112, then the remaining countries folded away
+  var near=[],far=[];
+  nums.forEach(function(n){(!s.pos||ord.indexOf(n.country)>=0?near:far).push(n);});
+  function nrow(n){var tel=n.tel||(telHref(n.num)||'').replace(/^tel:/,'');
+    return '<a class="bigbtn" href="tel:'+esc(tel)+'"><span class="n sm disp">'+esc(n.num)+'</span><span class="l"><b>'+esc(n.title)+'</b> · '+esc(n.country)+'<br>'+esc(n.sub)+'</span></a>';}
+  var h='';
+  near.forEach(function(n){h+=nrow(n);});
+  h+='<a class="bigbtn alt" href="tel:112"><span class="n disp">112</span><span class="l"><b>Europanotruf</b><br>Nur mit Mobilfunknetz, küstennah – auf See oft keins. Primär UKW.</span></a>';
+  if(far.length){h+='<details><summary>Weitere Länder</summary><div class="in">';far.forEach(function(n){h+=nrow(n);});h+='</div></details>';}
   $('nf-nums').innerHTML=h;
   var groups=radioGroups(now),order=s.pos?countryOf(s.pos):[];
   groups.sort(function(a,b){var ia=order.indexOf(a.code),ib=order.indexOf(b.code);ia=ia<0?99:ia;ib=ib<0?99:ib;return ia-ib;});
@@ -1752,7 +1764,7 @@ function buildPrint(){
       p+='<tbody class="gh"><tr><th colspan="10">'+esc(cc)+' · '+esc(r)+' · '+hs.length+'</th></tr></tbody>';
       hs.forEach(function(h){
         var v=h.verified||{};
-        var br=(h.bridgeIds||[]).map(function(id){var b=BR_BY_ID[id];return b?b.name+(b.clearanceClosed_m!=null?' '+fm(b.clearanceClosed_m)+' m':' ?'):id;}).join(', ')||'–';
+        var br=(h.bridgeIds||[]).map(function(id){var b=BR_BY_ID[id];return b?b.name.replace(/\s*\(.*$/,'')+(b.clearanceClosed_m!=null?' '+fm(b.clearanceClosed_m)+' m':' ?'):id;}).join(', ')||'–';
         var vhf=h.vhf?esc(h.vhf):'?',tel=h.tel?esc(h.tel):'?';
         var rs=h.refugeLevel?REFUGE_SHORT[h.refugeLevel]:'–';
         var typ=h.type==='marina'?'M':h.type==='hafen'?'H':'N';

@@ -115,6 +115,7 @@ Alle Gates greifen **vor** der Gefahrenzone (Lehre Orosei): Auslösung über Nä
    - `kind fest|freileitung`, Höhe bekannt: `frei = clearanceClosed_m − max(0, pegel/100)`; `frei < mast + sicherheitsabstand` → rot „Mast X m passt nicht unter <Name> (Y m bei <Ref>)“; sonst Info grün „passt (Reserve Z m)“.
    - Höhe unbekannt → gelb „Durchfahrtshöhe unbekannt – Seekarte prüfen“.
    - `klapp|dreh|schiebe` → Info „nur zu Öffnungszeiten: <opening>“ (gelb, wenn Mast > geschlossene Höhe); bekannte vorübergehende Sperren aus `note` mit Datum anzeigen.
+   **Abnahme-Korrektur:** Brücken-Ergebnisse stehen in `res.bridges` (eigener Banner-Block „Brücken in der Nähe“ mit eigener Farbe) und fließen **nicht** in `res.overall`/Kopfzeile ein – die Gesamtampel bewertet Wetter/See/Revier-Gates.
 5. **Gefahrengebiete in der Nähe**: Hazards mit Mittelpunkt ≤ 15 sm → Info-Banner mit `warn` und Hinweis „Abstand zum Mittelpunkt – Gebietsgrenze nicht belegt“. Hazards ohne Geometrie erscheinen nur im Regeln-Screen (nach Land/Typ) und – falls `name`/`warn` eine Region nennt, die der Region des nächsten Hafens entspricht – als Info.
 6. **Trend/Winddrehung**: wie Sardinien (gelb).
 7. **Starkwind > 12 h**: Info. Für DE/West (lon < 12.5): Wind aus SW/W → „Pegel fällt in der westlichen Ostsee (Faustregel)“; N–E → „Pegel steigt“. Für Häfen mit `surge` siehe §4.5.
@@ -164,6 +165,7 @@ Kein Hafen ist „immer grün“ (Lehre §9). Fehlt die Windrichtung → n „Wi
 - `countryOf(pos)`: Land des nächsten Hafens; im Haff (§4.4/8) zusätzlich PL. Liegt der nächste Hafen eines anderen Landes ≤ 15 sm, beide Länder anzeigen.
 
 ## 5. Notfall & Funk (Tab „Notfall“)
+- **Reihenfolge im Tab (Abnahme-Korrektur):** ganz oben DSC-Distress/MAYDAY CH 16, dann Nummern der Länder aus `countryOf`, dann 112; übrige Länder eingeklappt unter „Weitere Länder“.
 - Blöcke je Land aus `RADIO`, Reihenfolge: Land(er) aus `countryOf` zuerst, dann übrige. Nur Felder mit Wert anzeigen; `verified:false` → Badge „ungeprüft“. Keine Nummer aus dem Gedächtnis.
 - Fester Kopf wie Sardinien: DSC-Distress zuerst (5 s), dann MAYDAY auf CH 16; 112 mit Hinweis „nur mit Mobilfunknetz, küstennah“.
 - DE: 124 124 mit dem Hinweis aus `radio.json` („nur deutsche Netze, küstennah, keine offizielle Notrufnummer“).

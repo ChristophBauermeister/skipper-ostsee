@@ -18,3 +18,9 @@ Erstausgabe der Ostsee-App nach SPEC_v1.md, aufbauend auf Skipper-Assistent Sard
 - Brücken mit ungeprüfter Höhe sind nie grün: Reserve < 3,0 m gelb („Höhe ungeprüft, Reserve nur X m“), sonst nur Info. Fehmarnsund wird bei Mast 18,5 m gelb.
 - PDF-Brückenseite zeigt bei ungeprüfter Höhe „ungeprüft“.
 - Tests 37 und 38 ergänzt.
+
+## v1.2 (19.10.2026) Abnahme Runde 2
+- Brücken in der Nähe färben die Gesamtampel und die Kopfzeile nicht mehr: eigene Liste `res.bridges` und Block "Brücken in der Nähe" im Lage-Tab. Hafenstatus (bridgeIds) unverändert.
+- Notfall-Tab: DSC-Distress/MAYDAY-CH-16-Block ganz oben; danach Nummern der Länder an der Position, 112, übrige Länder unter "Weitere Länder".
+- PDF-Hafentabellen: Spalte Brücke nur "<Name> <Höhe> m" bzw. "<Name> ?".
+- Tests 4/5 wieder mit Heiligenhafen als Grün-Kontrolle; Tests 10/11/12/38 auf `res.bridges`; Test 10 prüft zusätzlich overall g bei roter Brücke.
