@@ -1,0 +1,1876 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#12141f">
+<title>Skipper-Assistent Ostsee</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%2312141f'/%3E%3Ccircle cx='32' cy='32' r='20' fill='none' stroke='%23fff' stroke-width='3'/%3E%3Cpath d='M32 10 L38 32 L32 54 L26 32Z' fill='%23ff5a1f'/%3E%3C/svg%3E">
+<style>
+/* ===== Theme tokens: day (default), dark (prefers-color-scheme), night (red on black) ===== */
+:root{
+  --bg:#f3f4f0; --card:#fff; --ink:#12141f; --mute:#4a4e60; --line:#c9cbc2;
+  --head:#12141f; --headink:#fff; --headmute:#b9bdd0;
+  --accent:#ff5a1f; --accent-ink:#b03a0a; --btn:#fff; --on:#12141f; --onink:#fff;
+  --g:#0f7a4d; --gt:#fff; --y:#ffc83d; --yt:#1a1400; --r:#c62828; --rt:#fff; --n:#5a5f70; --nt:#fff; --i:#1f4e8c; --it:#fff;
+  --gb:transparent; --yb:transparent; --rb:transparent;
+  --rose-full:#12141f; --rose-bg:#e6e8ee; --rose-line:#8a8ea0; --wind:#e8590c; --swell:#1f4e8c;
+  --warnbg:#fff3ec; --warnink:#6b2508; --emerg:#c62828;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme]){
+    --bg:#0e1018; --card:#1a1d2b; --ink:#eceef7; --mute:#aeb3c9; --line:#363b55;
+    --head:#05060b; --btn:#232738; --on:#eceef7; --onink:#0e1018; --accent-ink:#ff8a57;
+    --rose-full:#eceef7; --rose-bg:#2a2e42; --rose-line:#6d7391; --wind:#ff8a57; --swell:#7db4ff;
+    --warnbg:#2b1a12; --warnink:#ffd9c4;
+  }
+}
+:root[data-theme="night"]{
+  --bg:#000; --card:#120000; --ink:#ff6a5a; --mute:#d9483a; --line:#6a1212;
+  --head:#000; --headink:#ff6a5a; --headmute:#c03a2d;
+  --accent:#ff3b2a; --accent-ink:#ff6a5a; --btn:#1c0000; --on:#ff3b2a; --onink:#000;
+  --g:#1c0000; --gt:#ff8a7a; --gb:#ff6a5a; --y:#4a1400; --yt:#ffb3a0; --yb:#ff8a5a; --r:#d41a1a; --rt:#000; --rb:#ff3b2a; --n:#240808; --nt:#d98a80; --i:#1c0000; --it:#ff8a7a;
+  --rose-full:#ff3b2a; --rose-bg:#2a0000; --rose-line:#8a2a22; --wind:#ffd0c8; --swell:#ff9a8a;
+  --warnbg:#240000; --warnink:#ff9a8a; --emerg:#d41a1a;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{font-size:16px;-webkit-text-size-adjust:100%}
+body{font-family:ui-sans-serif,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.45;padding-bottom:84px}
+.disp{font-family:"Arial Narrow","Helvetica Neue Condensed","Avenir Next Condensed",ui-sans-serif,sans-serif}
+.app{max-width:680px;margin:0 auto}
+button{font:inherit;color:inherit;touch-action:manipulation}
+header{position:sticky;top:0;z-index:20;background:var(--head);color:var(--headink);padding:8px 14px 8px;border-bottom:2px solid var(--line)}
+.hrow1{display:flex;align-items:center;gap:8px}
+header h1{font-size:1rem;letter-spacing:.05em;text-transform:uppercase;font-weight:700;flex:1;line-height:1.2}
+.themebtn{min-height:44px;min-width:48px;border:1.5px solid var(--headmute);border-radius:10px;background:transparent;color:var(--headink);padding:0 10px;font-weight:700;cursor:pointer}
+.posline{margin-top:3px;font-size:.95rem;color:var(--headink);line-height:1.3}
+.posline.warn{color:#ffd24d;font-weight:700}
+.chip-head{margin-top:5px;display:flex;gap:8px;align-items:center;font-weight:700;font-size:.95rem;border-radius:8px;padding:5px 9px;line-height:1.25}
+.chip-head.c-g{background:var(--g);color:var(--gt);border:2px solid var(--gb)}
+.chip-head.c-y{background:var(--y);color:var(--yt);border:2px dashed var(--yb)}
+.chip-head.c-r{background:var(--r);color:var(--rt);border:2px solid var(--rb)}
+.chip-head.c-n{background:var(--n);color:var(--nt)}
+.chip-head.c-i{background:var(--i);color:var(--it)}
+.screen{display:none;padding:14px 14px 24px}
+.screen.active{display:block}
+h2{font-size:1.05rem;letter-spacing:.05em;text-transform:uppercase;margin:22px 0 8px;color:var(--ink);font-weight:800}
+h2:first-child{margin-top:4px}
+h3{font-size:1rem;margin:12px 0 4px}
+p,.note{font-size:1rem;line-height:1.5}
+.note{color:var(--mute);margin-top:6px}
+.small{font-size:.875rem}
+.card{background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:13px 14px;margin-top:12px}
+.card .t{font-weight:800;letter-spacing:.04em;text-transform:uppercase;font-size:1rem}
+.badge{display:inline-block;font-size:.8rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:2px 8px;border-radius:20px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);vertical-align:1px;line-height:1.35}
+.badge.unv{border-style:dashed;border-color:var(--accent-ink);color:var(--accent-ink)}
+.badge.ver{border-color:var(--g);color:var(--ink)}
+.badge.dark{background:var(--on);color:var(--onink);border-color:var(--on)}
+.datenstand{font-size:.95rem;border:1.5px solid var(--line);background:var(--card);border-radius:10px;padding:8px 12px}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:56px;padding:12px 14px;border:2px solid var(--on);border-radius:12px;background:var(--btn);color:var(--ink);font-weight:800;font-size:1.05rem;cursor:pointer;text-align:center}
+.btn.prim{background:var(--on);color:var(--onink)}
+.btn.sm{min-height:48px;font-size:1rem}
+details{margin-top:10px;background:var(--card);border:1.5px solid var(--line);border-radius:12px}
+summary{min-height:52px;display:flex;align-items:center;padding:8px 14px;font-weight:800;cursor:pointer;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"▾";margin-left:auto;font-size:1.1rem}
+details[open]>summary::after{content:"▴"}
+details>.in{padding:2px 14px 14px}
+.mapwrap{background:#12141f;border-radius:12px;padding:8px 4px 2px;overflow:hidden}
+:root[data-theme="night"] .mapwrap{background:#000;border:1.5px solid var(--line)}
+.mapwrap svg{width:100%;height:auto;display:block}
+.segdot{cursor:pointer}
+.segdot circle.hit{fill:transparent}
+.segdot circle.halo{fill:rgba(255,255,255,.12)}
+.segdot circle.core{fill:#fff;stroke:#12141f;stroke-width:1.5}
+.segdot text{fill:#dfe2f0;font-size:10.5px;font-family:"Arial Narrow",ui-sans-serif,sans-serif;letter-spacing:.02em}
+.segdot.sel circle.core{fill:#ff5a1f}
+.segdot.sel circle.halo{fill:rgba(255,90,31,.35)}
+.segdot.sel text{fill:#fff;font-weight:700}
+.segdot.near circle.halo{fill:rgba(255,200,61,.35)}
+:root[data-theme="night"] .segdot text{fill:#ff6a5a}
+:root[data-theme="night"] .segdot circle.core{fill:#ff6a5a;stroke:#000}
+:root[data-theme="night"] .segdot.sel circle.core{fill:#fff}
+.mapnote{font-size:.8rem;color:#9aa0b8;padding:2px 8px 8px;letter-spacing:.03em}
+select,input[type=text],input[type=number]{width:100%;min-height:52px;font-size:1.05rem;padding:8px 12px;border:2px solid var(--on);border-radius:10px;background:var(--card);color:var(--ink);font-family:inherit}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.tog{min-height:52px;border:2px solid var(--on);border-radius:10px;background:var(--btn);color:var(--ink);font-weight:800;font-size:1.05rem;cursor:pointer;padding:6px 4px}
+.tog[aria-pressed="true"]{background:var(--on);color:var(--onink)}
+.span4{grid-column:1/-1}
+.knrow{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.knbox{background:var(--card);border:2px solid var(--on);border-radius:12px;padding:8px 10px}
+.knbox .lbl{font-size:.85rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--mute)}
+.knbox .val{font-size:2.3rem;font-weight:800;line-height:1.1}
+.knbox .val small{font-size:1rem;font-weight:500;color:var(--mute)}
+.stepper{display:flex;gap:8px;margin-top:6px}
+.stepper button{flex:1;min-height:56px;font-size:1.6rem;font-weight:800;border:2px solid var(--on);border-radius:10px;background:var(--btn);color:var(--ink);cursor:pointer;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+.stepper button:active{background:var(--on);color:var(--onink)}
+.switch{display:flex;align-items:center;gap:12px;min-height:56px;padding:8px 12px;border:2px solid var(--on);border-radius:12px;background:var(--card);cursor:pointer;margin-top:8px;font-weight:700}
+.switch input{width:28px;height:28px;flex:none;accent-color:var(--on)}
+.switch small{display:block;font-weight:400;color:var(--mute);font-size:.9rem}
+.notice{margin-top:8px;font-size:.95rem;padding:8px 12px;border-radius:10px;background:var(--warnbg);color:var(--warnink);border:1.5px solid var(--accent)}
+.manual{display:grid;grid-template-columns:auto 1fr 1fr;gap:8px;align-items:center}
+.manual label{font-weight:800}
+.banner{margin-top:12px;border-radius:12px;padding:12px 14px}
+.banner .bt{font-weight:800;font-size:1.2rem;line-height:1.25;text-transform:uppercase;letter-spacing:.02em}
+.banner .bd{margin-top:5px;font-size:1rem;line-height:1.45}
+.banner .sym{font-size:1.4rem;margin-right:4px}
+.b-g{background:var(--g);color:var(--gt);border:2px solid var(--gb)}
+.b-y{background:var(--y);color:var(--yt);border:3px dashed var(--yb)}
+.b-r{background:var(--r);color:var(--rt);border:3px solid var(--rb)}
+.b-n{background:var(--n);color:var(--nt);border:2px dotted var(--line)}
+.b-i{background:var(--i);color:var(--it)}
+.segwarn{margin-top:12px;background:var(--warnbg);border:1.5px solid var(--accent);border-radius:12px;padding:10px 12px;color:var(--warnink)}
+.reffnum{font-size:2rem;font-weight:800;line-height:1.15}
+.hcard{display:grid;grid-template-columns:1fr auto;gap:4px 10px;background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:11px 12px;margin-top:10px}
+.hcard.lv-g{border-left:8px solid var(--g)}
+.hcard.lv-y{border-left:8px dashed var(--y)}
+.hcard.lv-r{border-left:8px solid var(--r)}
+.hcard.lv-n{border-left:8px dotted var(--n)}
+:root[data-theme="night"] .hcard.lv-g{border-left-color:var(--gb)}
+:root[data-theme="night"] .hcard.lv-y{border-left-color:var(--yb)}
+:root[data-theme="night"] .hcard.lv-n{border-left-color:var(--mute)}
+.hname{font-weight:800;font-size:1.08rem;line-height:1.25}
+.chip{display:inline-block;font-weight:800;font-size:.95rem;padding:2px 9px;border-radius:8px;margin:3px 0}
+.chip.c-g{background:var(--g);color:var(--gt);border:2px solid var(--gb)}
+.chip.c-y{background:var(--y);color:var(--yt);border:2px dashed var(--yb)}
+.chip.c-r{background:var(--r);color:var(--rt);border:2px solid var(--rb)}
+.chip.c-n{background:var(--n);color:var(--nt)}
+.hmeta{font-size:.95rem;color:var(--mute)}
+.hmeta b{color:var(--ink)}
+.reasons{margin:4px 0 0 18px;font-size:.95rem}
+.rose{width:92px;height:92px;flex:none}
+.hside{grid-row:1 / span 3;grid-column:2;align-self:start;text-align:center}
+.hwide{grid-column:1/-1}
+.sectors{font-size:.9rem;margin-top:4px}
+.legend{font-size:.875rem;color:var(--mute);margin-top:8px}
+.rec{border:2.5px solid var(--g);border-radius:14px;padding:2px 10px 10px;margin-top:12px;background:var(--card)}
+:root[data-theme="night"] .rec{border-color:var(--gb)}
+.rec .rt{font-weight:800;text-transform:uppercase;letter-spacing:.04em;font-size:.95rem;margin-top:8px}
+.rec .hcard{margin-top:6px}
+.bigbtn{display:flex;align-items:center;gap:14px;width:100%;min-height:72px;background:var(--emerg);color:#fff;border:3px solid transparent;border-radius:14px;padding:10px 16px;margin-top:10px;text-decoration:none;text-align:left}
+:root[data-theme="night"] .bigbtn{color:#000;border-color:#ff3b2a}
+.bigbtn .n{font-size:2.1rem;font-weight:800;min-width:92px;line-height:1}
+.bigbtn .l{font-size:1rem;line-height:1.3}
+.bigbtn.alt{background:var(--head);color:var(--headink);border-color:var(--emerg)}
+:root[data-theme="night"] .bigbtn.alt{color:#ff6a5a;background:#1c0000}
+.dsc{margin-top:10px;border:3px solid var(--emerg);border-radius:14px;padding:12px 14px;background:var(--card)}
+.dsc .bt{font-size:1.2rem;font-weight:800;color:var(--emerg)}
+:root[data-theme="night"] .dsc .bt{color:#ff6a5a}
+.posbox{font-size:1.65rem;font-weight:800;line-height:1.25;margin-top:8px;word-break:break-word}
+.mayday{font-size:1.1rem;line-height:1.7;margin-top:8px}
+.mayday .ph{background:var(--y);color:var(--yt);padding:0 6px;border-radius:5px;font-weight:700;border:1px dashed var(--yb)}
+.mayday div{padding:3px 0;border-bottom:1px solid var(--line)}
+.mayday div:last-child{border-bottom:none}
+.fields{display:grid;gap:8px;margin-top:8px}
+.fields label{font-weight:800;font-size:.9rem;display:block;margin-bottom:2px}
+table.tbl{width:100%;border-collapse:collapse;margin-top:8px;font-size:1rem}
+.tbl th,.tbl td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.tbl th{font-size:.85rem;text-transform:uppercase;letter-spacing:.04em;color:var(--mute)}
+.kv{display:flex;justify-content:space-between;gap:10px;padding:9px 2px;border-bottom:1px solid var(--line)}
+.kv:last-child{border-bottom:none}
+.kv b{text-align:right}
+ul.tight{padding-left:20px;line-height:1.55}
+ul.tight li{margin-bottom:6px}
+nav{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;background:var(--head);padding:6px 6px calc(6px + env(safe-area-inset-bottom));border-top:2px solid var(--line);gap:6px}
+nav button{flex:1;min-height:56px;background:transparent;border:2px solid transparent;border-radius:10px;color:var(--headmute);font-weight:800;font-size:.85rem;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px}
+nav button .ic{font-size:1.3rem;line-height:1}
+nav button.on{color:var(--headink);border-color:var(--headink)}
+nav button.sos{background:var(--emerg);color:#fff;border-color:var(--emerg)}
+nav button.sos.on{border-color:#fff}
+:root[data-theme="night"] nav button.sos{background:#d41a1a;color:#000}
+:root[data-theme="night"] nav button.sos.on{border-color:#ffb3a0}
+.hidden-svg{position:absolute;width:0;height:0;overflow:hidden}
+#printdoc{display:none}
+/* ===== Ostsee additions ===== */
+nav button{font-size:.72rem;letter-spacing:.02em;padding:0 2px}
+nav button .ic{font-size:1.2rem}
+.tog.sm{min-height:46px;font-size:.95rem}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
+.fgrid label{font-weight:800;font-size:.85rem;display:block;margin-bottom:2px}
+.fgrid .full{grid-column:1/-1}
+.infobox{margin-top:10px;background:var(--card);border:1.5px solid var(--i);border-left:8px solid var(--i);border-radius:12px}
+:root[data-theme="night"] .infobox{border-color:var(--line);border-left-color:var(--rt)}
+.infobox summary{min-height:48px;font-size:.95rem}
+.infobox .in{font-size:.95rem}
+.banner.b-g2{background:var(--card);color:var(--ink);border:2px solid var(--g)}
+.hcard .fl{display:inline-block;font-weight:800;font-size:.8rem;border:1.5px solid var(--ink);border-radius:6px;padding:0 5px;margin-right:4px}
+.hcard a{color:var(--accent-ink);font-weight:700}
+.hcard details{margin-top:6px}
+.hcard details summary{min-height:40px;font-size:.9rem}
+.reasons li.n,.reasons li.i{color:var(--mute)}
+.stufen td,.stufen th{font-size:.9rem}
+.tbl.small td,.tbl.small th{font-size:.85rem;padding:6px 4px}
+.lamp{display:inline-block;min-width:1.6em;text-align:center;font-weight:800;border-radius:6px;padding:0 4px}
+.lamp.g{background:var(--g);color:var(--gt)}
+.lamp.y{background:var(--y);color:var(--yt)}
+.lamp.r{background:var(--r);color:var(--rt)}
+.lamp.n{background:var(--n);color:var(--nt)}
+.rline{padding:7px 2px;border-bottom:1px solid var(--line);font-size:.95rem}
+.rline:last-child{border-bottom:none}
+.rline b{display:block}
+.rline .rn{color:var(--mute);font-size:.85rem}
+.rline a{color:var(--accent-ink);font-weight:700}
+.moreb{margin-top:10px}
+.cnt{font-weight:800;margin-top:10px}
+.regselect optgroup{font-weight:800}
+.bigbtn .n.sm{font-size:1.5rem;min-width:110px}
+.hdsc{font-size:.85rem}
+/* ===== PRINT (Bordkarte A4) – generated from the same data ===== */
+@page{size:A4;margin:8mm 8mm 9mm 8mm}
+@media print{
+  :root,:root[data-theme]{--bg:#fff;--card:#fff;--ink:#000;--mute:#333;--line:#999;--g:#0f7a4d;--y:#ffc83d;--r:#c62828;--rose-full:#000;--rose-bg:#fff;--emerg:#c62828}
+  html{font-size:10pt}
+  body{background:#fff;color:#000;padding:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .app,nav,header{display:none!important}
+  #printdoc{display:block;font-family:Arial,"Helvetica Neue",sans-serif;font-size:8pt;line-height:1.25}
+  #printdoc .pp{break-before:page}
+  #printdoc .pp:first-child{break-before:auto}
+  #printdoc h1{font-size:13pt;margin:0 0 1mm}
+  #printdoc .sub{font-size:8pt;margin-bottom:1.5mm;color:#222}
+  #printdoc h2{font-size:9.5pt;margin:2mm 0 1mm;padding:0.5mm 1.5mm;background:#12141f;color:#fff;text-transform:uppercase;letter-spacing:.04em;break-after:avoid}
+  #printdoc h2.red{background:#c62828}
+  #printdoc .nums{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5mm}
+  #printdoc .num{border:1.2pt solid #c62828;border-radius:2mm;padding:0.8mm 1.6mm;break-inside:avoid;font-size:7.5pt}
+  #printdoc .num b{font-size:12pt;display:block;line-height:1.1;color:#c62828}
+  #printdoc .box{border:1pt solid #444;border-radius:1.5mm;padding:1mm 2mm;margin-top:1.2mm;break-inside:avoid}
+  #printdoc .box.red{border:1.6pt solid #c62828}
+  #printdoc .box .ln{display:block;border-bottom:0.6pt solid #666;min-height:4.4mm;padding-top:0.8mm}
+  #printdoc .two{display:grid;grid-template-columns:1fr 1fr;gap:1.5mm}
+  #printdoc table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:7pt}
+  #printdoc th{background:#e4e6ee;text-align:left;font-size:7pt;padding:0.6mm 0.9mm;border:0.5pt solid #777}
+  #printdoc td{padding:0.5mm 0.9mm;border:0.5pt solid #aaa;vertical-align:top;overflow-wrap:anywhere}
+  #printdoc tr{break-inside:avoid}
+  #printdoc tbody.pl{break-inside:avoid}
+  #printdoc tbody.gh{break-after:avoid}
+  #printdoc tbody.gh th{background:#12141f;color:#fff;font-size:7.5pt;letter-spacing:.03em;text-transform:none;break-after:avoid}
+  #printdoc tbody.gh.c th{background:#c62828}
+  #printdoc tbody.gh tr{break-after:avoid}
+  #printdoc .unv{color:#8a3a00;font-weight:700}
+  #printdoc .ok{color:#0b5e3a;font-weight:700}
+  #printdoc .foot{margin-top:2mm;font-size:7.5pt;border-top:0.8pt solid #000;padding-top:1mm}
+  #printdoc .cols2{column-count:2;column-gap:4mm;font-size:7pt}
+  #printdoc .cols2 .rb{break-inside:avoid;margin-bottom:1.5mm}
+  #printdoc .cols2 h3{font-size:8pt;margin:0 0 0.5mm;background:#e4e6ee;padding:0.3mm 1mm;break-after:avoid}
+  a{color:inherit;text-decoration:none}
+}
+</style>
+</head>
+<body>
+<svg class="hidden-svg" aria-hidden="true" focusable="false"><defs>
+  <pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+    <rect width="6" height="6" style="fill:var(--rose-bg)"/><line x1="0" y1="0" x2="0" y2="6" style="stroke:var(--rose-full)" stroke-width="2.2"/>
+  </pattern></defs></svg>
+
+<div class="app">
+<header>
+  <div class="hrow1">
+    <h1 class="disp">Skipper · Ostsee</h1>
+    <button class="themebtn" id="themebtn" aria-pressed="false" title="Nachtmodus (rot auf schwarz)">☾ Nacht</button>
+  </div>
+  <div class="posline" id="posline">Position: nicht gewählt</div>
+  <div class="chip-head c-n" id="overallchip"><span>?</span><span>Noch keine Bewertung – Position, Windrichtung, Wind und Böen eingeben</span></div>
+</header>
+
+<!-- ============ LAGE ============ -->
+<section class="screen active" id="scr-lage">
+  <div class="datenstand" id="datenstand"></div>
+  <div class="note small" id="offlinestate"></div>
+  <div class="notice" id="boatnote" style="display:none"></div>
+
+  <h2>1 · Position</h2>
+  <button class="btn prim" id="btn-gps">◎ GPS-Position holen</button>
+  <div class="note" id="gpsmsg">GPS funktioniert auch ohne Mobilfunk. Falls nicht verfügbar: manuell vom Plotter oder Revier wählen.</div>
+  <details id="det-manual"><summary>Manuell vom Plotter (Grad + Dezimalminuten)</summary>
+    <div class="in">
+      <div class="manual">
+        <label for="latd">Breite N</label>
+        <input type="text" inputmode="numeric" id="latd" placeholder="54" aria-label="Breite Grad">
+        <input type="text" inputmode="decimal" id="latm" placeholder="22.6" aria-label="Breite Minuten">
+        <label for="lond">Länge E</label>
+        <input type="text" inputmode="numeric" id="lond" placeholder="10" aria-label="Länge Grad">
+        <input type="text" inputmode="decimal" id="lonm" placeholder="58.8" aria-label="Länge Minuten">
+      </div>
+      <button class="btn sm" id="btn-manual" style="margin-top:10px">Position übernehmen</button>
+      <div class="note small" id="manualmsg">Beispiel: 54 | 22.6 und 10 | 58.8 (Grad | Dezimalminuten, nördl. Breite, östl. Länge).</div>
+    </div>
+  </details>
+  <details id="det-reg" open><summary>Oder Revier wählen (Näherung)</summary>
+    <div class="in">
+      <select id="regselect" class="regselect" aria-label="Revier wählen"><option value="">— Revier wählen —</option></select>
+      <div class="note small">Position = Mittelpunkt der Häfen dieses Reviers – nur eine Näherung.</div>
+    </div>
+  </details>
+
+  <h2>2 · Wind und See</h2>
+  <h3>Windrichtung (Wind kommt AUS)</h3>
+  <div class="grid4" id="dirgrid"></div>
+  <div class="knrow" style="margin-top:10px">
+    <div class="knbox"><div class="lbl">Wind wahr</div><div class="val" id="windval">–</div>
+      <div class="stepper"><button data-k="windTrue" data-d="-1" aria-label="Wind minus">−</button><button data-k="windTrue" data-d="1" aria-label="Wind plus">+</button></div></div>
+    <div class="knbox"><div class="lbl">Böen wahr</div><div class="val" id="gustval">–</div>
+      <div class="stepper"><button data-k="gust" data-d="-1" aria-label="Böen minus">−</button><button data-k="gust" data-d="1" aria-label="Böen plus">+</button></div></div>
+  </div>
+  <div class="note small">Böen entscheiden, nicht der Mittelwind. Lange drücken = schnell. Werte aus Seewetterbericht, UKW oder NAVTEX.</div>
+  <div class="notice" id="gustnotice" style="display:none"></div>
+
+  <h3 style="margin-top:14px">Seegang aus</h3>
+  <div class="grid4" id="seadirgrid"></div>
+  <div class="knrow" style="margin-top:10px">
+    <div class="knbox"><div class="lbl">Seegang Höhe</div><div class="val" id="seaval">0,0 <small>m</small></div>
+      <div class="stepper"><button data-k="seaH" data-d="-0.25" aria-label="Seegang minus">−</button><button data-k="seaH" data-d="0.25" aria-label="Seegang plus">+</button></div></div>
+    <div class="knbox"><div class="lbl">Pegel (MW = 0)</div><div class="val" id="pegelval">0 <small>cm</small></div>
+      <div class="stepper"><button data-k="pegel" data-d="-10" aria-label="Pegel minus">−</button><button data-k="pegel" data-d="10" aria-label="Pegel plus">+</button></div></div>
+  </div>
+  <div class="note small">Pegel in cm relativ zu Mittelwasser, laut BSH/DMI-Wasserstandsvorhersage (−200 bis +200).</div>
+
+  <h3 style="margin-top:14px">Kurs zum Wind</h3>
+  <div class="grid2" id="coursegrid"></div>
+  <h3 style="margin-top:14px">Sicht</h3>
+  <div class="grid3" id="sichtgrid"></div>
+  <h3 style="margin-top:14px">Starkwind seit &gt; 12 h aus</h3>
+  <div class="grid4" id="longgrid"></div>
+
+  <label class="switch"><input type="checkbox" id="gewitter"><span>Gewitter erwartet<small>Mindestens gelb</small></span></label>
+  <label class="switch"><input type="checkbox" id="kids"><span>Kinder an Bord<small>Schwellen −3 kn (Standard: aus)</small></span></label>
+  <label class="switch"><input type="checkbox" id="trend"><span>Winddrehung / Front erwartet<small>Mindestens gelb</small></span></label>
+
+  <h2>3 · Bewertung</h2>
+  <div id="result"></div>
+</section>
+
+<!-- ============ ZUFLUCHT ============ -->
+<section class="screen" id="scr-zuflucht">
+  <h2>Zuflucht · Ausweichliste</h2>
+  <div class="note" id="zinfo"></div>
+  <div class="grid3" style="margin-top:10px">
+    <button class="tog sm" id="f-refuge" aria-pressed="true">nur Zuflucht</button>
+    <button class="tog sm" id="f-fits" aria-pressed="false">passt für mein Boot</button>
+    <button class="tog sm" id="f-open" aria-pressed="false">jetzt geöffnet</button>
+  </div>
+  <div class="grid3" style="margin-top:8px">
+    <button class="tog sm" data-fc="DE" aria-pressed="true">DE</button>
+    <button class="tog sm" data-fc="DK" aria-pressed="true">DK</button>
+    <button class="tog sm" data-fc="SE" aria-pressed="true">SE</button>
+  </div>
+  <select id="f-region" aria-label="Region filtern" style="margin-top:8px"><option value="">alle Regionen</option></select>
+  <div class="cnt" id="zcount"></div>
+  <div id="zlist"></div>
+</section>
+
+<!-- ============ NOTFALL ============ -->
+<section class="screen" id="scr-notfall">
+  <h2 style="color:var(--emerg)">Notfall</h2>
+  <div class="note" id="nf-area"></div>
+  <div id="nf-nums"></div>
+
+  <div class="dsc"><div class="bt">UKW-DSC-Distress zuerst</div>
+    <p style="margin-top:4px"><b>Rote DSC-Distress-Taste 5 Sekunden halten</b> → danach MAYDAY auf <b>CH 16</b> sprechen.</p>
+    <p class="note">MMSI muss im Gerät programmiert sein.</p></div>
+
+  <h2>Meine Position (für den Notruf)</h2>
+  <button class="btn prim" id="btn-mypos" style="min-height:64px">◎ Meine Position</button>
+  <div id="myposout" class="card" style="display:none"></div>
+
+  <h2>MAYDAY – zum Vorlesen</h2>
+  <div class="card" style="margin-top:0">
+    <div class="fields">
+      <div><label for="f-pers">Personen an Bord</label><input type="text" inputmode="numeric" id="f-pers" autocomplete="off"></div>
+      <div><label for="f-art">Art des Notfalls</label><input type="text" id="f-art" autocomplete="off" placeholder="z. B. Mast gebrochen, Wassereinbruch"></div>
+    </div>
+    <div class="note small">Name, Rufzeichen und MMSI kommen aus dem Boot-Tab. Gelb = noch auszufüllen.</div>
+    <div class="mayday" id="maydaytext"></div>
+  </div>
+  <div class="card"><div class="t">PAN PAN</div>
+    <p style="margin-top:4px">Dringlichkeit <b>ohne</b> unmittelbare Lebensgefahr: gleiches Schema, aber „PAN PAN PAN PAN PAN PAN“ statt „MAYDAY MAYDAY MAYDAY“.</p>
+    <div class="mayday" id="panpantext"></div></div>
+
+  <h2>Funk · Wetter · Stellen</h2>
+  <div id="funk"></div>
+</section>
+
+<!-- ============ REGELN ============ -->
+<section class="screen" id="scr-regeln">
+  <h2>Regeln und Schwellen</h2>
+  <div class="note" id="rg-intro"></div>
+  <div class="card"><div class="t">Reff-Plan (scheinbarer Wind)</div><div id="rg-reff"></div></div>
+  <div class="card"><div class="t">Ampel unterwegs (Böen wahr)</div><div id="rg-traffic"></div></div>
+  <div class="card"><div class="t">Zufluchtsort-Status</div><div id="rg-harbor"></div></div>
+  <div class="card"><div class="t">Revier-Gates</div><div id="rg-gates"></div></div>
+  <div class="card"><div class="t">Pegel</div><div id="rg-pegel"></div></div>
+  <div class="card"><div class="t">Feste Hindernisse &lt; 26 m</div><div id="rg-bridges"></div></div>
+  <div class="card"><div class="t">Klappbrücken, Dreh- und Schiebebrücken</div><div id="rg-opening"></div></div>
+  <div class="card"><div class="t">Nationalpark- und Schutzgebietsregeln</div><div id="rg-np"></div></div>
+  <div class="card"><div class="t">Gefahrengebiete nach Land</div><div id="rg-hazards"></div></div>
+  <div class="card"><div class="t">Bekannte Datenlücken</div><div id="rg-gaps"></div></div>
+  <div class="card"><div class="t">Datenstand</div><div id="rg-data"></div></div>
+  <div class="card" style="border-color:var(--accent)"><div class="t">Wichtig</div>
+    <p class="disc" style="margin-top:6px"></p></div>
+</section>
+
+<!-- ============ BOOT ============ -->
+<section class="screen" id="scr-boot">
+  <h2>Boot</h2>
+  <div class="notice" id="bt-first" style="display:none">Erster Start: Bitte Bootsprofil prüfen. Tiefen- und Brückenprüfung rechnen mit diesen Werten.</div>
+  <div class="fgrid">
+    <div class="full"><label for="b-profile">Profil</label><select id="b-profile"></select></div>
+    <div class="full"><label for="b-type">Typ</label><select id="b-type"><option value="mono">Einrumpf</option><option value="kat">Katamaran</option></select></div>
+    <div><label for="b-loa">Länge (m)</label><input type="text" inputmode="decimal" id="b-loa"></div>
+    <div><label for="b-beam">Breite (m)</label><input type="text" inputmode="decimal" id="b-beam"></div>
+    <div><label for="b-draft">Tiefgang (m)</label><input type="text" inputmode="decimal" id="b-draft"></div>
+    <div><label for="b-margin">Zuschlag unter Kiel (m)</label><input type="text" inputmode="decimal" id="b-margin"></div>
+    <div><label for="b-mast">Masthöhe über WL inkl. Antenne (m)</label><input type="text" inputmode="decimal" id="b-mast"></div>
+    <div><label for="b-bmargin">Brücken-Sicherheitsabstand (m)</label><input type="text" inputmode="decimal" id="b-bmargin"></div>
+    <div><label for="b-speed">Fahrt (kn)</label><input type="text" inputmode="decimal" id="b-speed"></div>
+    <div><label for="b-season">Saison</label><select id="b-season"><option value="auto">automatisch</option><option value="sommer">Sommer</option><option value="vor">Vor-/Nachsaison</option></select></div>
+    <div class="full"><label for="b-name">Schiffsname</label><input type="text" id="b-name" autocomplete="off" autocapitalize="characters"></div>
+    <div><label for="b-call">Rufzeichen</label><input type="text" id="b-call" autocomplete="off" autocapitalize="characters"></div>
+    <div><label for="b-mmsi">MMSI</label><input type="text" inputmode="numeric" id="b-mmsi" autocomplete="off"></div>
+  </div>
+  <label class="switch"><input type="checkbox" id="b-kids"><span>Kinder an Bord<small>Schwellen −3 kn</small></span></label>
+  <div class="notice" id="bt-mast">Masthöhe am Boot messen (inkl. Antenne/Windex) – Default ist geschätzt.</div>
+  <div class="notice" id="bt-kat" style="display:none">Kat: Boxen oft zu schmal – längsseits/Stirnseite.</div>
+  <div class="note" id="bt-msg"></div>
+  <button class="btn prim" id="bt-confirm" style="margin-top:12px">Profil übernehmen</button>
+  <div class="note small">Gespeichert wird nur auf diesem Gerät (localStorage).</div>
+</section>
+</div>
+
+<nav>
+  <button data-scr="scr-lage" class="on"><span class="ic">◎</span>Lage</button>
+  <button data-scr="scr-zuflucht"><span class="ic">⚓</span>Zuflucht</button>
+  <button data-scr="scr-notfall" class="sos"><span class="ic">✚</span>Notfall</button>
+  <button data-scr="scr-regeln"><span class="ic">≡</span>Regeln</button>
+  <button data-scr="scr-boot"><span class="ic">⛵</span>Boot</button>
+</nav>
+
+<div id="printdoc"></div>
+
+<script>
+(function(){
+'use strict';
+/*@@DATA@@*/
+
+/* =====================================================================
+   Constants. Nothing here may be invented: values come from SPEC v1
+   or from the data files. Rules without a source are "Faustregel".
+   ===================================================================== */
+var DIRS=['N','NE','E','SE','S','SW','W','NW'];
+var DISCLAIMER='Ersetzt weder Seekarte, Revierführer noch amtlichen Seewetterbericht. Entscheidung liegt beim Skipper.';
+var TYPE_LABEL={marina:'Marina',hafen:'Hafen',nothafen:'Nothafen'};
+var COUNTRY_LABEL={DE:'Deutschland',DK:'Dänemark',SE:'Schweden',PL:'Polen'};
+var REFUGE_SHORT={belegt:'B',plan:'P',abgeleitet:'A',grenzfall:'G',notfall:'N'};
+var BY_ID={},BR_BY_ID={};
+DATA.forEach(function(h){BY_ID[h.id]=h;});
+BRIDGES.forEach(function(b){BR_BY_ID[b.id]=b;});
+
+var CONST={
+  datenstand:'18.10.2026',
+  reff:{base:[18,23,28],names:['Vollzeug','1. Reff','2. Reff','3. Reff + Zuflucht anlaufen']},
+  courseFactor:{'am Wind':1.15,'halber Wind':1.05,'raum':0.9,'vorm Wind':0.8},
+  courses:['am Wind','halber Wind','raum','vorm Wind'],
+  traffic:{yellow:18,red:28},
+  offsets:{kids:3,season:3},
+  floor:{yellow:12,red:22,reff:[12,17,22]},
+  sea:{yellow:1.25,red:2.0},
+  harborSea:{yellow:0.5,red:1.0},
+  harborGust:{marina:[30,38],hafen:[30,38],nothafen:[30,38]},
+  entrance:{yellow:16,red:22},
+  crossing:{gust:22,sea:1.5},
+  pegel:{info:-60,yellowLow:-100,yellowHigh:100,red:150},
+  season:{from:'06-01',to:'08-31'},
+  bridgeNearNm:8,hazardNearNm:15,crossingNearNm:15,farNm:20,speed:5.5,sunsetBufferMin:30,
+  area:{latMin:53.6,latMax:56.95,lonMin:9.3,lonMax:15.8},
+  haff:{latMax:53.95,lonMin:14.0},
+  westLon:12.5,
+  defaultMast:18.5,
+  bridgeList:{maxHeight:26},
+  gates:{
+    bornholm:{ids:['de-sassnitz','de-lohme','de-glowe','de-breege','dk-klintholm-havn','dk-gedser-lystbaadehavn','se-ystad','se-simrishamn','se-kaaseberga','dk-roenne-havn','dk-hasle-havn','dk-allinge-havn','dk-nexoe-havn','dk-svaneke-havn','dk-gudhjem-havn','dk-christiansoe-havn'],
+      box:{latMin:54.45,latMax:55.6,lonMin:13.5,lonMax:14.6},islandLon:14.5},
+    anholt:{ids:['dk-anholt-havn','dk-grenaa-marina','dk-grenaa-havn','dk-boennerup-havn','dk-ebeltoft-havn','dk-ebeltoft-skudehavn','dk-hundested-havn','dk-gilleleje-havn','dk-odden-havn'],
+      box:{latMin:56.35,latMax:56.85,lonMin:11.0,lonMax:11.95}}
+  },
+  /* keys whose thresholds are Faustregeln (no official source) */
+  faustregel:['sea','harborSea','harborGust','entrance','crossing','offsets','season','bridgeMargin','reff','traffic']
+};
+var DEFAULT_BOAT={profile:'',name:'',call:'',mmsi:'',type:'mono',loa:10.51,beam:3.49,draft:1.95,mast:CONST.defaultMast,margin:0.3,bridgeMargin:1.0};
+
+function buildProfiles(){
+  var out=[];
+  (BOATS.variants||[]).forEach(function(v){
+    if(!v.loa_m||!v.keels||!v.keels.length)return;
+    var base=String(v.name).replace(/\s*\(.*$/,''),yr=String(v.years||'').replace(/\s*\(.*$/,'').trim();
+    v.keels.forEach(function(k){
+      var kn=String(k.name).replace(/\s*\(.*$/,'');
+      out.push({id:v.id+'|'+kn,label:base+' ('+yr+', '+kn+')',type:'mono',loa:v.loa_m,beam:v.beam_m,draft:k.draft_m,
+        mast:v.mast_above_wl_m==null?null:CONST.defaultMast,margin:0.3,bridgeMargin:1.0});
+    });
+  });
+  out.push({id:'kat',label:'Katamaran (eigene Werte)',type:'kat',loa:null,beam:null,draft:null,mast:null,margin:0.3,bridgeMargin:1.0});
+  out.push({id:'custom',label:'Eigene Werte',type:'mono'});
+  return out;
+}
+var PROFILES=buildProfiles();
+DEFAULT_BOAT.profile=PROFILES[0].id;
+
+/* ---------- small helpers ---------- */
+function isNum(x){return typeof x==='number'&&isFinite(x);}
+function num(x){if(x===null||x===undefined||x==='')return null;var n=Number(String(x).replace(',','.'));return isFinite(n)?n:null;}
+function pad(n){return (n<10?'0':'')+n;}
+function fm(x){return String(Math.round(x*100)/100).replace('.',',');}        // metres, up to 2 decimals
+function f1(x){return (Math.round(x*10)/10).toFixed(1).replace('.',',');}
+function fsig(p){return (p>0?'+':p<0?'−':'')+Math.abs(p);}
+function lt(a,b){return a<b-1e-9;}
+function ge(a,b){return a>=b-1e-9;}
+function toRad(x){return x*Math.PI/180;}
+function haversineNm(a,b){
+  var R=3440.065,dLat=toRad(b.lat-a.lat),dLon=toRad(b.lon-a.lon);
+  var h=Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(toRad(a.lat))*Math.cos(toRad(b.lat))*Math.sin(dLon/2)*Math.sin(dLon/2);
+  return 2*R*Math.asin(Math.min(1,Math.sqrt(h)));
+}
+function bearingDeg(a,b){
+  var p1=toRad(a.lat),p2=toRad(b.lat),dl=toRad(b.lon-a.lon);
+  var y=Math.sin(dl)*Math.cos(p2),x=Math.cos(p1)*Math.sin(p2)-Math.sin(p1)*Math.cos(p2)*Math.cos(dl);
+  return (Math.round(Math.atan2(y,x)*180/Math.PI)+360)%360;
+}
+function formatDM(v,isLat){
+  var hemi=isLat?(v>=0?'N':'S'):(v>=0?'E':'W');
+  var t=Math.round(Math.abs(v)*600),deg=Math.floor(t/600),min=(t%600)/10;
+  var dd=String(deg);while(dd.length<(isLat?2:3))dd='0'+dd;
+  var mm=min.toFixed(1).replace('.',',');if(mm.length<4)mm='0'+mm;
+  return dd+'°'+mm+'′ '+hemi;
+}
+function formatPos(p){return formatDM(p.lat,true)+' '+formatDM(p.lon,false);}
+function parseDM(deg,min){
+  var d=parseFloat(String(deg).replace(',','.')),m=parseFloat(String(min===''||min==null?'0':min).replace(',','.'));
+  if(!isFinite(d)||!isFinite(m)||d<0||m<0||m>=60||String(deg).trim()==='')return NaN;
+  return d+m/60;
+}
+function isOutOfArea(p){var a=CONST.area;return !(p.lat>=a.latMin&&p.lat<=a.latMax&&p.lon>=a.lonMin&&p.lon<=a.lonMax);}
+function nm1(x){return x.toFixed(1).replace('.',',');}
+function fmtEta(h){var m=Math.round(h*60),hh=Math.floor(m/60),mm=m%60;return (hh>0?hh+' h ':'')+(mm<10&&hh>0?'0':'')+mm+' min';}
+
+/* EU summer time: last Sunday March 01:00 UTC .. last Sunday October 01:00 UTC */
+function lastSundayUTC(y,m){var d=new Date(Date.UTC(y,m+1,0,1,0,0));d.setUTCDate(d.getUTCDate()-d.getUTCDay());return d.getTime();}
+function euOffset(ms){var y=new Date(ms).getUTCFullYear();return (ms>=lastSundayUTC(y,2)&&ms<lastSundayUTC(y,9))?2:1;}
+function utcToLocal(hhmm,ms){
+  var p=String(hhmm).split(':'),off=euOffset(ms),t=((+p[0])*60+(+p[1])+off*60)%1440;
+  var h=Math.floor(t/60),m=t%60;
+  return {text:pad(h)+':'+pad(m),label:off===2?'MESZ':'MEZ',offset:off};
+}
+function localParts(ms){
+  var off=euOffset(ms),d=new Date(ms+off*3600000);
+  return {y:d.getUTCFullYear(),m:d.getUTCMonth()+1,d:d.getUTCDate(),hh:d.getUTCHours(),mm:d.getUTCMinutes(),ss:d.getUTCSeconds(),off:off,md:pad(d.getUTCMonth()+1)+'-'+pad(d.getUTCDate())};
+}
+function localClock(ms){var p=localParts(ms);return pad(p.hh)+':'+pad(p.mm)+':'+pad(p.ss)+' '+(p.off===2?'MESZ':'MEZ');}
+function utcClock(ms){var d=new Date(ms);return pad(d.getUTCHours())+':'+pad(d.getUTCMinutes())+':'+pad(d.getUTCSeconds())+' UTC';}
+function hhmmLocal(ms){var p=localParts(ms);return pad(p.hh)+':'+pad(p.mm);}
+
+/* ---------- sun (NOAA algorithm) ---------- */
+function sunTimes(lat,lon,date){
+  var ms=(date instanceof Date)?date.getTime():Number(date);
+  var d=new Date(ms),y=d.getUTCFullYear(),mo=d.getUTCMonth(),da=d.getUTCDate();
+  var noon=Date.UTC(y,mo,da,12),jd=noon/86400000+2440587.5,T=(jd-2451545)/36525;
+  var rad=Math.PI/180,deg=180/Math.PI;
+  var L0=(280.46646+T*(36000.76983+T*0.0003032))%360;
+  var M=357.52911+T*(35999.05029-0.0001537*T),e=0.016708634-T*(0.000042037+0.0000001267*T),Mr=M*rad;
+  var C=Math.sin(Mr)*(1.914602-T*(0.004817+0.000014*T))+Math.sin(2*Mr)*(0.019993-0.000101*T)+Math.sin(3*Mr)*0.000289;
+  var omega=125.04-1934.136*T,lam=L0+C-0.00569-0.00478*Math.sin(omega*rad);
+  var eps0=23+(26+((21.448-T*(46.815+T*(0.00059-T*0.001813))))/60)/60,eps=eps0+0.00256*Math.cos(omega*rad);
+  var decl=Math.asin(Math.sin(eps*rad)*Math.sin(lam*rad));
+  var yy=Math.tan(eps*rad/2);yy=yy*yy;
+  var eq=4*deg*(yy*Math.sin(2*L0*rad)-2*e*Math.sin(Mr)+4*e*yy*Math.sin(Mr)*Math.cos(2*L0*rad)-0.5*yy*yy*Math.sin(4*L0*rad)-1.25*e*e*Math.sin(2*Mr));
+  var midnight=Date.UTC(y,mo,da);
+  function at(zenith){
+    var c=(Math.cos(zenith*rad)/(Math.cos(lat*rad)*Math.cos(decl)))-Math.tan(lat*rad)*Math.tan(decl);
+    if(c>1||c<-1)return null;
+    var ha=Math.acos(c)*deg;
+    return {rise:midnight+(720-4*(lon+ha)-eq)*60000,set:midnight+(720-4*(lon-ha)-eq)*60000};
+  }
+  var s=at(90.833),c=at(96);
+  var o={sunriseMs:s?s.rise:null,sunsetMs:s?s.set:null,dawnMs:c?c.rise:null,duskMs:c?c.set:null};
+  o.sunrise=s?hhmmLocal(s.rise):null;o.sunset=s?hhmmLocal(s.set):null;o.dawn=c?hhmmLocal(c.rise):null;o.dusk=c?hhmmLocal(c.set):null;
+  o.sunsetMin=s?localParts(s.set).hh*60+localParts(s.set).mm:null;
+  o.label=euOffset(noon)===2?'MESZ':'MEZ';
+  return o;
+}
+
+/* ---------- state normalisation ---------- */
+function normBoat(b){
+  var o=Object.assign({},DEFAULT_BOAT,b||{});
+  ['loa','beam','draft','mast','margin','bridgeMargin'].forEach(function(k){o[k]=num(o[k]);});
+  o.type=o.type==='kat'?'kat':'mono';
+  return o;
+}
+function normalize(raw){
+  var s=Object.assign({},raw||{});
+  s.kids=!!s.kids;s.trend=!!s.trend;s.gewitter=!!s.gewitter;
+  s.course=CONST.courseFactor[s.course]?s.course:'am Wind';
+  s.dir=DIRS.indexOf(s.dir)>=0?s.dir:null;
+  s.seaDir=DIRS.indexOf(s.seaDir)>=0?s.seaDir:null;
+  s.longWind=DIRS.indexOf(s.longWind)>=0?s.longWind:null;
+  var sh=Number(s.seaH);s.seaH=isFinite(sh)?Math.min(3,Math.max(0,Math.round(sh*4)/4)):0;
+  var pg=Number(s.pegel);s.pegel=isFinite(pg)?Math.min(200,Math.max(-200,Math.round(pg))):0;
+  s.sicht=['gut','maessig','nebel'].indexOf(s.sicht)>=0?s.sicht:'gut';
+  s.season=['auto','sommer','vor'].indexOf(s.season)>=0?s.season:'auto';
+  s.windTrue=(s.windTrue===null||s.windTrue===undefined||s.windTrue==='')?null:Number(s.windTrue);
+  s.gust=(s.gust===null||s.gust===undefined||s.gust==='')?null:Number(s.gust);
+  if(s.windTrue!==null&&!isFinite(s.windTrue))s.windTrue=null;
+  if(s.gust!==null&&!isFinite(s.gust))s.gust=null;
+  s.gustFixed=false;
+  if(s.windTrue!==null&&s.gust!==null&&s.gust<s.windTrue){s.gust=s.windTrue;s.gustFixed=true;}
+  var sd=Number(s.speed);s.speed=(isFinite(sd)&&sd>0)?sd:CONST.speed;
+  var nw=Number(s.now);s.now=(isFinite(nw)&&nw>0)?nw:Date.now();
+  s.boat=normBoat(s.boat);
+  return s;
+}
+function offSeason(s){
+  if(s.season==='sommer')return false;
+  if(s.season==='vor')return true;
+  var md=localParts(s.now).md;
+  return !(md>=CONST.season.from&&md<=CONST.season.to);
+}
+/* All thresholds that move with children aboard / off-season. Every rule in the logic reads from here. */
+function effThresholds(state){
+  var s=normalize(state),k=s.kids?1:0,v=offSeason(s)?1:0,off=k*CONST.offsets.kids+v*CONST.offsets.season,F=CONST.floor;
+  return {kids:k,season:v,offset:off,
+    reff:{base:CONST.reff.base.map(function(x,i){return Math.max(F.reff[i],x-off);})},
+    traffic:{yellow:Math.max(F.yellow,CONST.traffic.yellow-off),red:Math.max(F.red,CONST.traffic.red-off)},
+    entrance:{yellow:CONST.entrance.yellow-off,red:CONST.entrance.red-off},
+    crossing:{gust:CONST.crossing.gust-off}};
+}
+function offsetNote(T){
+  var p=[];if(T.kids)p.push('Kinder');if(T.season)p.push('Vor-/Nachsaison');
+  return p.length?' ('+p.join(' + ')+': −'+T.offset+' kn)':'';
+}
+function apparentWind(gust,course){
+  var f=CONST.courseFactor[course]||CONST.courseFactor['am Wind'];
+  return Math.ceil(gust*f-1e-9);
+}
+function reffLevel(apparent,ks){
+  var st=(ks&&typeof ks==='object')?ks:{kids:!!ks,season:'sommer'};
+  var t=effThresholds(st).reff.base,i=apparent>=t[2]?3:apparent>=t[1]?2:apparent>=t[0]?1:0;
+  return {idx:i,name:CONST.reff.names[i],level:i===0?'g':i===3?'r':'y',thresholds:t};
+}
+function reffStufe(state){
+  var s=normalize(state);
+  if(s.gust===null)return null;
+  var a=apparentWind(s.gust,s.course),r=reffLevel(a,s);
+  return {apparent:a,idx:r.idx,name:r.name,level:r.level,thresholds:r.thresholds,course:s.course,kids:s.kids};
+}
+
+/* ---------- boat / bridges ---------- */
+function boatNeeds(boat){
+  var b=normBoat(boat),miss=[];
+  var depthOk=isNum(b.draft)&&b.draft>0&&isNum(b.margin)&&b.margin>=0;
+  var bridgeOk=isNum(b.mast)&&b.mast>0&&isNum(b.bridgeMargin)&&b.bridgeMargin>=0;
+  var dimOk=isNum(b.loa)&&b.loa>0&&isNum(b.beam)&&b.beam>0;
+  if(!depthOk)miss.push('Tiefgang/Zuschlag');if(!bridgeOk)miss.push('Masthöhe/Sicherheitsabstand');if(!dimOk)miss.push('Länge/Breite');
+  return {boat:b,depthOk:depthOk,bridgeOk:bridgeOk,dimOk:dimOk,missing:miss,
+    need:depthOk?Math.round((b.draft+b.margin)*100)/100:null,
+    mastNeed:bridgeOk?Math.round((b.mast+b.bridgeMargin)*100)/100:null};
+}
+var DATE_RE=/\d{2}\.\d{2}\.(?:-|\d{2,4})/;
+function bridgeCheck(b,boat,pegel){
+  var N=boatNeeds(boat),bt=N.boat,p=(isNum(pegel)?pegel:0)/100,kind=b.kind,closed=b.clearanceClosed_m;
+  var ref=b.clearanceRef&&b.clearanceRef!=='unbekannt'?'bei '+b.clearanceRef:'Bezug unbekannt';
+  var showNote=b.note&&(DATE_RE.test(b.note)||(b.verified&&b.verified.clearance===false))?b.note:null;
+  var r;
+  if(kind==='fest'||kind==='freileitung'){
+    if(closed==null)r={level:'y',text:'Durchfahrtshöhe unbekannt – Seekarte prüfen ('+b.name+')'};
+    else if(!N.bridgeOk)r={level:'n',text:'Bootsdaten fehlen (Masthöhe/Sicherheitsabstand)',boatdata:true};
+    else{
+      var frei=closed-Math.max(0,p),res=frei-N.mastNeed;
+      if(lt(frei,N.mastNeed))r={level:'r',text:'Mast '+fm(bt.mast)+' m passt nicht unter '+b.name+' ('+fm(closed)+' m '+ref+(p>0?', Pegel +'+Math.round(p*100)+' cm abgezogen':'')+'; nötig '+fm(N.mastNeed)+' m inkl. Abstand)'};
+      else r={level:'g',text:'passt unter '+b.name+' (Reserve '+fm(res)+' m)',reserve:Math.round(res*100)/100};
+    }
+  }else{
+    var op='nur zu Öffnungszeiten: '+(b.opening||'Zeiten unbekannt')+' ('+b.name+')';
+    if(!N.bridgeOk&&closed!=null)r={level:'n',text:'Bootsdaten fehlen (Masthöhe/Sicherheitsabstand)',boatdata:true};
+    else if(closed==null||!N.bridgeOk||lt(closed-Math.max(0,p),N.mastNeed))r={level:'y',text:op};
+    else r={level:'i',text:op+' – Mast passt auch geschlossen'};
+  }
+  r.note=showNote;r.bridge=b;
+  return r;
+}
+
+/* ---------- geography ---------- */
+function nearestOf(pos,list){
+  var best=null,bd=1e9;
+  list.forEach(function(x){var d=haversineNm(pos,x);if(d<bd){bd=d;best=x;}});
+  return {item:best,dist:bd};
+}
+function seaAreaOf(pos){
+  if(!pos)return null;
+  var best=null,ba=1e9;
+  SEAAREAS.forEach(function(a){
+    var b=a.bbox;if(!b||b.length!==4)return;
+    if(pos.lon>=b[0]&&pos.lon<=b[2]&&pos.lat>=b[1]&&pos.lat<=b[3]){
+      var ar=(b[2]-b[0])*(b[3]-b[1]);
+      if(ar<ba){ba=ar;best=a;}
+    }
+  });
+  return best?{id:best.id,name:best.name,org:best.org,label:'Seegebiet ≈ '+best.name+' (Grenzen ungeprüft)'}:null;
+}
+function inHaff(pos){return pos.lat<CONST.haff.latMax&&pos.lon>CONST.haff.lonMin;}
+function countryOf(pos){
+  if(!pos)return [];
+  var n=nearestOf(pos,DATA),list=[n.item.country];
+  DATA.forEach(function(h){if(list.indexOf(h.country)<0&&haversineNm(pos,h)<=CONST.crossingNearNm)list.push(h.country);});
+  if(inHaff(pos)&&list.indexOf('PL')<0)list.push('PL');
+  return list;
+}
+
+/* =====================================================================
+   PURE LOGIC (exposed on window.SKIPPER for tests)
+   ===================================================================== */
+var RANK={g:1,y:2,r:3};
+function worst(a,b){return (RANK[b]||0)>(RANK[a]||0)?b:a;}
+var RANK2={g:1,y:2,r:3,n:4};   // for harbours: unknown ("n") outranks everything – never plan on unknown data
+
+/* BSH label for a water level (cm) taken from radio.json (DE water_level) */
+function pegelLabel(p){
+  try{
+    var wl=RADIO.filter(function(r){return r.country==='DE';})[0].water_level,list,best=null;
+    if(p>0){list=wl.high_m.value;list.forEach(function(x){if(p>=x.from*100-1e-9)best=x;});}
+    else{list=wl.low_m.value;list.forEach(function(x){if(p<=x.from*100+1e-9)best=x;});}
+    return best?best.label:null;
+  }catch(e){return null;}
+}
+function pegelLevel(state){
+  var s=normalize(state),P=CONST.pegel,p=s.pegel,lab=pegelLabel(p);
+  if(p>=P.red)return {level:'r',text:'Pegel '+fsig(p)+' cm: '+(lab||'schwere Sturmflut')+' (BSH-Stufe ≥ '+fsig(P.red)+' cm). Häfen/Stege prüfen, Tiefen und Brückenhöhen ändern sich.'};
+  if(p>=P.yellowHigh)return {level:'y',text:'Pegel '+fsig(p)+' cm: '+(lab||'Sturmflut')+' (BSH-Stufe ≥ '+fsig(P.yellowHigh)+' cm). Durchfahrtshöhen verringern sich um den Pegelstand.'};
+  if(p<=P.yellowLow)return {level:'y',text:'Pegel '+fsig(p)+' cm: '+(lab||'Niedrigwasserwarnung')+' (BSH-Stufe ≤ '+fsig(P.yellowLow)+' cm). Wassertiefen verringern sich.'};
+  if(p<=P.info)return {level:'i',text:'Pegel '+fsig(p)+' cm: Niedrigwasser – BSH meldet ab '+fsig(P.info)+' cm per NAVTEX. Wassertiefen verringern sich (Tiefenprüfung berücksichtigt den Pegel).'};
+  return null;
+}
+
+function generalLevel(state){
+  var s=normalize(state),T=effThresholds(s),lvl='g',title='FAHRBAR',txt='',why=[],ctx=offsetNote(T);
+  var haveBase=s.gust!==null;
+  if(haveBase){
+    var y=T.traffic.yellow,r=T.traffic.red,reff=reffLevel(apparentWind(s.gust,s.course),s);
+    if(s.gust>=r){lvl='r';txt='Böen '+s.gust+' kn (wahr) ≥ '+r+' kn'+ctx+'. Nicht mehr auf offener See sein – nächsten geschützten Platz aus der Liste anlaufen.';}
+    else if(s.gust>=y){lvl='y';txt='Böen '+s.gust+' kn (wahr), Schwelle '+y+'–'+(r-1)+' kn'+ctx+'. Segelführung: '+reff.name+'. Ausweichhafen vor Etappenbeginn festlegen, Crew briefen.';}
+    else txt='Böen '+s.gust+' kn (wahr) unter '+y+' kn'+ctx+'.';
+  }
+  function bump(l,t){lvl=worst(lvl,l);why.push(t);}
+  if(s.seaH>=CONST.sea.red)bump('r','Seegang '+fm(s.seaH)+' m ≥ '+fm(CONST.sea.red)+' m');
+  else if(s.seaH>=CONST.sea.yellow)bump('y','Seegang '+fm(s.seaH)+' m ≥ '+fm(CONST.sea.yellow)+' m (kurze, steile Ostseewelle)');
+  if(s.sicht==='nebel')bump('y','Nebel: Radar/AIS, Schallsignale, Verkehrstrennungsgebiete meiden');
+  if(s.gewitter)bump('y','Gewitter: Hafen vorher erreichen, Reff früh');
+  var pg=pegelLevel(s);
+  if(pg&&pg.level!=='i')bump(pg.level,pg.text);
+  if(!haveBase&&!why.length)return null;
+  title=lvl==='r'?'NICHT EMPFOHLEN – ZUFLUCHT ANLAUFEN':lvl==='y'?'FAHRBAR MIT EINSCHRÄNKUNG':'FAHRBAR';
+  if(why.length)txt=(txt?txt+' ':'')+'Zusätzlich: '+why.join('; ')+'.';
+  return {level:lvl,title:title,text:txt};
+}
+
+/* ---------- gates ---------- */
+function infoItem(id,title,text){return {id:id,level:'i',title:title,text:text};}
+function tokensOfRegion(region){
+  return String(region||'').split(/\s*\/\s*|\s+–\s+|,/).map(function(x){return x.trim();}).filter(function(x){return x.length>=4;});
+}
+function crossingGate(s,T,pos,id,def,titles){
+  var near=nearestOf(pos,def.ids.map(function(i){return BY_ID[i];}).filter(Boolean));
+  var b=def.box,inBox=pos.lat>=b.latMin&&pos.lat<=b.latMax&&pos.lon>=b.lonMin&&pos.lon<=b.lonMax;
+  if(!(near.dist<=CONST.crossingNearNm||inBox))return null;
+  var why=[];
+  if(s.gust!==null&&s.gust>=T.crossing.gust)why.push('Böen '+s.gust+' kn ≥ '+T.crossing.gust+' kn'+offsetNote(T));
+  if(s.seaH>=CONST.crossing.sea)why.push('Seegang '+fm(s.seaH)+' m ≥ '+fm(CONST.crossing.sea)+' m');
+  if(s.sicht==='nebel')why.push('Nebel');
+  if(!why.length)return null;
+  return {id:id,level:'r',title:titles(pos),text:titles.text+' Auslöser: '+why.join('; ')+'. (Schwellen: Faustregel)'};
+}
+function gates(s,pos,T){
+  var out=[],info=[];
+  if(!pos)return {gates:out,info:info};
+  var G=CONST.gates;
+  // 1 Bornholm
+  var tb=function(p){return p.lon>=G.bornholm.islandLon?'ÜBERFAHRT NICHT BEGINNEN – AUF BORNHOLM BLEIBEN':'BORNHOLM-ÜBERFAHRT NICHT BEGINNEN';};
+  tb.text='Offene See, Großschifffahrt, unterwegs kein Zufluchtsort.';
+  var g1=crossingGate(s,T,pos,'bornholm',G.bornholm,tb);if(g1)out.push(g1);
+  // 2 Anholt / Kattegat
+  var ta=function(){return 'ANHOLT-/KATTEGAT-ÜBERFAHRT NICHT BEGINNEN';};
+  ta.text='Offene See, unterwegs kein Zufluchtsort.';
+  var g2=crossingGate(s,T,pos,'anholt',G.anholt,ta);if(g2)out.push(g2);
+  // 3 traffic separation scheme
+  HAZARDS.forEach(function(hz){
+    if(hz.type!=='vtg'||!hz.geom||!hz.geom.center)return;
+    var c={lat:hz.geom.center[0],lon:hz.geom.center[1]},d=haversineNm(pos,c);
+    if(d>CONST.hazardNearNm)return;
+    var txt='VTG/Großschifffahrt: rechtwinklig queren, AIS. '+hz.name+' – Abstand zum Mittelpunkt ≈ '+nm1(d)+' sm, Gebietsgrenze nicht belegt.';
+    if(s.sicht==='nebel')out.push({id:'vtg',level:'y',title:'VERKEHRSTRENNUNGSGEBIET BEI NEBEL',text:txt+' Bei Nebel meiden.'});
+    else info.push(infoItem('vtg','Verkehrstrennungsgebiet in der Nähe',txt));
+  });
+  // 4 bridges
+  BRIDGES.forEach(function(b){
+    var d=haversineNm(pos,b);
+    if(d>CONST.bridgeNearNm)return;
+    var c=bridgeCheck(b,s.boat,s.pegel),id='bridge-'+b.id,dd=' (≈ '+nm1(d)+' sm)';
+    var txt=c.text+dd+(c.note?' · Hinweis aus den Daten: '+c.note:'');
+    if(c.level==='r'||c.level==='y')out.push({id:id,level:c.level,title:c.level==='r'?'BRÜCKE: MAST PASST NICHT':'BRÜCKE IN DER NÄHE',text:txt});
+    else if(c.level==='n')out.push({id:id,level:'y',title:'BRÜCKE IN DER NÄHE: BOOTSDATEN FEHLEN',text:txt});
+    else info.push(infoItem(id,'Brücke in der Nähe: '+b.name,txt));
+  });
+  // 5 hazards near (centre point only) + region-matched hazards without geometry
+  var nh=nearestOf(pos,DATA).item,toks=tokensOfRegion(nh.region),shown=0;
+  HAZARDS.forEach(function(hz){
+    if((hz.type==='vtg'&&hz.geom&&hz.geom.center)||hz.type==='befahrensverbot')return;
+    if(hz.geom&&hz.geom.center){
+      var d=haversineNm(pos,{lat:hz.geom.center[0],lon:hz.geom.center[1]});
+      if(d<=CONST.hazardNearNm)info.push(infoItem('hz-'+hz.id,'Gefahrengebiet: '+hz.name,(hz.warn||'Keine Angabe')+' – Abstand zum Mittelpunkt ≈ '+nm1(d)+' sm, Gebietsgrenze nicht belegt.'));
+    }else if(hz.warn){
+      var hay=(hz.name+' '+hz.warn).toLowerCase();
+      var hit=toks.some(function(t){return hay.indexOf(t.toLowerCase())>=0;});
+      if(hit&&shown<4){shown++;info.push(infoItem('hz-'+hz.id,'Hinweis Revier: '+hz.name,hz.warn));}
+    }
+  });
+  // 6 trend
+  if(s.trend)out.push({id:'trend',level:'y',title:'WINDDREHUNG / FRONT ERWARTET',text:'Ankerplatz muss auch bei gedrehtem Wind halten – nur Plätze mit Schutz in beiden Richtungen oder Hafen.'});
+  // 7 long-lasting strong wind
+  if(s.longWind){
+    var west=pos.lon<CONST.westLon,d7=s.longWind;
+    if(west&&(d7==='SW'||d7==='W'))info.push(infoItem('longwind','Starkwind seit > 12 h aus '+d7,'Pegel fällt in der westlichen Ostsee (Faustregel). Tiefen in Häfen mit Niedrigwasser-Angabe beachten.'));
+    else if(west&&(d7==='N'||d7==='NE'||d7==='E'))info.push(infoItem('longwind','Starkwind seit > 12 h aus '+d7,'Pegel steigt (Faustregel). Durchfahrtshöhen und Stege prüfen.'));
+    else info.push(infoItem('longwind','Starkwind seit > 12 h aus '+d7,'Wasserstand beobachten (BSH/DMI-Wasserstandsvorhersage).'));
+  }
+  // 8 Stettiner Haff
+  if(inHaff(pos)){
+    var pl=RADIO.filter(function(r){return r.id==='pl-mrcc-gdynia';})[0],extra='';
+    if(pl){
+      var v=pl.vhf?(' UKW CH '+(pl.vhf.distress||16)+(pl.vhf.sar_working?', Arbeitskanal '+pl.vhf.sar_working:'')):'';
+      extra=' Notruf:'+v+(pl.tel&&pl.tel[0]?', Tel. '+pl.tel[0]:'')+'.';
+    }
+    info.push(infoItem('haff','Stettiner Haff','Grenze DE/PL im Haff; polnische Zuständigkeit MRCC Gdynia.'+extra));
+  }
+  // season info
+  if(T.season)info.push(infoItem('saison','Vor-/Nachsaison','Kälteschock – Rettungsweste tragen; früher Sonnenuntergang; viele Häfen/Services geschlossen.'));
+  return {gates:out,info:info};
+}
+
+/* ---------- harbour status ---------- */
+function protOf(h,d){return h.prot?h.prot[d]:null;}
+function protKnown(h){return !!h.prot&&DIRS.some(function(d){return h.prot[d]!=null;});}
+function seasonOutside(h,s){
+  var se=h.season;
+  if(!se||typeof se!=='object'||!se.open||!se.close)return null;
+  var md=localParts(s.now).md,o=se.open,c=se.close,inside=(o<=c)?(md>=o&&md<=c):(md>=o||md<=c);
+  function dm(x){return x.slice(3)+'.'+x.slice(0,2)+'.';}
+  return inside?null:dm(o)+'–'+dm(c);
+}
+function harborStatus(h,state){
+  var s=normalize(state),T=effThresholds(s),items=[],N=boatNeeds(s.boat),b=N.boat,p=s.pegel/100;
+  function add(level,text,cat,noLevel){items.push({level:level,text:text,cat:cat||'',noLevel:!!noLevel});}
+  var dir=s.dir;
+  // 1 wind protection
+  if(!protKnown(h))add('n','Schutz unbekannt – nicht einplanen','prot');
+  else if(!dir)add('n','Windrichtung wählen','input');
+  else{
+    var pr=protOf(h,dir);
+    if(pr==='full')add('g','geschützt bei Wind aus '+dir,'prot');
+    else if(pr==='part')add('y','nur eingeschränkt geschützt bei Wind aus '+dir+' (Schwell/Böen möglich)','prot');
+    else if(pr==='open')add('r','offen gegen Wind aus '+dir,'prot');
+    else add('n','Schutz bei Wind aus '+dir+' unbekannt','prot');
+  }
+  // 2 entrance
+  var ent=h.entranceOpen||[];
+  if(dir&&ent.indexOf(dir)>=0&&s.gust!==null){
+    var uv=(h.verified&&h.verified.entrance)?'':' (Sektor ungeprüft)';
+    if(s.gust>=T.entrance.red)add('r','Ansteuerung bei auflandigem Wind gefährlich (Böen '+s.gust+' kn ≥ '+T.entrance.red+' kn)'+uv,'entrance');
+    else if(s.gust>=T.entrance.yellow)add('y','Ansteuerung bei auflandigem Wind schwierig (Böen '+s.gust+' kn ≥ '+T.entrance.yellow+' kn)'+uv,'entrance');
+  }
+  // 3 sea state
+  var open=(h.swellOpen||[]).concat(ent);
+  if(s.seaDir&&s.seaH>0&&open.indexOf(s.seaDir)>=0){
+    if(s.seaH>=CONST.harborSea.red)add('r','Seegang aus '+s.seaDir+' ('+fm(s.seaH)+' m) steht in Einfahrt/Hafen – gefährlich','sea');
+    else if(s.seaH>=CONST.harborSea.yellow)add('y','Seegang aus '+s.seaDir+' ('+fm(s.seaH)+' m): Einfahrt/Liegeplatz unruhig','sea');
+  }
+  // 4 gusts by type
+  var lim=CONST.harborGust[h.type];
+  if(lim&&s.gust!==null){
+    if(s.gust>=lim[1])add('r','Böen '+s.gust+' kn ≥ '+lim[1]+' kn: für '+TYPE_LABEL[h.type]+' zu viel','gust');
+    else if(s.gust>=lim[0])add('y','Böen '+s.gust+' kn ≥ '+lim[0]+' kn: für '+TYPE_LABEL[h.type]+' grenzwertig','gust');
+  }
+  // 5 depth
+  var dE=h.depthEntrance_m,dMin=h.depthBerthMin_m,dMax=h.depthBerthMax_m;
+  if(!N.depthOk)add('n','Bootsdaten fehlen (Tiefgang/Zuschlag)','boatdata');
+  else{
+    if(h.maxDraft_m!=null&&lt(h.maxDraft_m,b.draft))add('r','Hafen nennt max. Tiefgang '+fm(h.maxDraft_m)+' m (Boot: '+fm(b.draft)+' m)','depth');
+    var eKnown=dE!=null,bKnown=dMax!=null||dMin!=null;
+    if(!eKnown&&!bKnown)add('n','Tiefe unbekannt','depth');
+    else{
+      if(!eKnown)add('y','Einfahrtstiefe unbekannt','depth');
+      else if(lt(dE+p,N.need))add('r','Einfahrtstiefe '+fm(dE)+' m'+(p?' '+fsig(Math.round(p*100))+' cm Pegel':'')+' < '+fm(N.need)+' m (Tiefgang + Zuschlag)','depth');
+      if(!bKnown)add('y','Liegeplatztiefe unbekannt','depth');
+      else if(dMax!=null&&lt(dMax+p,N.need))add('r','Liegeplatztiefe max. '+fm(dMax)+' m'+(p?' '+fsig(Math.round(p*100))+' cm Pegel':'')+' < '+fm(N.need)+' m','depth');
+      else if(dMax!=null&&dMin!=null&&lt(dMin+p,N.need))add('y','nur an den tiefsten Plätzen ('+fm(dMin)+'–'+fm(dMax)+' m, nötig '+fm(N.need)+' m)','depth');
+      else if(dMax==null&&dMin!=null&&lt(dMin+p,N.need))add('y','Liegeplatztiefe ab '+fm(dMin)+' m, Maximum unbekannt (nötig '+fm(N.need)+' m)','depth');
+    }
+    // surge (only with long-lasting strong wind)
+    if(h.surge&&s.longWind){
+      (h.surge.low||[]).forEach(function(x){
+        if(x.dirs&&x.dirs.indexOf(s.longWind)>=0&&isNum(x.m)){
+          var vals=[dE,dMax!=null?dMax:dMin].filter(function(v){return v!=null;});
+          if(vals.length&&vals.some(function(v){return lt(v+p-x.m,N.need);}))add('y','bei anhaltendem Wind aus '+s.longWind+' bis −'+fm(x.m)+' m (Lotse): Tiefe wird knapp','depth');
+        }
+      });
+      (h.surge.high||[]).forEach(function(x){
+        if(x.dirs&&x.dirs.indexOf(s.longWind)>=0&&isNum(x.m))add('g','bei anhaltendem Wind aus '+s.longWind+' bis +'+fm(x.m)+' m Hochwasser (Lotse)','surge',true);
+      });
+    }
+  }
+  // 6 bridges on the approach
+  var bboat=false;
+  (h.bridgeIds||[]).forEach(function(id){
+    var br=BR_BY_ID[id];if(!br)return;
+    var c=bridgeCheck(br,s.boat,s.pegel);
+    if(c.level==='n'){if(!bboat){bboat=true;add('n','Bootsdaten fehlen (Masthöhe/Sicherheitsabstand)','boatdata');}}
+    else if(c.level==='r'||c.level==='y')add(c.level,'Zufahrt: '+c.text,'bridge');
+    else add(c.level==='g'?'g':'i','Zufahrt: '+c.text,'bridge',true);
+  });
+  // 7 dimensions
+  if(h.maxLoa_m!=null||h.maxBeam_m!=null){
+    if(!N.dimOk)add('n','Bootsdaten fehlen (Länge/Breite)','boatdata');
+    else{
+      if(h.maxLoa_m!=null&&lt(h.maxLoa_m,b.loa))add('r','Hafen erlaubt max. Länge '+fm(h.maxLoa_m)+' m (Boot: '+fm(b.loa)+' m)','dim');
+      if(h.maxBeam_m!=null&&lt(h.maxBeam_m,b.beam))add('r','Hafen erlaubt max. Breite '+fm(h.maxBeam_m)+' m (Boot: '+fm(b.beam)+' m)','dim');
+    }
+  }
+  if(b.type==='kat'&&h.catFriendly===false)add('y','Katamaran: Boxen oft zu schmal – längsseits/Stirnseite','dim');
+  // 8 season
+  var so=seasonOutside(h,s);
+  if(so)add('y','außerhalb der Saison ('+so+') – Service evtl. geschlossen','season');
+  // 9 refuge classification
+  var rl=h.refugeLevel,label=null;
+  if(rl==='belegt')label='Zuflucht (Quelle)';
+  else if(rl==='plan')label='Zuflucht (aus amtlichem Hafenplan abgeleitet)';
+  else if(rl==='abgeleitet')label='Zuflucht (abgeleitet, ungeprüft)';
+  else if(rl==='grenzfall'){
+    var m=/Grenzfall:\s*(.+?)(?:\.(?:\s|$)|$)/.exec(h.note||''),why=m?m[1].trim():'Begründung siehe Hafenhinweis';
+    label='Grenzfall: '+why;add('y','Grenzfall: '+why,'refuge');
+  }else if(rl==='notfall'){
+    label='Berufshafen – nur im Notfall, Hafenkontor rufen';add('y',label,'refuge');
+  }else add('n','nicht als Zuflucht eingestuft','refuge',true);
+  // 10 unverified
+  var unverified=h.protSource!=='quelle';
+  var lvl='g';
+  items.forEach(function(i){if(!i.noLevel&&(RANK2[i.level]||0)>RANK2[lvl])lvl=i.level;});
+  if(lvl==='g'&&unverified)add('g',(h.protSource==='plan'||h.protSource==='quelle+plan'||h.protSource==='abgeleitet')?'Sektoren aus Plan/Lage abgeleitet':'Sektoren ungeprüft','prot',true);
+  function sr(i){return i.noLevel?(i.level==='n'?1.6:i.level==='y'?1.7:0.5):(RANK2[i.level]||0.4);}
+  items.sort(function(a,b2){return sr(b2)-sr(a);});
+  return {level:lvl,items:items,reasons:items.map(function(i){return i.text;}),unverified:unverified,refugeLabel:label,refugeLevel:rl||null};
+}
+
+/* ---------- list / recommendation ---------- */
+function sunItem(status,pos,h,eta,s,sun){
+  if(!sun||sun.sunsetMs==null)return;
+  var arr=s.now+eta*3600000;
+  if(arr>sun.sunsetMs-CONST.sunsetBufferMin*60000){
+    status.items.push({level:'y',text:'Ankunft nach Sonnenuntergang ('+sun.sunset+')',cat:'sun',noLevel:false});
+    status.reasons.push('Ankunft nach Sonnenuntergang ('+sun.sunset+')');
+    if(status.level==='g')status.level='y';
+  }
+}
+function rank(state){
+  var s=normalize(state);
+  if(!s.pos)return [];
+  var sun=sunTimes(s.pos.lat,s.pos.lon,s.now);
+  var list=DATA.map(function(h){
+    var d=haversineNm(s.pos,h),st=harborStatus(h,s),eta=d/s.speed;
+    sunItem(st,s.pos,h,eta,s,sun);
+    return {h:h,status:st,dist:Math.round(d*10)/10,brg:bearingDeg(s.pos,h),eta:eta};
+  });
+  list.sort(function(a,b){return a.dist-b.dist;});
+  return list;
+}
+var GREEN_REFUGE={belegt:1,plan:1,abgeleitet:1};
+function recommend(list){
+  var green=null,belegt=null,fb=null;
+  list.forEach(function(it){
+    var rl=it.h.refugeLevel;
+    if(it.status.level==='g'&&GREEN_REFUGE[rl]&&!green)green=it;
+    if(it.status.level==='g'&&rl==='belegt'&&!belegt)belegt=it;
+    if(rl&&it.status.level==='y'&&!fb)fb=it;
+  });
+  var far=!green||green.dist>=CONST.farNm;
+  return {green:green,belegt:(belegt&&(!green||belegt.h.id!==green.h.id))?belegt:null,far:far,fallback:far?fb:null};
+}
+function itemsOf(it){return (it.status||it).items||[];}
+function fitsBoat(it){
+  return !itemsOf(it).some(function(i){
+    return (['depth','bridge','dim'].indexOf(i.cat)>=0&&i.level==='r')||(i.cat==='boatdata'&&i.level==='n');
+  });
+}
+function isOpenNow(it){return !itemsOf(it).some(function(i){return i.cat==='season';});}
+/* f: {refuge, fits, open, countries:{DE:true,..}, region} */
+function filterList(list,f,state){
+  f=f||{};
+  return list.filter(function(it){
+    var h=it.h;
+    if(f.refuge&&!h.refugeLevel)return false;
+    if(f.fits&&!fitsBoat(it))return false;
+    if(f.open&&!isOpenNow(it))return false;
+    if(f.countries&&f.countries[h.country]===false)return false;
+    if(f.region&&h.region!==f.region)return false;
+    return true;
+  });
+}
+
+function evaluate(raw){
+  var s=normalize(raw),T=effThresholds(s);
+  var res={state:s,T:T,missing:[],gates:[],info:[],general:null,reff:null,overall:null,pegel:null,outOfArea:false,list:[],rec:null,sun:null,seaArea:null,countries:[],boatMissing:boatNeeds(s.boat).missing};
+  if(!s.pos)res.missing.push('Position');
+  if(!s.dir)res.missing.push('Windrichtung');
+  if(s.windTrue===null)res.missing.push('Wind');
+  if(s.gust===null)res.missing.push('Böen');
+  if(s.pos){
+    res.outOfArea=isOutOfArea(s.pos);
+    res.sun=sunTimes(s.pos.lat,s.pos.lon,s.now);
+    res.seaArea=seaAreaOf(s.pos);
+    res.countries=countryOf(s.pos);
+  }
+  res.reff=reffStufe(s);
+  res.general=generalLevel(s);
+  var g=gates(s,s.pos,T);
+  res.gates=g.gates;res.info=g.info;
+  res.pegel=pegelLevel(s);
+  if(res.pegel&&res.pegel.level==='i')res.info.push(infoItem('pegel','Niedrigwasser',res.pegel.text));
+  var best=null;
+  res.gates.concat(res.general?[res.general]:[]).forEach(function(c){if(!best||RANK[c.level]>RANK[best.level])best=c;});
+  res.overall=best;
+  if(s.pos){res.list=rank(s);res.rec=recommend(res.list);}
+  return res;
+}
+
+/* =====================================================================
+   RADIO / EMERGENCY (generic, tolerant reader for radio.json)
+   ===================================================================== */
+var KEYS={rcc:'Rettungsleitstelle',phone_24h:'Telefon 24 h',phone_switchboard:'Telefon Zentrale',phone_ships_tmas:'Telefon Schiffe (TMAS)',phone:'Telefon',tel:'Telefon',
+  mmsi:'MMSI',dsc_mmsi:'DSC-MMSI',vhf_watch:'UKW-Hörwache CH',vhf_sar_working:'UKW SAR-Arbeitskanal',vhf:'UKW',mf_dsc_khz:'MF-DSC kHz',mf:'MF',mobile_short:'Mobilfunk-Kurzwahl',
+  email:'E-Mail',app:'App',callsign_vhf:'Rufname UKW',emergency_112:'Notruf 112',coast_stations_vhf:'Küstenfunkstellen',vts_centres:'VTS-Zentralen',weather:'Wetter',
+  navtex:'NAVTEX',water_level:'Wasserstand',coast_radio:'Küstenfunk',stations_vhf:'Stationen (Kanäle)',times_utc:'Zeiten UTC',times_local:'Zeiten (Ortszeit)',times:'Zeiten',
+  ostsee_slots_utc:'Ostsee-Slots UTC',freq_khz:'Frequenz kHz',lang:'Sprache',id:'Kennung',forecast_issue_local:'Vorhersage (Ortszeit)',forecast_areas:'Vorhersagegebiete',
+  contact_phone:'Kontakt Telefon',reference:'Bezug',high_m:'Hochwasser (m, ab)',low_m:'Niedrigwasser (m, ab)',high_cm:'Hochwasser (cm, ab)',low_cm:'Niedrigwasser (cm, ab)',
+  rule_of_thumb:'Faustregel',provider:'Anbieter',timezone:'Zeitzone',ch:'Kanal',role:'Aufgabe',call:'Anruf',working:'Arbeitskanal',distress:'Notkanal',sar_working:'SAR-Arbeitskanal',
+  dsc:'DSC',areas:'Gebiete',status:'Status',update_local:'Aktualisierung (Ortszeit)',five_day_update:'5-Tage-Vorhersage',thresholds:'Schwellen',rtty_khz:'RTTY kHz',fax_khz:'Fax kHz',
+  verified_window:'Sendefenster',address:'Adresse',inmarsat_c:'Inmarsat-C',channels:'Kanäle',std:'Normalzeit',dst:'Sommerzeit',rule:'Regel',tx_khz:'Senden kHz',rx_khz:'Empfangen kHz',
+  voice_khz:'Sprache kHz',dsc_khz:'DSC kHz',not_alerting:'Hinweis',freq:'Frequenz',web:'Web',tx:'Senden',rx:'Empfangen',number:'Nummer',label:'Bezeichnung',from:'ab'};
+var SKIPK={src:1,verified:1,country:1,note:1,phone_conflict:1,name:1,station:1,sources:1,bbox:1};
+function keyLabel(k){return KEYS[k]||k.replace(/_/g,' ').replace(/^./,function(c){return c.toUpperCase();});}
+function isLeaf(o){return o&&typeof o==='object'&&!Array.isArray(o)&&('value' in o);}
+function isScalar(x){return x===null||typeof x!=='object';}
+function fmtVal(v){
+  if(v==null)return '';
+  if(typeof v==='string')v=v.replace(/coast_stations_vhf/g,'Küstenfunkstellen');
+  if(Array.isArray(v))return v.map(fmtVal).filter(function(x){return x!=='';}).join(v.every(isScalar)?', ':'; ');
+  if(typeof v==='object'){
+    if('from' in v&&'label' in v)return 'ab '+String(v.from).replace('.',',')+': '+v.label;
+    if('name' in v&&'ch' in v)return v.name+' CH '+(Array.isArray(v.ch)?v.ch.join('/'):v.ch);
+    var q=[];
+    Object.keys(v).forEach(function(k){if(k==='note')return;var t=fmtVal(v[k]);if(t!=='')q.push((k==='number'?'':keyLabel(k)+' ')+t);});
+    return q.join(', ')+(v.note?' – '+v.note:'');
+  }
+  return String(v).replace(/^(\d+)\.(\d+)$/,'$1,$2');
+}
+function withLocal(key,text,now){
+  if(!/utc|slots/i.test(key))return text;
+  var parts=String(text).split(/,\s*/),loc=[];
+  parts.forEach(function(p){if(/^\d\d:\d\d$/.test(p))loc.push(utcToLocal(p,now).text);});
+  return loc.length?text+' = Ortszeit '+loc.join(', ')+' ('+utcToLocal('12:00',now).label+')':text;
+}
+function collect(node,title,blocks,now){
+  var nm=node.name||node.station||'';
+  var t=title+(nm&&typeof nm==='string'?(title?' · ':'')+nm:'');
+  var blk={title:t,lines:[]};blocks.push(blk);
+  Object.keys(node).forEach(function(k){
+    if(SKIPK[k])return;
+    var v=node[k];if(v==null)return;
+    var lab=keyLabel(k);
+    if(isLeaf(v)){
+      var txt=fmtVal(v.value);if(txt==='')return;
+      blk.lines.push({k:lab,v:withLocal(k,txt,now),note:v.note||null,unv:v.verified===false});
+    }else if(Array.isArray(v)){
+      if(v.every(isScalar)){var tx=v.join(', ');if(tx)blk.lines.push({k:lab,v:withLocal(k,tx,now)});}
+      else v.forEach(function(x){if(x&&typeof x==='object')collect(x,(t?t+' · ':'')+lab,blocks,now);});
+    }else if(typeof v==='object'){
+      var flat=!v.name&&Object.keys(v).every(function(kk){return kk==='src'||kk==='note'||kk==='verified'||isScalar(v[kk])||(Array.isArray(v[kk])&&v[kk].every(isScalar));});
+      if(flat){var tf=fmtVal(v);if(tf)blk.lines.push({k:lab,v:tf,unv:v.verified===false});}
+      else collect(v,(t?t+' · ':'')+lab,blocks,now);
+    }else{
+      blk.lines.push({k:lab,v:withLocal(k,fmtVal(v),now)});
+    }
+  });
+}
+function radioGroups(now){
+  var order=[],map={};
+  RADIO.forEach(function(r){
+    var c=r.country;
+    if(!map[c]){map[c]={code:c,name:c==='PL'?'Polen (Stettiner Haff)':r.name,entries:[]};order.push(c);}
+    map[c].entries.push(r);
+  });
+  return order.map(function(c){
+    var g=map[c],blocks=[];
+    g.entries.forEach(function(e){collect(e,'',blocks,now);});
+    g.blocks=blocks.filter(function(b){return b.lines.length;});
+    return g;
+  });
+}
+function leafVal(o){return o&&o.value!==undefined?o.value:null;}
+function emergencyNumbers(pos){
+  var out=[],rd=function(c){return RADIO.filter(function(r){return r.country===c;});};
+  var de=rd('DE')[0],dk=rd('DK')[0],se=rd('SE')[0],pl=RADIO.filter(function(r){return r.id==='pl-mrcc-gdynia';})[0];
+  if(de&&de.rcc&&leafVal(de.rcc.phone_24h))out.push({country:'DE',num:leafVal(de.rcc.phone_24h),title:'MRCC Bremen (DGzRS)',sub:'Rettungsleitstelle See · Tel. 24 h'});
+  if(de&&de.rcc&&leafVal(de.rcc.mobile_short)){var m=String(leafVal(de.rcc.mobile_short));out.push({country:'DE',num:m.length===6?m.slice(0,3)+' '+m.slice(3):m,tel:m,title:'DGzRS Mobilfunk-Kurzwahl',sub:de.rcc.mobile_short.note||''});}
+  if(dk&&dk.rcc&&leafVal(dk.rcc.phone_24h))out.push({country:'DK',num:leafVal(dk.rcc.phone_24h),title:'JRCC Danmark (Karup)',sub:'Tel. 24 h'});
+  if(se&&se.rcc&&leafVal(se.rcc.phone_switchboard))out.push({country:'SE',num:leafVal(se.rcc.phone_switchboard),title:'JRCC Sverige',sub:'Zentrale; im Notfall 112 und Sjöräddning verlangen'});
+  if(pl&&pl.tel&&pl.tel[0])out.push({country:'PL',num:pl.tel[0],title:'MRCC Gdynia',sub:'Polen / Stettiner Haff'});
+  var order=pos?countryOf(pos):[];
+  out.sort(function(a,b){var ia=order.indexOf(a.country),ib=order.indexOf(b.country);ia=ia<0?99:ia;ib=ib<0?99:ib;return ia-ib;});
+  return out;
+}
+function telHref(s){var m=/\+?\d[\d ]{4,}\d/.exec(String(s));return m?'tel:'+m[0].replace(/\s+/g,''):null;}
+function funkSummary(now){
+  // compact lines for the printed page 1 (all read from RADIO)
+  var L=[],de=RADIO.filter(function(r){return r.country==='DE';})[0],dk=RADIO.filter(function(r){return r.country==='DK';})[0],se=RADIO.filter(function(r){return r.country==='SE';})[0];
+  function loc(arr){return (arr||[]).map(function(u){return /^\d\d:\d\d$/.test(u)?utcToLocal(u,now).text:u;}).join(' · ');}
+  function lv(o){return leafVal(o);}
+  try{
+    var cs=(de.coast_stations_vhf||[]).map(function(c){return c.name.replace('DP07 Seefunk ','')+' CH '+lv(c.ch);}).join(', ');
+    var w0=de.weather[0];
+    L.push({c:'DE',k:'UKW-Seewetter (DP07 Seefunk)',v:cs+' – Zeiten (Ortszeit): '+(lv(w0.times_local)||[]).join(' · ')});
+    var nd=de.weather.filter(function(w){return /NDR/.test(w.name);})[0];
+    if(nd)L.push({c:'DE',k:nd.name,v:(lv(nd.times_local)||[]).join(' · ')+' (DAB+, Stream)'});
+    de.navtex.forEach(function(n){
+      var sl=lv(n.ostsee_slots_utc)||lv(n.times_utc);
+      L.push({c:'DE',k:'NAVTEX '+n.station+' '+n.id+' '+n.freq_khz+' kHz ('+n.lang+')',v:'UTC '+(sl||[]).join(' · ')+' = '+loc(sl)+' '+utcToLocal('12:00',now).label+(n.times_utc&&n.times_utc.verified===false?' [ungeprüft]':'')});
+    });
+    var tel=de.weather.filter(function(w){return w.phone;})[0];
+    if(tel)L.push({c:'DE',k:'DWD Telefonansage Seewetter',v:lv(tel.phone)});
+    var wl=de.water_level;
+    if(wl)L.push({c:'DE',k:'Wasserstand BSH',v:'Vorhersage '+(lv(wl.forecast_issue_local)||[]).join(' / ')+' Ortszeit'});
+    L.push({c:'DE',k:'Deutschlandfunk-Seewetter',v:(de.weather.filter(function(w){return /Deutschlandfunk/.test(w.name);})[0]||{status:{}}).status.value||''});
+  }catch(e){}
+  try{
+    var nw=dk.weather[0];
+    L.push({c:'DK',k:'Lyngby Radio (Navigationswarnungen)',v:'UTC '+(lv(nw.times_utc)||[]).join(' · ')+' = '+loc(lv(nw.times_utc))+' '+utcToLocal('12:00',now).label+'; Ankündigung CH 16'});
+    var lw=dk.weather[1];
+    L.push({c:'DK',k:'Lyngby Radio (Lokalwetter)',v:(lv(lw.times_local)||[]).join(' · ')+(lw.times_local.verified===false?' [ungeprüft]':'')});
+    L.push({c:'DK',k:'NAVTEX Dänemark',v:lv(dk.navtex).note});
+  }catch(e){}
+  try{
+    se.navtex.forEach(function(n){if(n.id==='H')return;L.push({c:'SE',k:'NAVTEX '+n.station+' '+n.id+' '+n.freq_khz+' kHz',v:'UTC '+(lv(n.times_utc)||[]).join(' · ')+' = '+loc(lv(n.times_utc))+' '+utcToLocal('12:00',now).label+(n.times_utc.verified===false?' [ungeprüft]':'')});});
+    var sw=se.weather[1];
+    L.push({c:'SE',k:'Sweden Traffic Wetter (UKW)',v:'UTC '+(lv(sw.times_utc)||[]).join(' · ')+' = '+loc(lv(sw.times_utc))+' '+utcToLocal('12:00',now).label});
+  }catch(e){}
+  return L;
+}
+
+/* =====================================================================
+   UI STATE
+   ===================================================================== */
+var S={pos:null,dir:null,windTrue:null,gust:null,seaDir:null,seaH:0,pegel:0,sicht:'gut',gewitter:false,longWind:null,kids:false,trend:false,
+  course:'am Wind',speed:CONST.speed,season:'auto',boat:Object.assign({},DEFAULT_BOAT),now:null,
+  fl:{refuge:true,fits:false,open:false,countries:{DE:true,DK:true,SE:true},region:''},show:40,confirmed:false};
+var SYM={g:'✔',y:'⚠',r:'✖',n:'?',i:'ℹ'};
+var ST_LABEL={g:'geschützt',y:'eingeschränkt',r:'nicht geeignet',n:'unbekannt'};
+function $(id){return document.getElementById(id);}
+function esc(t){return String(t).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function store(k,v){try{localStorage.setItem(k,v);}catch(e){}}
+function load(k){try{return localStorage.getItem(k);}catch(e){return null;}}
+function linkTel(t){return esc(t).replace(/\+\d[\d ]{4,}\d/g,function(m){return '<a href="tel:'+m.replace(/\s+/g,'')+'">'+m+'</a>';});}
+
+var REGIONS=(function(){
+  var m={};
+  DATA.forEach(function(h){
+    var k=h.country+'|'+h.region,r=m[k]||(m[k]={key:k,country:h.country,region:h.region,n:0,lat:0,lon:0});
+    r.n++;r.lat+=h.lat;r.lon+=h.lon;
+  });
+  return Object.keys(m).map(function(k){var r=m[k];r.lat/=r.n;r.lon/=r.n;return r;}).sort(function(a,b){return a.country===b.country?(a.region<b.region?-1:1):(a.country<b.country?-1:1);});
+})();
+var REG_BY_KEY={};REGIONS.forEach(function(r){REG_BY_KEY[r.key]=r;});
+
+/* ---- compass rose ---- */
+function polar(r,deg){var a=(deg-90)*Math.PI/180;return [r*Math.cos(a),r*Math.sin(a)];}
+function wedge(deg,r){var p0=polar(r,deg-21),p1=polar(r,deg+21);return 'M0 0 L'+p0[0].toFixed(1)+' '+p0[1].toFixed(1)+' A'+r+' '+r+' 0 0 1 '+p1[0].toFixed(1)+' '+p1[1].toFixed(1)+' Z';}
+function roseSVG(h,s){
+  var o='<svg class="rose" viewBox="-52 -52 104 104" role="img" aria-label="Schutzsektoren-Rose">';
+  DIRS.forEach(function(d,i){
+    var lv=protOf(h,d),deg=i*45;
+    if(lv==='full')o+='<path d="'+wedge(deg,32)+'" style="fill:var(--rose-full);stroke:var(--rose-full)" stroke-width="1"/>';
+    else if(lv==='part')o+='<path d="'+wedge(deg,32)+'" style="fill:url(#hatch);stroke:var(--rose-full)" stroke-width="1"/>';
+    else if(lv==='open')o+='<path d="'+wedge(deg,32)+'" style="fill:none;stroke:var(--rose-line)" stroke-width="1"/>';
+    else o+='<path d="'+wedge(deg,32)+'" style="fill:none;stroke:var(--rose-line)" stroke-width="1" stroke-dasharray="2 2"/>';
+  });
+  (h.swellOpen||[]).forEach(function(d){var p=polar(42,DIRS.indexOf(d)*45);o+='<text x="'+p[0].toFixed(1)+'" y="'+(p[1]+4).toFixed(1)+'" text-anchor="middle" font-size="12" font-weight="700" style="fill:var(--swell)">≈</text>';});
+  (h.entranceOpen||[]).forEach(function(d){var p=polar(36,DIRS.indexOf(d)*45);o+='<rect x="'+(p[0]-2.5).toFixed(1)+'" y="'+(p[1]-2.5).toFixed(1)+'" width="5" height="5" style="fill:var(--wind)"/>';});
+  if(s&&s.seaDir&&s.seaH>0){var q=polar(42,DIRS.indexOf(s.seaDir)*45);o+='<circle cx="'+q[0].toFixed(1)+'" cy="'+q[1].toFixed(1)+'" r="8" fill="none" style="stroke:var(--swell)" stroke-width="2"/>';}
+  if(s&&s.dir){
+    var di=DIRS.indexOf(s.dir)*45,t=polar(50,di),hd=polar(13,di),b1=polar(25,di-9),b2=polar(25,di+9);
+    o+='<line x1="'+t[0].toFixed(1)+'" y1="'+t[1].toFixed(1)+'" x2="'+hd[0].toFixed(1)+'" y2="'+hd[1].toFixed(1)+'" style="stroke:var(--wind)" stroke-width="3.5" stroke-linecap="round"/>';
+    o+='<polygon points="'+hd[0].toFixed(1)+','+hd[1].toFixed(1)+' '+b1[0].toFixed(1)+','+b1[1].toFixed(1)+' '+b2[0].toFixed(1)+','+b2[1].toFixed(1)+'" style="fill:var(--wind);stroke:var(--card)" stroke-width="1"/>';
+  }
+  o+='<text x="0" y="-36.5" text-anchor="middle" font-size="9" font-weight="800" style="fill:var(--ink)">N</text>';
+  return o+'</svg>';
+}
+function sectorText(h){
+  if(!protKnown(h))return '<b>Schutzsektoren: unbekannt</b>';
+  var full=[],part=[],open=[],unk=[];
+  DIRS.forEach(function(d){var l=protOf(h,d);(l==='full'?full:l==='part'?part:l==='open'?open:unk).push(d);});
+  return (full.length?'<b>geschützt:</b> '+full.join(' ')+' ':'')+(part.length?'· <b>teils:</b> '+part.join(' ')+' ':'')+(open.length?'· <b>offen:</b> '+open.join(' ')+' ':'')+(unk.length?'· <b>unbekannt:</b> '+unk.join(' '):'');
+}
+function verBadges(h){
+  var v=h.verified||{},o=[];
+  function b(ok,l){o.push('<span class="badge '+(ok?'ver':'unv')+'">'+(ok?'✔ ':'')+l+(ok?'':' ungeprüft')+'</span>');}
+  b(v.pos,'Lage');b(v.prot,'Schutz');
+  if(h.entranceOpen)b(v.entrance,'Ansteuerung');
+  b(v.depth,'Tiefe');
+  if(h.vhf)b(v.vhf,'VHF');
+  if(h.tel)b(v.tel,'Tel');
+  if(h.season)b(v.season,'Saison');
+  if(h.surge)b(v.surge,'Pegel');
+  return o.join(' ');
+}
+function depthText(h){
+  var e=h.depthEntrance_m!=null?fm(h.depthEntrance_m)+' m':'?';
+  var l;
+  if(h.depthBerthMin_m==null&&h.depthBerthMax_m==null)l='?';
+  else if(h.depthBerthMin_m!=null&&h.depthBerthMax_m!=null&&h.depthBerthMin_m!==h.depthBerthMax_m)l=fm(h.depthBerthMin_m)+'–'+fm(h.depthBerthMax_m)+' m';
+  else l=fm(h.depthBerthMax_m!=null?h.depthBerthMax_m:h.depthBerthMin_m)+' m';
+  return 'E '+e+' / L '+l;
+}
+function seasonText(h){
+  if(!h.season)return 'Saison: unbekannt';
+  if(typeof h.season==='string')return 'Saison: '+h.season;
+  function dm(x){return x.slice(3)+'.'+x.slice(0,2)+'.';}
+  return 'Saison: '+dm(h.season.open)+'–'+dm(h.season.close);
+}
+function bridgeText(h){
+  return (h.bridgeIds||[]).map(function(id){var b=BR_BY_ID[id];if(!b)return '';return b.name+(b.clearanceClosed_m!=null?' ('+fm(b.clearanceClosed_m)+' m)':' (Höhe unbekannt)');}).filter(Boolean).join(', ');
+}
+function harborCard(it,s,opts){
+  var h=it.h,st=it.status,lv=st.level;
+  var head='<div><div class="hname">'+esc(h.name)+' <span class="fl">'+esc(h.country)+'</span><span class="badge'+(h.type==='nothafen'?' dark':'')+'">'+TYPE_LABEL[h.type]+'</span></div>';
+  head+='<span class="chip c-'+lv+'">'+SYM[lv]+' '+ST_LABEL[lv]+'</span>';
+  if(it.dist!==undefined)head+=' <span class="hmeta"><b>≈ '+nm1(it.dist)+' sm Luftlinie</b>'+(it.dist>=0.1?' · rwK '+it.brg+'° · ≥ '+fmtEta(it.eta)+' bei '+nm1(s.speed)+' kn':' · am Platz')+'</span>';
+  head+='<div class="hmeta" style="margin-top:2px">'+esc(h.region)+(st.refugeLabel?' · <b>'+esc(st.refugeLabel)+'</b>':'')+'</div></div>';
+  var reasons='<ul class="reasons">'+st.items.map(function(r){return '<li class="'+(r.noLevel?r.level:'')+'">'+SYM[r.level]+' '+esc(r.text)+'</li>';}).join('')+'</ul>';
+  var vhf=h.vhf?'VHF '+esc(h.vhf):'VHF: unbekannt';
+  var tel=h.tel?linkTel(h.tel):'Tel.: unbekannt';
+  var ref=[];
+  if(h.distHeiligenhafen_sm!=null)ref.push('≈ '+nm1(h.distHeiligenhafen_sm)+' sm ab Heiligenhafen');
+  if(h.distBreege_sm!=null)ref.push('≈ '+nm1(h.distBreege_sm)+' sm ab Breege');
+  var br=bridgeText(h);
+  var body='<div class="hwide"><div class="sectors">'+sectorText(h)+((h.swellOpen&&h.swellOpen.length)?' · <span style="color:var(--swell)"><b>≈ Schwell/See offen:</b></span> '+h.swellOpen.join(' '):'')+((h.entranceOpen&&h.entranceOpen.length)?' · <b>Ansteuerung offen:</b> '+h.entranceOpen.join(' '):'')+'</div>';
+  body+='<div class="hmeta" style="margin-top:4px">Tiefe '+esc(depthText(h))+' · '+esc(seasonText(h))+'</div>';
+  if(br)body+='<div class="hmeta" style="margin-top:4px">Brücken: '+esc(br)+'</div>';
+  body+='<div class="hmeta" style="margin-top:4px">'+esc(vhf)+' · '+tel+(ref.length?' · '+esc(ref.join(' · ')):'')+'</div>';
+  body+='<div style="margin-top:5px">'+verBadges(h)+'</div>';
+  body+='<details><summary>Hinweise und Quelle</summary><div class="in small"><p>'+esc(h.note||'')+'</p><p class="hmeta">Quelle: '+esc(h.src||'–')+'</p></div></details></div>';
+  return '<div class="hcard lv-'+lv+'">'+head+'<div class="hside">'+roseSVG(h,s)+'</div><div>'+reasons+'</div>'+body+'</div>';
+}
+
+/* ---- header / position ---- */
+function ageText(t){
+  var m=Math.floor((Date.now()-t)/60000);
+  if(m<1)return 'gerade eben';
+  if(m<60)return 'vor '+m+' min';
+  return 'vor '+Math.floor(m/60)+' h '+(m%60)+' min';
+}
+function renderPosline(){
+  var el=$('posline'),p=S.pos;
+  el.className='posline';
+  if(!p){el.textContent='Position: nicht gewählt';return;}
+  var t;
+  if(p.src==='region'){var r=REG_BY_KEY[p.regKey];t='Revier (Näherung): '+(r?r.region+' ('+r.country+')':'?');}
+  else{
+    t=(p.src==='gps'?'GPS ':'Manuell ')+ageText(p.t)+' · '+formatPos(p);
+    if(p.src==='gps'&&Date.now()-p.t>10*60000)t+=' · veraltet?';
+  }
+  if(isOutOfArea(p)){t+=' · ⚠ außerhalb des Törngebiets';el.className='posline warn';}
+  el.textContent=t;
+}
+function renderChip(res){
+  var el=$('overallchip'),o=res.overall;
+  if(!o||res.missing.length){
+    var m=res.missing.length?res.missing.join(', ')+' fehlt':'';
+    if(!(o&&res.missing.length&&res.general)){el.className='chip-head c-n';el.innerHTML='<span>?</span><span>Noch keine vollständige Bewertung – '+esc(m||'Eingaben prüfen')+'</span>';return;}
+  }
+  el.className='chip-head c-'+o.level;
+  el.innerHTML='<span>'+SYM[o.level]+'</span><span>'+esc(o.title)+(res.missing.length?' (unvollständig: '+esc(res.missing.join(', '))+' fehlt)':'')+'</span>';
+}
+
+/* ---- Lage: result ---- */
+function banner(level,title,text){return '<div class="banner b-'+level+'"><div class="bt"><span class="sym">'+SYM[level]+'</span>'+esc(title)+'</div><div class="bd">'+esc(text)+'</div></div>';}
+function infoBox(i){return '<details class="infobox"><summary>ℹ '+esc(i.title)+'</summary><div class="in">'+esc(i.text)+'</div></details>';}
+function renderResult(res){
+  var s=res.state,el=$('result'),h='';
+  if(res.outOfArea)h+=banner('y','Außerhalb des Törngebiets','Position liegt außerhalb lat '+f1(CONST.area.latMin)+'–'+f1(CONST.area.latMax)+' / lon '+f1(CONST.area.lonMin)+'–'+f1(CONST.area.lonMax)+'. Bewertung und Daten gelten nur für das Törngebiet – Eingabe prüfen.');
+  if(res.missing.length)h+='<div class="notice">Für die vollständige Bewertung fehlt: <b>'+esc(res.missing.join(', '))+'</b>.</div>';
+  if(res.overall&&!res.missing.length)h+=banner(res.overall.level,res.overall.title,res.overall.text);
+  res.gates.forEach(function(g){if(g!==res.overall||res.missing.length)h+=banner(g.level,g.title,g.text);});
+  if(res.general&&res.overall!==res.general)h+=banner(res.general.level,'Unterwegs: '+res.general.title,res.general.text);
+  if(res.general&&res.missing.length&&res.overall===res.general)h+=banner(res.general.level,res.general.title,res.general.text+' (vorläufig – Eingaben unvollständig)');
+  res.info.forEach(function(i){h+=infoBox(i);});
+  if(res.reff){
+    h+='<div class="card"><div class="t">Segelführung</div><div class="reffnum">'+esc(res.reff.name)+'</div>'
+      +'<div class="note">scheinbar ≈ '+res.reff.apparent+' kn (Näherung: Böen '+s.gust+' kn × '+CONST.courseFactor[s.course]+' „'+s.course+'“) · Schwellen '+res.reff.thresholds.join('/')+' kn'+esc(offsetNote(res.T))+'</div></div>';
+  }
+  if(res.sun&&res.sun.sunrise){
+    h+='<div class="card"><div class="t">Hell / Dunkel</div><div class="note" style="margin-top:2px">Sonnenaufgang <b>'+res.sun.sunrise+'</b> · Sonnenuntergang <b>'+res.sun.sunset+'</b> ('+res.sun.label+') · bürgerliche Dämmerung <b>'+res.sun.dawn+'</b> bis <b>'+res.sun.dusk+'</b></div></div>';
+  }
+  if(res.seaArea)h+='<div class="note small">'+esc(res.seaArea.label)+'</div>';
+  if(res.countries.length)h+='<div class="note small">Land: '+res.countries.map(function(c){return COUNTRY_LABEL[c]||c;}).join(' + ')+'</div>';
+  if(res.rec&&s.dir&&s.gust!==null){
+    var r=res.rec;
+    h+='<h2>Ausweichen von hier</h2>';
+    if(r.far)h+=banner('r','Kein geschützter Platz in Reichweite','Kein grüner Zufluchtshafen unter '+CONST.farNm+' sm Luftlinie'+(r.fallback?' – Ausweichmöglichkeit mit Einschränkung: '+r.fallback.h.name+' (≈ '+nm1(r.fallback.dist)+' sm, rwK '+r.fallback.brg+'°).':'.'));
+    if(r.green)h+='<div class="rec"><div class="rt">✔ Nächster geschützter Zufluchtshafen</div>'+harborCard(r.green,s)+'</div>';
+    if(r.belegt)h+='<div class="rec"><div class="rt">✔ Nächste Zuflucht mit belegter Quelle</div>'+harborCard(r.belegt,s)+'</div>';
+    if(r.fallback)h+='<div class="rec" style="border-color:var(--y)"><div class="rt">⚠ Rückfall (eingeschränkt)</div>'+harborCard(r.fallback,s)+'</div>';
+    h+='<button class="btn sm" id="goz" style="margin-top:10px">Alle Ausweichhäfen ansehen →</button>';
+  }
+  h+='<div class="note small" style="margin-top:14px">'+esc(DISCLAIMER)+'</div>';
+  el.innerHTML=h;
+  var g=$('goz');if(g)g.addEventListener('click',function(){showScreen('scr-zuflucht');});
+}
+
+/* ---- Zuflucht ---- */
+function allItems(res){
+  var s=res.state;
+  if(s.pos)return res.list;
+  return DATA.slice().sort(function(a,b){return b.lat-a.lat;}).map(function(h){return {h:h,status:harborStatus(h,s)};});
+}
+function renderZuflucht(res){
+  var s=res.state,info=[];
+  if(!s.pos)info.push('Position fehlt (Entfernungen)');
+  if(!s.dir)info.push('Windrichtung fehlt (Status)');
+  $('zinfo').innerHTML=info.length?'<b>Unvollständig:</b> '+esc(info.join(', '))+'. Ohne diese Angaben ist die Liste Nord→Süd sortiert und ohne Ampel.':
+    'Sortiert nach Entfernung (Luftlinie, Seeweg ist länger). Fahrtzeit = Mindestzeit bei '+nm1(s.speed)+' kn. Bei Tiefe „?“ bleibt der Hafen sichtbar – Seekarte prüfen.';
+  var all=allItems(res),list=filterList(all,S.fl,s);
+  $('zcount').textContent=list.length+' von '+DATA.length+' Häfen';
+  var o='',n=Math.min(S.show,list.length);
+  for(var i=0;i<n;i++)o+=harborCard(list[i],s);
+  if(list.length>n)o+='<button class="btn sm moreb" id="zmore">Weitere '+Math.min(40,list.length-n)+' anzeigen ('+(list.length-n)+' übrig)</button>';
+  if(!list.length)o+='<div class="banner b-n"><div class="bt"><span class="sym">?</span>Keine Treffer</div><div class="bd">Mit diesen Filtern ist kein Hafen übrig. Filter lockern.</div></div>';
+  o+='<div class="legend"><b>Rose:</b> dunkel = geschützt · schraffiert = eingeschränkt · leer = offen · gestrichelt = unbekannt · Pfeil = Wind · ≈ = Schwell/See offen · Quadrat = Ansteuerung offen (Kreis = aktueller Seegang).</div>';
+  o+='<div class="note small">'+esc(DISCLAIMER)+'</div>';
+  $('zlist').innerHTML=o;
+  var mb=$('zmore');if(mb)mb.addEventListener('click',function(){S.show+=40;update();});
+  $('f-refuge').setAttribute('aria-pressed',S.fl.refuge?'true':'false');
+  $('f-fits').setAttribute('aria-pressed',S.fl.fits?'true':'false');
+  $('f-open').setAttribute('aria-pressed',S.fl.open?'true':'false');
+  document.querySelectorAll('[data-fc]').forEach(function(b){b.setAttribute('aria-pressed',S.fl.countries[b.dataset.fc]!==false?'true':'false');});
+  $('f-region').value=S.fl.region;
+}
+
+/* ---- inputs ---- */
+function buildInputs(){
+  $('dirgrid').innerHTML=DIRS.map(function(d){return '<button class="tog" data-dir="'+d+'" aria-pressed="false">'+d+'</button>';}).join('');
+  $('seadirgrid').innerHTML=DIRS.map(function(d){return '<button class="tog" data-sdir="'+d+'" aria-pressed="false">'+d+'</button>';}).join('')+'<button class="tog span4" data-sdir="" aria-pressed="true">keine / unbekannt</button>';
+  $('longgrid').innerHTML=DIRS.map(function(d){return '<button class="tog sm" data-ldir="'+d+'" aria-pressed="false">'+d+'</button>';}).join('')+'<button class="tog sm span4" data-ldir="" aria-pressed="true">—</button>';
+  $('coursegrid').innerHTML=CONST.courses.map(function(c){return '<button class="tog" data-course="'+c+'" aria-pressed="false" style="font-size:.9rem">'+c+'</button>';}).join('');
+  $('sichtgrid').innerHTML=[['gut','gut'],['maessig','mäßig'],['nebel','Nebel']].map(function(x){return '<button class="tog" data-sicht="'+x[0]+'" aria-pressed="false">'+x[1]+'</button>';}).join('');
+  var sel=$('regselect'),cur=null,grp=null;
+  REGIONS.forEach(function(r){
+    if(r.country!==cur){cur=r.country;grp=document.createElement('optgroup');grp.label=COUNTRY_LABEL[cur]||cur;sel.appendChild(grp);}
+    var o=document.createElement('option');o.value=r.key;o.textContent=r.region+' ('+r.n+')';grp.appendChild(o);
+  });
+  var fr=$('f-region');cur=null;
+  REGIONS.forEach(function(r){
+    if(r.country!==cur){cur=r.country;grp=document.createElement('optgroup');grp.label=COUNTRY_LABEL[cur]||cur;fr.appendChild(grp);}
+    var o=document.createElement('option');o.value=r.region;o.textContent=r.region;grp.appendChild(o);
+  });
+  var bp=$('b-profile');PROFILES.forEach(function(p){var o=document.createElement('option');o.value=p.id;o.textContent=p.label;bp.appendChild(o);});
+}
+function syncInputs(){
+  document.querySelectorAll('[data-dir]').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.dir===S.dir?'true':'false');});
+  document.querySelectorAll('[data-sdir]').forEach(function(b){b.setAttribute('aria-pressed',(b.dataset.sdir||null)===S.seaDir?'true':'false');});
+  document.querySelectorAll('[data-ldir]').forEach(function(b){b.setAttribute('aria-pressed',(b.dataset.ldir||null)===S.longWind?'true':'false');});
+  document.querySelectorAll('[data-course]').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.course===S.course?'true':'false');});
+  document.querySelectorAll('[data-sicht]').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.sicht===S.sicht?'true':'false');});
+  $('windval').innerHTML=S.windTrue===null?'–':S.windTrue+' <small>kn</small>';
+  $('gustval').innerHTML=S.gust===null?'–':S.gust+' <small>kn</small>';
+  $('seaval').innerHTML=fm(S.seaH).replace(/^(\d)$/,'$1,0')+' <small>m</small>';
+  $('pegelval').innerHTML=fsig(S.pegel)+' <small>cm</small>';
+  $('kids').checked=S.kids;$('trend').checked=S.trend;$('gewitter').checked=S.gewitter;$('b-kids').checked=S.kids;
+  $('regselect').value=(S.pos&&S.pos.src==='region')?S.pos.regKey:'';
+}
+var notice='';
+function setNotice(t){notice=t;var n=$('gustnotice');n.style.display=t?'block':'none';n.textContent=t;}
+function step(k,d){
+  if(k==='windTrue'||k==='gust'){
+    if(S[k]===null){S[k]=(k==='windTrue')?10:Math.max(15,S.windTrue===null?0:S.windTrue);if(k==='gust'&&S.windTrue===null)S.windTrue=10;}
+    else S[k]=Math.min(80,Math.max(0,S[k]+d));
+    if(S.windTrue!==null&&S.gust===null&&k==='windTrue'){S.gust=S.windTrue;setNotice('Böen auf Mittelwind gesetzt – bitte Böen eingeben.');}
+    else if(S.windTrue!==null&&S.gust!==null&&S.gust<S.windTrue){
+      S.gust=S.windTrue;setNotice('Böen können nicht unter dem Mittelwind liegen – auf '+S.windTrue+' kn angehoben.');
+    }else setNotice('');
+  }else if(k==='seaH'){S.seaH=Math.min(3,Math.max(0,Math.round((S.seaH+d)*4)/4));}
+  else if(k==='pegel'){S.pegel=Math.min(200,Math.max(-200,S.pegel+d));}
+  update();
+}
+function bindStepper(btn){
+  var t1=null,t2=null;
+  function fire(){step(btn.dataset.k,parseFloat(btn.dataset.d));}
+  function stop(){clearTimeout(t1);clearInterval(t2);t1=t2=null;}
+  btn.addEventListener('pointerdown',function(e){e.preventDefault();fire();stop();t1=setTimeout(function(){t2=setInterval(fire,70);},420);});
+  ['pointerup','pointerleave','pointercancel'].forEach(function(ev){btn.addEventListener(ev,stop);});
+  btn.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();fire();}});
+  btn.addEventListener('contextmenu',function(e){e.preventDefault();});
+}
+
+/* ---- position acquisition ---- */
+function gpsErr(err){
+  var c=err&&err.code;
+  if(c===1)return 'GPS-Zugriff abgelehnt. In den Browser-/Systemeinstellungen erlauben – oder Position manuell eingeben bzw. Revier wählen.';
+  if(c===3)return 'Kein GPS-Fix nach 15 s. Freie Sicht zum Himmel suchen oder Position manuell eingeben / Revier wählen.';
+  return 'GPS nicht verfügbar. Position manuell eingeben oder Revier wählen.';
+}
+function getGPS(ok,fail){
+  if(!navigator.geolocation){fail({code:2});return;}
+  try{navigator.geolocation.getCurrentPosition(ok,fail,{enableHighAccuracy:true,timeout:15000,maximumAge:0});}catch(e){fail({code:2});}
+}
+var lastGps=null;
+function doGPS(){
+  $('gpsmsg').textContent='Suche GPS-Position … (bis 15 s)';
+  getGPS(function(p){
+    S.pos={lat:p.coords.latitude,lon:p.coords.longitude,src:'gps',t:Date.now(),acc:p.coords.accuracy};
+    $('gpsmsg').textContent='GPS-Position übernommen (Genauigkeit ± '+Math.round(p.coords.accuracy)+' m).';
+    update();
+  },function(e){$('gpsmsg').textContent=gpsErr(e);});
+}
+function doManual(){
+  var la=parseDM($('latd').value,$('latm').value),lo=parseDM($('lond').value,$('lonm').value),m=$('manualmsg');
+  if(isNaN(la)||isNaN(lo)){m.textContent='Ungültig: Grad als Zahl, Minuten 0–59,9 (Dezimalpunkt oder Komma).';return;}
+  S.pos={lat:la,lon:lo,src:'manual',t:Date.now()};
+  m.textContent='Übernommen: '+formatPos(S.pos)+(isOutOfArea(S.pos)?' – ⚠ außerhalb des Törngebiets!':'');
+  update();
+}
+function setRegion(key){
+  var r=REG_BY_KEY[key];
+  if(!r)S.pos=null;else S.pos={lat:r.lat,lon:r.lon,src:'region',regKey:r.key,t:Date.now()};
+  update();
+}
+function doMyPos(){
+  var out=$('myposout');out.style.display='block';out.innerHTML='Suche GPS-Position … (bis 15 s)';
+  getGPS(function(p){
+    var now=Date.now(),pos={lat:p.coords.latitude,lon:p.coords.longitude};
+    lastGps={lat:pos.lat,lon:pos.lon,t:now};
+    out.innerHTML='<div class="note" style="margin-top:0">Zum Vorlesen:</div><div class="posbox">'+esc(formatDM(pos.lat,true))+'<br>'+esc(formatDM(pos.lon,false))+'</div>'
+      +'<div class="note">Stand '+esc(localClock(now))+' ('+esc(utcClock(now))+') · Genauigkeit ± '+Math.round(p.coords.accuracy)+' m</div>';
+    renderMayday();
+  },function(e){out.innerHTML='<b>'+esc(gpsErr(e))+'</b><br>Position vom Plotter ablesen und vorlesen.';});
+}
+
+/* ---- Notfall ---- */
+var MAYDAY=['{W} {W} {W}','Hier ist {name}, {name}, {name}, Rufzeichen {call}, MMSI {mmsi}','{W} {name}','Position {pos}','Art der Not {art}','Benötigte Hilfe …','Personen an Bord: {pers}','Weitere Infos …','OVER'];
+function renderMayday(){
+  var b=S.boat;
+  function ph(val,label){return val?'<b>'+esc(val)+'</b>':'<span class="ph">['+label+']</span>';}
+  var p=lastGps||S.pos;
+  var rep={name:ph(b.name,'Schiffsname'),call:ph(b.call,'Rufzeichen'),mmsi:ph(b.mmsi,'MMSI'),pers:ph($('f-pers').value.trim(),'Anzahl'),art:ph($('f-art').value.trim(),'Art der Not'),
+    pos:p?'<b>'+esc(formatPos(p))+'</b>':'<span class="ph">[Position]</span>'};
+  function fill(w){
+    $(w==='MAYDAY'?'maydaytext':'panpantext').innerHTML=MAYDAY.map(function(l){
+      var t=esc(l).replace(/\{W\}/g,w==='MAYDAY'?'MAYDAY':'PAN PAN').replace(/\{(\w+)\}/g,function(m,k){return '\u0001'+k+'\u0002';}).replace(/\u0001(\w+)\u0002/g,function(m,k){return rep[k];});
+      return '<div>'+t+'</div>';
+    }).join('');
+  }
+  fill('MAYDAY');fill('PAN PAN');
+}
+function renderNotfall(res){
+  var s=res.state,now=s.now;
+  $('nf-area').textContent=res.seaArea?res.seaArea.label:(s.pos?'':'Position wählen für Seegebiet und Länderreihenfolge.');
+  var nums=emergencyNumbers(s.pos);
+  var h='<a class="bigbtn alt" href="tel:112"><span class="n disp">112</span><span class="l"><b>Europanotruf</b><br>Nur mit Mobilfunknetz, küstennah – auf See oft keins. Primär UKW.</span></a>';
+  nums.forEach(function(n){
+    var tel=n.tel||(telHref(n.num)||'').replace(/^tel:/,'');
+    h+='<a class="bigbtn" href="tel:'+esc(tel)+'"><span class="n sm disp">'+esc(n.num)+'</span><span class="l"><b>'+esc(n.title)+'</b> · '+esc(n.country)+'<br>'+esc(n.sub)+'</span></a>';
+  });
+  $('nf-nums').innerHTML=h;
+  var groups=radioGroups(now),order=s.pos?countryOf(s.pos):[];
+  groups.sort(function(a,b){var ia=order.indexOf(a.code),ib=order.indexOf(b.code);ia=ia<0?99:ia;ib=ib<0?99:ib;return ia-ib;});
+  var f='';
+  groups.forEach(function(g,gi){
+    f+='<details'+(gi===0?' open':'')+'><summary>'+esc(g.name)+' ('+g.code+')</summary><div class="in">';
+    g.blocks.forEach(function(b){
+      if(b.title&&b.title!==g.name)f+='<h3>'+esc(b.title)+'</h3>';
+      b.lines.forEach(function(l){
+        f+='<div class="rline"><b>'+esc(l.k)+(l.unv?' <span class="badge unv">ungeprüft</span>':'')+'</b>'+linkTel(l.v)+(l.note?'<div class="rn">'+esc(l.note)+'</div>':'')+'</div>';
+      });
+    });
+    f+='</div></details>';
+  });
+  f+='<div class="note small">Zeiten: UTC wird automatisch in Ortszeit umgerechnet (MESZ = UTC+2 bis letzter Sonntag im Oktober, danach MEZ = UTC+1).</div>';
+  $('funk').innerHTML=f;
+}
+
+/* ---- Regeln (generated from CONST; numbers carry data-c for the DOM test) ---- */
+function getPath(o,p){return p.split('.').reduce(function(a,k){return a==null?a:a[k];},o);}
+function fmtN(x){return String(x).replace('.',',');}
+function cs(path){return '<span data-c="'+path+'">'+fmtN(getPath(CONST,path))+'</span>';}
+function ce(path,k,v){var T=effThresholds({kids:!!k,season:v?'vor':'sommer'});return '<span data-c="'+path+'" data-k="'+k+'" data-s="'+v+'">'+fmtN(getPath(T,path))+'</span>';}
+var FAUST='<span class="badge unv">Faustregel</span>';
+function rulesText(r){
+  if(r==null)return '';
+  if(typeof r!=='object')return String(r);
+  if(Array.isArray(r))return r.map(rulesText).join(', ');
+  return Object.keys(r).map(function(k){return keyLabel(k)+': '+rulesText(r[k]);}).join(' · ');
+}
+function rowOff(label,path){
+  return '<tr><td>'+label+'</td><td>'+ce(path,0,0)+'</td><td>'+ce(path,1,0)+'</td><td>'+ce(path,0,1)+'</td><td>'+ce(path,1,1)+'</td></tr>';
+}
+function renderRegeln(){
+  var O=CONST.offsets;
+  $('rg-intro').innerHTML='Alle Schwellen sind <b>Faustregeln</b> des Skippers ohne amtliche Quelle – Ausnahme: die BSH-Pegelstufen. Kinder an Bord: −'+cs('offsets.kids')+' kn, Vor-/Nachsaison: −'+cs('offsets.season')+' kn (kumulativ), danach Untergrenzen: Ampel gelb ≥ '+cs('floor.yellow')+', rot ≥ '+cs('floor.red')+' kn, Reff ≥ '+cs('floor.reff.0')+'/'+cs('floor.reff.1')+'/'+cs('floor.reff.2')+' kn. Saison „automatisch“: Sommer '+esc(CONST.season.from.slice(3)+'.'+CONST.season.from.slice(0,2)+'.–'+CONST.season.to.slice(3)+'.'+CONST.season.to.slice(0,2)+'.')+', sonst Vor-/Nachsaison.';
+  var tb='<table class="tbl small"><tr><th>Schwelle (kn)</th><th>Basis</th><th>Kinder</th><th>Saison</th><th>beide</th></tr>';
+  tb+=rowOff('1. Reff ab (scheinbar)','reff.base.0')+rowOff('2. Reff ab','reff.base.1')+rowOff('3. Reff ab','reff.base.2');
+  $('rg-reff').innerHTML=tb+'</table><div class="note small">Maßgeblich ist der <b>scheinbare Wind inkl. Böen</b>: Böen (wahr) × Kursfaktor, aufgerundet. Kursfaktoren: '+CONST.courses.map(function(c){return esc(c)+' <span data-c="courseFactor.'+c+'">'+fmtN(CONST.courseFactor[c])+'</span>';}).join(' · ')+' '+FAUST+'</div>';
+  var tt='<table class="tbl small"><tr><th>Böen wahr (kn)</th><th>Basis</th><th>Kinder</th><th>Saison</th><th>beide</th></tr>'+rowOff('⚠ gelb ab','traffic.yellow')+rowOff('✖ rot ab','traffic.red')+'</table>';
+  tt+='<div class="note small">Seegang: ⚠ ab '+cs('sea.yellow')+' m, ✖ ab '+cs('sea.red')+' m (kurze, steile Ostseewelle) '+FAUST+'. Nebel und Gewitter: mindestens ⚠.</div>';
+  $('rg-traffic').innerHTML=tt;
+  var G=CONST.harborGust;
+  $('rg-harbor').innerHTML='<ul class="tight"><li>Wind aus geschützter Richtung = ✔, teilgeschützt = ⚠, offen = ✖, <b>unbekannt = ?</b> (nie grün).</li>'
+    +'<li>Ansteuerung bei auflandigem Wind (Sektor <i>Ansteuerung offen</i>), Böen:</li></ul>'
+    +'<table class="tbl small"><tr><th>Böen (kn)</th><th>Basis</th><th>Kinder</th><th>Saison</th><th>beide</th></tr>'+rowOff('⚠ ab','entrance.yellow')+rowOff('✖ ab','entrance.red')+'</table> '+FAUST
+    +'<ul class="tight"><li>Seegang aus Schwell-/Ansteuerungsrichtung: ⚠ ab '+cs('harborSea.yellow')+' m, ✖ ab '+cs('harborSea.red')+' m '+FAUST+'</li>'
+    +'<li>Böen je Typ: Marina ⚠ ab '+cs('harborGust.marina.0')+' / ✖ ab '+cs('harborGust.marina.1')+' kn · Hafen ⚠ ab '+cs('harborGust.hafen.0')+' / ✖ ab '+cs('harborGust.hafen.1')+' kn · Nothafen ⚠ ab '+cs('harborGust.nothafen.0')+' / ✖ ab '+cs('harborGust.nothafen.1')+' kn '+FAUST+'</li>'
+    +'<li>Tiefe: Tiefgang + Zuschlag unter Kiel gegen Einfahrt-/Liegeplatztiefe bei Mittelwasser, Pegel wird berücksichtigt. Beide Tiefen unbekannt = ? (nie grün).</li>'
+    +'<li>Ankunft später als '+cs('sunsetBufferMin')+' min vor Sonnenuntergang = ⚠.</li>'
+    +'<li>„Nicht als Zuflucht eingestuft“ zählt nicht für Zuflucht-Empfehlungen. Grenzfall und Berufshafen: höchstens ⚠.</li></ul>';
+  var gb=CONST.gates.bornholm.ids.map(function(i){return BY_ID[i]?BY_ID[i].name:i;}).join(', '),ga=CONST.gates.anholt.ids.map(function(i){return BY_ID[i]?BY_ID[i].name:i;}).join(', ');
+  var gt='<table class="tbl small"><tr><th>Überfahrt-Gate Böen (kn)</th><th>Basis</th><th>Kinder</th><th>Saison</th><th>beide</th></tr>'+rowOff('✖ ab','crossing.gust')+'</table>';
+  $('rg-gates').innerHTML=gt+'<ul class="tight">'
+    +'<li><b>Bornholm-Überfahrt:</b> aktiv ≤ '+cs('crossingNearNm')+' sm von: '+esc(gb)+' – oder in der Box. ✖ bei Böen ≥ Schwelle, Seegang ≥ '+cs('crossing.sea')+' m oder Nebel '+FAUST+'</li>'
+    +'<li><b>Anholt-/Kattegat-Überfahrt:</b> ≤ '+cs('crossingNearNm')+' sm von: '+esc(ga)+' – oder in der Box. Gleiche Schwellen.</li>'
+    +'<li><b>Verkehrstrennungsgebiet:</b> Mittelpunkt ≤ '+cs('hazardNearNm')+' sm: Info, bei Nebel ⚠.</li>'
+    +'<li><b>Brücken:</b> ≤ '+cs('bridgeNearNm')+' sm: feste Brücke gegen Masthöhe + Sicherheitsabstand (Pegel über MW wird abgezogen); Klappbrücken: nur zu Öffnungszeiten.</li>'
+    +'<li><b>Gefahrengebiete:</b> Mittelpunkt ≤ '+cs('hazardNearNm')+' sm: Info. Grenzen und Radien sind nicht belegt.</li>'
+    +'<li><b>Trend / Winddrehung:</b> mindestens ⚠. <b>Starkwind &gt; 12 h:</b> Info zum Pegel (Faustregel). <b>Stettiner Haff:</b> Info Grenze DE/PL.</li>'
+    +'<li>„Kein Zufluchtshafen in Reichweite“ ab '+cs('farNm')+' sm. Standard-Fahrt '+cs('speed')+' kn.</li></ul>';
+  // Pegel
+  var P=CONST.pegel,pl='<table class="tbl small"><tr><th>Pegel (cm zu MW)</th><th>Stufe</th></tr>'
+    +'<tr><td>≤ <span data-c="pegel.info">'+P.info+'</span></td><td>Info (BSH: NAVTEX-Schifffahrtsinfo)</td></tr>'
+    +'<tr><td>≤ <span data-c="pegel.yellowLow">'+P.yellowLow+'</span></td><td>⚠ Niedrigwasserwarnung</td></tr>'
+    +'<tr><td>≥ +<span data-c="pegel.yellowHigh">'+P.yellowHigh+'</span></td><td>⚠ leichte Sturmflut</td></tr>'
+    +'<tr><td>≥ +<span data-c="pegel.red">'+P.red+'</span></td><td>✖ schwere Sturmflut</td></tr></table>';
+  var de=RADIO.filter(function(r){return r.country==='DE';})[0],wl=de&&de.water_level;
+  if(wl)pl+='<div class="note small"><b>BSH-Stufen (radio.json):</b> hoch '+esc(fmtVal(wl.high_m.value))+' · niedrig '+esc(fmtVal(wl.low_m.value))+'</div><div class="note small">'+esc(wl.rule_of_thumb.value)+' (Faustregel)</div>';
+  $('rg-pegel').innerHTML=pl;
+  // bridges
+  var fixed=BRIDGES.filter(function(b){return (b.kind==='fest'||b.kind==='freileitung')&&(b.clearanceClosed_m==null||b.clearanceClosed_m<CONST.bridgeList.maxHeight);})
+    .sort(function(a,b){return (a.clearanceClosed_m==null?999:a.clearanceClosed_m)-(b.clearanceClosed_m==null?999:b.clearanceClosed_m);});
+  var bt='<table class="tbl small"><tr><th>Brücke</th><th>Höhe</th><th>Mast '+fm(S.boat.mast||0)+' m</th></tr>';
+  fixed.forEach(function(b){
+    var c=bridgeCheck(b,S.boat,S.pegel),lamp=c.level==='g'?'<span class="lamp g">✔</span>':c.level==='r'?'<span class="lamp r">✖</span>':c.level==='n'?'<span class="lamp n">?</span>':'<span class="lamp y">⚠</span>';
+    bt+='<tr><td>'+esc(b.name)+' <span class="hmeta">('+esc(b.country)+')</span></td><td>'+(b.clearanceClosed_m!=null?fm(b.clearanceClosed_m)+' m':'?')+'</td><td>'+lamp+'</td></tr>';
+  });
+  $('rg-bridges').innerHTML=bt+'</table><div class="note small">Ampel gegen Masthöhe + Sicherheitsabstand '+FAUST+' und aktuellen Pegel. Höhe laut Datenbestand, Bezug siehe Quelle.</div>';
+  var op=BRIDGES.filter(function(b){return b.kind==='klapp'||b.kind==='dreh'||b.kind==='schiebe';}),ot='';
+  op.forEach(function(b){
+    ot+='<details><summary>'+esc(b.name)+' · '+esc(b.kind)+(b.clearanceClosed_m!=null?' · '+fm(b.clearanceClosed_m)+' m':'')+'</summary><div class="in small"><p>Öffnung: '+esc(b.opening||'unbekannt')+'</p>'
+      +(b.vhf||b.tel?'<p>'+(b.vhf?'VHF '+esc(b.vhf)+' ':'')+(b.tel?linkTel(b.tel):'')+'</p>':'')+(b.note?'<p class="hmeta">'+esc(b.note)+'</p>':'')+'</div></details>';
+  });
+  $('rg-opening').innerHTML=ot;
+  // national park & protected area rules
+  var NPT={nationalpark:1,schutzgebiet:1,geschwindigkeit:1,naturschutz:1,sperrgebiet:1},np='';
+  HAZARDS.filter(function(z){return NPT[z.type];}).forEach(function(z){
+    np+='<details><summary>'+esc(z.name)+'</summary><div class="in small"><p>'+esc(z.warn||'')+'</p>'+(z.rules?'<p class="hmeta">'+esc(rulesText(z.rules))+'</p>':'')+'</div></details>';
+  });
+  $('rg-np').innerHTML=np;
+  // hazards by country / type
+  var byC={};
+  HAZARDS.forEach(function(z){(byC[z.country]=byC[z.country]||[]).push(z);});
+  var hz='';
+  Object.keys(byC).sort().forEach(function(c){
+    var types={};byC[c].forEach(function(z){(types[z.type]=types[z.type]||[]).push(z);});
+    hz+='<details><summary>'+esc(c)+' ('+byC[c].length+')</summary><div class="in">';
+    Object.keys(types).sort().forEach(function(t){
+      hz+='<h3>'+esc(t)+' ('+types[t].length+')</h3>';
+      if(t==='befahrensverbot')hz+='<div class="rline small">'+types[t].map(function(z){return esc(z.name);}).join(' · ')+'</div>';
+      else types[t].forEach(function(z){hz+='<div class="rline"><b>'+esc(z.name)+(z.geom&&z.geom.center?'':' <span class="badge unv">ohne Mittelpunkt</span>')+'</b>'+esc(z.warn||'')+'</div>';});
+    });
+    hz+='</div></details>';
+  });
+  $('rg-hazards').innerHTML=hz+'<div class="note small">Radien und Gebietsgrenzen sind nicht belegt; die App rechnet nur mit dem Mittelpunkt.</div>';
+  // gaps
+  var dlf='';
+  try{var w=de.weather.filter(function(x){return /Deutschlandfunk/.test(x.name);})[0];dlf='Kein Deutschlandfunk-Seewetterbericht mehr: '+w.status.value+'.';}catch(e){}
+  $('rg-gaps').innerHTML='<ul class="tight">'+(dlf?'<li>'+esc(dlf)+'</li>':'')
+    +'<li>Freileitung Wittower Fähre ohne Höhe (Durchfahrtshöhe unbekannt).</li>'
+    +'<li>Fehmarnsundbrücke: 22/23 m, Gerüststatus nach 31.05.2026 unbelegt.</li>'
+    +'<li>Ziegelgraben: Koordinate ist ein Platzhalter.</li>'
+    +'<li>Seegebiets-Grenzen geschätzt; Gefahrengebiets-Radien unbekannt.</li>'
+    +'<li>Schweden: wenige Häfen, keine Zuflucht eingestuft. Deutschland: keine Pegelangaben je Hafen.</li>'
+    +'<li>Heiligenhafen: nur N/NW-Schutz abgeleitet. Burgtiefe: Liegeplatz 1,8 m vs. max. Tiefgang 2,8 m.</li></ul>';
+  // data counters
+  var n=DATA.length,vk={},rl={},ps={},cc={};
+  DATA.forEach(function(h){
+    Object.keys(h.verified||{}).forEach(function(k){if(h.verified[k])vk[k]=(vk[k]||0)+1;else vk[k]=vk[k]||0;});
+    var r=h.refugeLevel||'keine';rl[r]=(rl[r]||0)+1;
+    var p=h.protSource||'keine';ps[p]=(ps[p]||0)+1;cc[h.country]=(cc[h.country]||0)+1;
+  });
+  function lst(o){return Object.keys(o).sort().map(function(k){return esc(k)+' <b>'+o[k]+'</b>';}).join(' · ');}
+  $('rg-data').innerHTML='<ul class="tight"><li>Datenstand '+esc(CONST.datenstand)+': <b>'+n+'</b> Häfen ('+lst(cc)+'), '+BRIDGES.length+' Brücken, '+HAZARDS.length+' Gefahrenstellen.</li>'
+    +'<li><b>Geprüft (von '+n+'):</b> '+Object.keys(vk).sort().map(function(k){return esc(k)+' <b>'+vk[k]+'/'+n+'</b>';}).join(' · ')+'</li>'
+    +'<li><b>Zuflucht-Einstufung:</b> '+lst(rl)+'</li>'
+    +'<li><b>Quelle der Schutzsektoren:</b> '+lst(ps)+'</li>'
+    +'<li>Alles Ungeprüfte ist markiert und nur eine Näherung. Schutzsektoren immer mit Seekarte und Revierführer gegenprüfen.</li></ul>';
+  document.querySelector('.disc').textContent=DISCLAIMER;
+}
+function renderDatenstand(){
+  var n=DATA.length,pv=DATA.filter(function(h){return h.verified&&h.verified.prot;}).length;
+  $('datenstand').innerHTML='Datenstand '+CONST.datenstand+' · <b>'+pv+' von '+n+' Häfen mit geprüften Schutzsektoren</b> · alles andere „ungeprüft“';
+}
+
+/* ---- Boot tab ---- */
+function saveProfile(){
+  S.confirmed=true;
+  store('skipperOst.profile',JSON.stringify({boat:S.boat,kids:S.kids,season:S.season,speed:S.speed,confirmed:true}));
+}
+function loadProfile(){
+  var raw=load('skipperOst.profile');if(!raw)return false;
+  try{var o=JSON.parse(raw);if(o.boat)S.boat=normBoat(o.boat);S.kids=!!o.kids;if(['auto','sommer','vor'].indexOf(o.season)>=0)S.season=o.season;if(num(o.speed))S.speed=num(o.speed);S.confirmed=true;return true;}catch(e){return false;}
+}
+function fmtIn(x){return x==null?'':String(x).replace('.',',');}
+function bootToUI(){
+  var b=S.boat;
+  $('b-profile').value=b.profile;$('b-type').value=b.type;
+  $('b-loa').value=fmtIn(b.loa);$('b-beam').value=fmtIn(b.beam);$('b-draft').value=fmtIn(b.draft);$('b-margin').value=fmtIn(b.margin);
+  $('b-mast').value=fmtIn(b.mast);$('b-bmargin').value=fmtIn(b.bridgeMargin);$('b-speed').value=fmtIn(S.speed);$('b-season').value=S.season;
+  $('b-name').value=b.name||'';$('b-call').value=b.call||'';$('b-mmsi').value=b.mmsi||'';$('b-kids').checked=S.kids;
+  renderBootNotes();
+}
+function renderBootNotes(){
+  var N=boatNeeds(S.boat);
+  $('bt-kat').style.display=S.boat.type==='kat'?'block':'none';
+  $('bt-first').style.display=S.confirmed?'none':'block';
+  $('bt-msg').textContent=N.missing.length?'Es fehlt: '+N.missing.join(', ')+'. Die zugehörigen Prüfungen (Tiefe, Brücken, Maße) zeigen dann „Bootsdaten fehlen“.':'Profil vollständig.';
+  var bn=$('boatnote');
+  if(N.missing.length){bn.style.display='block';bn.textContent='Bootsdaten unvollständig ('+N.missing.join(', ')+') – Tiefen-/Brückenprüfung ist grau. Im Boot-Tab ergänzen.';}
+  else if(!S.confirmed){bn.style.display='block';bn.textContent='Bootsprofil noch nicht bestätigt (Default: Dehler 35). Im Boot-Tab prüfen und „Profil übernehmen“.';}
+  else bn.style.display='none';
+}
+function bootFromUI(changed){
+  var b=S.boat;
+  b.type=$('b-type').value;
+  b.loa=num($('b-loa').value);b.beam=num($('b-beam').value);b.draft=num($('b-draft').value);b.margin=num($('b-margin').value);
+  b.mast=num($('b-mast').value);b.bridgeMargin=num($('b-bmargin').value);
+  b.name=$('b-name').value.trim();b.call=$('b-call').value.trim();b.mmsi=$('b-mmsi').value.trim();
+  var sp=num($('b-speed').value);if(sp&&sp>0)S.speed=Math.min(30,sp);
+  S.season=$('b-season').value;S.kids=$('b-kids').checked;
+  if(changed==='b-loa'||changed==='b-beam'||changed==='b-draft'){b.profile='custom';$('b-profile').value='custom';}
+  saveProfile();renderBootNotes();update();
+}
+function applyProfile(id){
+  var p=PROFILES.filter(function(x){return x.id===id;})[0];if(!p)return;
+  var b=S.boat;b.profile=p.id;
+  if(p.id!=='custom'){
+    b.type=p.type;b.loa=p.loa==null?null:p.loa;b.beam=p.beam==null?null:p.beam;b.draft=p.draft==null?null:p.draft;b.mast=p.mast==null?null:p.mast;
+  }
+  bootToUI();saveProfile();update();
+}
+
+/* ---- printed Bordkarte (same data) ---- */
+function pFlag(ok){return ok?'<span class="ok">✔</span>':'<span class="unv">?</span>';}
+function protShort(h){
+  if(!protKnown(h))return '<b>?</b>';
+  var g={full:[],part:[],open:[],unk:[]};
+  DIRS.forEach(function(d){var l=protOf(h,d);(g[l==='full'?'full':l==='part'?'part':l==='open'?'open':'unk']).push(d);});
+  if(g.full.length===8)return '<b>voll:</b> alle';
+  var o=[];
+  if(g.full.length)o.push('<b>voll:</b> '+g.full.join(' '));
+  if(g.part.length)o.push('<b>teilw.:</b> '+g.part.join(' '));
+  if(g.open.length)o.push('<b>offen:</b> '+g.open.join(' '));
+  if(g.unk.length)o.push('<b>?:</b> '+g.unk.join(' '));
+  return o.join(' · ');
+}
+function buildPrint(){
+  var now=Date.now(),p='',lab=utcToLocal('12:00',now).label,D=DEFAULT_BOAT;
+  p+='<section class="pp"><h1>Bordkarte Ostsee · Skipper-Assistent</h1><div class="sub">Westliche Ostsee, Dänische Südsee, Bornholm, Kattegat, Stettiner Haff · Datenstand '+esc(CONST.datenstand)+' · Zeiten in Ortszeit ('+lab+')</div>';
+  p+='<h2 class="red">Notfall</h2><div class="nums"><div class="num"><b>112</b><strong>Europanotruf</strong><br>nur mit Mobilfunknetz, küstennah</div>';
+  emergencyNumbers(null).forEach(function(e){p+='<div class="num"><b>'+esc(e.num)+'</b><strong>'+esc(e.title)+' · '+esc(e.country)+'</strong><br>'+esc(e.sub)+'</div>';});
+  p+='</div><div class="box red"><b>UKW-DSC-Distress zuerst:</b> Rote DSC-Taste 5 Sekunden halten → danach MAYDAY auf CH 16. MMSI muss im Gerät programmiert sein.</div>';
+  p+='<div class="two"><div class="box red"><b>MAYDAY – Sprechschema</b>';
+  MAYDAY.forEach(function(l){
+    var t=esc(l).replace(/\{W\}/g,'MAYDAY').replace(/\{name\}/g,'________').replace('{call}','________').replace('{mmsi}','_________').replace('{pers}','____').replace('{pos}','…').replace('{art}','…');
+    p+='<span class="ln">'+t+'</span>';
+  });
+  p+='</div><div><div class="box red"><b>Meine Position (Grad / Dezimalminuten)</b><span class="ln">&nbsp;</span><span class="ln">&nbsp;</span><span class="ln">Uhrzeit: </span></div>';
+  p+='<div class="box"><b>PAN PAN</b> – Dringlichkeit ohne unmittelbare Lebensgefahr: gleiches Schema, „PAN PAN“ ×3 statt „MAYDAY“.</div>';
+  p+='<div class="box"><b>Polen / Haff:</b> MRCC Gdynia, UKW CH 16, Arbeitskanal 11. Grenze DE/PL im Stettiner Haff.</div></div></div>';
+  p+='<h2>Funk · Wetter · NAVTEX</h2><table><colgroup><col style="width:9mm"><col style="width:62mm"><col></colgroup><thead><tr><th>Land</th><th>Dienst</th><th>Angabe (Zeiten in Ortszeit, wo UTC umgerechnet)</th></tr></thead><tbody>';
+  funkSummary(now).forEach(function(r){p+='<tr><td>'+esc(r.c)+'</td><td><b>'+esc(r.k)+'</b></td><td>'+esc(r.v)+'</td></tr>';});
+  p+='</tbody></table>';
+  var de=RADIO.filter(function(r){return r.country==='DE';})[0],wl=de&&de.water_level;
+  if(wl)p+='<h2>Pegel (BSH, Abweichung vom Normalmittelwasser)</h2><div class="box">Hoch (m): '+esc(fmtVal(wl.high_m.value))+'<br>Niedrig (m): '+esc(fmtVal(wl.low_m.value))+'<br>App-Schwellen: Info ≤ '+CONST.pegel.info+' cm, ⚠ ≤ '+CONST.pegel.yellowLow+' cm bzw. ≥ +'+CONST.pegel.yellowHigh+' cm, ✖ ≥ +'+CONST.pegel.red+' cm.</div>';
+  p+='<div class="foot"><b>'+esc(DISCLAIMER)+'</b></div></section>';
+
+  // radio details
+  p+='<section class="pp"><h1>Funk und Stellen – Details</h1><div class="sub">Alles aus dem Datenbestand (radio.json); „ungeprüft“ = Quelle nicht bestätigt.</div><div class="cols2">';
+  radioGroups(now).forEach(function(g){
+    p+='<div class="rg"><h3>'+esc(g.name)+'</h3>';
+    g.blocks.forEach(function(b){
+      p+='<div class="rb">'+(b.title&&b.title!==g.name?'<b>'+esc(b.title)+'</b><br>':'');
+      b.lines.forEach(function(l){p+=esc(l.k)+': '+esc(l.v)+(l.unv?' <span class="unv">[ungeprüft]</span>':'')+'<br>';});
+      p+='</div>';
+    });
+    p+='</div>';
+  });
+  p+='</div></section>';
+
+  // harbours
+  p+='<section class="pp"><h1>Häfen – Land → Region, Nord → Süd</h1><div class="sub">Typ: M Marina · H Hafen · N Nothafen. Schutz: voll / teilw. / offen, ? = unbekannt. Tiefe in m bei Mittelwasser: E Einfahrt, L Liegeplatz. Zuflucht: B belegt · P Plan · A abgeleitet · G Grenzfall · N Berufshafen/Notfall · – keine. Status: L Lage · S Schutz · T Tiefe, ✔ geprüft / ? ungeprüft.</div>';
+  p+='<table><colgroup><col style="width:32mm"><col style="width:7mm"><col style="width:24mm"><col style="width:37mm"><col style="width:19mm"><col style="width:21mm"><col style="width:11mm"><col style="width:21mm"><col style="width:8mm"><col style="width:14mm"></colgroup>';
+  p+='<thead><tr><th>Name</th><th>Typ</th><th>Position</th><th>Schutz</th><th>Tiefe E / L</th><th>Brücke</th><th>VHF</th><th>Tel.</th><th>Zufl.</th><th>Status</th></tr></thead>';
+  var byCR={};
+  DATA.forEach(function(h){var c=byCR[h.country]=byCR[h.country]||{};(c[h.region]=c[h.region]||[]).push(h);});
+  ['DE','DK','SE'].forEach(function(cc){
+    var regs=byCR[cc];if(!regs)return;
+    var names=Object.keys(regs);
+    var total=names.reduce(function(a,r){return a+regs[r].length;},0);
+    p+='<tbody class="gh c"><tr><th colspan="10">'+esc(cc)+' · '+esc(COUNTRY_LABEL[cc])+' · '+total+' Häfen</th></tr></tbody>';
+    names.sort(function(a,b){
+      function mean(r){return regs[r].reduce(function(x,h){return x+h.lat;},0)/regs[r].length;}
+      return mean(b)-mean(a);
+    }).forEach(function(r){
+      var hs=regs[r].slice().sort(function(a,b){return b.lat-a.lat;});
+      p+='<tbody class="gh"><tr><th colspan="10">'+esc(cc)+' · '+esc(r)+' · '+hs.length+'</th></tr></tbody>';
+      hs.forEach(function(h){
+        var v=h.verified||{};
+        var br=(h.bridgeIds||[]).map(function(id){var b=BR_BY_ID[id];return b?b.name+(b.clearanceClosed_m!=null?' '+fm(b.clearanceClosed_m)+' m':' ?'):id;}).join(', ')||'–';
+        var vhf=h.vhf?esc(h.vhf):'?',tel=h.tel?esc(h.tel):'?';
+        var rs=h.refugeLevel?REFUGE_SHORT[h.refugeLevel]:'–';
+        var typ=h.type==='marina'?'M':h.type==='hafen'?'H':'N';
+        p+='<tbody class="pl" data-hid="'+esc(h.id)+'"><tr><td><b>'+esc(h.name)+'</b></td><td>'+typ+'</td><td>'+esc(formatDM(h.lat,true))+'<br>'+esc(formatDM(h.lon,false))+'</td><td>'+protShort(h)+'</td><td>'+esc(depthText(h))+'</td><td>'+esc(br)+'</td><td>'+vhf+'</td><td>'+tel+'</td><td><b>'+rs+'</b></td><td>L'+pFlag(v.pos)+' S'+pFlag(v.prot)+' T'+pFlag(v.depth)+'</td></tr></tbody>';
+      });
+    });
+  });
+  p+='</table></section>';
+
+  // bridges
+  p+='<section class="pp"><h1>Brücken</h1><div class="sub">Höhe geschlossen laut Datenbestand. Spalte „Mast '+fm(D.mast)+' m?“: Default-Profil (Mast '+fm(D.mast)+' m + Sicherheitsabstand '+fm(D.bridgeMargin)+' m), Pegel 0.</div>';
+  p+='<table><colgroup><col style="width:38mm"><col style="width:7mm"><col style="width:11mm"><col style="width:20mm"><col style="width:68mm"><col style="width:16mm"><col style="width:34mm"></colgroup><thead><tr><th>Name</th><th>Land</th><th>Art</th><th>Höhe</th><th>Öffnung</th><th>VHF</th><th>Mast '+fm(D.mast)+' m?</th></tr></thead><tbody>';
+  BRIDGES.slice().sort(function(a,b){return b.lat-a.lat;}).forEach(function(b){
+    var c=bridgeCheck(b,D,0),m=c.level==='g'?'✔ passt (Reserve '+fm(c.reserve)+' m)':c.level==='r'?'✖ passt nicht':c.level==='i'?'passt, Öffnung nötig?':'? '+(b.clearanceClosed_m==null?'Höhe unbekannt':'Öffnung nötig');
+    p+='<tr><td><b>'+esc(b.name)+'</b></td><td>'+esc(b.country)+'</td><td>'+esc(b.kind)+'</td><td>'+(b.clearanceClosed_m!=null?fm(b.clearanceClosed_m)+' m':'?')+'<br>'+esc(b.clearanceRef||'')+'</td><td>'+esc(b.opening||'–')+(c.note?'<br><i><b>Hinweis:</b> '+esc(c.note)+'</i>':'')+'</td><td>'+esc(b.vhf||'?')+'</td><td>'+m+(c.note&&c.level!=='y'?'<br><span class="unv">Höhe/Einschränkung: siehe Hinweis</span>':'')+'</td></tr>';
+  });
+  p+='</tbody></table></section>';
+
+  // rules
+  var T0=effThresholds({kids:false,season:'sommer'}),T1=effThresholds({kids:true,season:'sommer'}),T2=effThresholds({kids:false,season:'vor'}),T3=effThresholds({kids:true,season:'vor'});
+  function row4(l,f){return '<tr><td>'+l+'</td><td>'+f(T0)+'</td><td>'+f(T1)+'</td><td>'+f(T2)+'</td><td>'+f(T3)+'</td></tr>';}
+  p+='<section class="pp"><h1>Regeln an Bord</h1><div class="sub">Aus denselben Konstanten wie die App. Alles außer BSH-Pegelstufen ist Faustregel.</div>';
+  p+='<h2>Schwellen (kn, Böen wahr; Reff: scheinbar)</h2><table><thead><tr><th>Schwelle</th><th>Basis</th><th>Kinder −'+CONST.offsets.kids+'</th><th>Saison −'+CONST.offsets.season+'</th><th>beide</th></tr></thead><tbody>'
+    +row4('1. Reff ab',function(T){return T.reff.base[0];})+row4('2. Reff ab',function(T){return T.reff.base[1];})+row4('3. Reff ab',function(T){return T.reff.base[2];})
+    +row4('Ampel ⚠ ab',function(T){return T.traffic.yellow;})+row4('Ampel ✖ ab',function(T){return T.traffic.red;})
+    +row4('Ansteuerung ⚠ ab',function(T){return T.entrance.yellow;})+row4('Ansteuerung ✖ ab',function(T){return T.entrance.red;})
+    +row4('Überfahrt-Gate ✖ ab',function(T){return T.crossing.gust;})+'</tbody></table>';
+  p+='<div class="sub" style="margin-top:1mm">Kursfaktoren: '+CONST.courses.map(function(c){return esc(c)+' ×'+fmtN(CONST.courseFactor[c]);}).join(' · ')+'. Seegang ⚠ ≥ '+fm(CONST.sea.yellow)+' m, ✖ ≥ '+fm(CONST.sea.red)+' m. Überfahrt-Gate auch bei Seegang ≥ '+fm(CONST.crossing.sea)+' m oder Nebel. Hafen: Schwell/See ⚠ ≥ '+fm(CONST.harborSea.yellow)+' m, ✖ ≥ '+fm(CONST.harborSea.red)+' m; Böen ⚠ ≥ '+CONST.harborGust.hafen[0]+' / ✖ ≥ '+CONST.harborGust.hafen[1]+' kn.</div>';
+  p+='<h2 class="red">Überfahrten</h2><div class="box red"><b>Bornholm:</b> ab Sassnitz, Lohme, Glowe, Breege, Klintholm, Gedser, Ystad, Simrishamn, Kåseberga und von den Bornholm-Häfen: ✖ bei Böen ≥ Schwelle, Seegang ≥ '+fm(CONST.crossing.sea)+' m oder Nebel – offene See, Großschifffahrt, kein Zufluchtsort. <b>Anholt/Kattegat</b> analog.</div>';
+  p+='<div class="box"><b>Winddrehung/Front erwartet:</b> mindestens ⚠. <b>Starkwind &gt; 12 h:</b> Pegelfaustregel beachten. <b>VTG:</b> rechtwinklig queren, AIS.</div>';
+  p+='<div class="foot"><b>'+esc(DISCLAIMER)+'</b> Datenstand '+esc(CONST.datenstand)+' · '+DATA.filter(function(h){return h.verified&&h.verified.prot;}).length+' von '+DATA.length+' Häfen mit geprüften Schutzsektoren.</div></section>';
+  $('printdoc').innerHTML=p;
+}
+
+/* ---- navigation / init ---- */
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(function(x){x.classList.toggle('active',x.id===id);});
+  document.querySelectorAll('nav button').forEach(function(b){b.classList.toggle('on',b.dataset.scr===id);});
+  window.scrollTo(0,0);
+}
+function applyTheme(night){
+  if(night)document.documentElement.setAttribute('data-theme','night');else document.documentElement.removeAttribute('data-theme');
+  var b=$('themebtn');b.setAttribute('aria-pressed',night?'true':'false');b.textContent=night?'☀ Tag':'☾ Nacht';
+  var m=document.querySelector('meta[name=theme-color]');if(m)m.setAttribute('content',night?'#000000':'#12141f');
+}
+function offlineState(){
+  var el=$('offlinestate'),proto=location.protocol;
+  if(proto==='file:')el.textContent='Lokale Datei: läuft ohne Netz. Datei auf dem Gerät speichern, um sie offline zu öffnen.';
+  else el.textContent='Offline-Cache wird eingerichtet … (Status: noch nicht bestätigt)';
+}
+function registerSW(){
+  try{
+    if(!(location.protocol==='http:'||location.protocol==='https:')||!('serviceWorker' in navigator))return;
+    var l=document.createElement('link');l.rel='manifest';l.href='manifest.webmanifest';document.head.appendChild(l);
+    fetch('sw.js',{method:'HEAD',cache:'no-store'}).then(function(r){
+      if(!r.ok)throw new Error('no sw');
+      return navigator.serviceWorker.register('sw.js');
+    }).then(function(){return navigator.serviceWorker.ready;}).then(function(){
+      return caches.keys();
+    }).then(function(ks){
+      var el=$('offlinestate');
+      if(el)el.textContent=ks.length?'Offline bereit (Cache angelegt).':'Offline-Cache wird eingerichtet … (noch nicht bestätigt)';
+    }).catch(function(){
+      var el=$('offlinestate');if(el)el.textContent='Kein Offline-Cache (Service Worker nicht verfügbar). Seite bleibt geöffnet oder Datei lokal speichern.';
+    });
+  }catch(e){}
+}
+
+function update(){
+  var res=evaluate(S);
+  syncInputs();renderBootNotes();
+  renderPosline();renderChip(res);renderResult(res);renderZuflucht(res);renderNotfall(res);renderMayday();
+  return res;
+}
+
+function init(){
+  buildInputs();
+  var had=loadProfile();
+  renderRegeln();renderDatenstand();buildPrint();offlineState();
+  var pers=load('skipperOst.pers');
+  try{var o=pers?JSON.parse(pers):{};$('f-pers').value=o.pers||'';$('f-art').value=o.art||'';}catch(e){}
+  ['f-pers','f-art'].forEach(function(id){$(id).addEventListener('input',function(){store('skipperOst.pers',JSON.stringify({pers:$('f-pers').value,art:$('f-art').value}));renderMayday();});});
+  applyTheme(load('skipperOst.night')==='1');
+  $('themebtn').addEventListener('click',function(){var n=document.documentElement.getAttribute('data-theme')!=='night';store('skipperOst.night',n?'1':'0');applyTheme(n);});
+  document.querySelectorAll('.stepper button').forEach(bindStepper);
+  $('dirgrid').addEventListener('click',function(e){var b=e.target.closest('[data-dir]');if(b){S.dir=b.dataset.dir;update();}});
+  $('seadirgrid').addEventListener('click',function(e){var b=e.target.closest('[data-sdir]');if(b){S.seaDir=b.dataset.sdir||null;if(!S.seaDir)S.seaH=0;update();}});
+  $('longgrid').addEventListener('click',function(e){var b=e.target.closest('[data-ldir]');if(b){S.longWind=b.dataset.ldir||null;update();}});
+  $('coursegrid').addEventListener('click',function(e){var b=e.target.closest('[data-course]');if(b){S.course=b.dataset.course;update();}});
+  $('sichtgrid').addEventListener('click',function(e){var b=e.target.closest('[data-sicht]');if(b){S.sicht=b.dataset.sicht;update();}});
+  $('kids').addEventListener('change',function(){S.kids=$('kids').checked;saveProfile();update();});
+  $('trend').addEventListener('change',function(){S.trend=$('trend').checked;update();});
+  $('gewitter').addEventListener('change',function(){S.gewitter=$('gewitter').checked;update();});
+  $('btn-gps').addEventListener('click',doGPS);
+  $('btn-manual').addEventListener('click',doManual);
+  $('btn-mypos').addEventListener('click',doMyPos);
+  $('regselect').addEventListener('change',function(){setRegion($('regselect').value);});
+  $('f-refuge').addEventListener('click',function(){S.fl.refuge=!S.fl.refuge;S.show=40;update();});
+  $('f-fits').addEventListener('click',function(){S.fl.fits=!S.fl.fits;S.show=40;update();});
+  $('f-open').addEventListener('click',function(){S.fl.open=!S.fl.open;S.show=40;update();});
+  document.querySelectorAll('[data-fc]').forEach(function(b){b.addEventListener('click',function(){S.fl.countries[b.dataset.fc]=S.fl.countries[b.dataset.fc]===false;S.show=40;update();});});
+  $('f-region').addEventListener('change',function(){S.fl.region=$('f-region').value;S.show=40;update();});
+  ['b-type','b-loa','b-beam','b-draft','b-margin','b-mast','b-bmargin','b-speed','b-season','b-name','b-call','b-mmsi','b-kids'].forEach(function(id){
+    $(id).addEventListener(id==='b-type'||id==='b-season'||id==='b-kids'?'change':'input',function(){bootFromUI(id);});
+  });
+  $('b-profile').addEventListener('change',function(){applyProfile($('b-profile').value);});
+  $('bt-confirm').addEventListener('click',function(){bootFromUI('');saveProfile();renderBootNotes();showScreen('scr-lage');});
+  document.querySelectorAll('nav button').forEach(function(b){b.addEventListener('click',function(){showScreen(b.dataset.scr);});});
+  bootToUI();
+  update();
+  if(!had)showScreen('scr-boot');
+  setInterval(renderPosline,30000);
+  registerSW();
+}
+
+window.SKIPPER={DATA:DATA,BRIDGES:BRIDGES,HAZARDS:HAZARDS,RADIO:RADIO,SEAAREAS:SEAAREAS,BOATS:BOATS,CONST:CONST,DIRS:DIRS,DEFAULT_BOAT:DEFAULT_BOAT,PROFILES:PROFILES,REGIONS:REGIONS,
+  state:S,update:update,normalize:normalize,evaluate:evaluate,harborStatus:harborStatus,rank:rank,recommend:recommend,reffLevel:reffLevel,reffStufe:reffStufe,
+  apparentWind:apparentWind,generalLevel:generalLevel,pegelLevel:pegelLevel,haversineNm:haversineNm,bearingDeg:bearingDeg,formatDM:formatDM,formatPos:formatPos,parseDM:parseDM,
+  isOutOfArea:isOutOfArea,euOffset:euOffset,utcToLocal:utcToLocal,sunTimes:sunTimes,seaAreaOf:seaAreaOf,countryOf:countryOf,boatNeeds:boatNeeds,bridgeCheck:bridgeCheck,
+  effThresholds:effThresholds,filterList:filterList,emergencyNumbers:emergencyNumbers,DISCLAIMER:DISCLAIMER};
+
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script>
+</body>
+</html>
