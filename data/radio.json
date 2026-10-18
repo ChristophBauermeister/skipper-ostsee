@@ -1,0 +1,1333 @@
+{
+ "sources": {
+  "dgzrs_notfall": {
+   "url": "https://www.seenotretter.de/notfall",
+   "retrieved": "2026-10-18"
+  },
+  "dgzrs_en": {
+   "url": "https://www.seenotretter.de/en",
+   "retrieved": "2026-10-18"
+  },
+  "yacht_alarm": {
+   "url": "https://www.yacht.de/ausruestung/sicherheit/sicherheit-hilfe-holen-so-lassen-sich-auf-see-die-retter-alarmieren/",
+   "retrieved": "2026-10-18"
+  },
+  "dwd_dauer_2025": {
+   "url": "https://www.schobuell-wetter.de/media/files/quellen_wetter.pdf",
+   "retrieved": "2026-10-18",
+   "note": "Kopie der DWD-Broschüre 'Sturmwarnungen und Seewetterberichte', Stand 22.07.2025; Original dwd.de für Abruf gesperrt"
+  },
+  "dwd_opendata_fqen71": {
+   "url": "https://opendata.dwd.de/weather/maritime/forecast/english/FQEN71_EDZW_LATEST",
+   "retrieved": "2026-10-18"
+  },
+  "dwd_1997": {
+   "url": "https://dwdbib.dwd.de/retrosammlung/download/pdf/952344",
+   "retrieved": "2026-10-18",
+   "note": "DWD-Broschüre März 1997, historisch"
+  },
+  "dsv_2026": {
+   "url": "https://www.dsv.org/nachrichten/fahrtensegeln-bfs/2026/08/seewetterbericht-des-dwd-fuer-den-04-08-2026-achtung-sturmboeen/",
+   "retrieved": "2026-10-18"
+  },
+  "nordkurier_dlf": {
+   "url": "https://www.nordkurier.de/regional/mecklenburg-vorpommern/kein-seewetterbericht-mehr-im-radioprogramm-1430744",
+   "retrieved": "2026-10-18"
+  },
+  "wiki_navtex": {
+   "url": "https://en.wikipedia.org/wiki/List_of_Navtex_stations",
+   "retrieved": "2026-10-18"
+  },
+  "ics_navtex": {
+   "url": "https://www.icselectronics.co.uk/navtex_db/navarea.php?nva=1&freq0=490&freq1=518&freq2=4209.5&freq3=424&freq4=486",
+   "retrieved": "2026-10-18"
+  },
+  "bsh_ostsee": {
+   "url": "https://www.bsh.de/DE/THEMEN/Wasserstand_und_Gezeiten/Ostsee/ostsee_node.html",
+   "retrieved": "2026-10-18"
+  },
+  "wetterdienst_windstau": {
+   "url": "https://www.wetterdienst.de/Deutschlandwetter/Thema_des_Tages/6503/gezeiten-an-nord-und-ostsee-windstau-und-sturmflutwarndienst-und-amphidromische-punkte",
+   "retrieved": "2026-10-18",
+   "note": "privater Wetterdienst, nicht BSH"
+  },
+  "wiki_ostseesturmhochwasser": {
+   "url": "https://de.wikipedia.org/wiki/Ostseesturmhochwasser",
+   "retrieved": "2026-10-18"
+  },
+  "yacht_sturmflut": {
+   "url": "https://www.yacht.de/segelwissen/wetterkunde/ostsee-sturmflut-sichern-sie-ihre-yacht/",
+   "retrieved": "2026-10-18"
+  },
+  "bsh_bericht45": {
+   "url": "https://www.bsh.de/DE/PUBLIKATIONEN/_Anlagen/Downloads/Meer_und_Umwelt/Berichte-des-BSH/Berichte-des-BSH_45.pdf?__blob=publicationFile&v=9",
+   "retrieved": "2026-10-18",
+   "note": "nur Abstract gelesen"
+  },
+  "jrcc_dk_sarplan2026": {
+   "url": "https://www.forsvaret.dk/globalassets/fko---sovarnet/svk/dokumenter/jrcc/-sar-cooperation-plan-2026-final-.pdf",
+   "retrieved": "2026-10-18"
+  },
+  "lyngby_page": {
+   "url": "https://www.forsvaret.dk/da/organisation/soevaernet/nationalt-maritimt-operationscenter/lyngby-radio/",
+   "retrieved": "2026-10-18",
+   "note": "Seite Stand 25.03.2025"
+  },
+  "lyngby_channels": {
+   "url": "https://www.forsvaret.dk/da/organisation/soevaernet/nationalt-maritimt-operationscenter/lyngby-radio/lyngby-radio-arbejdskanaler/",
+   "retrieved": "2026-10-18",
+   "note": "Stand 10.03.2022"
+  },
+  "dma_efs_2017": {
+   "url": "https://www.dma.dk/Media/637648774280084130/NtM-v2-A-2017.pdf",
+   "retrieved": "2026-10-18",
+   "note": "EfS A, Version 2, 07.03.2017"
+  },
+  "dma_guidelines": {
+   "url": "https://www.dma.dk/safety-at-sea/navigational-information/nautical-information/guidelines-for-nautical-information",
+   "retrieved": "2026-10-18"
+  },
+  "dmi_farvand": {
+   "url": "https://www.dmi.dk/dmis-vejrprodukter/farvandsudsigt/",
+   "retrieved": "2026-10-18"
+  },
+  "dmi_varsler": {
+   "url": "https://www.dmi.dk/varsler/varsler-om-farligt-vejr-i-danmark",
+   "retrieved": "2026-10-18"
+  },
+  "dmi_vandstand_news": {
+   "url": "https://www.dmi.dk/nyheder/generiske-nyheder/folg-en-forhojet-vandstand-med-dmi",
+   "retrieved": "2026-10-18"
+  },
+  "ingdk_lw": {
+   "url": "https://ing.dk/artikel/efter-en-genopstandelse-laegges-langboelgesenderen-i-kalundborg-evigt-i-graven",
+   "retrieved": "2026-10-18",
+   "note": "Artikel 03.07.2023"
+  },
+  "vhfmap_2024": {
+   "url": "https://scf31793e417a4b22.jimcontent.com/download/version/1714743595/module/12635489412/name/Till_Sjoss_2024_VHF-karta_Norden_web-apr-24.pdf",
+   "retrieved": "2026-10-18",
+   "note": "'Till Sjöss 2024' VHF-Karte Norden (Stockholmradio), Apr. 2024; Zahlen hinter Stationsnamen nicht als Kanal beschriftet"
+  },
+  "sjv_contact": {
+   "url": "https://www.sjofartsverket.se/en/search-and-rescue/contact-channels/contact-channels/",
+   "retrieved": "2026-10-18"
+  },
+  "sjv_kustradiokarta": {
+   "url": "https://navvarn.sjofartsverket.se/pdf/kustradiokarta.pdf",
+   "retrieved": "2026-10-18",
+   "note": "Stand 16.06.2025"
+  },
+  "stockholmradio_wx": {
+   "url": "https://stockholmradio.se/koll-pa-vadret-till-sjoss/",
+   "retrieved": "2026-10-18",
+   "note": "veröffentlicht 03.04.2025, geändert 10.02.2026"
+  },
+  "sjolotsen_2023": {
+   "url": "https://sjolotsen.se/blogs/nyheter/vet-du-vart-du-ska-lyssna-pa-kustvadret-i-ar",
+   "retrieved": "2026-10-18",
+   "note": "06.04.2023"
+  },
+  "smhi_areas": {
+   "url": "https://www.smhi.se/kunskapsbanken/meteorologi/vaderprognoser/kustvaderstrackor-och-sjovaderomraden",
+   "retrieved": "2026-10-18"
+  },
+  "smhi_old_districts": {
+   "url": "https://www.smhi.se/kunskapsbanken/fran-datid-till-nutid/historisk-aterblick/aldre-prognosdistrikt-i-land--och-sjorapporten",
+   "retrieved": "2026-10-18"
+  },
+  "eu_dst": {
+   "url": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32000L0084",
+   "retrieved": "2026-10-18"
+  },
+  "skipperguide": {
+   "url": "https://www.skipperguide.de/wiki/Hilfe_im_Seenotfall",
+   "retrieved": "2026-10-18",
+   "note": "Prüfstand DE 2016, DK 2018, SE 2016 – veraltet"
+  }
+ },
+ "RADIO": [
+  {
+   "country": "DE",
+   "name": "Deutschland",
+   "rcc": {
+    "name": "MRCC Bremen (Rettungsleitstelle See der DGzRS)",
+    "callsign_vhf": "Bremen Rescue",
+    "phone_24h": {
+     "value": "+49 421 536870",
+     "verified": true,
+     "src": [
+      "dgzrs_notfall"
+     ]
+    },
+    "mmsi": {
+     "value": "002111240",
+     "verified": true,
+     "src": [
+      "dgzrs_notfall"
+     ]
+    },
+    "vhf_watch": {
+     "value": [
+      16,
+      70
+     ],
+     "verified": true,
+     "src": [
+      "dgzrs_notfall"
+     ],
+     "note": "CH16 Hörwache, CH70 DSC"
+    },
+    "mf_dsc_khz": {
+     "value": 2187.5,
+     "verified": true,
+     "src": [
+      "dgzrs_notfall"
+     ]
+    },
+    "mobile_short": {
+     "value": "124124",
+     "verified": true,
+     "src": [
+      "dgzrs_notfall"
+     ],
+     "note": "nur aus deutschen Mobilfunknetzen, nur auf See/in Küstennähe; laut DGzRS keine offizielle Notrufnummer, sondern Servicenummer der Netzbetreiber; Smartphone überträgt Standort"
+    },
+    "not_alerting": "E-Mail und Fax sind laut DGzRS keine Alarmierungswege",
+    "app": {
+     "value": "SafeTrx",
+     "verified": true,
+     "src": [
+      "dgzrs_notfall"
+     ],
+     "note": "Empfehlung der DGzRS"
+    }
+   },
+   "emergency_112": {
+    "value": {
+     "number": "112",
+     "note": "europaweit; Verbindung zur Rettungsleitstelle See verlangen. 112 landet in allgemeiner Leitstelle (Zeitverlust möglich). AML-Ortung EU-weit. Netzabdeckung nur küstennah."
+    },
+    "verified": true,
+    "src": [
+     "dgzrs_notfall",
+     "yacht_alarm"
+    ]
+   },
+   "coast_stations_vhf": [
+    {
+     "name": "DP07 Seefunk Flensburg",
+     "ch": {
+      "value": 21,
+      "verified": true,
+      "src": [
+       "dwd_dauer_2025"
+      ]
+     }
+    },
+    {
+     "name": "DP07 Seefunk Kiel",
+     "ch": {
+      "value": 23,
+      "verified": true,
+      "src": [
+       "dwd_dauer_2025"
+      ]
+     }
+    },
+    {
+     "name": "DP07 Seefunk Lübeck",
+     "ch": {
+      "value": 4,
+      "verified": true,
+      "src": [
+       "dwd_dauer_2025"
+      ]
+     }
+    },
+    {
+     "name": "DP07 Seefunk Rostock",
+     "ch": {
+      "value": 60,
+      "verified": true,
+      "src": [
+       "dwd_dauer_2025"
+      ]
+     }
+    },
+    {
+     "name": "DP07 Seefunk Arkona",
+     "ch": {
+      "value": 66,
+      "verified": true,
+      "src": [
+       "dwd_dauer_2025"
+      ]
+     }
+    }
+   ],
+   "vts_centres": {
+    "value": [
+     "Kiel Kanal II",
+     "Kiel Kanal III",
+     "Trave",
+     "Wismar",
+     "Warnemünde",
+     "Stralsund",
+     "Sassnitz",
+     "Wolgast"
+    ],
+    "verified": true,
+    "src": [
+     "dwd_dauer_2025"
+    ],
+    "note": "senden Sturmwarnungen/Wetterinfo auf UKW; Kanäle in Quelle nicht genannt -> null"
+   },
+   "weather": [
+    {
+     "name": "DP07 Seefunk Seewetter UKW",
+     "channels": "siehe coast_stations_vhf",
+     "times_local": {
+      "value": [
+       "07:45",
+       "09:45",
+       "12:45",
+       "16:45",
+       "19:45"
+      ],
+      "verified": true,
+      "src": [
+       "dwd_dauer_2025"
+      ],
+      "note": "Zeit = gesetzliche Zeit (MEZ/MESZ). 09:45/12:45/16:45 Mitte März–November; 07:45/19:45 nur März–Oktober"
+     },
+     "areas": "Flensburg–Fehmarn, östl. Fehmarn–Rügen, östl. Rügen, Belte und Sund, Westliche/Südliche Ostsee"
+    },
+    {
+     "name": "NDR Info Spezial Seewetter",
+     "times_local": {
+      "value": [
+       "08:30",
+       "23:03"
+      ],
+      "verified": true,
+      "src": [
+       "dwd_dauer_2025"
+      ],
+      "note": "gesetzliche Zeit; DAB+, DVB-S, App, Stream, Podcast"
+     },
+     "freq": null
+    },
+    {
+     "name": "Deutschlandfunk Seewetterbericht",
+     "status": {
+      "value": "eingestellt; letzte Sendung 28.02.2023",
+      "verified": true,
+      "src": [
+       "nordkurier_dlf"
+      ]
+     }
+    },
+    {
+     "name": "DWD Seewetter-Sprachsendung Pinneberg (Testbetrieb, Kurzwelle)",
+     "freq_khz": {
+      "value": [
+       5905,
+       6180
+      ],
+      "verified": true,
+      "src": [
+       "dwd_dauer_2025"
+      ]
+     },
+     "times_utc": {
+      "value": [
+       "06:00-06:30",
+       "12:00-12:30",
+       "20:00-20:15",
+       "16:00-16:30 (Wdh.)",
+       "20:15-20:30 (Wdh.)"
+      ],
+      "verified": true,
+      "src": [
+       "dwd_dauer_2025"
+      ],
+      "note": "Testbetrieb – Bestand prüfen"
+     }
+    },
+    {
+     "name": "DWD RTTY/FAX Pinneberg (DDH/DDK)",
+     "rtty_khz": {
+      "value": [
+       4583,
+       7646,
+       10100.8,
+       147.3,
+       11039,
+       14467.3
+      ],
+      "verified": true,
+      "src": [
+       "dwd_dauer_2025"
+      ]
+     },
+     "fax_khz": {
+      "value": [
+       3855,
+       7880,
+       13882.5
+      ],
+      "verified": true,
+      "src": [
+       "dwd_dauer_2025"
+      ]
+     },
+     "note": "aktueller Plan: www.dwd.de/sendeplan (nicht abrufbar)"
+    },
+    {
+     "name": "DWD Telefonansage Seewetter",
+     "phone": {
+      "value": "+49 69 8062 5799",
+      "verified": true,
+      "src": [
+       "dwd_dauer_2025"
+      ],
+      "note": "Menü 3 Skagerrak/Kattegat/Belte und Sund, 4 Westl./Südl. Ostsee, 6 Dt. Ostseeküste; Aktualisierung bis 07, 13, 21 Uhr (Zeitzone nicht angegeben)"
+     }
+    },
+    {
+     "name": "DWD Telefon Warnungen Ostseeküste",
+     "phone": {
+      "value": "+49 69 8062 6101",
+      "verified": true,
+      "src": [
+       "dwd_dauer_2025"
+      ]
+     }
+    }
+   ],
+   "navtex": [
+    {
+     "station": "Pinneberg",
+     "id": "L",
+     "freq_khz": 490,
+     "lang": "de",
+     "times_utc": {
+      "value": [
+       "01:50",
+       "05:50",
+       "09:50",
+       "13:50",
+       "17:50",
+       "21:50"
+      ],
+      "verified": true,
+      "src": [
+       "wiki_navtex",
+       "ics_navtex"
+      ],
+      "note": "Gesamtslots; laut DWD 2025 Ostsee-Inhalt in den Slots 01:50, 09:50, 17:50"
+     },
+     "ostsee_slots_utc": {
+      "value": [
+       "01:50",
+       "09:50",
+       "17:50"
+      ],
+      "verified": true,
+      "src": [
+       "dwd_dauer_2025"
+      ]
+     }
+    },
+    {
+     "station": "Pinneberg",
+     "id": "S",
+     "freq_khz": 518,
+     "lang": "en",
+     "times_utc": {
+      "value": [
+       "03:00",
+       "07:00",
+       "11:00",
+       "15:00",
+       "19:00",
+       "23:00"
+      ],
+      "verified": false,
+      "src": [
+       "wiki_navtex"
+      ],
+      "note": "nur Wikipedia; DWD 2025 nennt für Ostsee englisch stattdessen Gislövshammar J"
+     }
+    },
+    {
+     "station": "Gislövshammar (SE)",
+     "id": "J",
+     "freq_khz": 518,
+     "lang": "en",
+     "times_utc": {
+      "value": [
+       "01:30",
+       "05:30",
+       "09:30",
+       "13:30",
+       "17:30",
+       "21:30"
+      ],
+      "verified": true,
+      "src": [
+       "dwd_dauer_2025",
+       "wiki_navtex"
+      ]
+     },
+     "note": "laut DWD englische Ostsee-Abdeckung West/Süd"
+    }
+   ],
+   "water_level": {
+    "provider": "BSH Wasserstandsvorhersagedienst Ostsee",
+    "forecast_issue_local": {
+     "value": [
+      "08:00",
+      "14:00"
+     ],
+     "verified": true,
+     "src": [
+      "bsh_ostsee"
+     ]
+    },
+    "forecast_areas": {
+     "value": [
+      "Kieler Bucht",
+      "Lübecker Bucht",
+      "Westlich Rügens",
+      "Östlich Rügens",
+      "Kleines Haff"
+     ],
+     "verified": true,
+     "src": [
+      "bsh_ostsee"
+     ]
+    },
+    "contact_phone": {
+     "value": "+49 381 4563-781",
+     "verified": true,
+     "src": [
+      "bsh_ostsee"
+     ],
+     "note": "Kontakt Wasserstandsdienst, keine Ansage"
+    },
+    "reference": "Abweichung vom Normalmittelwasser (NMW)",
+    "high_m": {
+     "value": [
+      {
+       "from": 0.75,
+       "label": "Information erhöhter Wasserstand"
+      },
+      {
+       "from": 1.0,
+       "label": "Sturmflutwarnung / leichte Sturmflut"
+      },
+      {
+       "from": 1.25,
+       "label": "mittlere Sturmflut"
+      },
+      {
+       "from": 1.5,
+       "label": "schwere Sturmflut"
+      },
+      {
+       "from": 2.0,
+       "label": "sehr schwere Sturmflut"
+      }
+     ],
+     "verified": true,
+     "src": [
+      "bsh_ostsee"
+     ]
+    },
+    "low_m": {
+     "value": [
+      {
+       "from": -0.6,
+       "label": "Schifffahrtsinfo per NAVTEX"
+      },
+      {
+       "from": -0.75,
+       "label": "Information niedriger Wasserstand"
+      },
+      {
+       "from": -1.0,
+       "label": "Niedrigwasserwarnung / leichtes Sturmniedrigwasser"
+      },
+      {
+       "from": -1.25,
+       "label": "mittleres Sturmniedrigwasser"
+      },
+      {
+       "from": -1.5,
+       "label": "schweres Sturmniedrigwasser"
+      }
+     ],
+     "verified": true,
+     "src": [
+      "bsh_ostsee"
+     ]
+    },
+    "rule_of_thumb": {
+     "value": "Anhaltender starker SW-/W-Wind drückt Wasser nach Osten -> Niedrigwasser westl. Ostsee; Drehung auf N/NO/O schiebt es zurück und staut es an Rügen/Schleswig-Holstein auf (Badewanneneffekt), Belte/Sund bremsen Abfluss -> Hochwasser. Rückschwappen kann auch bei wenig Wind 1–1,2 m über normal bringen.",
+     "verified": true,
+     "src": [
+      "wetterdienst_windstau",
+      "wiki_ostseesturmhochwasser",
+      "yacht_sturmflut"
+     ],
+     "note": "Quellen nennen SW (nicht reines W) bzw. NO; BSH-Primärquelle zur Richtung nicht gelesen"
+    }
+   },
+   "timezone": {
+    "std": "MEZ (UTC+1)",
+    "dst": "MESZ (UTC+2)",
+    "rule": {
+     "value": "Sommerzeit letzter So im März 01:00 UTC bis letzter So im Oktober 01:00 UTC",
+     "verified": true,
+     "src": [
+      "eu_dst"
+     ]
+    }
+   }
+  },
+  {
+   "country": "DK",
+   "name": "Dänemark",
+   "rcc": {
+    "name": "JRCC Danmark (Karup)",
+    "address": "Herningvej 30, DK-7470 Karup J",
+    "phone_24h": {
+     "value": "+45 7285 0380",
+     "verified": true,
+     "src": [
+      "jrcc_dk_sarplan2026"
+     ],
+     "note": "SAR Cooperation Plan 2026"
+    },
+    "phone_conflict": {
+     "value": "+45 728 50000",
+     "verified": false,
+     "src": [
+      "skipperguide"
+     ],
+     "note": "ältere Angabe (Prüfstand 2018), widerspricht SAR-Plan 2026 – nicht verwenden"
+    },
+    "email": {
+     "value": "jrcc@sok.dk",
+     "verified": true,
+     "src": [
+      "jrcc_dk_sarplan2026"
+     ],
+     "note": "kein Alarmierungsweg"
+    },
+    "inmarsat_c": {
+     "value": "492380442",
+     "verified": true,
+     "src": [
+      "jrcc_dk_sarplan2026"
+     ]
+    }
+   },
+   "coast_radio": {
+    "name": "Lyngby Radio (OXZ), mit JRCC co-lokalisiert, ferngesteuert aus Karup",
+    "mmsi": {
+     "value": "002191000",
+     "verified": true,
+     "src": [
+      "vhfmap_2024"
+     ],
+     "note": "nur Sekundärquelle (schwedische VHF-Karte)"
+    },
+    "vhf_watch": {
+     "value": [
+      16,
+      70
+     ],
+     "verified": true,
+     "src": [
+      "jrcc_dk_sarplan2026"
+     ]
+    },
+    "mf": {
+     "value": {
+      "dsc_khz": 2187.5,
+      "voice_khz": 2182,
+      "note": "2182 nur auf Anfrage abgehört"
+     },
+     "verified": true,
+     "src": [
+      "jrcc_dk_sarplan2026"
+     ]
+    },
+    "phone": {
+     "value": [
+      "+45 7219 8410",
+      "+45 7211 2180"
+     ],
+     "verified": true,
+     "src": [
+      "lyngby_page"
+     ],
+     "note": "Lyngby Radio allgemein; auch Auskunft aktive Schießgebiete"
+    },
+    "stations_vhf": {
+     "value": [
+      {
+       "name": "Bornholm/Årsballe",
+       "ch": [
+        1,
+        4
+       ]
+      },
+      {
+       "name": "Kbh./Lynetten",
+       "ch": [
+        3,
+        5
+       ]
+      },
+      {
+       "name": "Røsnæs",
+       "ch": [
+        1,
+        4
+       ]
+      },
+      {
+       "name": "Vejby",
+       "ch": [
+        63
+       ]
+      },
+      {
+       "name": "Svendborg",
+       "ch": [
+        18
+       ]
+      },
+      {
+       "name": "Als (Felsted)",
+       "ch": [
+        62
+       ]
+      },
+      {
+       "name": "Mern",
+       "ch": [
+        2,
+        64
+       ]
+      },
+      {
+       "name": "Vejle",
+       "ch": [
+        65
+       ]
+      },
+      {
+       "name": "Fornæs",
+       "ch": [
+        66
+       ]
+      },
+      {
+       "name": "Anholt",
+       "ch": [
+        7
+       ]
+      },
+      {
+       "name": "Karleby",
+       "ch": [
+        7,
+        61
+       ]
+      },
+      {
+       "name": "Frejlev",
+       "ch": [
+        3
+       ]
+      },
+      {
+       "name": "Silkeborg",
+       "ch": [
+        5
+       ]
+      },
+      {
+       "name": "Læsø",
+       "ch": [
+        64
+       ]
+      }
+     ],
+     "verified": true,
+     "src": [
+      "lyngby_channels"
+     ],
+     "note": "Haupt-/Arbeitskanal; alle zusätzlich CH16 + DSC70; Stand 10.03.2022; Abdeckungsgebiete nicht angegeben"
+    }
+   },
+   "emergency_112": {
+    "value": {
+     "number": "112",
+     "note": "EU-Notruf; für DK keine seefahrtsspezifische Anweisung in Primärquelle gefunden"
+    },
+    "verified": false,
+    "src": [
+     "yacht_alarm"
+    ]
+   },
+   "weather": [
+    {
+     "name": "Lyngby Radio Navigationswarnungen",
+     "times_utc": {
+      "value": [
+       "01:33",
+       "05:33",
+       "09:33",
+       "13:33",
+       "17:33",
+       "21:33"
+      ],
+      "verified": true,
+      "src": [
+       "dma_efs_2017",
+       "vhfmap_2024"
+      ],
+      "note": "Ankündigung auf CH16/DSC; Erstsendung zur nächsten :03 oder :33"
+     }
+    },
+    {
+     "name": "Lyngby Radio Lokalwetter",
+     "times_local": {
+      "value": [
+       "09:00",
+       "12:00",
+       "15:00",
+       "18:00",
+       "21:00"
+      ],
+      "verified": false,
+      "src": [
+       "vhfmap_2024"
+      ],
+      "note": "nur Sekundärquelle 2024; Kanäle nicht genannt"
+     }
+    },
+    {
+     "name": "Lyngby Radio Kuling-/Sturmwarnungen DMI",
+     "times": {
+      "value": "keine festen Zeiten; nach Ankündigung CH16, Wiederholung",
+      "verified": true,
+      "src": [
+       "dma_efs_2017"
+      ]
+     }
+    },
+    {
+     "name": "DMI Farvandsudsigt (Web)",
+     "update_local": {
+      "value": [
+       "05:45",
+       "11:45",
+       "17:45"
+      ],
+      "verified": true,
+      "src": [
+       "dmi_farvand"
+      ],
+      "note": "'kurz vor'; Zeitzone nicht angegeben"
+     },
+     "five_day_update": {
+      "value": [
+       "12:30",
+       "23:00"
+      ],
+      "verified": true,
+      "src": [
+       "dmi_farvand"
+      ]
+     }
+    },
+    {
+     "name": "DR Langwelle 243 kHz (Kalundborg)",
+     "times": {
+      "value": [
+       "05:45",
+       "08:45",
+       "11:45",
+       "17:45"
+      ],
+      "verified": false,
+      "src": [
+       "dmi_farvand"
+      ],
+      "note": "Widerspruch: ing.dk (07/2023) meldet Abschaltung zum Jahreswechsel (vermutl. 01.01.2024); DMI-Seite listet 243 kHz noch"
+     }
+    }
+   ],
+   "navtex": {
+    "value": {
+     "note": "keine dänische NAVTEX-Station; Abdeckung durch Gislövshammar und Grimeton (SE), Rogaland und Jeløya (NO)"
+    },
+    "verified": true,
+    "src": [
+     "dma_efs_2017",
+     "ics_navtex"
+    ]
+   },
+   "water_level": {
+    "provider": "DMI (dmi.dk/vandstand, App DMI Vejr)",
+    "high_cm": {
+     "value": [
+      {
+       "from": 125,
+       "label": "Kat. 1"
+      },
+      {
+       "from": 140,
+       "label": "Kat. 2"
+      },
+      {
+       "from": 160,
+       "label": "Kat. 3"
+      }
+     ],
+     "verified": true,
+     "src": [
+      "dmi_varsler",
+      "dmi_vandstand_news"
+     ],
+     "note": "Ostsee und innere dänische Gewässer; Bezugshöhe nicht angegeben (vermutl. DVR90)"
+    },
+    "low_cm": {
+     "value": null,
+     "verified": false,
+     "src": [
+      "dmi_varsler"
+     ],
+     "note": "keine Niedrigwasser-Kriterien gefunden"
+    }
+   },
+   "timezone": {
+    "std": "CET (UTC+1)",
+    "dst": "CEST (UTC+2)",
+    "rule": {
+     "value": "EU-Regel wie DE",
+     "verified": true,
+     "src": [
+      "eu_dst"
+     ]
+    }
+   }
+  },
+  {
+   "country": "SE",
+   "name": "Schweden",
+   "rcc": {
+    "name": "JRCC Sverige (Sjöfartsverket, Göteborg)",
+    "callsign_vhf": "Sweden Rescue",
+    "phone_switchboard": {
+     "value": "+46 10 492 77 00",
+     "verified": true,
+     "src": [
+      "sjv_contact"
+     ]
+    },
+    "phone_ships_tmas": {
+     "value": "+46 10 492 79 00",
+     "verified": true,
+     "src": [
+      "sjv_contact"
+     ]
+    },
+    "phone_conflict": {
+     "value": "+46 31 64 80 00",
+     "verified": false,
+     "src": [
+      "skipperguide"
+     ],
+     "note": "ältere Angabe (2016) – nicht verwenden"
+    },
+    "dsc_mmsi": {
+     "value": "002653000",
+     "verified": true,
+     "src": [
+      "sjv_contact"
+     ],
+     "note": "Quelle nennt es 'Nummer' für DSC"
+    },
+    "vhf_watch": {
+     "value": [
+      16
+     ],
+     "verified": true,
+     "src": [
+      "sjv_contact"
+     ],
+     "note": "durchgehend entlang der Küste, Vänern, Vättern, Mälaren"
+    },
+    "vhf_sar_working": {
+     "value": [
+      67,
+      74
+     ],
+     "verified": true,
+     "src": [
+      "sjv_contact"
+     ],
+     "note": "je nach Region"
+    },
+    "email": {
+     "value": "jrcc@sjofartsverket.se",
+     "verified": true,
+     "src": [
+      "sjv_contact"
+     ],
+     "note": "kein Alarmierungsweg"
+    }
+   },
+   "emergency_112": {
+    "value": {
+     "number": "112",
+     "note": "Sjöfartsverket: im Notfall immer 112 anrufen und Sjöräddning verlangen"
+    },
+    "verified": true,
+    "src": [
+     "sjv_contact"
+    ]
+   },
+   "coast_radio": {
+    "name": "Stockholm Radio / Sweden Traffic",
+    "mmsi": {
+     "value": "002652000",
+     "verified": true,
+     "src": [
+      "vhfmap_2024"
+     ],
+     "note": "Stockholm Radio; Sekundärquelle"
+    },
+    "phone": {
+     "value": "+46 8 601 79 20",
+     "verified": true,
+     "src": [
+      "stockholmradio_wx"
+     ],
+     "note": "Telefonzeit 11–14"
+    },
+    "stations_vhf": {
+     "value": [
+      {
+       "name": "Malmö",
+       "ch": 65
+      },
+      {
+       "name": "Helsingborg",
+       "ch": 60
+      },
+      {
+       "name": "Kivik",
+       "ch": 21
+      },
+      {
+       "name": "Karlshamn",
+       "ch": 62
+      },
+      {
+       "name": "Karlskrona",
+       "ch": 81
+      }
+     ],
+     "verified": false,
+     "src": [
+      "vhfmap_2024",
+      "sjv_kustradiokarta"
+     ],
+     "note": "Zahlen in Karten nicht explizit als Kanal beschriftet; Helsingborg/Kivik/Karlshamn/Karlskrona in beiden Quellen gleich; Malmö nur 2024; Ystad/Simrishamn/Utklippan fehlen"
+    },
+    "mf": {
+     "value": {
+      "station": "Gislövshammar MF3",
+      "tx_khz": 1797,
+      "rx_khz": 2060
+     },
+     "verified": true,
+     "src": [
+      "sjv_kustradiokarta"
+     ]
+    }
+   },
+   "weather": [
+    {
+     "name": "Sweden Traffic Navigationswarnungen (UKW, alle Verkehrskanäle)",
+     "times_utc": {
+      "value": [
+       "02:00",
+       "06:00",
+       "10:00",
+       "14:00",
+       "18:00",
+       "22:00"
+      ],
+      "verified": true,
+      "src": [
+       "stockholmradio_wx",
+       "vhfmap_2024"
+      ],
+      "note": "Ankündigung auf CH16"
+     }
+    },
+    {
+     "name": "Sweden Traffic Wetter (UKW)",
+     "times_utc": {
+      "value": [
+       "06:00",
+       "18:00"
+      ],
+      "verified": true,
+      "src": [
+       "stockholmradio_wx",
+       "vhfmap_2024"
+      ]
+     }
+    },
+    {
+     "name": "Stockholmradio Küstenwetter",
+     "times_local": {
+      "value": {
+       "Utklippan–Hallands Väderö": [
+        "09:15",
+        "17:15"
+       ],
+       "Landsort–Utklippan": [
+        "09:00",
+        "17:00"
+       ]
+      },
+      "verified": false,
+      "src": [
+       "sjolotsen_2023"
+      ],
+      "note": "Saison widersprüchlich: 15.06.–15.08. (VHF-Karte 2024) vs. 11.05.–31.08. (stockholmradio.se 2026); Fenster 08:30–09:30 / 16:30–17:30 Ortszeit"
+     },
+     "verified_window": {
+      "value": [
+       "08:30-09:30",
+       "16:30-17:30"
+      ],
+      "verified": true,
+      "src": [
+       "stockholmradio_wx",
+       "vhfmap_2024"
+      ]
+     }
+    },
+    {
+     "name": "Sveriges Radio Sjörapporten",
+     "times_local": {
+      "value": null,
+      "verified": false,
+      "src": [
+       "smhi_areas"
+      ],
+      "note": "Sendezeiten nicht belegt"
+     }
+    }
+   ],
+   "navtex": [
+    {
+     "station": "Gislövshammar",
+     "id": "J",
+     "freq_khz": 518,
+     "times_utc": {
+      "value": [
+       "01:30",
+       "05:30",
+       "09:30",
+       "13:30",
+       "17:30",
+       "21:30"
+      ],
+      "verified": true,
+      "src": [
+       "wiki_navtex",
+       "dwd_dauer_2025"
+      ]
+     }
+    },
+    {
+     "station": "Grimeton",
+     "id": "I",
+     "freq_khz": 518,
+     "times_utc": {
+      "value": [
+       "01:20",
+       "05:20",
+       "09:20",
+       "13:20",
+       "17:20",
+       "21:20"
+      ],
+      "verified": false,
+      "src": [
+       "wiki_navtex"
+      ]
+     }
+    },
+    {
+     "station": "Bjuröklubb",
+     "id": "H",
+     "freq_khz": 518,
+     "times_utc": {
+      "value": [
+       "01:10",
+       "05:10",
+       "09:10",
+       "13:10",
+       "17:10",
+       "21:10"
+      ],
+      "verified": false,
+      "src": [
+       "wiki_navtex"
+      ],
+      "note": "Bottnischer Meerbusen, für Revier irrelevant"
+     }
+    }
+   ],
+   "water_level": {
+    "provider": "SMHI (smhi.se, Vattenstånd och vågor)",
+    "reference": "RH 2000 (vermutet, nicht belegt)",
+    "thresholds": {
+     "value": null,
+     "verified": false,
+     "src": [
+      "smhi_areas"
+     ],
+     "note": "SMHI-Warnkriterien nicht abrufbar"
+    }
+   },
+   "timezone": {
+    "std": "CET (UTC+1)",
+    "dst": "CEST (UTC+2)",
+    "rule": {
+     "value": "EU-Regel wie DE",
+     "verified": true,
+     "src": [
+      "eu_dst"
+     ]
+    }
+   }
+  },
+  {
+   "id": "pl-mrcc-gdynia",
+   "name": "MRCC Gdynia (MRCK, Polish SAR Service)",
+   "country": "PL",
+   "role": "Seenot-Leitstelle PL (gesamtes polnisches SAR-Gebiet)",
+   "vhf": {
+    "distress": 16,
+    "sar_working": 11,
+    "dsc": 70
+   },
+   "mf_dsc_khz": 2187.5,
+   "tel": [
+    "+48 58 661 01 97",
+    "+48 58 620 55 51",
+    "+48 58 621 68 11",
+    "+48 505 050 971 (mobil)"
+   ],
+   "email": "polratok.1@sar.gov.pl",
+   "mmsi": null,
+   "src": [
+    {
+     "url": "https://www.sar.gov.pl/en/our-branches/mrck-gdynia",
+     "abruf": "2026-10-18"
+    }
+   ],
+   "verified": true
+  },
+  {
+   "id": "pl-mpck-swinoujscie",
+   "name": "MPCK Świnoujście (Nebenkoordinierungszentrum)",
+   "country": "PL",
+   "role": "SAR-Nebenstelle Westpommern; Zuständigkeit fürs Haff in der Quelle nicht ausdrücklich genannt",
+   "vhf": {
+    "distress": 16,
+    "sar_working": 11
+   },
+   "tel": [
+    "+48 91 321 49 17",
+    "+48 91 321 59 29",
+    "+48 505 050 969 (mobil)"
+   ],
+   "email": "polratok.2@sar.gov.pl",
+   "mmsi": null,
+   "note": "Station MSR Trzebież (am Haff) existiert laut sar.gov.pl, Kontaktdaten nicht abgerufen. Allgemeiner Notruf 112.",
+   "src": [
+    {
+     "url": "https://www.sar.gov.pl/en/our-branches/mpck-swinoujscie",
+     "abruf": "2026-10-18"
+    },
+    {
+     "url": "https://move.noonsite.com/place/poland/view/emergencies",
+     "abruf": "2026-10-18"
+    }
+   ],
+   "verified": true
+  },
+  {
+   "id": "pl-vts-szczecin",
+   "name": "Szczecin Traffic (VTS)",
+   "country": "PL",
+   "role": "VTS Zalew Szczeciński, Roztoka Odrzańska, Häfen Police/Szczecin, Fahrwasser ab Fairway Gate II",
+   "vhf": {
+    "call": 69,
+    "working": 20
+   },
+   "note": "Pflicht ab 20 m LüA.",
+   "src": [
+    {
+     "url": "https://ums.gov.pl/Zeglarze/Poradnik jachty.pdf",
+     "abruf": "2026-10-18"
+    },
+    {
+     "url": "https://www.ums.gov.pl/nawigacyjne/poradnik/Port_regs_VTS_guidance_07082018.pdf",
+     "abruf": "2026-10-18"
+    }
+   ],
+   "verified": true
+  },
+  {
+   "id": "pl-vts-swinoujscie",
+   "name": "Świnoujście Traffic (VTS)",
+   "country": "PL",
+   "role": "Reede, Hafen Świnoujście, Fahrwasser bis Fairway Gate II",
+   "vhf": {
+    "call": 12,
+    "working": "18 (Yacht-Leitfaden 2019) / 70 (VTS-Guidance 2018 – vermutlich DSC)"
+   },
+   "dsc_mmsi": "002610800",
+   "note": "Hafenkapitän Świnoujście UKW 74. Pflicht ab 20 m LüA.",
+   "src": [
+    {
+     "url": "https://ums.gov.pl/Zeglarze/Poradnik jachty.pdf",
+     "abruf": "2026-10-18"
+    },
+    {
+     "url": "https://www.ums.gov.pl/nawigacyjne/poradnik/Port_regs_VTS_guidance_07082018.pdf",
+     "abruf": "2026-10-18"
+    }
+   ],
+   "verified": true
+  }
+ ]
+}

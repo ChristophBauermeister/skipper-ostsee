@@ -1,0 +1,501 @@
+{
+ "generated": "2026-10-18",
+ "note": "Kein Polygon belegt. bbox = [minLon,minLat,maxLon,maxLat], eigene Schätzung, verified=false. 'verified' am Gebiet bezieht sich nur auf den Namen.",
+ "SEAAREAS": [
+  {
+   "id": "dwd_b12",
+   "name": "Belte und Sund",
+   "org": "DWD",
+   "lang": "de",
+   "boundary_desc": "Großer/Kleiner Belt und Øresund; genaue Grenzen in Quelle nicht beschrieben",
+   "bbox": [
+    9.5,
+    54.6,
+    12.8,
+    56.1
+   ],
+   "bbox_verified": false,
+   "bbox_note": "grobe eigene Schätzung [Sicherheit: 4/10], nicht aus Quelle",
+   "polygon": null,
+   "verified": true,
+   "src": [
+    {
+     "url": "https://www.schobuell-wetter.de/media/files/quellen_wetter.pdf",
+     "retrieved": "2026-10-18",
+     "note": "Kopie der DWD-Broschüre 'Sturmwarnungen und Seewetterberichte', Stand 22.07.2025; Original dwd.de für Abruf gesperrt",
+     "key": "dwd_dauer_2025"
+    },
+    {
+     "url": "https://www.dsv.org/nachrichten/fahrtensegeln-bfs/2026/08/seewetterbericht-des-dwd-fuer-den-04-08-2026-achtung-sturmboeen/",
+     "retrieved": "2026-10-18",
+     "key": "dsv_2026"
+    },
+    {
+     "url": "https://dwdbib.dwd.de/retrosammlung/download/pdf/952344",
+     "retrieved": "2026-10-18",
+     "note": "DWD-Broschüre März 1997, historisch",
+     "key": "dwd_1997"
+    }
+   ],
+   "grid_point": {
+    "lat": 55,
+    "lon": 11,
+    "src": {
+     "url": "https://dwdbib.dwd.de/retrosammlung/download/pdf/952344",
+     "retrieved": "2026-10-18",
+     "note": "DWD-Broschüre März 1997, historisch",
+     "key": "dwd_1997"
+    },
+    "note": "DWD-Gitterpunkt = Mittelpunkt des Gebiets (DWD 1997)"
+   },
+   "note": "Name verifiziert, Grenze nicht"
+  },
+  {
+   "id": "dwd_b11",
+   "name": "Westliche Ostsee",
+   "org": "DWD",
+   "lang": "de",
+   "boundary_desc": "Kieler/Mecklenburger Bucht bis etwa Bornholm-Westrand (vermutet); Bericht nennt 'Ostteil' separat",
+   "bbox": [
+    9.8,
+    53.9,
+    14.3,
+    55.0
+   ],
+   "bbox_verified": false,
+   "bbox_note": "grobe eigene Schätzung [Sicherheit: 4/10], nicht aus Quelle",
+   "polygon": null,
+   "verified": true,
+   "src": [
+    {
+     "url": "https://www.schobuell-wetter.de/media/files/quellen_wetter.pdf",
+     "retrieved": "2026-10-18",
+     "note": "Kopie der DWD-Broschüre 'Sturmwarnungen und Seewetterberichte', Stand 22.07.2025; Original dwd.de für Abruf gesperrt",
+     "key": "dwd_dauer_2025"
+    },
+    {
+     "url": "https://www.dsv.org/nachrichten/fahrtensegeln-bfs/2026/08/seewetterbericht-des-dwd-fuer-den-04-08-2026-achtung-sturmboeen/",
+     "retrieved": "2026-10-18",
+     "key": "dsv_2026"
+    },
+    {
+     "url": "https://dwdbib.dwd.de/retrosammlung/download/pdf/952344",
+     "retrieved": "2026-10-18",
+     "note": "DWD-Broschüre März 1997, historisch",
+     "key": "dwd_1997"
+    }
+   ],
+   "grid_point": {
+    "lat": 54,
+    "lon": 12,
+    "src": {
+     "url": "https://dwdbib.dwd.de/retrosammlung/download/pdf/952344",
+     "retrieved": "2026-10-18",
+     "note": "DWD-Broschüre März 1997, historisch",
+     "key": "dwd_1997"
+    },
+    "note": "DWD-Gitterpunkt = Mittelpunkt des Gebiets (DWD 1997)"
+   },
+   "note": "Name verifiziert, Grenze nicht"
+  },
+  {
+   "id": "dwd_b10",
+   "name": "Südliche Ostsee",
+   "org": "DWD",
+   "lang": "de",
+   "boundary_desc": "Seegebiet um Bornholm / vor polnischer Küste (vermutet)",
+   "bbox": [
+    14.3,
+    54.0,
+    17.5,
+    56.0
+   ],
+   "bbox_verified": false,
+   "bbox_note": "grobe eigene Schätzung [Sicherheit: 4/10], nicht aus Quelle",
+   "polygon": null,
+   "verified": true,
+   "src": [
+    {
+     "url": "https://www.schobuell-wetter.de/media/files/quellen_wetter.pdf",
+     "retrieved": "2026-10-18",
+     "note": "Kopie der DWD-Broschüre 'Sturmwarnungen und Seewetterberichte', Stand 22.07.2025; Original dwd.de für Abruf gesperrt",
+     "key": "dwd_dauer_2025"
+    },
+    {
+     "url": "https://www.dsv.org/nachrichten/fahrtensegeln-bfs/2026/08/seewetterbericht-des-dwd-fuer-den-04-08-2026-achtung-sturmboeen/",
+     "retrieved": "2026-10-18",
+     "key": "dsv_2026"
+    },
+    {
+     "url": "https://dwdbib.dwd.de/retrosammlung/download/pdf/952344",
+     "retrieved": "2026-10-18",
+     "note": "DWD-Broschüre März 1997, historisch",
+     "key": "dwd_1997"
+    }
+   ],
+   "grid_point": {
+    "lat": 54,
+    "lon": 16,
+    "src": {
+     "url": "https://dwdbib.dwd.de/retrosammlung/download/pdf/952344",
+     "retrieved": "2026-10-18",
+     "note": "DWD-Broschüre März 1997, historisch",
+     "key": "dwd_1997"
+    },
+    "note": "DWD-Gitterpunkt = Mittelpunkt des Gebiets (DWD 1997)"
+   },
+   "note": "Name verifiziert, Grenze nicht"
+  },
+  {
+   "id": "dwd_b9",
+   "name": "Südöstliche Ostsee",
+   "org": "DWD",
+   "lang": "de",
+   "boundary_desc": "östlich der Südlichen Ostsee bis Baltikum (vermutet)",
+   "bbox": [
+    17.5,
+    54.3,
+    21.5,
+    57.5
+   ],
+   "bbox_verified": false,
+   "bbox_note": "grobe eigene Schätzung [Sicherheit: 4/10], nicht aus Quelle",
+   "polygon": null,
+   "verified": true,
+   "src": [
+    {
+     "url": "https://www.schobuell-wetter.de/media/files/quellen_wetter.pdf",
+     "retrieved": "2026-10-18",
+     "note": "Kopie der DWD-Broschüre 'Sturmwarnungen und Seewetterberichte', Stand 22.07.2025; Original dwd.de für Abruf gesperrt",
+     "key": "dwd_dauer_2025"
+    },
+    {
+     "url": "https://www.dsv.org/nachrichten/fahrtensegeln-bfs/2026/08/seewetterbericht-des-dwd-fuer-den-04-08-2026-achtung-sturmboeen/",
+     "retrieved": "2026-10-18",
+     "key": "dsv_2026"
+    },
+    {
+     "url": "https://dwdbib.dwd.de/retrosammlung/download/pdf/952344",
+     "retrieved": "2026-10-18",
+     "note": "DWD-Broschüre März 1997, historisch",
+     "key": "dwd_1997"
+    }
+   ],
+   "grid_point": {
+    "lat": 56,
+    "lon": 18,
+    "src": {
+     "url": "https://dwdbib.dwd.de/retrosammlung/download/pdf/952344",
+     "retrieved": "2026-10-18",
+     "note": "DWD-Broschüre März 1997, historisch",
+     "key": "dwd_1997"
+    },
+    "note": "DWD-Gitterpunkt = Mittelpunkt des Gebiets (DWD 1997)"
+   },
+   "note": "für Revier randständig"
+  },
+  {
+   "id": "dwd_b13",
+   "name": "Kattegat",
+   "org": "DWD",
+   "lang": "de",
+   "boundary_desc": "zwischen Jütland und Schweden nördlich Belte/Sund",
+   "bbox": [
+    10.5,
+    56.0,
+    12.9,
+    57.8
+   ],
+   "bbox_verified": false,
+   "bbox_note": "grobe eigene Schätzung [Sicherheit: 4/10], nicht aus Quelle",
+   "polygon": null,
+   "verified": true,
+   "src": [
+    {
+     "url": "https://www.schobuell-wetter.de/media/files/quellen_wetter.pdf",
+     "retrieved": "2026-10-18",
+     "note": "Kopie der DWD-Broschüre 'Sturmwarnungen und Seewetterberichte', Stand 22.07.2025; Original dwd.de für Abruf gesperrt",
+     "key": "dwd_dauer_2025"
+    },
+    {
+     "url": "https://dwdbib.dwd.de/retrosammlung/download/pdf/952344",
+     "retrieved": "2026-10-18",
+     "note": "DWD-Broschüre März 1997, historisch",
+     "key": "dwd_1997"
+    }
+   ],
+   "grid_point": {
+    "lat": 56,
+    "lon": 11,
+    "src": {
+     "url": "https://dwdbib.dwd.de/retrosammlung/download/pdf/952344",
+     "retrieved": "2026-10-18",
+     "note": "DWD-Broschüre März 1997, historisch",
+     "key": "dwd_1997"
+    },
+    "note": "DWD-Gitterpunkt = Mittelpunkt des Gebiets (DWD 1997)"
+   }
+  },
+  {
+   "id": "dwd_bodden",
+   "name": "Boddengewässer Ost",
+   "org": "DWD",
+   "lang": "de",
+   "boundary_desc": "Boddengewässer Vorpommern/Rügen; im Küstenbericht 'Boddengewässer Ost und östlich Rügen'",
+   "bbox": [
+    12.4,
+    54.0,
+    14.3,
+    54.7
+   ],
+   "bbox_verified": false,
+   "bbox_note": "grobe eigene Schätzung [Sicherheit: 4/10], nicht aus Quelle",
+   "polygon": null,
+   "verified": true,
+   "src": [
+    {
+     "url": "https://opendata.dwd.de/weather/maritime/forecast/english/FQEN71_EDZW_LATEST",
+     "retrieved": "2026-10-18",
+     "key": "dwd_opendata_fqen71"
+    },
+    {
+     "url": "https://dwdbib.dwd.de/retrosammlung/download/pdf/952344",
+     "retrieved": "2026-10-18",
+     "note": "DWD-Broschüre März 1997, historisch",
+     "key": "dwd_1997"
+    }
+   ],
+   "grid_point": {
+    "lat": 54,
+    "lon": 14,
+    "src": {
+     "url": "https://dwdbib.dwd.de/retrosammlung/download/pdf/952344",
+     "retrieved": "2026-10-18",
+     "note": "DWD-Broschüre März 1997, historisch",
+     "key": "dwd_1997"
+    },
+    "note": "DWD-Gitterpunkt = Mittelpunkt des Gebiets (DWD 1997)"
+   },
+   "note": "Gitterpunkt 54N14E aus 1997"
+  },
+  {
+   "id": "dwd_k_fl_fe",
+   "name": "Flensburg bis Fehmarn",
+   "org": "DWD Küstenwetter",
+   "lang": "de",
+   "boundary_desc": "Küstengewässer von Flensburg bis Fehmarn (Grenzen nur durch Namen)",
+   "bbox": [
+    9.4,
+    54.2,
+    11.3,
+    55.0
+   ],
+   "bbox_verified": false,
+   "bbox_note": "grobe eigene Schätzung [Sicherheit: 4/10], nicht aus Quelle",
+   "polygon": null,
+   "verified": true,
+   "src": [
+    {
+     "url": "https://opendata.dwd.de/weather/maritime/forecast/english/FQEN71_EDZW_LATEST",
+     "retrieved": "2026-10-18",
+     "key": "dwd_opendata_fqen71"
+    },
+    {
+     "url": "https://www.schobuell-wetter.de/media/files/quellen_wetter.pdf",
+     "retrieved": "2026-10-18",
+     "note": "Kopie der DWD-Broschüre 'Sturmwarnungen und Seewetterberichte', Stand 22.07.2025; Original dwd.de für Abruf gesperrt",
+     "key": "dwd_dauer_2025"
+    }
+   ]
+  },
+  {
+   "id": "dwd_k_fe_rue",
+   "name": "Östlich Fehmarn bis Rügen",
+   "org": "DWD Küstenwetter",
+   "lang": "de",
+   "boundary_desc": "Küstengewässer östlich Fehmarn bis Rügen",
+   "bbox": [
+    11.0,
+    53.9,
+    13.4,
+    54.7
+   ],
+   "bbox_verified": false,
+   "bbox_note": "grobe eigene Schätzung [Sicherheit: 4/10], nicht aus Quelle",
+   "polygon": null,
+   "verified": true,
+   "src": [
+    {
+     "url": "https://opendata.dwd.de/weather/maritime/forecast/english/FQEN71_EDZW_LATEST",
+     "retrieved": "2026-10-18",
+     "key": "dwd_opendata_fqen71"
+    },
+    {
+     "url": "https://www.schobuell-wetter.de/media/files/quellen_wetter.pdf",
+     "retrieved": "2026-10-18",
+     "note": "Kopie der DWD-Broschüre 'Sturmwarnungen und Seewetterberichte', Stand 22.07.2025; Original dwd.de für Abruf gesperrt",
+     "key": "dwd_dauer_2025"
+    }
+   ]
+  },
+  {
+   "id": "dwd_k_rue_ost",
+   "name": "Boddengewässer Ost und östlich Rügen",
+   "org": "DWD Küstenwetter",
+   "lang": "de",
+   "boundary_desc": "Bodden und Küste östlich Rügen bis Usedom",
+   "bbox": [
+    13.2,
+    53.8,
+    14.3,
+    54.8
+   ],
+   "bbox_verified": false,
+   "bbox_note": "grobe eigene Schätzung [Sicherheit: 4/10], nicht aus Quelle",
+   "polygon": null,
+   "verified": true,
+   "src": [
+    {
+     "url": "https://opendata.dwd.de/weather/maritime/forecast/english/FQEN71_EDZW_LATEST",
+     "retrieved": "2026-10-18",
+     "key": "dwd_opendata_fqen71"
+    }
+   ]
+  },
+  {
+   "id": "smhi_sydvastra",
+   "name": "Sydvästra Östersjön",
+   "org": "SMHI",
+   "lang": "sv",
+   "boundary_desc": "SW-Ostsee (Nachfolger Teil 'Södra Östersjön' alt); Grenzen nicht beschrieben",
+   "bbox": null,
+   "bbox_verified": false,
+   "bbox_note": null,
+   "polygon": null,
+   "verified": true,
+   "src": [
+    {
+     "url": "https://www.smhi.se/kunskapsbanken/fran-datid-till-nutid/historisk-aterblick/aldre-prognosdistrikt-i-land--och-sjorapporten",
+     "retrieved": "2026-10-18",
+     "key": "smhi_old_districts"
+    },
+    {
+     "url": "https://www.smhi.se/kunskapsbanken/meteorologi/vaderprognoser/kustvaderstrackor-och-sjovaderomraden",
+     "retrieved": "2026-10-18",
+     "key": "smhi_areas"
+    }
+   ]
+  },
+  {
+   "id": "smhi_sodra",
+   "name": "Södra Östersjön",
+   "org": "SMHI",
+   "lang": "sv",
+   "boundary_desc": "Küstenstrecken Utklippan–Hanö, Hanö–Sandhammaren, Sandhammaren–Falsterbo zugeordnet",
+   "bbox": [
+    12.8,
+    54.8,
+    16.5,
+    56.3
+   ],
+   "bbox_verified": false,
+   "bbox_note": "grobe eigene Schätzung [Sicherheit: 4/10], nicht aus Quelle",
+   "polygon": null,
+   "verified": true,
+   "src": [
+    {
+     "url": "https://www.smhi.se/kunskapsbanken/meteorologi/vaderprognoser/kustvaderstrackor-och-sjovaderomraden",
+     "retrieved": "2026-10-18",
+     "key": "smhi_areas"
+    }
+   ]
+  },
+  {
+   "id": "smhi_sydostra",
+   "name": "Sydöstra Östersjön",
+   "org": "SMHI",
+   "lang": "sv",
+   "boundary_desc": "SO-Ostsee; Grenzen nicht beschrieben",
+   "bbox": null,
+   "bbox_verified": false,
+   "bbox_note": null,
+   "polygon": null,
+   "verified": true,
+   "src": [
+    {
+     "url": "https://www.smhi.se/kunskapsbanken/meteorologi/vaderprognoser/kustvaderstrackor-och-sjovaderomraden",
+     "retrieved": "2026-10-18",
+     "key": "smhi_areas"
+    },
+    {
+     "url": "https://www.smhi.se/kunskapsbanken/fran-datid-till-nutid/historisk-aterblick/aldre-prognosdistrikt-i-land--och-sjorapporten",
+     "retrieved": "2026-10-18",
+     "key": "smhi_old_districts"
+    }
+   ]
+  },
+  {
+   "id": "smhi_balten",
+   "name": "Bälten",
+   "org": "SMHI",
+   "lang": "sv",
+   "boundary_desc": "Belte; Grenzen nicht beschrieben",
+   "bbox": null,
+   "bbox_verified": false,
+   "bbox_note": null,
+   "polygon": null,
+   "verified": true,
+   "src": [
+    {
+     "url": "https://www.smhi.se/kunskapsbanken/meteorologi/vaderprognoser/kustvaderstrackor-och-sjovaderomraden",
+     "retrieved": "2026-10-18",
+     "key": "smhi_areas"
+    }
+   ]
+  },
+  {
+   "id": "smhi_oresund",
+   "name": "Öresund (och allra sydligaste Kattegatt)",
+   "org": "SMHI",
+   "lang": "sv",
+   "boundary_desc": "Küstenstrecke Falsterbo–Hallands Väderö",
+   "bbox": [
+    12.3,
+    55.3,
+    13.0,
+    56.5
+   ],
+   "bbox_verified": false,
+   "bbox_note": "grobe eigene Schätzung [Sicherheit: 4/10], nicht aus Quelle",
+   "polygon": null,
+   "verified": true,
+   "src": [
+    {
+     "url": "https://www.smhi.se/kunskapsbanken/meteorologi/vaderprognoser/kustvaderstrackor-och-sjovaderomraden",
+     "retrieved": "2026-10-18",
+     "key": "smhi_areas"
+    }
+   ]
+  },
+  {
+   "id": "dmi_areas",
+   "name": "DMI farvandsområder",
+   "org": "DMI",
+   "lang": "da",
+   "boundary_desc": "Namen und Grenzen nicht ermittelt",
+   "bbox": null,
+   "bbox_verified": false,
+   "bbox_note": null,
+   "polygon": null,
+   "verified": false,
+   "src": [
+    {
+     "url": "https://www.dmi.dk/dmis-vejrprodukter/farvandsudsigt/",
+     "retrieved": "2026-10-18",
+     "key": "dmi_farvand"
+    }
+   ],
+   "note": "offen"
+  }
+ ]
+}

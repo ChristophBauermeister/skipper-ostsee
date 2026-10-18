@@ -1,0 +1,119 @@
+{
+ "_meta": {
+  "stand": "2026-10-18",
+  "abrufdatum": "2026-10-18",
+  "hinweis": "Unter dem Namen 'Dehler 35' laufen mindestens zwei verschiedene Boote. Welches Christoph segelt (Baujahr!), muss er bestätigen. Werft-Seiten (dehler.com) enthalten keine Daten zu Altmodellen; de-Wikipedia-Artikel existiert nicht. Einzige Quelle: sailboatdata.com (Sekundärquelle).",
+  "app_default_vorschlag": "Erst nach Bestätigung des Baujahrs setzen. Masthöhe für die Brückenprüfung immer inkl. Antenne/Windex + Sicherheitszuschlag rechnen."
+ },
+ "variants": [
+  {
+   "id": "dehler-35-2010",
+   "name": "Dehler 35 (Simonis & Voogd)",
+   "years": "ab 2010 (Endjahr nicht belegt)",
+   "designer": "Simonis & Voogd",
+   "loa_m": 10.51,
+   "lwl_m": 9.38,
+   "beam_m": 3.49,
+   "keels": [
+    {
+     "name": "Standardkiel (Tabellenwert)",
+     "draft_m": 1.95,
+     "displacement_kg": 5520,
+     "ballast_kg": 1880
+    },
+    {
+     "name": "Regattakiel",
+     "draft_m": 2.15,
+     "displacement_kg": 5430,
+     "ballast_kg": 1815
+    },
+    {
+     "name": "Flachkiel",
+     "draft_m": 1.62,
+     "displacement_kg": 5830,
+     "ballast_kg": 2190
+    }
+   ],
+   "mast_above_wl_m": 17.64,
+   "mast_note": "sailboatdata 'mast height above DWL' (berechneter Wert, ohne Antenne/Windex/Licht). Für Brückenprüfung NICHT direkt verwenden: realen Wert am Boot messen oder Zuschlag ≥0,5 m (Faustregel, nicht belegt).",
+   "rig": {
+    "I_m": 14.8,
+    "P_m": 14.55,
+    "E_m": 4.7,
+    "J_m": 4.1
+   },
+   "src": [
+    {
+     "url": "https://sailboatdata.com/sailboat/dehler-35/",
+     "abruf": "2026-10-18"
+    }
+   ],
+   "verified": {
+    "dims": true,
+    "draft": true,
+    "mast": false,
+    "displacement": true
+   },
+   "verified_overall": false
+  },
+  {
+   "id": "dehler-35-cws",
+   "name": "Dehler 35 CWS (van de Stadt)",
+   "years": "1993–1998 (280 gebaut)",
+   "designer": "E. G. van de Stadt",
+   "loa_m": 10.5,
+   "lwl_m": 8.9,
+   "beam_m": 3.3,
+   "keels": [
+    {
+     "name": "Flossenkiel mit Bombe (einzige gelistete Variante)",
+     "draft_m": 1.9,
+     "displacement_kg": 4800,
+     "ballast_kg": 1900
+    }
+   ],
+   "mast_above_wl_m": null,
+   "mast_note": "Nicht in der Quelle. Grobe Größenordnung aus I=12,60 m wäre ca. 14 m über WL – NICHT belegt, nicht verwenden [Sicherheit: 4/10].",
+   "rig": {
+    "I_m": 12.6,
+    "P_m": 13.2,
+    "E_m": 4.75,
+    "J_m": 3.68
+   },
+   "src": [
+    {
+     "url": "https://sailboatdata.com/sailboat/dehler-35-cws/",
+     "abruf": "2026-10-18"
+    }
+   ],
+   "verified": {
+    "dims": true,
+    "draft": true,
+    "mast": false,
+    "displacement": true
+   },
+   "verified_overall": false,
+   "note": "Weitere Kielvarianten (Flach-/Tiefkiel) nicht belegt."
+  },
+  {
+   "id": "dehler-35-sq-jv",
+   "name": "Dehler 35 SQ / 35 JV (Zwischengeneration, ca. 1999–2009?)",
+   "years": null,
+   "designer": null,
+   "loa_m": null,
+   "lwl_m": null,
+   "beam_m": null,
+   "keels": [],
+   "mast_above_wl_m": null,
+   "src": [],
+   "verified": {
+    "dims": false,
+    "draft": false,
+    "mast": false,
+    "displacement": false
+   },
+   "verified_overall": false,
+   "note": "Existenz nur aus Erinnerung [Sicherheit: 5/10]; sailboatdata-Seite war nicht abrufbar. Klären."
+  }
+ ]
+}

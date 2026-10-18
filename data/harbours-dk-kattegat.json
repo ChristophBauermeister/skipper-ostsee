@@ -1,0 +1,4972 @@
+[
+ {
+  "id": "dk-aarhus-havn",
+  "name": "Aarhus Havn",
+  "country": "DK",
+  "region": "Aarhus-Bucht",
+  "type": "hafen",
+  "lat": 56.15923,
+  "lon": 10.23577,
+  "prot": null,
+  "protSource": null,
+  "entranceOpen": null,
+  "swellOpen": null,
+  "depthEntrance_m": 11.0,
+  "depthBerthMin_m": null,
+  "depthBerthMax_m": null,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "W"
+     ],
+     "m": 2.0
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "E"
+     ],
+     "m": 1.0
+    }
+   ]
+  },
+  "season": null,
+  "vhf": "16, 12",
+  "tel": "+45 86 13 32 66",
+  "web": "www.aarhushavn.dk",
+  "note": "Berufshafen (Nord-, Süd-, Ost- und Fährhafen); Sportboote in der Lystbåde- og Fiskerihavn (eigener Eintrag). An-/Ablegen 15 min vorher bei Trafiktjenesten (Kanal 12) melden. Hochwasser bei W-Wind 1–2 m (hier Obergrenze). Bauarbeiten in Bassin 11/12 bis Ende 2026. Ankern auf der Reede.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": true,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/d2364bfa-c792-4cff-aef2-137900316e15.html, Tekst 13-05-2026, abgerufen 2026-10-18",
+  "refuge": false,
+  "refugeLevel": null,
+  "plans": null,
+  "distHeiligenhafen_sm": 110.0,
+  "distBreege_sm": 141.3,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-egaa-marina",
+  "name": "Egå Marina",
+  "country": "DK",
+  "region": "Aarhus-Bucht",
+  "type": "marina",
+  "lat": 56.20905,
+  "lon": 10.29105,
+  "prot": {
+   "N": "full",
+   "NE": "part",
+   "E": "part",
+   "SE": "full",
+   "S": "full",
+   "SW": "full",
+   "W": "full",
+   "NW": "full"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "E",
+   "NE"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 3.0,
+  "depthBerthMin_m": 2.2,
+  "depthBerthMax_m": 3.0,
+  "maxDraft_m": null,
+  "maxLoa_m": 20,
+  "maxBeam_m": 5,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "NW"
+     ],
+     "m": 1.0
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "E"
+     ],
+     "m": 0.6
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 86 22 55 51",
+  "web": "www.egaa-marina.dk",
+  "note": "Ca. 3,5 sm NE von Aarhus an der W-Seite der Einfahrt zur Kalø Vig. Neigung zur Versandung am E-Molenkopf und außen an der S-Mole. Tiefen nur im Plan. Text-Stand 2021. Hafenplan: Bådehavn 2,2–3 m, Jollehavn 1,5 m nicht berücksichtigt. Laut Text Versandung am E-Molenkopf und außen an der S-Mole.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/1ac021ff-a99f-473a-ae23-ef23cb6deb94.html, Tekst 07-07-2021, abgerufen 2026-10-18",
+  "refuge": true,
+  "refugeLevel": "plan",
+  "plans": [
+   "SK_EGAAX.jpg"
+  ],
+  "distHeiligenhafen_sm": 112.5,
+  "distBreege_sm": 141.8,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-kaloevig-baadehavn",
+  "name": "Kaløvig Bådehavn",
+  "country": "DK",
+  "region": "Aarhus-Bucht",
+  "type": "marina",
+  "lat": 56.24283,
+  "lon": 10.34303,
+  "prot": {
+   "N": "part",
+   "NE": "part",
+   "E": "full",
+   "SE": "full",
+   "S": "full",
+   "SW": "full",
+   "W": "full",
+   "NW": "full"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "NE",
+   "E"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 3.0,
+  "depthBerthMin_m": 2.5,
+  "depthBerthMax_m": 3.0,
+  "maxDraft_m": 3.0,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "SE"
+     ],
+     "m": 1.5
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "W",
+      "NW"
+     ],
+     "m": 0.8
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 86 99 19 67",
+  "web": "www.kblsail.dk",
+  "note": "Bootsclubhafen an der W-Seite der Kalø Vig unmittelbar S des Kraftwerks Studstrup. Stege 3,0–2,5 m; Lagune im S für Jollen (1,0 m). Text-Stand 2018. Hafenplan: Text nennt 3,5 m in der Einfahrt, Plan zeigt keine Lotung im Einlauf, dahinter 3 m (Plan gewinnt). Stege 2,5–3 m, Lagune/Jollefortøjning 1 m ausgenommen.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/43082130-7ab3-4252-bc7b-1888b991392f.html, Tekst 28-09-2018, abgerufen 2026-10-18",
+  "refuge": true,
+  "refugeLevel": "plan",
+  "plans": [
+   "SK_KALOV.jpg"
+  ],
+  "distHeiligenhafen_sm": 114.1,
+  "distBreege_sm": 141.9,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-knebelbro-jolle-og-baadehavn",
+  "name": "Knebelbro Jolle- og Bådehavn",
+  "country": "DK",
+  "region": "Aarhus-Bucht",
+  "type": "marina",
+  "lat": 56.20435,
+  "lon": 10.47222,
+  "prot": null,
+  "protSource": null,
+  "entranceOpen": null,
+  "swellOpen": null,
+  "depthEntrance_m": null,
+  "depthBerthMin_m": null,
+  "depthBerthMax_m": null,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": null,
+  "season": null,
+  "vhf": null,
+  "tel": null,
+  "web": null,
+  "note": "Becken und kleine Bootsbrücke in der Knebel Vig (Knebelvig Bådelaug). Weitere Angaben laut Lotse ausstehend. Text-Stand 2018.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": false,
+   "vhf": false,
+   "tel": false,
+   "season": false,
+   "surge": false
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/932e69e4-7983-48f6-b299-5560eead6b28.html, Tekst 28-09-2018, abgerufen 2026-10-18",
+  "refuge": false,
+  "refugeLevel": null,
+  "plans": null,
+  "distHeiligenhafen_sm": 111.0,
+  "distBreege_sm": 137.1,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-kongsgaarde-bro",
+  "name": "Kongsgårde Bro",
+  "country": "DK",
+  "region": "Aarhus-Bucht",
+  "type": "hafen",
+  "lat": 56.14568,
+  "lon": 10.51413,
+  "prot": {
+   "N": "open",
+   "NE": "open",
+   "E": "open",
+   "SE": "full",
+   "S": "full",
+   "SW": "full",
+   "W": "open",
+   "NW": "open"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "N",
+   "NE",
+   "E",
+   "W",
+   "NW"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": null,
+  "depthBerthMin_m": 2.5,
+  "depthBerthMax_m": 2.5,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "W"
+     ],
+     "m": 0.6
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "SE",
+      "S"
+     ],
+     "m": 1.0
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": null,
+  "web": null,
+  "note": "135 m lange Steganlage des Sejlklubben Bugten in der Begtrup Vig, für kleinere Fahrzeuge; nur tagsüber. Offene Brücke, Schutzrichtungen nicht beschrieben. Hafenplan: Freistehende Brücke ohne Hafenbecken; Plan zeigt 2,5 m am Brückenkopf, Text 3,0 m (Plan gewinnt). Keine Einfahrt, daher depthEntrance null; nur am Tag.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": false,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/ec3ee37b-fb43-439a-9837-e2c85eb9cbb5.html, Tekst 15-05-2023, abgerufen 2026-10-18",
+  "refuge": false,
+  "refugeLevel": null,
+  "plans": [
+   "SK_KGSGD.jpg"
+  ],
+  "distHeiligenhafen_sm": 107.4,
+  "distBreege_sm": 133.7,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-marselisborg-lystbaadehavn",
+  "name": "Marselisborg Lystbådehavn",
+  "country": "DK",
+  "region": "Aarhus-Bucht",
+  "type": "marina",
+  "lat": 56.1377,
+  "lon": 10.21558,
+  "prot": {
+   "N": "full",
+   "NE": "full",
+   "E": "full",
+   "SE": "full",
+   "S": "part",
+   "SW": "part",
+   "W": "full",
+   "NW": "full"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "S"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 3.5,
+  "depthBerthMin_m": 2.5,
+  "depthBerthMax_m": 3.5,
+  "maxDraft_m": 2.5,
+  "maxLoa_m": 20,
+  "maxBeam_m": 5,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "W",
+      "NW"
+     ],
+     "m": 1.0
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "SE"
+     ],
+     "m": 0.8
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 86 19 86 44",
+  "web": "www.marselisborghavn.dk",
+  "note": "Marina mit West-, Außen- und Ostbecken; max. Tiefgang laut Lotse 2,5–2,75 m (Untergrenze). Bis Ende Nov. 2026 geotechnische Arbeiten SE der Marina. Ankern in Tangkrogen SW des Hafens. Hafenplan: Einfahrt nach SSW zwischen Vest- und Østmole, Ansteuerung 4,4/3,8 m, Yderbassin 3,5 m; Liegeplätze in Vest-/Øst-/Yderbassin 2,5–3,5 m.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/82ba67d5-eaca-47d5-b488-4a7546b2d1a2.html, Tekst 01-09-2026, abgerufen 2026-10-18",
+  "refuge": true,
+  "refugeLevel": "plan",
+  "plans": [
+   "SK_MASBG.jpg"
+  ],
+  "distHeiligenhafen_sm": 108.9,
+  "distBreege_sm": 141.0,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-nappedam-lystbaadehavn",
+  "name": "Nappedam Lystbådehavn",
+  "country": "DK",
+  "region": "Aarhus-Bucht",
+  "type": "marina",
+  "lat": 56.27653,
+  "lon": 10.49508,
+  "prot": {
+   "N": "full",
+   "NE": "full",
+   "E": "part",
+   "SE": "part",
+   "S": "full",
+   "SW": "full",
+   "W": "full",
+   "NW": "full"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "SE"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 2.2,
+  "depthBerthMin_m": 2.0,
+  "depthBerthMax_m": 3.0,
+  "maxDraft_m": 2.5,
+  "maxLoa_m": 18,
+  "maxBeam_m": 6,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "NW"
+     ],
+     "m": 0.6
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "SE"
+     ],
+     "m": 0.6
+    }
+   ]
+  },
+  "season": null,
+  "vhf": "16, 12, 68",
+  "tel": "+45 86 37 20 89",
+  "web": "www.nappedam.dk",
+  "note": "Reiner Sportboothafen (Nappedam Bådelaug) in der Kalø Vig. Guter Ankerplatz S des Hafens. Tiefen nur im Plan. Hafenplan: Einfahrt im SE zwischen Molenkopf (F.R) und Slipanlage, dort 2,2–2,7 m; Gæstebro 2,7–3 m, Becken 2–3 m. Grenzfall: Einfahrt 2,2 m evtl. neben dem Fahrwasser gelotet.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": true,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/753031bb-354a-419f-9f04-8cf0bf98a472.html, Tekst 16-05-2023, abgerufen 2026-10-18",
+  "refuge": false,
+  "refugeLevel": "grenzfall",
+  "plans": [
+   "SK_NAPDM.jpg"
+  ],
+  "distHeiligenhafen_sm": 115.2,
+  "distBreege_sm": 139.6,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-norsminde-lystbaadehavn",
+  "name": "Norsminde Lystbådehavn",
+  "country": "DK",
+  "region": "Aarhus-Bucht",
+  "type": "marina",
+  "lat": 56.02337,
+  "lon": 10.26278,
+  "prot": {
+   "N": "full",
+   "NE": "part",
+   "E": "full",
+   "SE": "full",
+   "S": "full",
+   "SW": "full",
+   "W": "full",
+   "NW": "full"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "NE"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 2.2,
+  "depthBerthMin_m": 1.0,
+  "depthBerthMax_m": 1.8,
+  "maxDraft_m": null,
+  "maxLoa_m": 15,
+  "maxBeam_m": 3.75,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "NW",
+      "N"
+     ],
+     "m": 0.8
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "SE",
+      "S"
+     ],
+     "m": 0.8
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 20 14 16 54",
+  "web": "www.norsminde-havn.dk",
+  "note": "Sportboothafen an der Mündung des Norsminde Fjords; Hafen bis 1,8 m (nur Obergrenze), Jollenlagune 0,9 m. Ansteuerung durch schmalen Einschnitt zwischen Kysing Hage und Hesbjerg Grund; Strom aus/in den Fjord 3–4 kn, Fahrt halten. Hafenplan: Rinne 2,2 m von NE an Mole (F.G) entlang; Steganlage 1,0–1,8 m (2,2 m nur in der Fahrrinne), Lagune 0,9 m. Starker Fjordstrom beachten.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/9977a6a1-7de2-42c0-be00-7de29bfe8d47.html, Tekst 16-10-2025, abgerufen 2026-10-18",
+  "refuge": false,
+  "refugeLevel": null,
+  "plans": [
+   "SK_NORMI.jpg"
+  ],
+  "distHeiligenhafen_sm": 101.8,
+  "distBreege_sm": 135.5,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-skoedshoved-bro-jollehavn",
+  "name": "Skødshoved Bro Jollehavn",
+  "country": "DK",
+  "region": "Aarhus-Bucht",
+  "type": "marina",
+  "lat": 56.18117,
+  "lon": 10.37343,
+  "prot": {
+   "N": "full",
+   "NE": "full",
+   "E": "full",
+   "SE": "full",
+   "S": "full",
+   "SW": "full",
+   "W": "part",
+   "NW": "part"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "S",
+   "W"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 1.8,
+  "depthBerthMin_m": 1.2,
+  "depthBerthMax_m": 1.8,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "SE"
+     ],
+     "m": 1.3
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "N"
+     ],
+     "m": 0.5
+    }
+   ]
+  },
+  "season": {
+   "open": "04-01",
+   "close": "11-15"
+  },
+  "vhf": null,
+  "tel": null,
+  "web": "www.skoedshoved.dk",
+  "note": "Jollenhafen, Brücke auch für Fischer und lokale Fähre; Innenhafen flacht auf 1,2 m ab. Ansteuerung zwischen Tonnenpaar ca. 100 m NNW der Einfahrt; laut Lotse bei hartem S- und W-Wind (v. a. bei Niedrigwasser) abgeraten. 15.11.–1.4. wegen Eisschutz-Luftschläuchen bis auf den äußeren Beckenteil gesperrt. Lotse nennt max. 10×3 m. Hafenplan: Einfahrt W (F.G) 1,8 m, Stege 1,2–1,8 m. Text: Anlaufen bei harten S-/W-Winden frarådes.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": true,
+   "depth": true,
+   "vhf": false,
+   "tel": false,
+   "season": true,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/5501171c-e12e-46a2-9c8c-1862e0f5e525.html, Tekst 06-02-2026, abgerufen 2026-10-18",
+  "refuge": false,
+  "refugeLevel": null,
+  "plans": [
+   "SK_SKDHD.jpg"
+  ],
+  "distHeiligenhafen_sm": 110.3,
+  "distBreege_sm": 138.6,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-studstrupvaerkets-havn",
+  "name": "Studstrupværkets Havn",
+  "country": "DK",
+  "region": "Aarhus-Bucht",
+  "type": "hafen",
+  "lat": 56.24932,
+  "lon": 10.35133,
+  "prot": {
+   "N": "part",
+   "NE": "open",
+   "E": "open",
+   "SE": "open",
+   "S": "full",
+   "SW": "full",
+   "W": "full",
+   "NW": "full"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "NE",
+   "E",
+   "SE"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 11.3,
+  "depthBerthMin_m": 7.7,
+  "depthBerthMax_m": 11.3,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "W",
+      "NW"
+     ],
+     "m": 1.25
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "E",
+      "SE"
+     ],
+     "m": 0.9
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 99 55 65 42",
+  "web": null,
+  "note": "Berufshafen des Kraftwerks Studstrup (Ørsted); Zufahrt durch Sperrgebiet in der Kalø Vig nur mit Genehmigung der Søfartsstyrelsen. Keine Sportbootplätze. Hafenplan: Industriekai ohne Sportbootplätze; Werte über Kaianlage. Gebaggerte Rinne 11,3 m, inneres Kaiende 7,7 m; nach NE–SE offen.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/709cde53-bc39-4649-b725-9fc08f965030.html, Tekst 06-02-2026, abgerufen 2026-10-18",
+  "refuge": false,
+  "refugeLevel": null,
+  "plans": [
+   "SKTSTUDV.jpg"
+  ],
+  "distHeiligenhafen_sm": 114.4,
+  "distBreege_sm": 141.9,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-aarhus-lystbaadehavn",
+  "name": "Århus Lystbådehavn",
+  "country": "DK",
+  "region": "Aarhus-Bucht",
+  "type": "marina",
+  "lat": 56.16775,
+  "lon": 10.22353,
+  "prot": {
+   "N": "part",
+   "NE": "part",
+   "E": "full",
+   "SE": "full",
+   "S": "full",
+   "SW": "full",
+   "W": "full",
+   "NW": "full"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "NE",
+   "E"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 5.2,
+  "depthBerthMin_m": 3.0,
+  "depthBerthMax_m": 4.0,
+  "maxDraft_m": 4.0,
+  "maxLoa_m": 15,
+  "maxBeam_m": 5,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": null,
+  "season": null,
+  "vhf": null,
+  "tel": "+45 86 19 15 90",
+  "web": null,
+  "note": "Sportboothafen der Aarhus Havn. Unmittelbar E der Einfahrt Schwimm-/Tauchbahn mit gelben Stangen (teils 1.6.–1.10.). Hafenbüro geöffnet 15.4.–31.10. Keine Wasserstandsangabe. Tiefen nur im Plan. Hafenplan: Einfahrt N (F.R), Rinne 5,2 m; 2,2 m knapp außerhalb der Rinnenmarkierung an der Einfahrt. Stege 3–4 m. Badezone E der Einfahrt.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": false
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/f14b35c0-a7db-4cf0-ad9e-ebf91c504874.html, Tekst 23-04-2024, abgerufen 2026-10-18",
+  "refuge": true,
+  "refugeLevel": "plan",
+  "plans": [
+   "SK_ARHSL.jpg"
+  ],
+  "distHeiligenhafen_sm": 110.6,
+  "distBreege_sm": 141.9,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-anholt-havn",
+  "name": "Anholt Havn",
+  "country": "DK",
+  "region": "Anholt",
+  "type": "hafen",
+  "lat": 56.71468,
+  "lon": 11.50947,
+  "prot": {
+   "N": "full",
+   "NE": "full",
+   "E": "full",
+   "SE": "full",
+   "S": "full",
+   "SW": "part",
+   "W": "part",
+   "NW": "full"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "SW",
+   "W"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 3.5,
+  "depthBerthMin_m": 1.5,
+  "depthBerthMax_m": 3.5,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "W"
+     ],
+     "m": 1.0
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "E"
+     ],
+     "m": 0.8
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 86 31 90 08",
+  "web": null,
+  "note": "prot abgeleitet: Molenhafen an der W-Spitze, Ansteuerungssektor 292–310° von der Mündung, Einfahrt also nach WNW zum offenen Kattegat. Versandung: an den Molenköpfen (v. a. S-Mole) oft unter 3,7 m, im Sektor 292–310° normal mind. 4,2 m – keine belastbare Untergrenze, daher Tiefe null. Größere Yachten ggf. im Vorhafen. Querstrom vor der Mündung meist N-setzend. Hafenplan: Einfahrt zwischen Molenköpfen 3,5 m, Lystbådehavn 1,5–3,5 m; Plan vermerkt unsichere Tiefen durch Sandwanderung, laut Text an Molenköpfen oft < 3,7 m. Größere Yachten ggf. in der Forhavn.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/48ab9ed3-dc58-4f5e-ae0b-31e10e16b3bb.html, Tekst 09-02-2026, abgerufen 2026-10-18",
+  "refuge": true,
+  "refugeLevel": "plan",
+  "plans": [
+   "NKTANHOL.jpg"
+  ],
+  "distHeiligenhafen_sm": 141.5,
+  "distBreege_sm": 140.9,
+  "zone": "rand"
+ },
+ {
+  "id": "dk-boennerup-havn",
+  "name": "Bønnerup Havn",
+  "country": "DK",
+  "region": "Djursland",
+  "type": "hafen",
+  "lat": 56.53615,
+  "lon": 10.71312,
+  "prot": {
+   "N": "part",
+   "NE": "full",
+   "E": "full",
+   "SE": "full",
+   "S": "full",
+   "SW": "full",
+   "W": "full",
+   "NW": "full"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "N",
+   "NW",
+   "NE"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 3.0,
+  "depthBerthMin_m": 2.0,
+  "depthBerthMax_m": 3.0,
+  "maxDraft_m": 3.0,
+  "maxLoa_m": 20,
+  "maxBeam_m": 5,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "N"
+     ],
+     "m": 1.0
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "S"
+     ],
+     "m": 1.0
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 23 29 07 60",
+  "web": null,
+  "note": "Fischerei- und Sportboothafen; Grenzen gelten für den Sportbootteil. Starke, wechselnde Versandung vor und in der Einfahrt, nach Sturm täglich änderbar; E der Einfahrt ≤4 m gelotet. Tiefen nur im Plan. Hafenplan: Lange Molen mit innerem Wellenbrecher, Lystbådehavn im SW 2–3 m. Laut Text häufige Versandung der Einfahrt, Tiefen können sich nach Sturm stark ändern.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/011b4769-51dc-4b55-8f2d-1b95db4869c6.html, Tekst 29-07-2026, abgerufen 2026-10-18",
+  "refuge": true,
+  "refugeLevel": "plan",
+  "plans": [
+   "NKTBONRP.jpg"
+  ],
+  "distHeiligenhafen_sm": 129.9,
+  "distBreege_sm": 146.3,
+  "zone": "rand"
+ },
+ {
+  "id": "dk-ebeltoft-havn",
+  "name": "Ebeltoft Havn",
+  "country": "DK",
+  "region": "Djursland",
+  "type": "hafen",
+  "lat": 56.1972,
+  "lon": 10.66987,
+  "prot": {
+   "N": "full",
+   "NE": "full",
+   "E": "full",
+   "SE": "full",
+   "S": "full",
+   "SW": "full",
+   "W": "part",
+   "NW": "part"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "W",
+   "NW"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 4.5,
+  "depthBerthMin_m": 3.0,
+  "depthBerthMax_m": 4.5,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "NW"
+     ],
+     "m": 1.5
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "SE"
+     ],
+     "m": 1.0
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 86 34 31 24",
+  "web": null,
+  "note": "Verkehrshafen mit Gastplätzen, Fischereihafen getrennt; Zufahrt über 200×50 m Rinne, an den Rändern Versandung. Gute Ankerplätze in der Ebeltoft Vig. Tiefen nur im Plan. Hafenplan: Auswertung Trafikhavn (Gastplätze): Rinne/Einfahrt 4,5–5 m, Stege 3–4,5 m. Rinne zum Træskibshavn seitlich versandend.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/932126b0-1232-4fcd-97c8-fb52534904db.html, Tekst 03-07-2026, abgerufen 2026-10-18",
+  "refuge": true,
+  "refugeLevel": "plan",
+  "plans": [
+   "SKTEBLTF.jpg"
+  ],
+  "distHeiligenhafen_sm": 109.8,
+  "distBreege_sm": 132.1,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-ebeltoft-skudehavn",
+  "name": "Ebeltoft Skudehavn",
+  "country": "DK",
+  "region": "Djursland",
+  "type": "marina",
+  "lat": 56.19135,
+  "lon": 10.66812,
+  "prot": {
+   "N": "full",
+   "NE": "full",
+   "E": "full",
+   "SE": "full",
+   "S": "full",
+   "SW": "part",
+   "W": "part",
+   "NW": "full"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "W",
+   "SW"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 3.0,
+  "depthBerthMin_m": 2.0,
+  "depthBerthMax_m": 3.0,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "W",
+      "NW"
+     ],
+     "m": 1.3
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "E",
+      "SE"
+     ],
+     "m": 0.9
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 40 16 75 54",
+  "web": null,
+  "note": "Selbstverwaltete Skudehavn S des Fischereihafens Ebeltoft. Lotse nennt max. ca. 15×5 m (nicht ausdrücklich für Sportboote). Tiefen nur im Plan. Hafenplan: Einfahrt am N-Ende hinter Steinwellenbrecher, 3 m; Stege 3 m, im S-Teil 2–2,5 m.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/69b57d88-5a20-4878-9f58-83ca9bc76e6c.html, Tekst 03-07-2026, abgerufen 2026-10-18",
+  "refuge": true,
+  "refugeLevel": "plan",
+  "plans": [
+   "SKTEBLTF.jpg"
+  ],
+  "distHeiligenhafen_sm": 109.4,
+  "distBreege_sm": 131.9,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-glatved-lasteanlaeg",
+  "name": "Glatved Lasteanlæg",
+  "country": "DK",
+  "region": "Djursland",
+  "type": "hafen",
+  "lat": 56.30005,
+  "lon": 10.86662,
+  "prot": null,
+  "protSource": null,
+  "entranceOpen": null,
+  "swellOpen": null,
+  "depthEntrance_m": null,
+  "depthBerthMin_m": 5.3,
+  "depthBerthMax_m": 5.3,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "W"
+     ],
+     "m": 0.5
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "E"
+     ],
+     "m": 0.4
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 22 23 65 10",
+  "web": null,
+  "note": "Berufshafen: Steinverlade-Anleger (Nymølle Stenindustrier), ca. 100 m langer NE-SW-Liegeplatz an Förderband auf Pfeilern; keine Sportbootplätze beschrieben. Strom entlang der Küste. Ankern auf der Reede.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/e3fe7157-5612-4cef-bcbb-271686214c98.html, Tekst 15-05-2023, abgerufen 2026-10-18",
+  "refuge": false,
+  "refugeLevel": null,
+  "plans": null,
+  "distHeiligenhafen_sm": 115.5,
+  "distBreege_sm": 132.1,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-grenaa-havn",
+  "name": "Grenaa Havn",
+  "country": "DK",
+  "region": "Djursland",
+  "type": "hafen",
+  "lat": 56.41667,
+  "lon": 10.93337,
+  "prot": {
+   "N": "full",
+   "NE": "part",
+   "E": "part",
+   "SE": "full",
+   "S": "full",
+   "SW": "full",
+   "W": "full",
+   "NW": "full"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "NE",
+   "E"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 4.5,
+  "depthBerthMin_m": 2.5,
+  "depthBerthMax_m": 11.0,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": null,
+  "season": null,
+  "vhf": null,
+  "tel": "+45 87 58 76 00",
+  "web": "www.grenaahavn.dk",
+  "note": "Großer Fähr- und Industriehafen; 12-m-Rinne N um Kalkgrund (Steingrund E des Hafens, 1,3 m), beidseitig derzeit 11,6 m. Bei starkem E/SE-Wind schwieriges Manövrieren an den Fähranlegern; Schraubenwasser beachten. Tel. rund um die Uhr. Gute Ankerstelle in der Ålebugt N des Hafens. Wasserstand ohne windabhängige Angaben. Hafenplan: Handels-/Fährhafen, Sportbootplätze nicht gekennzeichnet; Rinne 10–12 m, Einfahrt Bassin I/II 4,5 m, Werte über alle Becken. Laut Text bei E/SE-Starkwind Schraubenwasser der Fähren beachten (Gastlieger eher Grenaa Marina). Berufs-/Industriehafen: nur im Notfall nach Kontakt mit dem Hafenkontor.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": false
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/1f80f647-a0ac-4149-922c-f514da6739de.html, Tekst 15-05-2023, abgerufen 2026-10-18",
+  "refuge": false,
+  "refugeLevel": "notfall",
+  "plans": [
+   "SKTGRENA.jpg"
+  ],
+  "distHeiligenhafen_sm": 122.4,
+  "distBreege_sm": 136.1,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-grenaa-marina",
+  "name": "Grenaa Marina",
+  "country": "DK",
+  "region": "Djursland",
+  "type": "marina",
+  "lat": 56.40348,
+  "lon": 10.92393,
+  "prot": {
+   "N": "full",
+   "NE": "part",
+   "E": "part",
+   "SE": "full",
+   "S": "full",
+   "SW": "full",
+   "W": "full",
+   "NW": "full"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "E",
+   "NE"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 3.2,
+  "depthBerthMin_m": 2.0,
+  "depthBerthMax_m": 3.2,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "NW",
+      "N"
+     ],
+     "m": 1.1
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "SE",
+      "S"
+     ],
+     "m": 1.2
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 86 32 72 55",
+  "web": "www.grenaamarina.dk",
+  "note": "Marina ca. 0,6 sm S der Einfahrt Grenaa Havn. Derzeit 2,8 m in der Einfahrt gemeldet, W des Feuers Fl.G.3s bis 2 m (zwei grüne Tonnen). Liegeplatztiefen nur im Plan. Hafenzeit ca. 9 h. Hafenplan: Einfahrt 3,2–3,5 m (Plan; bisheriger Wert 2,8 m), Stege 2–3,2 m, flacher im W-Teil.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/541499e1-ed8b-4f6d-a49b-c3061ed44c03.html, Tekst 06-07-2026, abgerufen 2026-10-18",
+  "refuge": true,
+  "refugeLevel": "plan",
+  "plans": [
+   "SK_GRENL.jpg"
+  ],
+  "distHeiligenhafen_sm": 121.7,
+  "distBreege_sm": 135.7,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-oeer-havn",
+  "name": "Øer Havn",
+  "country": "DK",
+  "region": "Djursland",
+  "type": "marina",
+  "lat": 56.15157,
+  "lon": 10.68857,
+  "prot": {
+   "N": "full",
+   "NE": "full",
+   "E": "full",
+   "SE": "full",
+   "S": "full",
+   "SW": "full",
+   "W": "full",
+   "NW": "full"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "W",
+   "SW"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 3.5,
+  "depthBerthMin_m": 1.0,
+  "depthBerthMax_m": 3.5,
+  "maxDraft_m": 3.0,
+  "maxLoa_m": 30,
+  "maxBeam_m": 6.5,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "W",
+      "NW"
+     ],
+     "m": 1.3
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "E",
+      "SE"
+     ],
+     "m": 0.9
+    }
+   ]
+  },
+  "season": {
+   "open": "04-01",
+   "close": "11-15"
+  },
+  "vhf": null,
+  "tel": "+45 61 61 66 93",
+  "web": "www.efomf.dk/havnen",
+  "note": "Hafen einer Ferienanlage in einem Salzwassersee hinter einer Kammerschleuse; Zufahrt über 700-m-Rinne ca. 400 m SE des Fährhafens Ebeltoft und 220-m-Kanal (3,5 m). Rinne/Kanal/Schleuse laut Regulativ den Fahrzeugen zur/von der Ferienanlage vorbehalten. Grenzen gelten für Kanal und Schleuse. Wasserstand aus dem Schleusenregulativ (WNW/ESE). Hafenplan: Hafen in künstlichem See innerhalb einer Schleuse (Betrieb 1.4.–15.11.); Kanal im Plan 3,5 m, äußere Rinne nur teilweise im Plan. Becken 2,5–3,5 m, Kanäle 1–1,5 m.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": true,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/3fc07d35-855a-496b-b95c-2af043d93a3a.html, Tekst 17-05-2023, abgerufen 2026-10-18",
+  "refuge": true,
+  "refugeLevel": "plan",
+  "plans": [
+   "SK_OERHV.jpg"
+  ],
+  "distHeiligenhafen_sm": 107.0,
+  "distBreege_sm": 129.7,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-horsens-havn",
+  "name": "Horsens Havn",
+  "country": "DK",
+  "region": "Horsens Fjord",
+  "type": "hafen",
+  "lat": 55.85678,
+  "lon": 9.86625,
+  "prot": {
+   "N": "full",
+   "NE": "full",
+   "E": "part",
+   "SE": "full",
+   "S": "full",
+   "SW": "full",
+   "W": "full",
+   "NW": "full"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "E"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 6.0,
+  "depthBerthMin_m": 1.8,
+  "depthBerthMax_m": 6.3,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "NW",
+      "N"
+     ],
+     "m": 1.5
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "SW",
+      "S"
+     ],
+     "m": 1.0
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 75 62 10 14",
+  "web": "www.horsenshavn.dk",
+  "note": "Handelshafen mit 3 Sportboot- und 1 Fischereibecken; 4 sm lange Baggerrinne (32 m Sohlbreite). Meldepflicht nur für Berufsschiffe. Tel. rund um die Uhr. Pegelsignal vorhanden. Tiefen nur im Plan. Hafenplan: Gebaggerte Rinne 6–6,3 m; Sportbootplätze nicht eindeutig dem Job zuzuordnen, Werte über alle Becken (Nord-/Sydhavn 6,3 m, Sejlklub/Lystbådebecken ab 1,8 m). Berufs-/Industriehafen: nur im Notfall nach Kontakt mit dem Hafenkontor.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/275baa69-cdf0-464e-842c-ab7fd9a5bf52.html, Tekst 12-10-2026, abgerufen 2026-10-18",
+  "refuge": false,
+  "refugeLevel": "notfall",
+  "plans": [
+   "SKTHORSN.jpg"
+  ],
+  "distHeiligenhafen_sm": 96.7,
+  "distBreege_sm": 140.9,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-horsens-lystbaadehavn",
+  "name": "Horsens Lystbådehavn",
+  "country": "DK",
+  "region": "Horsens Fjord",
+  "type": "marina",
+  "lat": 55.85695,
+  "lon": 9.87665,
+  "prot": {
+   "N": "full",
+   "NE": "part",
+   "E": "open",
+   "SE": "part",
+   "S": "part",
+   "SW": "full",
+   "W": "full",
+   "NW": "full"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "E",
+   "SE"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 2.5,
+  "depthBerthMin_m": 1.8,
+  "depthBerthMax_m": 3.1,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": null,
+  "season": null,
+  "vhf": null,
+  "tel": "+45 20 80 13 38",
+  "web": null,
+  "note": "Kommunale Marina; Ausbau im E-Teil abgeschlossen, Plan wird aktualisiert. Keine Tiefen- oder Wasserstandsangaben im Text. Hafenplan: Zuordnung unklar (Plan zeigt Marina NE und Sejlklub-Becken): Werte über beide, 1,8–3,1 m. Marina-Becken nach E nur durch Pfahlreihe begrenzt; F.G nur 1.4.–15.11.; nahe Wand 1 m.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": false
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/726e7471-4039-40f4-815b-a012625a66d9.html, Tekst 12-10-2026, abgerufen 2026-10-18",
+  "refuge": false,
+  "refugeLevel": null,
+  "plans": [
+   "SKTHORSN.jpg"
+  ],
+  "distHeiligenhafen_sm": 96.6,
+  "distBreege_sm": 140.6,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-hov-havn-hou-havn",
+  "name": "Hov Havn (Hou Havn)",
+  "country": "DK",
+  "region": "Hov Løb",
+  "type": "marina",
+  "lat": 55.91037,
+  "lon": 10.25832,
+  "prot": {
+   "N": "full",
+   "NE": "full",
+   "E": "part",
+   "SE": "part",
+   "S": "full",
+   "SW": "full",
+   "W": "full",
+   "NW": "full"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "E",
+   "SE"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 3.2,
+  "depthBerthMin_m": 0.9,
+  "depthBerthMax_m": 3.2,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "N"
+     ],
+     "m": 1.0
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "S"
+     ],
+     "m": 1.0
+    }
+   ]
+  },
+  "season": null,
+  "vhf": "12",
+  "tel": "+45 86 55 25 50",
+  "web": null,
+  "note": "Fährhafen (Samsø/Tunø) ohne Sondergenehmigung für Sportboote gesperrt; Baggerrinne führt durch ihn zur Lystbådehavn. Einfahrt neigt zur Versandung. Vor der Einfahrt Flutstrom SW-, Ebbstrom NE-setzend. Tiefen nur im Plan. Hafenplan: Ausgewertet Hou Lystbådehavn (Vesterhavn/Gamle Havn), Rinne 3,2 m, Stege 2,8–3,2 m, Ecke am Slip 0,9 m. Einfahrt laut Text versandungsgefährdet; Fährhafen nur für Fähren. Rinnentonnen nur 1.4.–15.11.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": true,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/37be7f2c-f28e-4f2e-944d-ae56f0bf97e0.html, Tekst 29-10-2025, abgerufen 2026-10-18",
+  "refuge": true,
+  "refugeLevel": "plan",
+  "plans": [
+   "SKTHOVXX.jpg"
+  ],
+  "distHeiligenhafen_sm": 95.3,
+  "distBreege_sm": 131.6,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-hundested-havn",
+  "name": "Hundested Havn",
+  "country": "DK",
+  "region": "Isefjord",
+  "type": "hafen",
+  "lat": 55.96165,
+  "lon": 11.8402,
+  "prot": {
+   "N": "part",
+   "NE": "full",
+   "E": "full",
+   "SE": "full",
+   "S": "full",
+   "SW": "full",
+   "W": "full",
+   "NW": "part"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "N",
+   "NW"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 4.0,
+  "depthBerthMin_m": 3.0,
+  "depthBerthMax_m": 4.0,
+  "maxDraft_m": null,
+  "maxLoa_m": 15,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "N",
+      "NW"
+     ],
+     "m": 1.4
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "E",
+      "SE"
+     ],
+     "m": 0.8
+    }
+   ]
+  },
+  "season": null,
+  "vhf": "16, 12–13",
+  "tel": "+45 47 93 72 34",
+  "web": "www.hundestedhavn.dk",
+  "note": "Alter Hafen mit 5 Becken (Mellem- und Inderhavn = Sportbootbecken, max. 15 m; Yderhavn für Fähren/Frachter), dazu Kreuzfahrt- und Verkehrshafen. SW/W des W-Außenmolenkopfs Versandung. Starker N-setzender Strom erschwert das Anlaufen des alten Hafens. Tel.-Bereitschaft 21 23 72 34. Ankern S des Hafens W des Fahrwassers. Hafenplan: Sportboote in Mellemhavn/Inderhavn (3 m) und Sydhavn (3–4 m); Einfahrt 4,5 m, Durchfahrt 4 m. Yderhavn den Fähren vorbehalten; Bereich SW/W des W-Molenkopfs versandet.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": true,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/a07c9dfb-a7ec-4782-a412-444e1aaad6f2.html, Tekst 01-07-2026, abgerufen 2026-10-18",
+  "refuge": true,
+  "refugeLevel": "plan",
+  "plans": [
+   "SKTHUNST.jpg"
+  ],
+  "distHeiligenhafen_sm": 99.6,
+  "distBreege_sm": 96.2,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-lynaes-havn",
+  "name": "Lynæs Havn",
+  "country": "DK",
+  "region": "Isefjord",
+  "type": "hafen",
+  "lat": 55.94148,
+  "lon": 11.8697,
+  "prot": {
+   "N": "full",
+   "NE": "full",
+   "E": "part",
+   "SE": "part",
+   "S": "part",
+   "SW": "full",
+   "W": "full",
+   "NW": "full"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "E",
+   "SE",
+   "S"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 2.5,
+  "depthBerthMin_m": 1.8,
+  "depthBerthMax_m": 3.0,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "N",
+      "NW"
+     ],
+     "m": 1.0
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "SE"
+     ],
+     "m": 1.0
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 47 93 91 19",
+  "web": "www.lynaes-havn.dk",
+  "note": "Privathafen: Vesthavn und Sportboothafen E davon; Molenhöhe ca. 1,6 m. Lotse nennt für Vesthavn max. 18 m, 2,5 m. Starker Strom im Kulhus Rende bei N/S-Starkwind. Ankern E des Hafens. Tiefen nur im Plan. Hafenplan: Lystbådehavn (Einfahrt E zwischen Fl.G/Fl.R, Pfahlrinne ab 2,5 m) 1,8–2,5 m, Vesthavn 2,5–3 m. Molenhöhe laut Text nur ca. 1,6 m.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/7047421c-0edc-42de-afcb-e061261b364e.html, Tekst 26-06-2026, abgerufen 2026-10-18",
+  "refuge": false,
+  "refugeLevel": null,
+  "plans": [
+   "SK_LYNAS.jpg"
+  ],
+  "distHeiligenhafen_sm": 98.7,
+  "distBreege_sm": 94.7,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-nykoebing-sjaelland-lystbaadehavn",
+  "name": "Nykøbing Sjælland Lystbådehavn",
+  "country": "DK",
+  "region": "Isefjord",
+  "type": "hafen",
+  "lat": 55.91358,
+  "lon": 11.67288,
+  "prot": {
+   "N": "full",
+   "NE": "full",
+   "E": "part",
+   "SE": "full",
+   "S": "full",
+   "SW": "full",
+   "W": "full",
+   "NW": "full"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "E"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 2.8,
+  "depthBerthMin_m": 1.0,
+  "depthBerthMax_m": 3.0,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "N",
+      "NW"
+     ],
+     "m": 1.5
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "S",
+      "SE"
+     ],
+     "m": 1.0
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 70 20 38 38",
+  "web": "www.odsherredhavne.dk",
+  "note": "Von E nach W alter Hafen, neuer Hafen, Sportboothafen; Sportboote können alle drei nutzen. Lotse nennt allgemein max. 50×10 m. Ankern in der Bucht W des Hafens. Tel. = Odsherred Havne. Tiefen nur im Plan. Hafenplan: Plan zeigt mehrere Häfen, ausgewertet nur Lystbådehavn (W): Zufahrt über Vorhafen (Fl.R.3s) 2,8–3 m, Einfahrt F.G/F.R 3 m; Stege 3 m, im W/NW-Teil 1,0–1,5 m.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/47b94b47-f173-46a2-b0da-6995dd4c9268.html, Tekst 06-02-2026, abgerufen 2026-10-18",
+  "refuge": true,
+  "refugeLevel": "plan",
+  "plans": [
+   "SK_NYKBS.jpg"
+  ],
+  "distHeiligenhafen_sm": 95.2,
+  "distBreege_sm": 97.1,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-roervig-havn",
+  "name": "Rørvig Havn",
+  "country": "DK",
+  "region": "Isefjord",
+  "type": "hafen",
+  "lat": 55.94382,
+  "lon": 11.769,
+  "prot": {
+   "N": "full",
+   "NE": "full",
+   "E": "part",
+   "SE": "part",
+   "S": "full",
+   "SW": "full",
+   "W": "full",
+   "NW": "full"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "E",
+   "SE"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 2.7,
+  "depthBerthMin_m": 0.8,
+  "depthBerthMax_m": 3.0,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "W",
+      "NW"
+     ],
+     "m": 1.5
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "SE",
+      "S"
+     ],
+     "m": 1.0
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 70 20 38 38",
+  "web": "www.odsherredhavne.dk",
+  "note": "Anlegebrücke, Becken mit Fähranleger und Sportboothafen. Rinne vor der Quermole versandet an der S-Seite. Starker Strom im Vesterløb bei N/S-Starkwind. Niedrigwasser laut Lotse 0,6–1,0 m (hier Obergrenze). Lotse nennt allgemein max. 30×6 m. Ankern NE des Hafens. Tel. = Odsherred Havne. Hafenplan: Lystbådehavn im S-Teil, Einfahrt F.R/F.G 2,7–3 m; Stege 2–3 m, in den W-Ecken 0,8–1,5 m. Text: Rinne an Tværmole versandet S-seitig.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/910124c2-b91b-4c92-8b30-6a7b382748fb.html, Tekst 06-02-2026, abgerufen 2026-10-18",
+  "refuge": true,
+  "refugeLevel": "plan",
+  "plans": [
+   "SK_RORVI.jpg"
+  ],
+  "distHeiligenhafen_sm": 97.9,
+  "distBreege_sm": 96.7,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-akzo-nobel-salt-a-s-anlaegskaj",
+  "name": "Akzo Nobel Salt A/S Anlægskaj",
+  "country": "DK",
+  "region": "Mariager Fjord",
+  "type": "hafen",
+  "lat": 56.68287,
+  "lon": 10.03812,
+  "prot": {
+   "N": "part",
+   "NE": "open",
+   "E": "full",
+   "SE": "full",
+   "S": "full",
+   "SW": "open",
+   "W": "part",
+   "NW": "part"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "NE",
+   "SW"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 5.7,
+  "depthBerthMin_m": 5.7,
+  "depthBerthMax_m": 5.7,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [
+   "dk-bro-hadsundbroen"
+  ],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "W"
+     ],
+     "m": null
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "E"
+     ],
+     "m": null
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 96 68 78 88",
+  "web": null,
+  "note": "Berufshafen: Salzverlade-Anleger von Akzo Nobel; keine Sportbootplätze beschrieben. Anlauf möglichst von W (Kühlwassereinlass E des Molenkopfs). Wasserstandsangabe ohne Meterwerte. Hafenplan: Industrieanleger (Salzverladung) am SE-Ufer des Mariager Fjord, keine Sportbootplätze; Lotung 5,7 m an Brückenkopf und Zufahrt. Kühlwassereinlass an der E-Seite des Molenkopfs, Anlauf von W.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/9765c115-bba7-4718-914f-2d8de2e3d13a.html, Tekst 03-09-2026, abgerufen 2026-10-18",
+  "refuge": false,
+  "refugeLevel": null,
+  "plans": [
+   "NKTAKZOA.jpg"
+  ],
+  "distHeiligenhafen_sm": 142.1,
+  "distBreege_sm": 167.6,
+  "zone": "rand"
+ },
+ {
+  "id": "dk-als-odde-bro",
+  "name": "Als Odde Bro",
+  "country": "DK",
+  "region": "Mariager Fjord",
+  "type": "nothafen",
+  "lat": 56.70512,
+  "lon": 10.32933,
+  "prot": null,
+  "protSource": null,
+  "entranceOpen": null,
+  "swellOpen": null,
+  "depthEntrance_m": null,
+  "depthBerthMin_m": 2.0,
+  "depthBerthMax_m": 2.0,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "NE"
+     ],
+     "m": 1.0
+    }
+   ],
+   "low": []
+  },
+  "season": null,
+  "vhf": null,
+  "tel": null,
+  "web": null,
+  "note": "20-m-Betonbrücke mit Brückenkopf; Lotsenbootstation, laut Lotse Nothafen für Fischerboote. Schutzsektoren nicht beschrieben (offene Brücke).",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": false,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/fa33e334-0336-4c8b-a099-c204a0bb09ea.html, Tekst 30-06-2026, abgerufen 2026-10-18",
+  "refuge": true,
+  "refugeLevel": "belegt",
+  "plans": null,
+  "distHeiligenhafen_sm": 141.5,
+  "distBreege_sm": 162.2,
+  "zone": "rand"
+ },
+ {
+  "id": "dk-dania-havn",
+  "name": "Dania Havn",
+  "country": "DK",
+  "region": "Mariager Fjord",
+  "type": "hafen",
+  "lat": 56.69093,
+  "lon": 10.05143,
+  "prot": {
+   "N": "part",
+   "NE": "part",
+   "E": "open",
+   "SE": "full",
+   "S": "full",
+   "SW": "full",
+   "W": "open",
+   "NW": "part"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "E",
+   "W"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 5.7,
+  "depthBerthMin_m": 2.3,
+  "depthBerthMax_m": 5.7,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [
+   "dk-bro-hadsundbroen"
+  ],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "NW",
+      "N",
+      "NE"
+     ],
+     "m": 1.5
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "SE",
+      "S",
+      "SW"
+     ],
+     "m": 0.7
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 97 11 30 00",
+  "web": null,
+  "note": "Berufshafen der Kommune; Kais 5,7 m, Becken bis 3,0 m (nur Obergrenze, daher depthBerth null). Tel. = Kommune Teknik og Miljø. Hafenplan: Industriekai am S-Ufer des Mariager Fjord, keine gekennzeichneten Sportbootplätze; Werte über Kai (5,7 m) und kleines Becken am Slip (2,3–3 m).",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/55f84d92-91c7-41d3-b7a4-217d7ab6d1b2.html, Tekst 23-04-2024, abgerufen 2026-10-18",
+  "refuge": false,
+  "refugeLevel": null,
+  "plans": [
+   "NKTDANIA.jpg"
+  ],
+  "distHeiligenhafen_sm": 142.4,
+  "distBreege_sm": 167.7,
+  "zone": "rand"
+ },
+ {
+  "id": "dk-h-j-hansen-hadsund-a-s-anloebsbro",
+  "name": "H.J. Hansen Hadsund A/S Anløbsbro",
+  "country": "DK",
+  "region": "Mariager Fjord",
+  "type": "hafen",
+  "lat": 56.70035,
+  "lon": 10.05647,
+  "prot": null,
+  "protSource": null,
+  "entranceOpen": null,
+  "swellOpen": null,
+  "depthEntrance_m": null,
+  "depthBerthMin_m": 5.0,
+  "depthBerthMax_m": 5.0,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [
+   "dk-bro-hadsundbroen"
+  ],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "N"
+     ],
+     "m": 0.4
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "S",
+      "E"
+     ],
+     "m": 0.4
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": null,
+  "web": null,
+  "note": "Berufshafen: ca. 40 m lange Anlegebrücke mit Brückenkopf (H.J. Hansen); keine Sportbootplätze beschrieben.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": false,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/d974a21b-4b7c-4a10-b9c5-f325f5ebc37a.html, Tekst 23-04-2024, abgerufen 2026-10-18",
+  "refuge": false,
+  "refugeLevel": null,
+  "plans": null,
+  "distHeiligenhafen_sm": 142.9,
+  "distBreege_sm": 168.0,
+  "zone": "rand"
+ },
+ {
+  "id": "dk-hadsund-fiskerihavn",
+  "name": "Hadsund Fiskerihavn",
+  "country": "DK",
+  "region": "Mariager Fjord",
+  "type": "hafen",
+  "lat": 56.71652,
+  "lon": 10.12612,
+  "prot": {
+   "N": "full",
+   "NE": "full",
+   "E": "part",
+   "SE": "part",
+   "S": "part",
+   "SW": "full",
+   "W": "full",
+   "NW": "full"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "E"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 1.5,
+  "depthBerthMin_m": 1.5,
+  "depthBerthMax_m": 1.5,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "N",
+      "NE"
+     ],
+     "m": 0.8
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "SE",
+      "S"
+     ],
+     "m": 0.4
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 40 43 41 96",
+  "web": null,
+  "note": "Fischerei- und Sportboothafen mit 2 Becken, seewärts (E) der Hadsundbroen. Tiefen nur im Plan. Hafenplan: Auswertung E-Becken (Bootssymbol), 1,5 m; W-Becken (Fischerei) 1 m. Keine Lotung im Einfahrtsspalt selbst, außen 4,3–4,8 m.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/6bc67776-a68e-416b-9a7f-6f1b3f56be44.html, Tekst 23-04-2024, abgerufen 2026-10-18",
+  "refuge": false,
+  "refugeLevel": null,
+  "plans": [
+   "NK_HDSUF.jpg"
+  ],
+  "distHeiligenhafen_sm": 143.4,
+  "distBreege_sm": 167.1,
+  "zone": "rand"
+ },
+ {
+  "id": "dk-hadsund-havn",
+  "name": "Hadsund Havn",
+  "country": "DK",
+  "region": "Mariager Fjord",
+  "type": "hafen",
+  "lat": 56.71333,
+  "lon": 10.11357,
+  "prot": {
+   "N": "full",
+   "NE": "part",
+   "E": "part",
+   "SE": "part",
+   "S": "part",
+   "SW": "open",
+   "W": "full",
+   "NW": "full"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "SW"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 4.7,
+  "depthBerthMin_m": 4.7,
+  "depthBerthMax_m": 5.7,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [
+   "dk-bro-hadsundbroen"
+  ],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "N",
+      "NE"
+     ],
+     "m": 0.8
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "SE",
+      "S"
+     ],
+     "m": 0.4
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 40 43 41 96",
+  "web": null,
+  "note": "210-m-Kai für Berufsschiffe, E davon 46-m-Holzbrücke (Andersens Bro) für größere Sportboote. Liegt laut Koordinaten knapp W der Hadsundbroen. Rohrleitung W der Brücke; Plan wird aktualisiert. Hafenplan: Offener Kai am Mariager Fjord bei der Hadsundbroen; Andersens Bro (Text) im Plan nicht eindeutig zuzuordnen, Werte über den Kai. Brückenpassage 4,7 m.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/dc22e0c9-604d-4a44-820d-389fe4256b5c.html, Tekst 15-10-2026, abgerufen 2026-10-18",
+  "refuge": false,
+  "refugeLevel": null,
+  "plans": [
+   "NKTHDSUN.jpg"
+  ],
+  "distHeiligenhafen_sm": 143.3,
+  "distBreege_sm": 167.3,
+  "zone": "rand"
+ },
+ {
+  "id": "dk-hadsund-lystbaadehavn",
+  "name": "Hadsund Lystbådehavn",
+  "country": "DK",
+  "region": "Mariager Fjord",
+  "type": "marina",
+  "lat": 56.7094,
+  "lon": 10.1056,
+  "prot": {
+   "N": "full",
+   "NE": "full",
+   "E": "part",
+   "SE": "part",
+   "S": "part",
+   "SW": "part",
+   "W": "full",
+   "NW": "full"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "SW"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 2.0,
+  "depthBerthMin_m": 1.5,
+  "depthBerthMax_m": 2.6,
+  "maxDraft_m": null,
+  "maxLoa_m": 12,
+  "maxBeam_m": 3,
+  "catFriendly": null,
+  "bridgeIds": [
+   "dk-bro-hadsundbroen"
+  ],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "NW",
+      "N",
+      "NE"
+     ],
+     "m": 0.5
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "SE",
+      "S",
+      "SW"
+     ],
+     "m": 0.4
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 42 71 17 03",
+  "web": "www.hadsundsejlklub.dk",
+  "note": "Segelclubhafen ca. 0,5 sm SW der Hadsundbroen. Grenzen gelten für den Innenhafen; größere Boote an der Außenseite des W-Pontons (Gäste). Strom im Fahrwasser ca. 1 kn, Wechsel alle 6 h. Hafenplan: Hauptbecken hinter Pontonbrücke (schwimmend) 1,8–2,1 m, Außenseite Pontonbro 2,5–2,6 m, Gl. Havn 1,5–1,8 m. Einfahrt SW-Ende 2,0 m.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/986fcda6-7937-4dc2-9527-ffc2cbee46ff.html, Tekst 11-12-2024, abgerufen 2026-10-18",
+  "refuge": false,
+  "refugeLevel": null,
+  "plans": [
+   "NK_HDSUL.jpg"
+  ],
+  "distHeiligenhafen_sm": 143.1,
+  "distBreege_sm": 167.3,
+  "zone": "rand"
+ },
+ {
+  "id": "dk-hobro-baade-og-fiskerihavn",
+  "name": "Hobro Både- og Fiskerihavn",
+  "country": "DK",
+  "region": "Mariager Fjord",
+  "type": "hafen",
+  "lat": 56.63845,
+  "lon": 9.80612,
+  "prot": {
+   "N": "part",
+   "NE": "part",
+   "E": "part",
+   "SE": "full",
+   "S": "full",
+   "SW": "full",
+   "W": "full",
+   "NW": "full"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "NE"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 3.0,
+  "depthBerthMin_m": 1.2,
+  "depthBerthMax_m": 1.5,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [
+   "dk-bro-hadsundbroen"
+  ],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "W",
+      "NW",
+      "NE"
+     ],
+     "m": 1.0
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "SE",
+      "SW"
+     ],
+     "m": 0.5
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": null,
+  "web": "www.hobro-baadogfiskerihavn.dk",
+  "note": "Boots- und Fischerhafen SE von Hobro Havn. Hochwasser bei hartem W/NW-Wind mit schnellem Drehen auf NE, Niedrigwasser bei SE mit Drehen auf SW. Lotse nennt max. 12 m, 4,0 m Tiefgang (nicht sportbootspezifisch). Tagsüber anlaufen empfohlen. Hafenplan: Becken SE der Hobro Havn hinter schmaler Brücke (F.R–F.G), Einfahrt N 3–3,3 m, Becken nur 1,2–1,5 m; davor flach (1,5–2 m).",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": false,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/7d6d48f3-9031-4b27-b689-8a49fe5d1c52.html, Tekst 23-01-2026, abgerufen 2026-10-18",
+  "refuge": false,
+  "refugeLevel": null,
+  "plans": [
+   "NKTHOBRO.jpg"
+  ],
+  "distHeiligenhafen_sm": 141.5,
+  "distBreege_sm": 171.1,
+  "zone": "rand"
+ },
+ {
+  "id": "dk-hobro-havn",
+  "name": "Hobro Havn",
+  "country": "DK",
+  "region": "Mariager Fjord",
+  "type": "hafen",
+  "lat": 56.63868,
+  "lon": 9.80188,
+  "prot": {
+   "N": "part",
+   "NE": "open",
+   "E": "part",
+   "SE": "full",
+   "S": "full",
+   "SW": "full",
+   "W": "full",
+   "NW": "full"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "NE",
+   "E"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 4.5,
+  "depthBerthMin_m": 5.7,
+  "depthBerthMax_m": 5.7,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [
+   "dk-bro-hadsundbroen"
+  ],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "W",
+      "NW",
+      "NE"
+     ],
+     "m": 1.0
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "SE",
+      "SW"
+     ],
+     "m": 0.5
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 97 11 30 00",
+  "web": null,
+  "note": "Zum Fjord offenes Becken, geteilt in Berufshafen und Sportboothafen (Hobro Kulturhavn, Freihafen der Træskibenes Sammenslutning); offene Richtung im Text nicht angegeben. Keine Tiefenangaben im Text. Tel. = Kommune. Hafenplan: Zum Fjord offenes Becken (Erhvervshavn + Kulturhavn), überall 5,7 m; Leitlinie 260° mit 4,5 m kurz vor dem Becken.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/ea4d97d8-767d-4c3a-8e88-aea238ebc712.html, Tekst 26-06-2026, abgerufen 2026-10-18",
+  "refuge": false,
+  "refugeLevel": null,
+  "plans": [
+   "NKTHOBRO.jpg"
+  ],
+  "distHeiligenhafen_sm": 141.5,
+  "distBreege_sm": 171.2,
+  "zone": "rand"
+ },
+ {
+  "id": "dk-hobro-lystbaadehavn",
+  "name": "Hobro Lystbådehavn",
+  "country": "DK",
+  "region": "Mariager Fjord",
+  "type": "marina",
+  "lat": 56.64318,
+  "lon": 9.8125,
+  "prot": {
+   "N": "full",
+   "NE": "full",
+   "E": "full",
+   "SE": "part",
+   "S": "part",
+   "SW": "part",
+   "W": "full",
+   "NW": "full"
+  },
+  "protSource": "plan",
+  "entranceOpen": [],
+  "swellOpen": null,
+  "depthEntrance_m": 3.5,
+  "depthBerthMin_m": 2.0,
+  "depthBerthMax_m": 3.5,
+  "maxDraft_m": 3.0,
+  "maxLoa_m": 15,
+  "maxBeam_m": 4,
+  "catFriendly": null,
+  "bridgeIds": [
+   "dk-bro-hadsundbroen"
+  ],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "W",
+      "NW",
+      "NE"
+     ],
+     "m": 1.0
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "SE",
+      "SW"
+     ],
+     "m": 0.5
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 21 49 81 10",
+  "web": null,
+  "note": "Segelclubhafen an der N-Seite des Fjords ca. 0,5 sm E von Hobro Havn; Tag und Nacht bei klarer Sicht. Tiefen nur im Plan. Hafenplan: Stegbecken am N-Ufer, nach S auf ganzer Breite offen (Fjord dort schmal); Stege 2–3,5 m.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/4e18ea57-053e-4127-8d6b-df72c7629469.html, Tekst 02-02-2026, abgerufen 2026-10-18",
+  "refuge": false,
+  "refugeLevel": null,
+  "plans": [
+   "NK_HOBRL.jpg"
+  ],
+  "distHeiligenhafen_sm": 141.7,
+  "distBreege_sm": 171.2,
+  "zone": "rand"
+ },
+ {
+  "id": "dk-kongsdal-havn",
+  "name": "Kongsdal Havn",
+  "country": "DK",
+  "region": "Mariager Fjord",
+  "type": "hafen",
+  "lat": 56.68695,
+  "lon": 10.06502,
+  "prot": {
+   "N": "open",
+   "NE": "open",
+   "E": "open",
+   "SE": "full",
+   "S": "full",
+   "SW": "full",
+   "W": "part",
+   "NW": "open"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "N",
+   "NE",
+   "E",
+   "NW"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 5.0,
+  "depthBerthMin_m": 5.7,
+  "depthBerthMax_m": 5.7,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [
+   "dk-bro-hadsundbroen"
+  ],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "NW",
+      "N",
+      "NE"
+     ],
+     "m": 1.5
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "SE",
+      "S",
+      "SW"
+     ],
+     "m": 0.7
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 97 11 30 00",
+  "web": null,
+  "note": "Berufshafen der Kommune; Rinne und Kai bis 5,7 m (nur Obergrenze). Keine Sportbootplätze beschrieben. Tel. = Kommune. Hafenplan: Offener Industriekai am S-Ufer des Mariager Fjord, gebaggert 5,7 m; Fjordrinne (Leitlinien 103,7°/142°) mit Einzellotungen bis 5,0 m. Keine Sportbootplätze.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/870ecb40-544b-4678-8492-93573603339c.html, Tekst 11-09-2026, abgerufen 2026-10-18",
+  "refuge": false,
+  "refugeLevel": null,
+  "plans": [
+   "NKTKNGDA.jpg"
+  ],
+  "distHeiligenhafen_sm": 142.1,
+  "distBreege_sm": 167.2,
+  "zone": "rand"
+ },
+ {
+  "id": "dk-kongsdal-lystbaadehavn",
+  "name": "Kongsdal Lystbådehavn",
+  "country": "DK",
+  "region": "Mariager Fjord",
+  "type": "marina",
+  "lat": 56.68415,
+  "lon": 10.0723,
+  "prot": {
+   "N": "part",
+   "NE": "full",
+   "E": "full",
+   "SE": "full",
+   "S": "full",
+   "SW": "full",
+   "W": "full",
+   "NW": "part"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "N",
+   "NW"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 2.5,
+  "depthBerthMin_m": 2.0,
+  "depthBerthMax_m": 2.0,
+  "maxDraft_m": 1.8,
+  "maxLoa_m": 11,
+  "maxBeam_m": 8,
+  "catFriendly": null,
+  "bridgeIds": [
+   "dk-bro-hadsundbroen"
+  ],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "W"
+     ],
+     "m": 1.0
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "E"
+     ],
+     "m": 0.4
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 50 51 57 82",
+  "web": "www.kongsdal-baadelaug.dk",
+  "note": "Bootsclubhafen (Kongsdal Baadelaug). Max. Breite laut Lotse 8 m. Hafenplan: Einfahrt auf Leitlinie 142° 2,5–2,8 m, Becken 2 m (Plan und Text übereinstimmend).",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/63d30452-1523-47a3-8ca2-1b8147dd1346.html, Tekst 23-04-2024, abgerufen 2026-10-18",
+  "refuge": false,
+  "refugeLevel": null,
+  "plans": [
+   "NK_KNGDL.jpg"
+  ],
+  "distHeiligenhafen_sm": 141.9,
+  "distBreege_sm": 166.9,
+  "zone": "rand"
+ },
+ {
+  "id": "dk-mariager-havn",
+  "name": "Mariager Havn",
+  "country": "DK",
+  "region": "Mariager Fjord",
+  "type": "hafen",
+  "lat": 56.65393,
+  "lon": 9.98243,
+  "prot": {
+   "N": "part",
+   "NE": "part",
+   "E": "full",
+   "SE": "full",
+   "S": "full",
+   "SW": "full",
+   "W": "full",
+   "NW": "part"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "N",
+   "NW"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 3.7,
+  "depthBerthMin_m": 1.2,
+  "depthBerthMax_m": 3.7,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [
+   "dk-bro-hadsundbroen"
+  ],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "NW",
+      "NE"
+     ],
+     "m": 1.4
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "SE",
+      "SW"
+     ],
+     "m": 0.4
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 97 11 30 00",
+  "web": "https://mariager-sejlklub.dk/",
+  "note": "Hafen in einer Bucht an der S-Seite des Fjords; neuer Teil mit Bootsstegen an Mariager Sejlklub verpachtet (Tel. 29 79 88 68), alter Hafen als Sportboothafen. Wasserstand bei hartem NW mit Drehen auf NE bzw. SE mit Drehen auf SW. Ankern mind. 150 m N der grünen Stange. Tel. = Kommune. Hafenplan: Leitlinie 150° bis alte Hafeneinfahrt 3,7 m; neue Stege 1,8–3,4 m, alter Hafen 1,2–3,7 m (Fischereibecken innen 0,3–0,6 m ausgenommen).",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/d3af44d5-21cb-4dd9-ad74-2d40f4ef013f.html, Tekst 13-02-2024, abgerufen 2026-10-18",
+  "refuge": false,
+  "refugeLevel": null,
+  "plans": [
+   "NK_MARIA.jpg"
+  ],
+  "distHeiligenhafen_sm": 140.8,
+  "distBreege_sm": 167.6,
+  "zone": "rand"
+ },
+ {
+  "id": "dk-stinesminde-havn",
+  "name": "Stinesminde Havn",
+  "country": "DK",
+  "region": "Mariager Fjord",
+  "type": "hafen",
+  "lat": 56.67118,
+  "lon": 9.97062,
+  "prot": null,
+  "protSource": null,
+  "entranceOpen": null,
+  "swellOpen": null,
+  "depthEntrance_m": 1.0,
+  "depthBerthMin_m": 1.0,
+  "depthBerthMax_m": 1.0,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [
+   "dk-bro-hadsundbroen"
+  ],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "W"
+     ],
+     "m": 0.5
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "E"
+     ],
+     "m": 0.5
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 98 55 83 13",
+  "web": null,
+  "note": "Kleines Fischerlager mit wenigen Sportbootplätzen; Hafen ca. 1,5 m, am Bollwerk der Außenmole 1,0 m. Nur tagsüber. Lotse nennt max. ca. 7,5×3 m, 1,0 m. Ankern E des Hafens.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/8e710463-843a-4287-be6a-8a095e111cdc.html, Tekst 23-04-2024, abgerufen 2026-10-18",
+  "refuge": false,
+  "refugeLevel": null,
+  "plans": null,
+  "distHeiligenhafen_sm": 141.9,
+  "distBreege_sm": 168.6,
+  "zone": "rand"
+ },
+ {
+  "id": "dk-vive-havn",
+  "name": "Vive Havn",
+  "country": "DK",
+  "region": "Mariager Fjord",
+  "type": "marina",
+  "lat": 56.69842,
+  "lon": 10.0442,
+  "prot": {
+   "N": "full",
+   "NE": "full",
+   "E": "full",
+   "SE": "part",
+   "S": "open",
+   "SW": "open",
+   "W": "part",
+   "NW": "full"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "S",
+   "SW"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 3.1,
+  "depthBerthMin_m": 0.7,
+  "depthBerthMax_m": 2.0,
+  "maxDraft_m": null,
+  "maxLoa_m": 10,
+  "maxBeam_m": 3.3,
+  "catFriendly": null,
+  "bridgeIds": [
+   "dk-bro-hadsundbroen"
+  ],
+  "surge": null,
+  "season": null,
+  "vhf": null,
+  "tel": "+45 24 98 85 83",
+  "web": "www.vive-havn.dk",
+  "note": "Bootsclubhafen (Vive Bådelaug): Jollen-, Innen- und Ostbecken; Gastplätze an der W-Seite der Leemole. Nur tagsüber. Wasserstand ohne windabhängige Angaben. Hafenplan: Offene Steganlage ohne Mole nach S; zwischen den Stegen 1,2–2 m, Gastplätze W-Seite Læmole 1,8 m, Jollenbecken 0,7 m. Fjordbreite unsicher, konservativ 'open'.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": false
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/bfd53e3f-cb0e-4913-9f61-61a90de4759c.html, Tekst 23-04-2024, abgerufen 2026-10-18",
+  "refuge": false,
+  "refugeLevel": null,
+  "plans": [
+   "NK_VIVEX.jpg"
+  ],
+  "distHeiligenhafen_sm": 142.9,
+  "distBreege_sm": 168.1,
+  "zone": "rand"
+ },
+ {
+  "id": "dk-gilleleje-havn",
+  "name": "Gilleleje Havn",
+  "country": "DK",
+  "region": "Nordseeland",
+  "type": "hafen",
+  "lat": 56.12853,
+  "lon": 12.31077,
+  "prot": {
+   "N": "part",
+   "NE": "full",
+   "E": "full",
+   "SE": "full",
+   "S": "full",
+   "SW": "full",
+   "W": "full",
+   "NW": "full"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "N",
+   "NE"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 3.5,
+  "depthBerthMin_m": 3.0,
+  "depthBerthMax_m": 5.0,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "NW"
+     ],
+     "m": 2.0
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "SE"
+     ],
+     "m": 1.5
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 48 30 16 63",
+  "web": null,
+  "note": "Laut Lods Anlauf bei auflandigem Wind ab Starkwind schwierig (entranceOpen aus Küstenlage N-Küste abgeleitet). Starker Ein-/Ausstrom im Einlauf; NW-Sturm → starker E-Strom, SE-Sturm → W-Strom. Sandbarre vor der Außenmole wird erst unter 3,5 m gebaggert. Tag und Nacht anlaufbar. Größte Schiffe 40×9 m, 3,7 m Tiefgang (allgemein). Hafenplan: Lystbådehavn E hinter langer Steinmole (3–5 m); Einfahrt N 4–4,9 m, Barre wird erst unter 3,5 m gebaggert. Anlauf bei auflandigem Sturm schwierig.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/49b436a0-9288-4bb3-863f-bf917b982ff8.html, Tekst 27-02-2024, abgerufen 2026-10-18",
+  "refuge": true,
+  "refugeLevel": "plan",
+  "plans": [
+   "SUTGILLJ.jpg"
+  ],
+  "distHeiligenhafen_sm": 114.6,
+  "distBreege_sm": 97.8,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-hornbaek-havn",
+  "name": "Hornbæk Havn",
+  "country": "DK",
+  "region": "Nordseeland",
+  "type": "hafen",
+  "lat": 56.09515,
+  "lon": 12.4582,
+  "prot": {
+   "N": "part",
+   "NE": "part",
+   "E": "full",
+   "SE": "full",
+   "S": "full",
+   "SW": "full",
+   "W": "full",
+   "NW": "full"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "N",
+   "NE"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 2.5,
+  "depthBerthMin_m": 2.0,
+  "depthBerthMax_m": 2.5,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "NW"
+     ],
+     "m": 1.2
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "E"
+     ],
+     "m": 1.0
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 26 81 01 89",
+  "web": "https://www.hornbaekhavn.dk",
+  "note": "Versandung; laut Lods-Anmerkung derzeit 1,5 m im W-Teil der Einfahrt (Stand 08-10-2026). Verkehrssignal 3 rote Lichter/schwarzer Ball = Tiefe nicht normal, Anlauf nicht ratsam; Info hornbaekhavn.dk. Größte Schiffe 20×6 m auf Anfrage. Hafenplan: Einfahrt nach N, Forhavn/Inderhavn 2,5 m, Gammelhavn 2 m; Text: Versandung, Warnsignal (3 rote Lichter/Kugel) bei verringerter Tiefe – dann kein Anlaufen.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/65b30075-d3b0-43fb-b7e4-0ceb01fff67b.html, Tekst 08-10-2026, abgerufen 2026-10-18",
+  "refuge": true,
+  "refugeLevel": "plan",
+  "plans": [
+   "SU_HRNBK.jpg"
+  ],
+  "distHeiligenhafen_sm": 114.9,
+  "distBreege_sm": 94.2,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-aalsgaarde-langebro",
+  "name": "Ålsgårde Langebro",
+  "country": "DK",
+  "region": "Nordseeland",
+  "type": "hafen",
+  "lat": 56.07648,
+  "lon": 12.54735,
+  "prot": {
+   "N": "open",
+   "NE": "open",
+   "E": "open",
+   "SE": null,
+   "S": null,
+   "SW": null,
+   "W": "open",
+   "NW": "open"
+  },
+  "protSource": "abgeleitet",
+  "entranceOpen": null,
+  "swellOpen": null,
+  "depthEntrance_m": null,
+  "depthBerthMin_m": 0.5,
+  "depthBerthMax_m": 0.5,
+  "maxDraft_m": 1.0,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "W"
+     ],
+     "m": 1.0
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "E"
+     ],
+     "m": 1.0
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 49 28 10 80",
+  "web": "https://www.nordhavn.helsingor.dk",
+  "note": "prot abgeleitet: offener 133-m-Steg an der N-Küste Seelands, zum freien Wasser ungeschützt. Nur bei Tag, nicht ohne Ortskenntnis; wandernde Sandbarre, Wasserstand stark stromabhängig, nicht bei N-setzendem Strom anlaufen. Innenseite des Brückenkopfs (ca. 1,5 m) nutzen. 'Langebro' ist hier der Steg, nicht die Kopenhagener Brücke.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/7c1ca4b8-1d1c-4132-a9ad-a18596972cb7.html, Tekst 17-05-2023, abgerufen 2026-10-18",
+  "refuge": false,
+  "refugeLevel": null,
+  "plans": null,
+  "distHeiligenhafen_sm": 115.3,
+  "distBreege_sm": 92.2,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-dronningborg-lystbaadehavn",
+  "name": "Dronningborg Lystbådehavn",
+  "country": "DK",
+  "region": "Randers Fjord",
+  "type": "marina",
+  "lat": 56.46677,
+  "lon": 10.0817,
+  "prot": {
+   "N": "full",
+   "NE": "full",
+   "E": "full",
+   "SE": "part",
+   "S": "part",
+   "SW": "part",
+   "W": "full",
+   "NW": "full"
+  },
+  "protSource": "plan",
+  "entranceOpen": [],
+  "swellOpen": null,
+  "depthEntrance_m": 2.0,
+  "depthBerthMin_m": 0.5,
+  "depthBerthMax_m": 2.0,
+  "maxDraft_m": 1.9,
+  "maxLoa_m": 12,
+  "maxBeam_m": 3.5,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "NW",
+      "N",
+      "NE"
+     ],
+     "m": 1.8
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "S",
+      "SE"
+     ],
+     "m": 1.0
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": null,
+  "web": "www.dronningborg-baadelaug.dk",
+  "note": "Bootsclubhafen ca. 0,7 sm von Randers Havn. Einfahrtsbetonnung unbefeuert und Mitte Nov.–Mitte Apr. eingezogen – dann schwierige Ansteuerung. Kontakt über Website. Hafenplan: Offene Stege am N-Ufer des Randers Fjord (Gudenå), Baggerfläche 2 m, innen bis 0,5 m. Fahrwasserbetonnung von Mitte Nov. bis Mitte Apr. eingezogen.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": false,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/89f4e63a-bdd6-420e-85ac-643471e45c63.html, Tekst 23-04-2024, abgerufen 2026-10-18",
+  "refuge": false,
+  "refugeLevel": null,
+  "plans": [
+   "NK_DRNBG.jpg"
+  ],
+  "distHeiligenhafen_sm": 129.1,
+  "distBreege_sm": 157.4,
+  "zone": "rand"
+ },
+ {
+  "id": "dk-mellerup-lystbaadehavn",
+  "name": "Mellerup Lystbådehavn",
+  "country": "DK",
+  "region": "Randers Fjord",
+  "type": "marina",
+  "lat": 56.52403,
+  "lon": 10.22388,
+  "prot": {
+   "N": "full",
+   "NE": "part",
+   "E": "part",
+   "SE": "full",
+   "S": "full",
+   "SW": "full",
+   "W": "full",
+   "NW": "full"
+  },
+  "protSource": "plan",
+  "entranceOpen": [],
+  "swellOpen": null,
+  "depthEntrance_m": 1.8,
+  "depthBerthMin_m": 1.2,
+  "depthBerthMax_m": 1.8,
+  "maxDraft_m": null,
+  "maxLoa_m": 12,
+  "maxBeam_m": 3.5,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "NW"
+     ],
+     "m": 1.0
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "S",
+      "SE"
+     ],
+     "m": 1.0
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 86 44 20 59",
+  "web": null,
+  "note": "Becken 90×60 m an der W-Seite des Fjords ca. 400 m N der Fähre Mellerup–Voer, 60 m lange Zufahrtsrinne. Strom bis 3 kn. Hafenplan: Betonnte Rinne 1,8 m (Leitlinie 253,4°) quer zum Randers Fjord; Becken 1,2–1,8 m, Fjord vor der Einfahrt < 1 sm breit.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/3991f96d-9c1c-4841-b1d9-461035b988dd.html, Tekst 09-12-2024, abgerufen 2026-10-18",
+  "refuge": false,
+  "refugeLevel": null,
+  "plans": [
+   "NK_MERPL.jpg"
+  ],
+  "distHeiligenhafen_sm": 131.4,
+  "distBreege_sm": 156.5,
+  "zone": "rand"
+ },
+ {
+  "id": "dk-randers-havn",
+  "name": "Randers Havn",
+  "country": "DK",
+  "region": "Randers Fjord",
+  "type": "hafen",
+  "lat": 56.46205,
+  "lon": 10.06147,
+  "prot": {
+   "N": "full",
+   "NE": "full",
+   "E": "part",
+   "SE": "part",
+   "S": "part",
+   "SW": "part",
+   "W": "full",
+   "NW": "full"
+  },
+  "protSource": "plan",
+  "entranceOpen": [],
+  "swellOpen": null,
+  "depthEntrance_m": 6.5,
+  "depthBerthMin_m": 1.0,
+  "depthBerthMax_m": 3.0,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "E",
+      "N"
+     ],
+     "m": 1.4
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "S"
+     ],
+     "m": 1.2
+    }
+   ]
+  },
+  "season": null,
+  "vhf": "16, 12",
+  "tel": "+45 86 42 10 57",
+  "web": "www.randershavn.dk",
+  "note": "Berufshafen; Fahrwasser 7,0 m (Verschlickung möglich), Hafen bis 7,0 m. Sportboote sollen 1.4.–1.10. die gelb betonnte 1,8-m-Route im Raden Løb nutzen. Einlaufstrom ca. 2 kn, Auslaufstrom bis 4 kn. Auf dem Fjord UKW 16 und 12 hören. 15.10.–10.12.2026 Baggerarbeiten an der Mündung. Hafenplan: Flusshafen; Fahrwasser 7 m, 6,5 m bei Pieren (Text 7,0 m). Sportbootplätze (Bootssymbol) am N-Ufer östlich Svajebassin 1–3 m; Zufahrt Randers Fjord nicht im Plan.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": true,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/6d8de2c8-2a39-4b1b-bba4-d447ffeac24e.html, Tekst 15-10-2026, abgerufen 2026-10-18",
+  "refuge": false,
+  "refugeLevel": null,
+  "plans": [
+   "NKTRANDS.jpg"
+  ],
+  "distHeiligenhafen_sm": 129.0,
+  "distBreege_sm": 157.7,
+  "zone": "rand"
+ },
+ {
+  "id": "dk-randers-lystbaadehavn",
+  "name": "Randers Lystbådehavn",
+  "country": "DK",
+  "region": "Randers Fjord",
+  "type": "marina",
+  "lat": 56.46232,
+  "lon": 10.0544,
+  "prot": {
+   "N": "full",
+   "NE": "full",
+   "E": "part",
+   "SE": "part",
+   "S": "part",
+   "SW": "part",
+   "W": "full",
+   "NW": "full"
+  },
+  "protSource": "plan",
+  "entranceOpen": [],
+  "swellOpen": null,
+  "depthEntrance_m": 6.5,
+  "depthBerthMin_m": 1.0,
+  "depthBerthMax_m": 3.0,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": null,
+  "season": null,
+  "vhf": null,
+  "tel": "+45 86 42 52 51",
+  "web": "www.randerssejlklub.dk",
+  "note": "Hafen des Randers Sejlklub. Tiefen nur im Plan, keine Wasserstandsangabe. Hafenplan: Lage der Randers Sejlklub im Plan nicht eindeutig: Bootsplätze am N-Ufer 1–3 m bzw. Bådehavn im E 2–2,5 m (Zufahrt 3 m); Werte über beide Bereiche. Zufahrt Fjord nicht im Plan.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": false
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/5ac4096b-a176-4283-905f-3f387b27c428.html, Tekst 23-04-2024, abgerufen 2026-10-18",
+  "refuge": false,
+  "refugeLevel": null,
+  "plans": [
+   "NKTRANDS.jpg"
+  ],
+  "distHeiligenhafen_sm": 129.1,
+  "distBreege_sm": 157.9,
+  "zone": "rand"
+ },
+ {
+  "id": "dk-udbyhoej-lystbaadehavn",
+  "name": "Udbyhøj Lystbådehavn",
+  "country": "DK",
+  "region": "Randers Fjord",
+  "type": "marina",
+  "lat": 56.61022,
+  "lon": 10.30617,
+  "prot": {
+   "N": "full",
+   "NE": "full",
+   "E": "part",
+   "SE": "part",
+   "S": "full",
+   "SW": "full",
+   "W": "full",
+   "NW": "full"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "E"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 3.0,
+  "depthBerthMin_m": 2.0,
+  "depthBerthMax_m": 3.0,
+  "maxDraft_m": null,
+  "maxLoa_m": 30,
+  "maxBeam_m": 5,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "NW",
+      "N",
+      "NE"
+     ],
+     "m": 0.7
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "SE",
+      "S",
+      "SW"
+     ],
+     "m": 0.5
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 20 47 36 82",
+  "web": "www.udbyhøjlystbådehavn.dk",
+  "note": "Kommunale Marina mit 2 Becken, Einlauf 30 m breit; wenige Längsliegeplätze für größere Boote. Grüne Betonnung beachten – flache Stelle dicht SE der E-Mole. Kabelfähre ca. 150 m WSW. Tiefen nur im Plan. Hafenplan: Einfahrt Fl.R.3s/Fl.G.3s 3–5 m; Becken 2–3 m. Flach (0,2–0,6 m) E der Ostmole – grüne Markierung respektieren.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/f6004bef-0802-48d6-94a0-81d187a7d5da.html, Tekst 09-02-2026, abgerufen 2026-10-18",
+  "refuge": true,
+  "refugeLevel": "plan",
+  "plans": [
+   "NK_UBHOJ.jpg"
+  ],
+  "distHeiligenhafen_sm": 136.0,
+  "distBreege_sm": 158.4,
+  "zone": "rand"
+ },
+ {
+  "id": "dk-udbyhoej-syd-lystbaadehavn",
+  "name": "Udbyhøj Syd Lystbådehavn",
+  "country": "DK",
+  "region": "Randers Fjord",
+  "type": "marina",
+  "lat": 56.60688,
+  "lon": 10.3018,
+  "prot": {
+   "N": "part",
+   "NE": "full",
+   "E": "full",
+   "SE": "full",
+   "S": "full",
+   "SW": "full",
+   "W": "full",
+   "NW": "part"
+  },
+  "protSource": "plan",
+  "entranceOpen": [],
+  "swellOpen": null,
+  "depthEntrance_m": 2.2,
+  "depthBerthMin_m": 1.7,
+  "depthBerthMax_m": 1.7,
+  "maxDraft_m": 1.7,
+  "maxLoa_m": 10,
+  "maxBeam_m": 3.2,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "NW",
+      "N",
+      "NE"
+     ],
+     "m": 1.0
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "S"
+     ],
+     "m": 0.7
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 23 72 03 32",
+  "web": null,
+  "note": "Becken ca. 35×85 m; daneben Lotsenbrücke und Kabelfähranleger (für Sportboote gesperrt). Gezeitenstrom einlaufend 2–2,5 kn, auslaufend bis 4 kn. Tiefen nur im Plan. Hafenplan: Kleines Becken am S-Ufer, Einfahrt N 2,2–3 m, Becken 1,7 m; Fjord nach N < 1 sm.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/18eb271f-27c8-41d1-b976-295ea84183cb.html, Tekst 08-05-2024, abgerufen 2026-10-18",
+  "refuge": false,
+  "refugeLevel": null,
+  "plans": [
+   "NK_UBHOJ.jpg"
+  ],
+  "distHeiligenhafen_sm": 135.8,
+  "distBreege_sm": 158.3,
+  "zone": "rand"
+ },
+ {
+  "id": "dk-uggelhuse-marina",
+  "name": "Uggelhuse Marina",
+  "country": "DK",
+  "region": "Randers Fjord",
+  "type": "marina",
+  "lat": 56.47155,
+  "lon": 10.20625,
+  "prot": null,
+  "protSource": null,
+  "entranceOpen": null,
+  "swellOpen": null,
+  "depthEntrance_m": 2.0,
+  "depthBerthMin_m": 1.7,
+  "depthBerthMax_m": 1.7,
+  "maxDraft_m": 2.0,
+  "maxLoa_m": 12,
+  "maxBeam_m": 4,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "NW"
+     ],
+     "m": 1.5
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "E"
+     ],
+     "m": null
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": null,
+  "web": "uggelhusesejlklub.dk",
+  "note": "Segelclubbecken ca. 60×35 m; E davon T-förmige Gastbrücke (nicht Teil der Marina, Kopf 3,0 m, innen 1,5 m).",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": false,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/89d11328-a15d-4a92-8009-a8e74db1c711.html, Tekst 23-04-2024, abgerufen 2026-10-18",
+  "refuge": false,
+  "refugeLevel": null,
+  "plans": null,
+  "distHeiligenhafen_sm": 128.5,
+  "distBreege_sm": 154.6,
+  "zone": "rand"
+ },
+ {
+  "id": "dk-frederiksvaerk-havn",
+  "name": "Frederiksværk Havn",
+  "country": "DK",
+  "region": "Roskilde Fjord",
+  "type": "hafen",
+  "lat": 55.96427,
+  "lon": 11.99872,
+  "prot": {
+   "N": "full",
+   "NE": "full",
+   "E": "full",
+   "SE": "full",
+   "S": "part",
+   "SW": "part",
+   "W": "full",
+   "NW": "full"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "S",
+   "SW"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 2.8,
+  "depthBerthMin_m": 2.3,
+  "depthBerthMax_m": 2.8,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "N",
+      "NW"
+     ],
+     "m": 0.8
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "S",
+      "SE"
+     ],
+     "m": 0.8
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 47 72 11 90",
+  "web": "www.frv-havn.dk",
+  "note": "Strom im Fjord läuft im Wesentlichen mit dem Wind. Viele gute Ankerplätze im Roskilde Fjord. Liegeplatztiefen nur im Plan. Hafenplan: Text nennt 3,1 m in der Einfahrt, Plan zeigt im Zufahrtsbereich 2,8 m (Plan gewinnt). Stege 2,3–2,8 m. Berufs-/Industriehafen: nur im Notfall nach Kontakt mit dem Hafenkontor.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/7814dc9f-6a1d-49d3-a578-87177d141311.html, Tekst 17-03-2026, abgerufen 2026-10-18",
+  "refuge": false,
+  "refugeLevel": "notfall",
+  "plans": [
+   "SK_FRDVL.jpg"
+  ],
+  "distHeiligenhafen_sm": 101.5,
+  "distBreege_sm": 93.5,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-frederiksvaerk-staalvalsevaerks-havn",
+  "name": "Frederiksværk Stålvalseværks Havn",
+  "country": "DK",
+  "region": "Roskilde Fjord",
+  "type": "hafen",
+  "lat": 55.96157,
+  "lon": 12.01238,
+  "prot": {
+   "N": "full",
+   "NE": "full",
+   "E": "full",
+   "SE": "full",
+   "S": "part",
+   "SW": "part",
+   "W": "full",
+   "NW": "full"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "SW",
+   "S"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 5.1,
+  "depthBerthMin_m": 5.1,
+  "depthBerthMax_m": 6.0,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "N",
+      "NW"
+     ],
+     "m": 1.0
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "E"
+     ],
+     "m": 1.0
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 23 24 51 79",
+  "web": null,
+  "note": "Private Berufshafen (Stahlwerk NLMK DanSteel), 700×40 m Rinne von SE der Teglgårds Hage; enges Fahrwasser, Auslaufende warten. Keine Sportbootplätze beschrieben. Hafenplan: Privater Industriehafen ohne Sportbootplätze; 6-m-Rinne, Einfahrt 5,1 m, Kais 5,1–6 m. Berufs-/Industriehafen: nur im Notfall nach Kontakt mit dem Hafenkontor.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/41df98d2-8972-4185-bb57-bb617e29b6a5.html, Tekst 13-07-2026, abgerufen 2026-10-18",
+  "refuge": false,
+  "refugeLevel": "notfall",
+  "plans": [
+   "SKTFRDVK.jpg"
+  ],
+  "distHeiligenhafen_sm": 101.5,
+  "distBreege_sm": 93.2,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-kignaes-lystbaadehavn",
+  "name": "Kignæs Lystbådehavn",
+  "country": "DK",
+  "region": "Roskilde Fjord",
+  "type": "marina",
+  "lat": 55.85745,
+  "lon": 12.00927,
+  "prot": null,
+  "protSource": null,
+  "entranceOpen": null,
+  "swellOpen": null,
+  "depthEntrance_m": 1.7,
+  "depthBerthMin_m": 1.2,
+  "depthBerthMax_m": 1.2,
+  "maxDraft_m": null,
+  "maxLoa_m": 12,
+  "maxBeam_m": 4,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "NW"
+     ],
+     "m": 0.8
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "E",
+      "SE"
+     ],
+     "m": 0.5
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 24 63 84 78",
+  "web": "www.kignaeshavn.dk",
+  "note": "Becken ca. 180×35 m (125 Plätze), Zufahrt über 700 m lange Rinne (1,7 m) mit Drehbecken; Rinne kann versanden. Nachts mit Vorsicht. Saisonbojen 0,43 sm E und 1,35 sm N des Hafens.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/373397eb-a4b2-4759-8c66-dd5f53cb544a.html, Tekst 23-04-2024, abgerufen 2026-10-18",
+  "refuge": false,
+  "refugeLevel": null,
+  "plans": null,
+  "distHeiligenhafen_sm": 95.6,
+  "distBreege_sm": 87.9,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-kulhuse-havn",
+  "name": "Kulhuse Havn",
+  "country": "DK",
+  "region": "Roskilde Fjord",
+  "type": "hafen",
+  "lat": 55.937,
+  "lon": 11.90605,
+  "prot": {
+   "N": "part",
+   "NE": "full",
+   "E": "full",
+   "SE": "full",
+   "S": "full",
+   "SW": "full",
+   "W": "full",
+   "NW": "full"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "W"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 2.8,
+  "depthBerthMin_m": 2.0,
+  "depthBerthMax_m": 2.5,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "NW"
+     ],
+     "m": 1.0
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "SE"
+     ],
+     "m": 1.0
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 47 53 05 40",
+  "web": null,
+  "note": "Hafen mit Westmole und Fähranleger (Fähre Sølager), 20-m-Rinne; Hafen 2,5 m, innen hinter den Pfählen 2,0 m; versandet leicht. Laut Lotse Anlaufen bei W-Starkwind schwierig. Starker Strom im Kulhus Rende bei N/S-Starkwind. Lotse nennt max. ca. 12–14×3–4 m (nicht sportbootspezifisch). Hafenplan: Rinne 2,8 m (Baken nur 1.4.–15.11.), Becken 2,5 m, innerer Teil 2 m. Laut Text Versandung von Einfahrt und Hafen, Einlaufen bei W-Kuling schwierig.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": true,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/4b53ccd5-f932-4b18-beee-43674654e251.html, Tekst 18-06-2024, abgerufen 2026-10-18",
+  "refuge": true,
+  "refugeLevel": "plan",
+  "plans": [
+   "SK_KULHS.jpg"
+  ],
+  "distHeiligenhafen_sm": 98.9,
+  "distBreege_sm": 93.8,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-langoer-havn",
+  "name": "Langør Havn",
+  "country": "DK",
+  "region": "Samsø",
+  "type": "hafen",
+  "lat": 55.91057,
+  "lon": 10.64157,
+  "prot": {
+   "N": "full",
+   "NE": "part",
+   "E": "part",
+   "SE": "part",
+   "S": "part",
+   "SW": "full",
+   "W": "full",
+   "NW": "full"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "NE",
+   "E"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 3.0,
+  "depthBerthMin_m": 1.2,
+  "depthBerthMax_m": 3.5,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "W",
+      "NW",
+      "N"
+     ],
+     "m": 1.0
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "SW",
+      "S",
+      "SE"
+     ],
+     "m": 1.0
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 86 59 12 03",
+  "web": null,
+  "note": "Hafen im Stavns Fjord: Kai mit Plätzen an S- und W-Seite, 2 Becken SW davon; W/SW durch Steinmolen begrenzt. Gezeitenstrom quer vor der Einfahrt. Nur tagsüber. Lotse nennt allgemein max. 40 m, 3,0 m. Guter Ankerplatz N der Linie Lilleør–Langør (weicher Grund, schweres Geschirr). Tel. = Ballen Havn. Hafenplan: Lage im Stavns Fjord; Inderbassin (Zufahrt NE, 3,3–3,5 m) und Yderbassin (eigene Einfahrt S, 3–3,1 m). Sportbootplätze nicht gekennzeichnet, Werte über Kaj und Becken (flache NW-Ecke 0,6–1,9 m ohne Liegeplätze ausgenommen). Nur am Tag.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/8c2d2ca4-1507-4179-affb-091ac98504aa.html, Tekst 23-04-2024, abgerufen 2026-10-18",
+  "refuge": false,
+  "refugeLevel": null,
+  "plans": [
+   "SK_LNGOR.jpg"
+  ],
+  "distHeiligenhafen_sm": 92.8,
+  "distBreege_sm": 121.3,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-maarup-havn",
+  "name": "Mårup Havn",
+  "country": "DK",
+  "region": "Samsø",
+  "type": "hafen",
+  "lat": 55.9372,
+  "lon": 10.5523,
+  "prot": {
+   "N": "full",
+   "NE": "part",
+   "E": "open",
+   "SE": "full",
+   "S": "full",
+   "SW": "full",
+   "W": "full",
+   "NW": "full"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "E"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 3.0,
+  "depthBerthMin_m": 2.4,
+  "depthBerthMax_m": 3.0,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "NW",
+      "N",
+      "NE"
+     ],
+     "m": 0.9
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "SW",
+      "S",
+      "SE"
+     ],
+     "m": 0.9
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 86 59 12 03",
+  "web": null,
+  "note": "Betonnte, vertiefte Rinne zu Innenbecken und Becken hinter der Außenmole; Innenbecken für Einheimische/Jollen. Ca. 0,1 sm S des Hafens Untiefe 1,5 m. Lotse nennt allgemein max. 40×5 m, ca. 2,6 m. Bei ablandigem Wind Ankern in Sælvig/Mårup Vig. Tel. = Ballen Havn. Hafenplan: Betonnte Rinne 3 m von SW um den Molenkopf (F.R); Steganlage hinter der Dækmole 3 m, nach E offen (nördlich nur Flach 0,9 m). Innerstes Becken 1,5 m nur für Einheimische/Jollen.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/83f271bd-6f47-4f88-afdd-f7fc357c6ab8.html, Tekst 28-09-2018, abgerufen 2026-10-18",
+  "refuge": false,
+  "refugeLevel": null,
+  "plans": [
+   "SK_MAARP.jpg"
+  ],
+  "distHeiligenhafen_sm": 94.8,
+  "distBreege_sm": 124.6,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-odden-havn",
+  "name": "Odden Havn",
+  "country": "DK",
+  "region": "Seeland Nord",
+  "type": "hafen",
+  "lat": 55.97228,
+  "lon": 11.36983,
+  "prot": {
+   "N": "full",
+   "NE": "full",
+   "E": "part",
+   "SE": "part",
+   "S": "full",
+   "SW": "full",
+   "W": "full",
+   "NW": "full"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "E",
+   "NE"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 3.5,
+  "depthBerthMin_m": 2.0,
+  "depthBerthMax_m": 3.5,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "N",
+      "NW"
+     ],
+     "m": 1.2
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "E",
+      "S"
+     ],
+     "m": 1.0
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 70 20 38 38",
+  "web": "www.odsherredhavne.dk",
+  "note": "Vor- und Innenhafen an der N-Küste von Sjællands Odde. Versandung, Tiefen schwanken um ca. 0,5 m, im Herbst für größere Schiffe schwierig. Lotse nennt max. 30 m. Tel. = Odsherred Havne. Tiefen nur im Plan. Hafenplan: Einfahrt östlich Fl.G.3s, Vorhafen 4 m, Becken 2–3,5 m (Sportboote im mittleren Becken 2,5 m; unklar welche Plätze, daher alle Becken). Text: Tilsanding, Tiefen ±0,5 m.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/3d76ee57-1f18-4dc2-b71a-9e91d5eb2ed8.html, Tekst 06-02-2026, abgerufen 2026-10-18",
+  "refuge": true,
+  "refugeLevel": "plan",
+  "plans": [
+   "SKTODDEN.jpg"
+  ],
+  "distHeiligenhafen_sm": 96.7,
+  "distBreege_sm": 106.2,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-sejeroe-havn",
+  "name": "Sejerø Havn",
+  "country": "DK",
+  "region": "Sejerø Bugt",
+  "type": "hafen",
+  "lat": 55.8798,
+  "lon": 11.13637,
+  "prot": {
+   "N": "full",
+   "NE": "full",
+   "E": "full",
+   "SE": "part",
+   "S": "part",
+   "SW": "full",
+   "W": "full",
+   "NW": "full"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "S",
+   "SE"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 3.5,
+  "depthBerthMin_m": 1.5,
+  "depthBerthMax_m": 3.0,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "N",
+      "NW"
+     ],
+     "m": 1.0
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "E",
+      "SE"
+     ],
+     "m": 0.7
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 59 59 03 79",
+  "web": null,
+  "note": "Kombinierter Fischerei-, Fähr- und Sportboothafen an der SW-Küste von Sejerø. Ständige Versandung am W-Molenkopf. Lotse nennt max. ca. 40 m. Ankern mit gutem Halt W des Hafens. Tiefen nur im Plan. Hafenplan: Vorhafen zwischen F.R/F.G 3,5 m, Lystbådebecken (W) 2–3 m, am Steg 1,5 m. Text: ständige Versandung am W-Molenkopf.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/df191966-018d-42c2-8719-5126a24ab7b6.html, Tekst 06-01-2025, abgerufen 2026-10-18",
+  "refuge": true,
+  "refugeLevel": "plan",
+  "plans": [
+   "SKTSEJRO.jpg"
+  ],
+  "distHeiligenhafen_sm": 90.4,
+  "distBreege_sm": 107.6,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-tunoe-havn",
+  "name": "Tunø Havn",
+  "country": "DK",
+  "region": "Tunø",
+  "type": "hafen",
+  "lat": 55.94883,
+  "lon": 10.45402,
+  "prot": {
+   "N": "full",
+   "NE": "full",
+   "E": "part",
+   "SE": "full",
+   "S": "full",
+   "SW": "full",
+   "W": "full",
+   "NW": "full"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "E",
+   "NE"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 2.4,
+  "depthBerthMin_m": 2.5,
+  "depthBerthMax_m": 3.5,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "NW",
+      "N",
+      "NE"
+     ],
+     "m": 0.5
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "SW"
+     ],
+     "m": 0.5
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 86 55 30 92",
+  "web": null,
+  "note": "Kommunaler Hafen mit 2 Becken, im SE-Becken Fähranleger (Hov–Tunø). Lotse nennt allgemein max. 30×10 m, 3,0 m. Ankern N des Einlaufs. Tiefen nur im Plan. Hafenplan: Betonnte Rinne (1.4.–15.11.) 3,5 m, am Molenkopf 2,4 m; NW-Becken Stege 2,5 m, gebaggerte Gasse 3,5 m. SE-Becken mit Fähre 2,5 m.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/8f3a1cf0-d042-4377-bfab-dbdc66cb9b7f.html, Tekst 23-04-2024, abgerufen 2026-10-18",
+  "refuge": true,
+  "refugeLevel": "plan",
+  "plans": [
+   "SK_TUNOE.jpg"
+  ],
+  "distHeiligenhafen_sm": 96.1,
+  "distBreege_sm": 127.6,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-espergaerde-havn",
+  "name": "Espergærde Havn",
+  "country": "DK",
+  "region": "Øresund",
+  "type": "hafen",
+  "lat": 55.9924,
+  "lon": 12.56248,
+  "prot": {
+   "N": "full",
+   "NE": "part",
+   "E": "part",
+   "SE": "full",
+   "S": "full",
+   "SW": "full",
+   "W": "full",
+   "NW": "full"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "NE",
+   "E"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 2.0,
+  "depthBerthMin_m": 2.0,
+  "depthBerthMax_m": 2.0,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "W"
+     ],
+     "m": 0.5
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "E"
+     ],
+     "m": 0.5
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 22 86 10 26",
+  "web": "https://www.espergaerdehavn.dk",
+  "note": "Ein Becken, selbstverwaltet. Tiefen nur im Plan. Größte Schiffe 11×3,5 m. Hafenplan: Rinne 2,2 m, Einfahrt und Becken 2 m.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/0d2f6367-9b50-4acb-9584-3fa62bcc8679.html, Tekst 25-09-2026, abgerufen 2026-10-18",
+  "refuge": false,
+  "refugeLevel": null,
+  "plans": [
+   "SU_ESPGR.jpg"
+  ],
+  "distHeiligenhafen_sm": 111.1,
+  "distBreege_sm": 87.2,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-helsingoer-havn",
+  "name": "Helsingør Havn",
+  "country": "DK",
+  "region": "Øresund",
+  "type": "hafen",
+  "lat": 56.03553,
+  "lon": 12.61802,
+  "prot": {
+   "N": "full",
+   "NE": "full",
+   "E": "full",
+   "SE": "part",
+   "S": "part",
+   "SW": "full",
+   "W": "full",
+   "NW": "full"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "E",
+   "SE"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 7.0,
+  "depthBerthMin_m": 4.0,
+  "depthBerthMax_m": 7.0,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "N"
+     ],
+     "m": 1.5
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "S"
+     ],
+     "m": 1.2
+    }
+   ]
+  },
+  "season": null,
+  "vhf": "16, 12",
+  "tel": "+45 49 21 05 15",
+  "web": "https://www.helsingor-havne.helsingor.dk",
+  "note": "Fähr- und Erwerbshafen. Strom über 3 kn mit Neer an der Einfahrt – genug Fahrt halten. An-/Abmeldung 15 min vorher (Tel./VHF 12/16). Sperrgebiet für Freizeitfahrzeuge vor dem Hafen (Ausnahme >15 m mit Genehmigung). Sportboote → Helsingør Nordhavn. Guter Ankerplatz S des Hafens. Hafenplan: Plan: Einfahrt 7 m (Text 7,5/7,3 m); Nordre Havn 4–5,5 m, Søndre Havn 7 m. Keine Sportbootmarkierung, Werte über alle Becken; starke Strömung. Berufs-/Industriehafen: nur im Notfall nach Kontakt mit dem Hafenkontor.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": true,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/033185ef-47a0-4039-9487-6caf81c2a768.html, Tekst 22-06-2026, abgerufen 2026-10-18",
+  "refuge": false,
+  "refugeLevel": "notfall",
+  "plans": [
+   "SUTHLSNS.jpg"
+  ],
+  "distHeiligenhafen_sm": 114.3,
+  "distBreege_sm": 89.1,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-helsingoer-nordhavn",
+  "name": "Helsingør Nordhavn",
+  "country": "DK",
+  "region": "Øresund",
+  "type": "marina",
+  "lat": 56.04358,
+  "lon": 12.61685,
+  "prot": {
+   "N": "full",
+   "NE": "full",
+   "E": "full",
+   "SE": "part",
+   "S": "full",
+   "SW": "full",
+   "W": "full",
+   "NW": "full"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "E",
+   "SE"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 4.2,
+  "depthBerthMin_m": 2.5,
+  "depthBerthMax_m": 5.0,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "NW"
+     ],
+     "m": 1.0
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "SE"
+     ],
+     "m": 0.6
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 49 28 10 80",
+  "web": null,
+  "note": "Sportboothafen der Kommune; größere Schiffe → Dokøen. Größte Schiffe ca. 25×6 m. Strom vor dem Hafen NW-/SE-setzend bis 3 kn. Hafenwache +45 25 31 10 80; VHF nur nach Absprache. Hafenplan: Einfahrt SE (Zone > 4 m); Yderhavn 2,8–5 m, Inderhavn/Vest-/Østbassin 2,5–3,5 m.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/73c697c8-c8c3-42c2-97e0-990b9e41fde5.html, Tekst 20-03-2025, abgerufen 2026-10-18",
+  "refuge": true,
+  "refugeLevel": "plan",
+  "plans": [
+   "SU_HLSNN.jpg"
+  ],
+  "distHeiligenhafen_sm": 114.7,
+  "distBreege_sm": 89.6,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-humlebaek-havn",
+  "name": "Humlebæk Havn",
+  "country": "DK",
+  "region": "Øresund",
+  "type": "hafen",
+  "lat": 55.971,
+  "lon": 12.54632,
+  "prot": {
+   "N": "full",
+   "NE": "part",
+   "E": "full",
+   "SE": "full",
+   "S": "full",
+   "SW": "full",
+   "W": "full",
+   "NW": "full"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "NE"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 2.5,
+  "depthBerthMin_m": 0.9,
+  "depthBerthMax_m": 2.5,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "NW"
+     ],
+     "m": 1.0
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "S",
+      "SE"
+     ],
+     "m": 0.5
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 21 29 71 91",
+  "web": "https://www.humlebaekhavn.dk",
+  "note": "Vereinshafen; im Winter Versandung möglich. Tiefen nur im Plan. Größte Schiffe 18×4 m. Hafenplan: Zufahrtsrinne von NE 2,5 m (außerhalb 1,2–1,5 m); Becken 2,5 m, im Innenwinkel 0,9 m. Text: Versandung im Winter möglich.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/36e5e536-7293-45cc-94a4-753c8c43a76e.html, Tekst 11-12-2024, abgerufen 2026-10-18",
+  "refuge": true,
+  "refugeLevel": "plan",
+  "plans": [
+   "SU_HMLBK.jpg"
+  ],
+  "distHeiligenhafen_sm": 109.7,
+  "distBreege_sm": 86.2,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-nivaa-havn",
+  "name": "Nivå Havn",
+  "country": "DK",
+  "region": "Øresund",
+  "type": "hafen",
+  "lat": 55.93968,
+  "lon": 12.52807,
+  "prot": {
+   "N": "full",
+   "NE": "full",
+   "E": "part",
+   "SE": "full",
+   "S": "full",
+   "SW": "full",
+   "W": "full",
+   "NW": "full"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "E"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 2.5,
+  "depthBerthMin_m": 0.5,
+  "depthBerthMax_m": 2.5,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "W",
+      "NW"
+     ],
+     "m": 1.0
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "S",
+      "SW"
+     ],
+     "m": 0.5
+    }
+   ]
+  },
+  "season": null,
+  "vhf": "12",
+  "tel": "+45 30 52 48 04",
+  "web": "https://www.nivaahavn.dk",
+  "note": "Stein mit ca. 2 m Wassertiefe ca. 260 m NE des N-Molenkopfs (034,2°). Notfall-Tel./SMS +45 21 52 39 04. Tiefen nur im Plan. Größte Schiffe 15×4 m. Hafenplan: Rinne 2,5 m (am N-Rand 1,5/0,8 m); Liegeplätze 0,5–2,5 m. Text: Stein (ca. 2 m) 260 m NE vom N-Molenkopf.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": true,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/a3c00705-bc4e-41ed-95c9-8bf37d8a6fba.html, Tekst 22-04-2026, abgerufen 2026-10-18",
+  "refuge": true,
+  "refugeLevel": "plan",
+  "plans": [
+   "SU_NIVAA.jpg"
+  ],
+  "distHeiligenhafen_sm": 107.8,
+  "distBreege_sm": 84.6,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-rungsted-havn",
+  "name": "Rungsted Havn",
+  "country": "DK",
+  "region": "Øresund",
+  "type": "marina",
+  "lat": 55.88572,
+  "lon": 12.54895,
+  "prot": {
+   "N": "part",
+   "NE": "full",
+   "E": "full",
+   "SE": "full",
+   "S": "full",
+   "SW": "full",
+   "W": "full",
+   "NW": "part"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "NW"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 3.0,
+  "depthBerthMin_m": 2.0,
+  "depthBerthMax_m": 3.0,
+  "maxDraft_m": null,
+  "maxLoa_m": 20,
+  "maxBeam_m": 5,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "NW"
+     ],
+     "m": 1.3
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "SE",
+      "S",
+      "SW"
+     ],
+     "m": 1.1
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 45 86 83 11",
+  "web": "https://www.rungsted-havn.dk",
+  "note": "Nur für Sportboote. Laut Lods kann NW-Sturm sehr unruhige See vor dem Hafen erzeugen. Ankern N und S des Hafens. Tiefen nur im Plan. Hafenplan: Rinne 3 m zwischen Tonnen, nördlich davon 1,5 m und 2-m-Linie; Forhavn 3 m, Nord-/Sydbassin 2,0–3,0 m. Text: NW-Sturm macht See vor dem Hafen.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": true,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/166d2074-8cc4-4cdc-ac39-206ac5823645.html, Tekst 14-01-2025, abgerufen 2026-10-18",
+  "refuge": true,
+  "refugeLevel": "plan",
+  "plans": [
+   "SU_RUNST.jpg"
+  ],
+  "distHeiligenhafen_sm": 105.4,
+  "distBreege_sm": 81.3,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-sletten-havn",
+  "name": "Sletten Havn",
+  "country": "DK",
+  "region": "Øresund",
+  "type": "hafen",
+  "lat": 55.95357,
+  "lon": 12.53652,
+  "prot": {
+   "N": "part",
+   "NE": "part",
+   "E": "full",
+   "SE": "full",
+   "S": "full",
+   "SW": "full",
+   "W": "full",
+   "NW": "full"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "N",
+   "NE"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 3.0,
+  "depthBerthMin_m": 0.9,
+  "depthBerthMax_m": 2.5,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "W",
+      "NW",
+      "N"
+     ],
+     "m": 1.3
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "E",
+      "SE",
+      "S"
+     ],
+     "m": 1.0
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 20 40 27 72",
+  "web": null,
+  "note": "Hafenbecken bis 2,5 m (Untergrenze unbekannt). Hafen und Einfahrt versanden über Winter/Frühjahr, jährliche Baggerung im Hochsommer. Größte Schiffe 15×4 m, 2,2 m Tiefgang (allgemein). Hafenplan: Einfahrt 3 m (deckt sich mit Text); Becken 0,9–2,5 m. Text: Versandung über Winter/Frühjahr, Ausbaggerung im Hochsommer.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/33dbb54f-4037-4e01-89d6-b53d0740311a.html, Tekst 11-07-2025, abgerufen 2026-10-18",
+  "refuge": true,
+  "refugeLevel": "plan",
+  "plans": [
+   "SU_SLETN.jpg"
+  ],
+  "distHeiligenhafen_sm": 108.6,
+  "distBreege_sm": 85.3,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-snekkersten-havn",
+  "name": "Snekkersten Havn",
+  "country": "DK",
+  "region": "Øresund",
+  "type": "hafen",
+  "lat": 56.00812,
+  "lon": 12.58952,
+  "prot": {
+   "N": "full",
+   "NE": "full",
+   "E": "part",
+   "SE": "part",
+   "S": "full",
+   "SW": "full",
+   "W": "full",
+   "NW": "full"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "E",
+   "SE"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 2.1,
+  "depthBerthMin_m": 2.5,
+  "depthBerthMax_m": 3.0,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "N"
+     ],
+     "m": 1.0
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "SE",
+      "S"
+     ],
+     "m": 1.0
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 49 22 49 19",
+  "web": "https://www.snekkerstenhavn.dk",
+  "note": "Stiftungshafen; Tiefen nur im Plan. Hafenplan: Einfahrt zwischen F.R-Kopf und freistehendem Wellenbrecher 2,1 m, 2-m-Linie quert die Einfahrt, 1,8 m vor dem S-Molenkopf; Becken 2,5–3,0 m.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/c9dd737c-b16e-4deb-b6f2-dab6f8b9c87a.html, Tekst 16-05-2023, abgerufen 2026-10-18",
+  "refuge": false,
+  "refugeLevel": null,
+  "plans": [
+   "SU_SNKST.jpg"
+  ],
+  "distHeiligenhafen_sm": 112.4,
+  "distBreege_sm": 87.9,
+  "zone": "kern"
+ }
+]

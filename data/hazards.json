@@ -1,0 +1,1496 @@
+{
+ "_note": "Zusammengeführt 2026-10-18 aus hazards.json, hazards-np.json, haff-pl.json",
+ "HAZARDS": [
+  {
+   "id": "hz-de-putlos",
+   "name": "Schießgebiet Putlos (Warngebiet See)",
+   "country": "DE",
+   "type": "schiessgebiet",
+   "geom": {
+    "type": "circle",
+    "center": [
+     54.32464,
+     10.84497
+    ],
+    "radius_nm": null,
+    "center_note": "Koordinate = Truppenübungsplatz an Land (de-Wikipedia), nicht Mittelpunkt des Seewarngebiets."
+   },
+   "warn": "Warngebiet Putlos (Hohwachter Bucht / westlich Heiligenhafen). Bei Schießbetrieb: Warnfeuer rot blinkend (Fl R); gelb/rot wechselnd = Putlos und Todendorf aktiv. Sperrgebiet durch gelbe Tonnen markiert, Sicherungsboote. Schießzeiten vorab auf elwis.de prüfen, Funkdurchsagen UKW 11 bzw. 16 abhören. Anweisungen der Sicherungsboote befolgen.",
+   "notice": {
+    "web": "elwis.de (Schießzeiten Putlos/Todendorf)",
+    "vhf": "11 / 16",
+    "licht": "Fl R = Putlos aktiv"
+   },
+   "src": [
+    {
+     "url": "https://de.wikipedia.org/wiki/Truppenübungsplatz_Putlos",
+     "abruf": "2026-10-18"
+    }
+   ],
+   "verified": {
+    "pos": false,
+    "geom": false,
+    "rule": true
+   },
+   "verified_overall": false
+  },
+  {
+   "id": "hz-de-todendorf",
+   "name": "Schießgebiet Todendorf / Hohwacht (Warngebiet See)",
+   "country": "DE",
+   "type": "schiessgebiet",
+   "geom": {
+    "type": "circle",
+    "center": null,
+    "radius_nm": null
+   },
+   "warn": "Warngebiet Todendorf (Hohwachter Bucht). Bei Schießbetrieb: Warnfeuer gelb blinkend (Fl Y). Schießzeiten auf elwis.de, Funkdurchsagen UKW 11/16. Sicherungsboote beachten.",
+   "notice": {
+    "web": "elwis.de",
+    "vhf": "11 / 16",
+    "licht": "Fl Y = Todendorf aktiv"
+   },
+   "src": [
+    {
+     "url": "https://de.wikipedia.org/wiki/Truppenübungsplatz_Putlos",
+     "abruf": "2026-10-18",
+     "note": "Todendorf als Außenstelle von Putlos beschrieben; Sicherheitsbereich See beider Gebiete zusammen ca. 486 km²."
+    }
+   ],
+   "verified": {
+    "pos": false,
+    "geom": false,
+    "rule": true
+   },
+   "verified_overall": false
+  },
+  {
+   "id": "hz-de-weitere-schiessgebiete",
+   "name": "Weitere Schießgebiete deutsche Ostsee (z. B. Marine-Übungsgebiete, Pommersche Bucht)",
+   "country": "DE",
+   "type": "schiessgebiet",
+   "geom": null,
+   "warn": null,
+   "notice": {
+    "web": "elwis.de / BSH NfS"
+   },
+   "src": [],
+   "verified": {
+    "pos": false,
+    "geom": false,
+    "rule": false
+   },
+   "verified_overall": false,
+   "note": "Nicht recherchiert (Budget). Liste und Grenzen aus BSH-Seekarten/NfS ergänzen."
+  },
+  {
+   "id": "hz-de-dk-vtg-fehmarnbelt",
+   "name": "Verkehrstrennungsgebiet Fehmarnbelt",
+   "country": "DE/DK",
+   "type": "vtg",
+   "geom": null,
+   "warn": "Großschifffahrt im Fehmarnbelt (2014: rund 38.000 Passagen). VTG nur auf kürzestem Weg und möglichst rechtwinklig queren, Einbahnwege nicht entgegen der Richtung befahren, AIS/Ausguck. Grenzen: Seekarte.",
+   "src": [
+    {
+     "url": "https://de.wikipedia.org/wiki/Fehmarnbelt",
+     "abruf": "2026-10-18",
+     "note": "Nur Verkehrszahl belegt; VTG-Lage und -Regeln nicht in der Quelle."
+    }
+   ],
+   "verified": {
+    "pos": false,
+    "geom": false,
+    "rule": false
+   },
+   "verified_overall": false,
+   "note": "Querungsregel (rechtwinklig, kürzester Weg) entspricht KVR Regel 10 – Quelle im nächsten Lauf ergänzen."
+  },
+  {
+   "id": "hz-de-dk-kadetrinne",
+   "name": "Kadetrinne (Gedser Rev – Darß), Verkehrstrennungsgebiet/Tiefwasserweg",
+   "country": "DE/DK",
+   "type": "vtg",
+   "geom": {
+    "type": "circle",
+    "center": [
+     54.45278,
+     12.19472
+    ],
+    "radius_nm": null,
+    "center_note": "Punkt laut de-Wikipedia (54°27'10\"N 12°11'41\"E)."
+   },
+   "warn": "Engstes und schwierigstes Fahrwasser der Ostsee: dichter Verkehr (2014 rund 55.000 Passagen), an der engsten Stelle nur 500–1000 m befahrbar für Tiefgänger, Kurswechsel ca. 90° am Gedser Rev. Großschifffahrt hat Vorrang im Fahrwasser; zügig und rechtwinklig queren, nicht im Fahrwasser segeln, bei schlechter Sicht meiden.",
+   "src": [
+    {
+     "url": "https://de.wikipedia.org/wiki/Kadetrinne",
+     "abruf": "2026-10-18"
+    }
+   ],
+   "verified": {
+    "pos": true,
+    "geom": false,
+    "rule": false
+   },
+   "verified_overall": false
+  },
+  {
+   "id": "hz-de-dk-fehmarnbelt-tunnel",
+   "name": "Baustelle Fehmarnbelt-Tunnel (Puttgarden – Rødbyhavn)",
+   "country": "DE/DK",
+   "type": "baustelle",
+   "geom": null,
+   "warn": "Großbaustelle auf der Trasse Puttgarden–Rødbyhavn (ca. 17,6–18 km). Absenkponton IVY und Arbeitsschiffe aktiv, Sperr- und Sicherheitszonen wechseln mit dem Baufortschritt. Vor Querung NfS (BSH/elwis) und EfS (Søfartsstyrelsen) prüfen, UKW abhören, Abstand zu Arbeitsfahrzeugen halten.",
+   "status": "Erstes Tunnelelement Mai 2026 abgesenkt; Sept. 2026 'nähert sich dem ersten Kilometer'; Eröffnung voraussichtlich 2031/2032. Im Juli 2020 wurden Arbeitsgebiete 'OWA South' (DE) und 'OWA North' (DK) südöstlich Rødbyhavn eingerichtet – aktueller Status unbekannt.",
+   "src": [
+    {
+     "url": "https://en.wikipedia.org/wiki/Fehmarn_Belt_Fixed_Link",
+     "abruf": "2026-10-18"
+    },
+    {
+     "url": "https://de.wikipedia.org/wiki/Fehmarnbelt-Tunnel",
+     "abruf": "2026-10-18"
+    },
+    {
+     "url": "https://www.femern.com/",
+     "abruf": "2026-10-18"
+    }
+   ],
+   "verified": {
+    "pos": false,
+    "geom": false,
+    "rule": false
+   },
+   "verified_overall": false
+  },
+  {
+   "id": "hz-de-owf-baltic1",
+   "name": "Offshore-Windpark Baltic 1",
+   "country": "DE",
+   "type": "windpark",
+   "geom": {
+    "type": "circle",
+    "center": [
+     54.61389,
+     12.66667
+    ],
+    "radius_nm": null
+   },
+   "warn": "Offshore-Windpark (nördlich Darß/Zingst). Befahrensregel/Sicherheitszone aus BSH/NfS prüfen, nicht durchfahren solange nicht belegt erlaubt.",
+   "src": [
+    {
+     "url": "https://en.wikipedia.org/wiki/List_of_offshore_wind_farms_in_Germany",
+     "abruf": "2026-10-18"
+    }
+   ],
+   "verified": {
+    "pos": true,
+    "geom": false,
+    "rule": false
+   },
+   "verified_overall": false
+  },
+  {
+   "id": "hz-de-owf-baltic2",
+   "name": "Offshore-Windpark EnBW Baltic 2 (Kriegers Flak, DE)",
+   "country": "DE",
+   "type": "windpark",
+   "geom": {
+    "type": "circle",
+    "center": [
+     55.0,
+     13.2
+    ],
+    "radius_nm": null
+   },
+   "warn": "Offshore-Windpark auf Kriegers Flak (Route Rügen–Schweden/Bornholm). Befahrensregel aus BSH/NfS prüfen.",
+   "src": [
+    {
+     "url": "https://en.wikipedia.org/wiki/List_of_offshore_wind_farms_in_Germany",
+     "abruf": "2026-10-18"
+    }
+   ],
+   "verified": {
+    "pos": true,
+    "geom": false,
+    "rule": false
+   },
+   "verified_overall": false
+  },
+  {
+   "id": "hz-de-owf-wikinger",
+   "name": "Offshore-Windpark Wikinger",
+   "country": "DE",
+   "type": "windpark",
+   "geom": {
+    "type": "circle",
+    "center": [
+     54.83389,
+     14.06806
+    ],
+    "radius_nm": null
+   },
+   "warn": "Offshore-Windpark nordöstlich Rügen (Route Rügen–Bornholm). Befahrensregel prüfen.",
+   "src": [
+    {
+     "url": "https://en.wikipedia.org/wiki/List_of_offshore_wind_farms_in_Germany",
+     "abruf": "2026-10-18"
+    }
+   ],
+   "verified": {
+    "pos": true,
+    "geom": false,
+    "rule": false
+   },
+   "verified_overall": false
+  },
+  {
+   "id": "hz-de-owf-arkona",
+   "name": "Offshore-Windpark Arkona",
+   "country": "DE",
+   "type": "windpark",
+   "geom": {
+    "type": "circle",
+    "center": [
+     54.78306,
+     14.12111
+    ],
+    "radius_nm": null
+   },
+   "warn": "Offshore-Windpark nordöstlich Rügen (neben Wikinger). Befahrensregel prüfen.",
+   "src": [
+    {
+     "url": "https://en.wikipedia.org/wiki/List_of_offshore_wind_farms_in_Germany",
+     "abruf": "2026-10-18"
+    }
+   ],
+   "verified": {
+    "pos": true,
+    "geom": false,
+    "rule": false
+   },
+   "verified_overall": false
+  },
+  {
+   "id": "hz-de-owf-baltic-eagle",
+   "name": "Offshore-Windpark Baltic Eagle",
+   "country": "DE",
+   "type": "windpark",
+   "geom": null,
+   "warn": "Offshore-Windpark (Inbetriebnahme 2024 gelistet). Lage nicht belegt.",
+   "src": [
+    {
+     "url": "https://en.wikipedia.org/wiki/List_of_offshore_wind_farms_in_Germany",
+     "abruf": "2026-10-18"
+    }
+   ],
+   "verified": {
+    "pos": false,
+    "geom": false,
+    "rule": false
+   },
+   "verified_overall": false
+  },
+  {
+   "id": "hz-de-owf-breitling",
+   "name": "Windkraftanlage Breitling (Rostock, Einzelanlage im Hafen)",
+   "country": "DE",
+   "type": "windpark",
+   "geom": {
+    "type": "circle",
+    "center": [
+     54.16111,
+     12.13111
+    ],
+    "radius_nm": null
+   },
+   "warn": "Einzelne Anlage (2,5 MW) im Breitling/Rostock – kein Befahrensverbotsgebiet bekannt; nur zur Vollständigkeit.",
+   "src": [
+    {
+     "url": "https://en.wikipedia.org/wiki/List_of_offshore_wind_farms_in_Germany",
+     "abruf": "2026-10-18"
+    }
+   ],
+   "verified": {
+    "pos": true,
+    "geom": false,
+    "rule": false
+   },
+   "verified_overall": false,
+   "app_relevanz": "niedrig"
+  },
+  {
+   "id": "hz-dk-owf-kriegers-flak",
+   "name": "Offshore-Windpark Kriegers Flak (DK)",
+   "country": "DK",
+   "type": "windpark",
+   "geom": {
+    "type": "circle",
+    "center": [
+     55.01667,
+     12.93333
+    ],
+    "radius_nm": null
+   },
+   "warn": "Offshore-Windpark (600 MW) östlich Møn. Befahrensregel aus EfS/Søfartsstyrelsen prüfen.",
+   "src": [
+    {
+     "url": "https://en.wikipedia.org/wiki/List_of_offshore_wind_farms_in_Denmark",
+     "abruf": "2026-10-18"
+    },
+    {
+     "url": "https://en.wikipedia.org/wiki/Kriegers_Flak",
+     "abruf": "2026-10-18"
+    }
+   ],
+   "verified": {
+    "pos": true,
+    "geom": false,
+    "rule": false
+   },
+   "verified_overall": false
+  },
+  {
+   "id": "hz-dk-owf-roedsand2",
+   "name": "Offshore-Windpark Rødsand II",
+   "country": "DK",
+   "type": "windpark",
+   "geom": {
+    "type": "circle",
+    "center": [
+     54.56,
+     11.55
+    ],
+    "radius_nm": null
+   },
+   "warn": "Offshore-Windpark südlich Lolland (Nähe Fehmarnbelt/Gedser). Befahrensregel prüfen.",
+   "src": [
+    {
+     "url": "https://en.wikipedia.org/wiki/List_of_offshore_wind_farms_in_Denmark",
+     "abruf": "2026-10-18"
+    }
+   ],
+   "verified": {
+    "pos": true,
+    "geom": false,
+    "rule": false
+   },
+   "verified_overall": false
+  },
+  {
+   "id": "hz-dk-owf-nysted",
+   "name": "Offshore-Windpark Nysted (Rødsand I)",
+   "country": "DK",
+   "type": "windpark",
+   "geom": {
+    "type": "circle",
+    "center": [
+     54.55,
+     11.71
+    ],
+    "radius_nm": null
+   },
+   "warn": "Offshore-Windpark südlich Lolland. Befahrensregel prüfen.",
+   "src": [
+    {
+     "url": "https://en.wikipedia.org/wiki/List_of_offshore_wind_farms_in_Denmark",
+     "abruf": "2026-10-18"
+    }
+   ],
+   "verified": {
+    "pos": true,
+    "geom": false,
+    "rule": false
+   },
+   "verified_overall": false
+  },
+  {
+   "id": "hz-dk-owf-middelgrunden",
+   "name": "Offshore-Windpark Middelgrunden (Øresund vor Kopenhagen)",
+   "country": "DK",
+   "type": "windpark",
+   "geom": {
+    "type": "circle",
+    "center": [
+     55.69083,
+     12.67028
+    ],
+    "radius_nm": null
+   },
+   "warn": "Windpark im Øresund vor Kopenhagen. Befahrensregel prüfen.",
+   "src": [
+    {
+     "url": "https://en.wikipedia.org/wiki/List_of_offshore_wind_farms_in_Denmark",
+     "abruf": "2026-10-18"
+    }
+   ],
+   "verified": {
+    "pos": true,
+    "geom": false,
+    "rule": false
+   },
+   "verified_overall": false
+  },
+  {
+   "id": "hz-dk-owf-sprogoe",
+   "name": "Offshore-Windpark Sprogø (Großer Belt)",
+   "country": "DK",
+   "type": "windpark",
+   "geom": {
+    "type": "circle",
+    "center": [
+     55.34,
+     10.96
+    ],
+    "radius_nm": null
+   },
+   "warn": "Windpark bei Sprogø im Großen Belt (Nähe Storebæltsbro). Befahrensregel prüfen.",
+   "src": [
+    {
+     "url": "https://en.wikipedia.org/wiki/List_of_offshore_wind_farms_in_Denmark",
+     "abruf": "2026-10-18"
+    }
+   ],
+   "verified": {
+    "pos": true,
+    "geom": false,
+    "rule": false
+   },
+   "verified_overall": false
+  },
+  {
+   "id": "hz-dk-owf-samsoe",
+   "name": "Offshore-Windpark Samsø",
+   "country": "DK",
+   "type": "windpark",
+   "geom": {
+    "type": "circle",
+    "center": [
+     55.72,
+     10.58
+    ],
+    "radius_nm": null
+   },
+   "warn": "Windpark südlich Samsø. Befahrensregel prüfen.",
+   "src": [
+    {
+     "url": "https://en.wikipedia.org/wiki/List_of_offshore_wind_farms_in_Denmark",
+     "abruf": "2026-10-18"
+    }
+   ],
+   "verified": {
+    "pos": true,
+    "geom": false,
+    "rule": false
+   },
+   "verified_overall": false
+  },
+  {
+   "id": "hz-dk-owf-avedoere",
+   "name": "Windpark Avedøre Holme (Kopenhagen Süd)",
+   "country": "DK",
+   "type": "windpark",
+   "geom": {
+    "type": "circle",
+    "center": [
+     55.6,
+     12.45833
+    ],
+    "radius_nm": null
+   },
+   "warn": "Küstennahe Anlagen bei Avedøre Holme. Befahrensregel prüfen.",
+   "src": [
+    {
+     "url": "https://en.wikipedia.org/wiki/List_of_offshore_wind_farms_in_Denmark",
+     "abruf": "2026-10-18"
+    }
+   ],
+   "verified": {
+    "pos": true,
+    "geom": false,
+    "rule": false
+   },
+   "verified_overall": false,
+   "app_relevanz": "niedrig"
+  },
+  {
+   "id": "hz-dk-owf-anholt",
+   "name": "Offshore-Windpark Anholt (Kattegat)",
+   "country": "DK",
+   "type": "windpark",
+   "geom": {
+    "type": "circle",
+    "center": [
+     56.6,
+     11.21
+    ],
+    "radius_nm": null
+   },
+   "warn": "Windpark westlich Anholt (Randzone / evtl. außerhalb 175 sm). Befahrensregel prüfen.",
+   "src": [
+    {
+     "url": "https://en.wikipedia.org/wiki/List_of_offshore_wind_farms_in_Denmark",
+     "abruf": "2026-10-18"
+    }
+   ],
+   "verified": {
+    "pos": true,
+    "geom": false,
+    "rule": false
+   },
+   "verified_overall": false
+  },
+  {
+   "id": "hz-dk-skydeomraader",
+   "name": "Dänische Schießgebiete (Forsvarets skydeområder)",
+   "country": "DK",
+   "type": "schiessgebiet",
+   "geom": null,
+   "warn": "Dänische Schießgebiete sind in Seekarten eingezeichnet. Aktive Gebiete werden auf der Karte 'Nautisk information' der Søfartsstyrelsen magenta angezeigt und in Efterretninger for Søfarende (EfS, Anhang 'Oversigt over Forsvarets skydeområder') sowie als Navigationswarnungen bekannt gegeben.",
+   "notice": {
+    "web": "https://nautiskinformation.soefartsstyrelsen.dk/index.html#/messages/map",
+    "efs": "Efterretninger for Søfarende (wöchentlich), Skydebilaget",
+    "tel_fare_for_sejladsen": "+45 72196040 (außerhalb Bürozeit +45 72850370)"
+   },
+   "src": [
+    {
+     "url": "https://www.soefartsstyrelsen.dk/sikkerhed-til-soes/sejladsinformation/nautisk-information",
+     "abruf": "2026-10-18"
+    }
+   ],
+   "verified": {
+    "pos": false,
+    "geom": false,
+    "rule": true
+   },
+   "verified_overall": false,
+   "note": "Einzelgebiete (Namen, Grenzen) nicht recherchiert – aus Skydebilaget ableiten."
+  },
+  {
+   "id": "hz-se-skjutfalt",
+   "name": "Schwedische Schieß- und Sperrgebiete (Skåne/Blekinge, z. B. Ravlunda, Kabusa, Karlskrona)",
+   "country": "SE",
+   "type": "schiessgebiet",
+   "geom": null,
+   "warn": null,
+   "src": [],
+   "verified": {
+    "pos": false,
+    "geom": false,
+    "rule": false
+   },
+   "verified_overall": false,
+   "note": "Nicht belegt – forsvarsmakten.se nicht abrufbar, Suchbudget erschöpft. Namen sind nur Suchkandidaten [Sicherheit: 4/10]."
+  },
+  {
+   "id": "hz-de-np-vpb-regeln",
+   "name": "Nationalpark Vorpommersche Boddenlandschaft – Befahrensregeln (Schutzzonen I/II)",
+   "country": "DE",
+   "type": "nationalpark",
+   "geom": null,
+   "geom_note": "Grenzen der Schutzzonen und rot/grün markierte Flächen nur in BSH-Seekarten bzw. Anlage I (Kartenblätter 1–4), nicht als Koordinaten verfügbar.",
+   "rules": {
+    "speed_kn": {
+     "fahrwasser": 12,
+     "ausserhalb_fahrwasser": 8,
+     "noerdlich_hiddensee_tonne_5_6_und_stralsund_nord_tonne_10_11": 16
+    },
+    "verboten": [
+     "Luftkissenfahrzeuge",
+     "Wassermotorräder",
+     "Wasserski",
+     "Parasailing",
+     "Modellboote in Zone I und in besonderen Gebieten der Zone II"
+    ],
+    "surfbrett": "Zone I verboten; Zone II verboten innerhalb 200 m vor Schilfkanten und in den Gebieten nach § 4",
+    "motorboote": "in den Gebieten nach Anlage II außerhalb Fahrwasser/Zufahrten verboten (§ 4 Abs. 1)",
+    "segelboote": "in rot markierten Gebieten außerhalb Fahrwasser/Zufahrten verboten, grün = Segeln erlaubt (§ 4 Abs. 2)",
+    "ankern": "Übernachtungsankern im Nationalpark verboten, 50 m Abstand zu Schilf, Rast- und Brutplätzen (YACHT 2025, nicht aus NPBefVMVK)"
+   },
+   "warn": "Im Nationalpark gelten 12 kn im Fahrwasser, 8 kn außerhalb (16 kn nördlich Tonne 5/6 Hiddensee-Fahrwasser und Tonne 10/11 Stralsunder Nordfahrwasser). Außerhalb der Fahrwasser viele Befahrensverbote (Anlage II, 25 Gebiete) – nur betonnte Fahrwasser und direkte Hafenzufahrten benutzen. Nicht über Nacht ankern.",
+   "src": [
+    {
+     "url": "https://www.gesetze-im-internet.de/npbefvmvk/__3.html",
+     "abruf": "2026-10-18",
+     "note": "NPBefVMVK vom 24.06.1997, zuletzt geändert 02.06.2016; § 3 über gesetze.legal/bund/npbefvmvk/3 gelesen"
+    },
+    {
+     "url": "https://www.gesetze-im-internet.de/npbefvmvk/__4.html",
+     "abruf": "2026-10-18"
+    },
+    {
+     "url": "https://www.gesetze-im-internet.de/npbefvmvk/anlage_ii.html",
+     "abruf": "2026-10-18"
+    },
+    {
+     "url": "https://faolex.fao.org/docs/pdf/ger158024.pdf",
+     "abruf": "2026-10-18",
+     "note": "Volltext NPBefVMVK"
+    },
+    {
+     "url": "https://www.yacht.de/reisen-chartern/deutschland/nationalparks-der-ostsee-vorpommersche-boddenlandschaft/",
+     "abruf": "2026-10-18",
+     "note": "30.05.2025, Ankerregel"
+    }
+   ],
+   "verified": {
+    "pos": false,
+    "geom": false,
+    "rule": true
+   },
+   "verified_overall": false
+  },
+  {
+   "id": "hz-de-np-vpb-a2-01",
+   "name": "NP VB Anlage II Nr. 1: Neuendorfer Bülten",
+   "country": "DE",
+   "type": "befahrensverbot",
+   "applies_to": "alle Fahrzeuge",
+   "season": "ganzjährig (keine Zeiten in Anlage II)",
+   "geom": null,
+   "geom_note": "Begrenzt durch Anleger Michaelsdorf, Ufer und Fahrwasser; Ost-/Südgrenze 54°20,9'N. Polygon nur aus Anlage I (Karte) – nicht als Koordinaten belegt.",
+   "warn": "Befahren verboten außerhalb von Fahrwassern und direkten Hafenzufahrten.",
+   "src": [
+    {
+     "url": "https://www.gesetze-im-internet.de/npbefvmvk/anlage_ii.html",
+     "abruf": "2026-10-18"
+    }
+   ],
+   "verified": {
+    "pos": false,
+    "geom": false,
+    "rule": true
+   },
+   "verified_overall": false
+  },
+  {
+   "id": "hz-de-np-vpb-a2-02",
+   "name": "NP VB Anlage II Nr. 2: Koppelstrom (Staben bis Roland)",
+   "country": "DE",
+   "type": "befahrensverbot",
+   "applies_to": "maschinengetriebene Fahrzeuge",
+   "season": "ganzjährig (keine Zeiten in Anlage II)",
+   "geom": null,
+   "geom_note": "Innerhalb 200 m vor der Schilfkante; Eckpunkt 54°22,3'N 012°34,4'E. Polygon nur aus Anlage I (Karte) – nicht als Koordinaten belegt.",
+   "warn": "Befahren mit Motorkraft verboten außerhalb von Fahrwassern und direkten Hafenzufahrten.",
+   "src": [
+    {
+     "url": "https://www.gesetze-im-internet.de/npbefvmvk/anlage_ii.html",
+     "abruf": "2026-10-18"
+    }
+   ],
+   "verified": {
+    "pos": false,
+    "geom": false,
+    "rule": true
+   },
+   "verified_overall": false
+  },
+  {
+   "id": "hz-de-np-vpb-a2-03",
+   "name": "NP VB Anlage II Nr. 3: Nadelstrom – Jägerbülten",
+   "country": "DE",
+   "type": "befahrensverbot",
+   "applies_to": "alle Fahrzeuge",
+   "season": "ganzjährig (keine Zeiten in Anlage II)",
+   "geom": null,
+   "geom_note": "Zwischen Jägerbülten und Planort; Bezugspunkt 54°22,3'N 012°34,4'E. Polygon nur aus Anlage I (Karte) – nicht als Koordinaten belegt.",
+   "warn": "Befahren verboten außerhalb von Fahrwassern und direkten Hafenzufahrten.",
+   "src": [
+    {
+     "url": "https://www.gesetze-im-internet.de/npbefvmvk/anlage_ii.html",
+     "abruf": "2026-10-18"
+    }
+   ],
+   "verified": {
+    "pos": false,
+    "geom": false,
+    "rule": true
+   },
+   "verified_overall": false
+  },
+  {
+   "id": "hz-de-np-vpb-a2-04",
+   "name": "NP VB Anlage II Nr. 4: Bodstedter Bodden (Westteil)",
+   "country": "DE",
+   "type": "befahrensverbot",
+   "applies_to": "maschinengetriebene Fahrzeuge",
+   "season": "ganzjährig (keine Zeiten in Anlage II)",
+   "geom": null,
+   "geom_note": "Innerhalb 200 m vor der Schilfkante, Ufer Bliesenrade–Wieck. Polygon nur aus Anlage I (Karte) – nicht als Koordinaten belegt.",
+   "warn": "Befahren mit Motorkraft verboten außerhalb von Fahrwassern und direkten Hafenzufahrten.",
+   "src": [
+    {
+     "url": "https://www.gesetze-im-internet.de/npbefvmvk/anlage_ii.html",
+     "abruf": "2026-10-18"
+    }
+   ],
+   "verified": {
+    "pos": false,
+    "geom": false,
+    "rule": true
+   },
+   "verified_overall": false
+  },
+  {
+   "id": "hz-de-np-vpb-a2-05",
+   "name": "NP VB Anlage II Nr. 5: Bodstedter Bodden (Nordteil)",
+   "country": "DE",
+   "type": "befahrensverbot",
+   "applies_to": "alle Fahrzeuge",
+   "season": "ganzjährig (keine Zeiten in Anlage II)",
+   "geom": null,
+   "geom_note": "Bis 2-m-Linie, Fastbültenhaken; Bezugspunkte 54°24,45'N 012°38,65'E / 54°24,42'N. Polygon nur aus Anlage I (Karte) – nicht als Koordinaten belegt.",
+   "warn": "Befahren verboten außerhalb von Fahrwassern und direkten Hafenzufahrten.",
+   "src": [
+    {
+     "url": "https://www.gesetze-im-internet.de/npbefvmvk/anlage_ii.html",
+     "abruf": "2026-10-18"
+    }
+   ],
+   "verified": {
+    "pos": false,
+    "geom": false,
+    "rule": true
+   },
+   "verified_overall": false
+  },
+  {
+   "id": "hz-de-np-vpb-a2-06",
+   "name": "NP VB Anlage II Nr. 6: Große Kirr",
+   "country": "DE",
+   "type": "befahrensverbot",
+   "applies_to": "alle Fahrzeuge",
+   "season": "ganzjährig (keine Zeiten in Anlage II)",
+   "geom": null,
+   "geom_note": "Innerhalb 20 m vom Ufer inkl. Bek und Schwinbrod; Grenzen 54°24,25'N, 012°40,50'E. Polygon nur aus Anlage I (Karte) – nicht als Koordinaten belegt.",
+   "warn": "Befahren verboten außerhalb von Fahrwassern und direkten Hafenzufahrten.",
+   "src": [
+    {
+     "url": "https://www.gesetze-im-internet.de/npbefvmvk/anlage_ii.html",
+     "abruf": "2026-10-18"
+    }
+   ],
+   "verified": {
+    "pos": false,
+    "geom": false,
+    "rule": true
+   },
+   "verified_overall": false
+  },
+  {
+   "id": "hz-de-np-vpb-a2-07",
+   "name": "NP VB Anlage II Nr. 7: Barther Bodden und Grabow (Nordteil)",
+   "country": "DE",
+   "type": "befahrensverbot",
+   "applies_to": "alle Fahrzeuge",
+   "season": "ganzjährig (keine Zeiten in Anlage II)",
+   "geom": null,
+   "geom_note": "Zwischen Schutzzone I und 2-m-Linie. Polygon nur aus Anlage I (Karte) – nicht als Koordinaten belegt.",
+   "warn": "Befahren verboten außerhalb von Fahrwassern und direkten Hafenzufahrten.",
+   "src": [
+    {
+     "url": "https://www.gesetze-im-internet.de/npbefvmvk/anlage_ii.html",
+     "abruf": "2026-10-18"
+    }
+   ],
+   "verified": {
+    "pos": false,
+    "geom": false,
+    "rule": true
+   },
+   "verified_overall": false
+  },
+  {
+   "id": "hz-de-np-vpb-a2-08",
+   "name": "NP VB Anlage II Nr. 8: Grabow bis Barhöft",
+   "country": "DE",
+   "type": "befahrensverbot",
+   "applies_to": "alle Fahrzeuge",
+   "season": "ganzjährig (keine Zeiten in Anlage II)",
+   "geom": null,
+   "geom_note": "Gesamte Schutzzone I zwischen Zingst, Werder und Bock, nördlich Fahrwasser Barth bis Bock-Reede. Polygon nur aus Anlage I (Karte) – nicht als Koordinaten belegt.",
+   "warn": "Befahren verboten außerhalb von Fahrwassern und direkten Hafenzufahrten.",
+   "src": [
+    {
+     "url": "https://www.gesetze-im-internet.de/npbefvmvk/anlage_ii.html",
+     "abruf": "2026-10-18"
+    }
+   ],
+   "verified": {
+    "pos": false,
+    "geom": false,
+    "rule": true
+   },
+   "verified_overall": false
+  },
+  {
+   "id": "hz-de-np-vpb-a2-09",
+   "name": "NP VB Anlage II Nr. 9: Barhöfter Rinne am Bock und Gellenstrom",
+   "country": "DE",
+   "type": "befahrensverbot",
+   "applies_to": "alle Fahrzeuge",
+   "season": "ganzjährig (keine Zeiten in Anlage II)",
+   "geom": null,
+   "geom_note": "Ausgenommen Bock-Reede und je 50 m beidseits Nordansteuerung Stralsund; Segelboote ausgenommen nördlich 54°28,3'N und westlich dieses Fahrwassers. Polygon nur aus Anlage I (Karte) – nicht als Koordinaten belegt.",
+   "warn": "Befahren verboten außerhalb von Fahrwassern und direkten Hafenzufahrten.",
+   "src": [
+    {
+     "url": "https://www.gesetze-im-internet.de/npbefvmvk/anlage_ii.html",
+     "abruf": "2026-10-18"
+    }
+   ],
+   "verified": {
+    "pos": false,
+    "geom": false,
+    "rule": true
+   },
+   "verified_overall": false
+  },
+  {
+   "id": "hz-de-np-vpb-a2-10",
+   "name": "NP VB Anlage II Nr. 10: Geller Haken, Vierendehlgrund",
+   "country": "DE",
+   "type": "befahrensverbot",
+   "applies_to": "alle Fahrzeuge",
+   "season": "ganzjährig (keine Zeiten in Anlage II)",
+   "geom": null,
+   "geom_note": "Gesamte Schutzzone I um den Gellen, ausgenommen je 50 m beidseits Nordansteuerung Stralsund. Polygon nur aus Anlage I (Karte) – nicht als Koordinaten belegt.",
+   "warn": "Befahren verboten außerhalb von Fahrwassern und direkten Hafenzufahrten.",
+   "src": [
+    {
+     "url": "https://www.gesetze-im-internet.de/npbefvmvk/anlage_ii.html",
+     "abruf": "2026-10-18"
+    }
+   ],
+   "verified": {
+    "pos": false,
+    "geom": false,
+    "rule": true
+   },
+   "verified_overall": false
+  },
+  {
+   "id": "hz-de-np-vpb-a2-11",
+   "name": "NP VB Anlage II Nr. 11: Prohner Wiek (Westteil)",
+   "country": "DE",
+   "type": "befahrensverbot",
+   "applies_to": "maschinengetriebene Fahrzeuge",
+   "season": "ganzjährig (keine Zeiten in Anlage II)",
+   "geom": null,
+   "geom_note": "Innerhalb 200 m vor der Schilfkante, Ufer Barhöft–Parow. Polygon nur aus Anlage I (Karte) – nicht als Koordinaten belegt.",
+   "warn": "Befahren mit Motorkraft verboten außerhalb von Fahrwassern und direkten Hafenzufahrten.",
+   "src": [
+    {
+     "url": "https://www.gesetze-im-internet.de/npbefvmvk/anlage_ii.html",
+     "abruf": "2026-10-18"
+    }
+   ],
+   "verified": {
+    "pos": false,
+    "geom": false,
+    "rule": true
+   },
+   "verified_overall": false
+  },
+  {
+   "id": "hz-de-np-vpb-a2-12",
+   "name": "NP VB Anlage II Nr. 12: Kubitzer Bodden (Südteil)",
+   "country": "DE",
+   "type": "befahrensverbot",
+   "applies_to": "maschinengetriebene Fahrzeuge",
+   "season": "ganzjährig (keine Zeiten in Anlage II)",
+   "geom": null,
+   "geom_note": "Innerhalb 500 m vor der Schilfkante, Bessiner Haken bis ehem. Liebitz. Polygon nur aus Anlage I (Karte) – nicht als Koordinaten belegt.",
+   "warn": "Befahren mit Motorkraft verboten außerhalb von Fahrwassern und direkten Hafenzufahrten.",
+   "src": [
+    {
+     "url": "https://www.gesetze-im-internet.de/npbefvmvk/anlage_ii.html",
+     "abruf": "2026-10-18"
+    }
+   ],
+   "verified": {
+    "pos": false,
+    "geom": false,
+    "rule": true
+   },
+   "verified_overall": false
+  },
+  {
+   "id": "hz-de-np-vpb-a2-13",
+   "name": "NP VB Anlage II Nr. 13: Insel Liebitz",
+   "country": "DE",
+   "type": "befahrensverbot",
+   "applies_to": "alle Fahrzeuge",
+   "season": "ganzjährig (keine Zeiten in Anlage II)",
+   "geom": null,
+   "geom_note": "Gesamte Wasserfläche des ehem. NSG Liebitz. Polygon nur aus Anlage I (Karte) – nicht als Koordinaten belegt.",
+   "warn": "Befahren verboten außerhalb von Fahrwassern und direkten Hafenzufahrten.",
+   "src": [
+    {
+     "url": "https://www.gesetze-im-internet.de/npbefvmvk/anlage_ii.html",
+     "abruf": "2026-10-18"
+    }
+   ],
+   "verified": {
+    "pos": false,
+    "geom": false,
+    "rule": true
+   },
+   "verified_overall": false
+  },
+  {
+   "id": "hz-de-np-vpb-a2-14",
+   "name": "NP VB Anlage II Nr. 14: Kubitzer Bodden (Nordteil)",
+   "country": "DE",
+   "type": "befahrensverbot",
+   "applies_to": "maschinengetriebene Fahrzeuge",
+   "season": "ganzjährig (keine Zeiten in Anlage II)",
+   "geom": null,
+   "geom_note": "Innerhalb 500 m vom Ufer um Lieschow, auslaufend zum Pahler Haken. Polygon nur aus Anlage I (Karte) – nicht als Koordinaten belegt.",
+   "warn": "Befahren mit Motorkraft verboten außerhalb von Fahrwassern und direkten Hafenzufahrten.",
+   "src": [
+    {
+     "url": "https://www.gesetze-im-internet.de/npbefvmvk/anlage_ii.html",
+     "abruf": "2026-10-18"
+    }
+   ],
+   "verified": {
+    "pos": false,
+    "geom": false,
+    "rule": true
+   },
+   "verified_overall": false
+  },
+  {
+   "id": "hz-de-np-vpb-a2-15",
+   "name": "NP VB Anlage II Nr. 15: Heuwiese",
+   "country": "DE",
+   "type": "befahrensverbot",
+   "applies_to": "alle Fahrzeuge",
+   "season": "ganzjährig (keine Zeiten in Anlage II)",
+   "geom": null,
+   "geom_note": "Gesamte Wasserfläche des ehem. NSG Heuwiese. Polygon nur aus Anlage I (Karte) – nicht als Koordinaten belegt.",
+   "warn": "Befahren verboten außerhalb von Fahrwassern und direkten Hafenzufahrten.",
+   "src": [
+    {
+     "url": "https://www.gesetze-im-internet.de/npbefvmvk/anlage_ii.html",
+     "abruf": "2026-10-18"
+    }
+   ],
+   "verified": {
+    "pos": false,
+    "geom": false,
+    "rule": true
+   },
+   "verified_overall": false
+  },
+  {
+   "id": "hz-de-np-vpb-a2-16",
+   "name": "NP VB Anlage II Nr. 16: Gewässer zwischen Ummanz und Rügen",
+   "country": "DE",
+   "type": "befahrensverbot",
+   "applies_to": "alle Fahrzeuge",
+   "season": "ganzjährig (keine Zeiten in Anlage II)",
+   "geom": null,
+   "geom_note": "Östlich 013°10,0'E (Südspitze Schafshorn/Öhe), inkl. Udarser Wiek, Gahlitzer Strom, Kosolower und Kapeller See, Wittenberger Strom, Varbelvitzer Bodden. Polygon nur aus Anlage I (Karte) – nicht als Koordinaten belegt.",
+   "warn": "Befahren verboten außerhalb von Fahrwassern und direkten Hafenzufahrten.",
+   "src": [
+    {
+     "url": "https://www.gesetze-im-internet.de/npbefvmvk/anlage_ii.html",
+     "abruf": "2026-10-18"
+    }
+   ],
+   "verified": {
+    "pos": false,
+    "geom": false,
+    "rule": true
+   },
+   "verified_overall": false
+  },
+  {
+   "id": "hz-de-np-vpb-a2-17",
+   "name": "NP VB Anlage II Nr. 17: Schaproder Bodden (Suhrendorf–Trog)",
+   "country": "DE",
+   "type": "befahrensverbot",
+   "applies_to": "maschinengetriebene Fahrzeuge",
+   "season": "ganzjährig (keine Zeiten in Anlage II)",
+   "geom": null,
+   "geom_note": "Schutzzone II mit Tiefen unter 2 m; ohne Bereich nördlich Linie Geller Haken–Heuwiese und südlich Trog-Einfahrt. Polygon nur aus Anlage I (Karte) – nicht als Koordinaten belegt.",
+   "warn": "Befahren mit Motorkraft verboten außerhalb von Fahrwassern und direkten Hafenzufahrten.",
+   "src": [
+    {
+     "url": "https://www.gesetze-im-internet.de/npbefvmvk/anlage_ii.html",
+     "abruf": "2026-10-18"
+    }
+   ],
+   "verified": {
+    "pos": false,
+    "geom": false,
+    "rule": true
+   },
+   "verified_overall": false
+  },
+  {
+   "id": "hz-de-np-vpb-a2-18",
+   "name": "NP VB Anlage II Nr. 18: Fährinsel",
+   "country": "DE",
+   "type": "befahrensverbot",
+   "applies_to": "alle Fahrzeuge",
+   "season": "ganzjährig (keine Zeiten in Anlage II)",
+   "geom": null,
+   "geom_note": "Gesamte Wasserfläche des ehem. NSG Fährinsel. Polygon nur aus Anlage I (Karte) – nicht als Koordinaten belegt.",
+   "warn": "Befahren verboten außerhalb von Fahrwassern und direkten Hafenzufahrten.",
+   "src": [
+    {
+     "url": "https://www.gesetze-im-internet.de/npbefvmvk/anlage_ii.html",
+     "abruf": "2026-10-18"
+    }
+   ],
+   "verified": {
+    "pos": false,
+    "geom": false,
+    "rule": true
+   },
+   "verified_overall": false
+  },
+  {
+   "id": "hz-de-np-vpb-a2-19",
+   "name": "NP VB Anlage II Nr. 19: Vitter Bodden (Westteil) und Trog",
+   "country": "DE",
+   "type": "befahrensverbot",
+   "applies_to": "maschinengetriebene Fahrzeuge",
+   "season": "ganzjährig (keine Zeiten in Anlage II)",
+   "geom": null,
+   "geom_note": "Ausgenommen je 50 m beidseits der Fahrwasser; begrenzt durch 2-m-Linie, Hiddensee- und Kloster-Fahrwasser. Polygon nur aus Anlage I (Karte) – nicht als Koordinaten belegt.",
+   "warn": "Befahren mit Motorkraft verboten außerhalb von Fahrwassern und direkten Hafenzufahrten.",
+   "src": [
+    {
+     "url": "https://www.gesetze-im-internet.de/npbefvmvk/anlage_ii.html",
+     "abruf": "2026-10-18"
+    }
+   ],
+   "verified": {
+    "pos": false,
+    "geom": false,
+    "rule": true
+   },
+   "verified_overall": false
+  },
+  {
+   "id": "hz-de-np-vpb-a2-20",
+   "name": "NP VB Anlage II Nr. 20: Bug und Rassower Strom (Schutzzone I)",
+   "country": "DE",
+   "type": "befahrensverbot",
+   "applies_to": "alle Fahrzeuge",
+   "season": "ganzjährig (keine Zeiten in Anlage II)",
+   "geom": null,
+   "geom_note": "Ausgenommen 50 m nördlich Fahrwasser Wiek und je 50 m beidseits Hiddensee-Fahrwasser. Polygon nur aus Anlage I (Karte) – nicht als Koordinaten belegt.",
+   "warn": "Befahren verboten außerhalb von Fahrwassern und direkten Hafenzufahrten.",
+   "src": [
+    {
+     "url": "https://www.gesetze-im-internet.de/npbefvmvk/anlage_ii.html",
+     "abruf": "2026-10-18"
+    }
+   ],
+   "verified": {
+    "pos": false,
+    "geom": false,
+    "rule": true
+   },
+   "verified_overall": false
+  },
+  {
+   "id": "hz-de-np-vpb-a2-21",
+   "name": "NP VB Anlage II Nr. 21: Rassower Strom (Schutzzone II)",
+   "country": "DE",
+   "type": "befahrensverbot",
+   "applies_to": "maschinengetriebene Fahrzeuge",
+   "season": "ganzjährig (keine Zeiten in Anlage II)",
+   "geom": null,
+   "geom_note": "Gesamte Wasserfläche der Schutzzone II. Polygon nur aus Anlage I (Karte) – nicht als Koordinaten belegt.",
+   "warn": "Befahren mit Motorkraft verboten außerhalb von Fahrwassern und direkten Hafenzufahrten.",
+   "src": [
+    {
+     "url": "https://www.gesetze-im-internet.de/npbefvmvk/anlage_ii.html",
+     "abruf": "2026-10-18"
+    }
+   ],
+   "verified": {
+    "pos": false,
+    "geom": false,
+    "rule": true
+   },
+   "verified_overall": false
+  },
+  {
+   "id": "hz-de-np-vpb-a2-22",
+   "name": "NP VB Anlage II Nr. 22: Vitter Bodden bis Libben",
+   "country": "DE",
+   "type": "befahrensverbot",
+   "applies_to": "alle Fahrzeuge",
+   "season": "ganzjährig (keine Zeiten in Anlage II)",
+   "geom": null,
+   "geom_note": "Außer je 50 m entlang Hiddensee- und Kloster-Fahrwasser; 2-m-Linie; Bezug 54°35,9'N. Polygon nur aus Anlage I (Karte) – nicht als Koordinaten belegt.",
+   "warn": "Befahren verboten außerhalb von Fahrwassern und direkten Hafenzufahrten.",
+   "src": [
+    {
+     "url": "https://www.gesetze-im-internet.de/npbefvmvk/anlage_ii.html",
+     "abruf": "2026-10-18"
+    }
+   ],
+   "verified": {
+    "pos": false,
+    "geom": false,
+    "rule": true
+   },
+   "verified_overall": false
+  },
+  {
+   "id": "hz-de-np-vpb-a2-23",
+   "name": "NP VB Anlage II Nr. 23: Libben",
+   "country": "DE",
+   "type": "befahrensverbot",
+   "applies_to": "maschinengetriebene Fahrzeuge",
+   "season": "ganzjährig (keine Zeiten in Anlage II)",
+   "geom": null,
+   "geom_note": "Ausgenommen je 50 m beidseits Hiddensee-Fahrwasser; begrenzt durch Toter Kerl, Schutzzone-I-Linie, Bug, 2-m-Linie; Bezug 54°35,9'N. Polygon nur aus Anlage I (Karte) – nicht als Koordinaten belegt.",
+   "warn": "Befahren mit Motorkraft verboten außerhalb von Fahrwassern und direkten Hafenzufahrten.",
+   "src": [
+    {
+     "url": "https://www.gesetze-im-internet.de/npbefvmvk/anlage_ii.html",
+     "abruf": "2026-10-18"
+    }
+   ],
+   "verified": {
+    "pos": false,
+    "geom": false,
+    "rule": true
+   },
+   "verified_overall": false
+  },
+  {
+   "id": "hz-de-np-vpb-a2-24",
+   "name": "NP VB Anlage II Nr. 24: Außenküste (Schutzzone I)",
+   "country": "DE",
+   "type": "befahrensverbot",
+   "applies_to": "alle Fahrzeuge",
+   "season": "ganzjährig (keine Zeiten in Anlage II)",
+   "geom": null,
+   "geom_note": "Segelboote ausgenommen nördlich 54°28,3'N und westlich der Nordansteuerung Stralsund. Polygon nur aus Anlage I (Karte) – nicht als Koordinaten belegt.",
+   "warn": "Befahren verboten außerhalb von Fahrwassern und direkten Hafenzufahrten.",
+   "src": [
+    {
+     "url": "https://www.gesetze-im-internet.de/npbefvmvk/anlage_ii.html",
+     "abruf": "2026-10-18"
+    }
+   ],
+   "verified": {
+    "pos": false,
+    "geom": false,
+    "rule": true
+   },
+   "verified_overall": false
+  },
+  {
+   "id": "hz-de-np-vpb-a2-25",
+   "name": "NP VB Anlage II Nr. 25: Außenküste (Schutzzone II)",
+   "country": "DE",
+   "type": "befahrensverbot",
+   "applies_to": "maschinengetriebene Fahrzeuge",
+   "season": "ganzjährig (keine Zeiten in Anlage II)",
+   "geom": null,
+   "geom_note": "Innerhalb der 5-m-Linie (Bezug Weststrand Darß 54°28,4'N); ausgenommen Seeseite der Enklaven Prerow–Zingst, Neuendorf, Kloster–Vitte. Polygon nur aus Anlage I (Karte) – nicht als Koordinaten belegt.",
+   "warn": "Befahren mit Motorkraft verboten außerhalb von Fahrwassern und direkten Hafenzufahrten.",
+   "src": [
+    {
+     "url": "https://www.gesetze-im-internet.de/npbefvmvk/anlage_ii.html",
+     "abruf": "2026-10-18"
+    }
+   ],
+   "verified": {
+    "pos": false,
+    "geom": false,
+    "rule": true
+   },
+   "verified_overall": false
+  },
+  {
+   "id": "hz-de-np-jasmund",
+   "name": "Nationalpark Jasmund (Rügen) – Befahrensregel Schutzzone I",
+   "country": "DE",
+   "type": "nationalpark",
+   "geom": null,
+   "geom_note": "Ca. 500 m breiter Wasserstreifen vor der Kreideküste (ca. 603 ha, Wikipedia); Grenze nur in Anlage I Kartenblatt 5 / BSH-Karte.",
+   "rules": {
+    "schutzzone_I": "Befahren außerhalb Fahrwasser und direkter Zufahrten zu zugelassenen Häfen/Liegeplätzen verboten (§ 5)",
+    "speed_kn": {
+     "fahrwasser": 12,
+     "ausserhalb_fahrwasser": 8
+    },
+    "verboten": [
+     "Wassermotorräder",
+     "Luftkissenfahrzeuge",
+     "Wasserski",
+     "Parasailing"
+    ]
+   },
+   "warn": "Den ca. 500 m breiten Nationalparkstreifen vor der Kreideküste Jasmund nicht befahren (außer Fahrwasser/Hafenzufahrt, z. B. Lohme, Sassnitz). Abstand zur Küste halten.",
+   "src": [
+    {
+     "url": "https://www.gesetze-im-internet.de/npbefvmvk/__5.html",
+     "abruf": "2026-10-18"
+    },
+    {
+     "url": "https://www.gesetze-im-internet.de/npbefvmvk/__3.html",
+     "abruf": "2026-10-18"
+    },
+    {
+     "url": "https://de.wikipedia.org/wiki/Nationalpark_Jasmund",
+     "abruf": "2026-10-18"
+    }
+   ],
+   "verified": {
+    "pos": false,
+    "geom": false,
+    "rule": true
+   },
+   "verified_overall": false,
+   "note": "Ob die 12/8-kn-Regel des § 3 Abs. 3 in Jasmund praktisch greift (Schutzzone II?), ist aus der Verordnung allein nicht eindeutig."
+  },
+  {
+   "id": "hz-de-br-suedost-ruegen",
+   "name": "Biosphärenreservat Südost-Rügen – Schutzzonen I/II (Having, Kaming, Zicker See)",
+   "country": "DE",
+   "type": "schutzgebiet",
+   "geom": null,
+   "geom_note": "Grenzen nur in BSH-Seekarte.",
+   "rules": {
+    "allgemein": "Befahren außerhalb Fahrwasser und direkter Hafenzufahrten verboten (§ 6)",
+    "ausnahme_segel_paddel": "Having, Kaming, Zicker See: Fahrzeuge ohne Motorkraft dürfen außerhalb fahren, mind. 100 m Uferabstand",
+    "ausnahme_zicker_see": "In Höhe Einfahrt Zicker See dürfen Sportboote das Fahrwasser verlassen und bis 200 m entlang des Westufers nach N oder S fahren, mind. 100 m vom Ufer",
+    "speed_kn": {
+     "fahrwasser": 12,
+     "ausserhalb_fahrwasser": 8
+    }
+   },
+   "warn": "Im Having/Zicker See unter Motor nur im Fahrwasser; unter Segel mind. 100 m Uferabstand. Ankern nur an zugelassenen Plätzen (Zicker See siehe Hafen Thiessow).",
+   "src": [
+    {
+     "url": "https://www.gesetze-im-internet.de/npbefvmvk/__6.html",
+     "abruf": "2026-10-18"
+    },
+    {
+     "url": "https://www.gesetze-im-internet.de/npbefvmvk/__3.html",
+     "abruf": "2026-10-18"
+    }
+   ],
+   "verified": {
+    "pos": false,
+    "geom": false,
+    "rule": true
+   },
+   "verified_overall": false
+  },
+  {
+   "id": "hz-de-having-5kn",
+   "name": "Havinger Bucht – Saisonale Geschwindigkeitsbegrenzung",
+   "country": "DE",
+   "type": "geschwindigkeit",
+   "geom": null,
+   "rules": {
+    "speed_kn": 5,
+    "zeitraum": "16.05.–31.10.",
+    "bereich": "außerhalb Fahrwasser bis zur 2-m-Linie"
+   },
+   "warn": "Vom 16.05. bis 31.10. außerhalb des Fahrwassers bis zur 2-m-Linie höchstens 5 kn (laut ESYS; Rechtsgrundlage dort nicht genannt).",
+   "src": [
+    {
+     "url": "https://esys.org/rev_info/Deutschland/Seedorf_(Ruegen).html",
+     "abruf": "2026-10-18",
+     "note": "Stand 06/2024, in Runde 1 gelesen"
+    }
+   ],
+   "verified": {
+    "pos": false,
+    "geom": false,
+    "rule": false
+   },
+   "verified_overall": false
+  },
+  {
+   "id": "hz-de-wamper-wiek",
+   "name": "Ankerplatz Wamper Wiek (Strelasund, bei Altefähr) – saisonal",
+   "country": "DE",
+   "type": "naturschutz",
+   "geom": null,
+   "rules": {
+    "befahrbar": "01.05.–30.09.",
+    "sonst": "gesperrt (Naturschutz)"
+   },
+   "warn": "Wamper Wiek nur 01.05.–30.09. befahren/ankern; guter Seegangsschutz außer bei Wind um West.",
+   "src": [
+    {
+     "url": "https://esys.org/rev_info/Deutschland/Altefaehr.html",
+     "abruf": "2026-10-18",
+     "note": "Stand 06/2024"
+    }
+   ],
+   "verified": {
+    "pos": false,
+    "geom": false,
+    "rule": false
+   },
+   "verified_overall": false
+  },
+  {
+   "id": "hz-de-darsser-ort-kernzone",
+   "name": "Darßer Ort – ehemaliger Nothafen, Kernzone (geschlossen)",
+   "country": "DE",
+   "type": "sperrgebiet",
+   "geom": null,
+   "warn": "Nothafen Darßer Ort seit 09/2023 dauerhaft geschlossen und renaturiert, Kernzone des Nationalparks. Nicht anlaufen – Ersatz Inselhafen Prerow.",
+   "src": [
+    {
+     "url": "https://www.yacht.de/",
+     "abruf": "2026-10-18",
+     "note": "YACHT 15.09.2023 'Nothafen Darßer Ort: Ab heute für immer geschlossen' (Runde 1)"
+    }
+   ],
+   "verified": {
+    "pos": false,
+    "geom": false,
+    "rule": true
+   },
+   "verified_overall": false
+  },
+  {
+   "id": "hz-de-nsg-grosser-wotig",
+   "name": "NSG Großer Wotig (Peenestrom bei Kröslin)",
+   "country": "DE",
+   "type": "naturschutz",
+   "geom": null,
+   "warn": "Naturschutzgebiet mit gelben Sperrtonnen markiert – nicht befahren.",
+   "src": [
+    {
+     "url": "https://esys.org/rev_info/Deutschland/Kroeslin.html",
+     "abruf": "2026-10-18",
+     "note": "in Runde 1 gelesen"
+    }
+   ],
+   "verified": {
+    "pos": false,
+    "geom": false,
+    "rule": false
+   },
+   "verified_overall": false
+  },
+  {
+   "id": "hz-de-pl-grenze-haff",
+   "name": "Staatsgrenze DE/PL im Stettiner Haff",
+   "country": "DE/PL",
+   "type": "staatsgrenze",
+   "geom": null,
+   "geom_note": "Grob: Grenze teilt das Haff seit 1945 in Kleines Haff (DE, West, ca. 277 km²) und Großes Haff (PL, Ost, ca. 410 km²). Sie kommt im Norden von der Landgrenze auf Usedom am Ostrand von Kamminke (ESYS: Ort ca. 500 m von der Grenze) und erreicht im Süden das Festland zwischen Altwarp (DE) und Nowe Warpno (PL), die ca. 0,7 sm auseinander liegen. Innere Seegewässer-Anteil der Grenze laut Wikipedia 19,5 km. Exakter Verlauf: amtliche Seekarte BSH/BHMW.",
+   "warn": "Westlich von Kamminke und Altwarp verläuft die Staatsgrenze durch das Haff. Polnische Gewässer: Häfen Nowe Warpno, Trzebież, Świnoujście, Szczecin. Ausweis, Bootspapiere und Befähigungsnachweis mitführen. Siehe RADIO-/Regel-Einträge unten.",
+   "src": [
+    {
+     "url": "https://de.wikipedia.org/wiki/Stettiner_Haff",
+     "abruf": "2026-10-18"
+    },
+    {
+     "url": "https://de.wikipedia.org/wiki/Deutsch-polnische_Grenze",
+     "abruf": "2026-10-18"
+    },
+    {
+     "url": "https://esys.org/rev_info/Deutschland/Kamminke.html",
+     "abruf": "2026-10-18",
+     "note": "Stand 06/2024"
+    },
+    {
+     "url": "https://www.yacht.de/reisen-chartern/weltweit/polen-westpommern-teil-1-das-stettiner-haff/",
+     "abruf": "2026-10-18",
+     "note": "05.07.2025, Abstand Altwarp–Nowe Warpno"
+    }
+   ],
+   "verified": {
+    "pos": false,
+    "geom": false,
+    "rule": false
+   },
+   "verified_overall": false
+  },
+  {
+   "id": "hz-pl-grenzuebertritt-sportboot",
+   "name": "Grenzübertritt Sportboot DE→PL (Haff/Oder)",
+   "country": "PL",
+   "type": "regel",
+   "geom": null,
+   "warn": "Beide Länder sind Schengen-Staaten; eine Pflicht zur Grenzkontroll-Meldung für Boote aus Deutschland ist nicht belegt. Polen kontrolliert seit 07.07.2025 vorübergehend an der Grenze zu Deutschland (verlängert bis 01.10.2026, laut trans.info vom 03.09.2026 Verlängerung bis 30.03.2027 geplant); die Quellen nennen nur Landgrenzen. Die Wasserpolizei Szczecin hat seit 07/2025 verstärkt auf der Oder kontrolliert: Ausweis/Reisepass, Bootspapiere, Befähigungsnachweis, Rettungsmittel, Nüchternheit. Deutschland kontrolliert seine Landgrenzen (auch zu PL) bis 15.03.2027. In polnischen Häfen: Ankunft und Abfahrt beim Hafenmeister bzw. im Hafenregister eintragen (Name/Reg.-Nr., Flagge, Personenzahl, Herkunft/Ziel); ohne 24-h-Dienst über das automatische Telefon-Meldesystem. Ältere Angabe (noonsite, 03/2025): Papiere am Grenzpatrouillenboot zeigen und nicht ohne Einklarieren oderaufwärts fahren – vermutlich aus der Zeit vor Schengen, nicht bestätigt.",
+   "src": [
+    {
+     "url": "https://dailymare.com/news/temporary-border-controls-reinstituted-polish-water-police-intensify-patrols-on-the-odra-river,1566",
+     "abruf": "2026-10-18",
+     "note": "07.07.2025"
+    },
+    {
+     "url": "https://trans.info/de/polen-verlaengert-grenzkontrollen-oktober-2026-465736",
+     "abruf": "2026-10-18",
+     "note": "30.03.2026"
+    },
+    {
+     "url": "https://trans.info/de/polen-plant-laengere-grenzkontrollen-zu-deutschland-und-litauen-500158",
+     "abruf": "2026-10-18",
+     "note": "03.09.2026, geplant, nicht beschlossen"
+    },
+    {
+     "url": "https://ms-aktuell.de/?p=152220",
+     "abruf": "2026-10-18",
+     "note": "18.08.2026, DE-Landgrenzkontrollen 16.09.2026–15.03.2027"
+    },
+    {
+     "url": "https://ums.gov.pl/Zeglarze/Poradnik jachty.pdf",
+     "abruf": "2026-10-18",
+     "note": "UMS Szczecin, Poradnik dla jednostek rekreacyjnych v1.0 30.05.2019"
+    },
+    {
+     "url": "https://www.noonsite.com/place/poland/formalities",
+     "abruf": "2026-10-18",
+     "note": "Stand 03/2025, Haff-Angabe vermutlich veraltet"
+    }
+   ],
+   "verified": {
+    "pos": false,
+    "geom": false,
+    "rule": false
+   },
+   "verified_overall": false,
+   "uncertainty": "[Sicherheit: 5/10] ob polnische Kontrollen 2026 Sportboote im Haff betreffen; Lage nach 01.10.2026 nicht bestätigt."
+  },
+  {
+   "id": "hz-pl-fahrwasser-swinoujscie-szczecin",
+   "name": "Fahrwasser Świnoujście–Szczecin (Großes Haff, Kaiserfahrt/Kanał Piastowski)",
+   "country": "PL",
+   "type": "fahrwasser_regel",
+   "geom": null,
+   "warn": "VTS-Teilnahme Pflicht erst ab 20 m LüA; kleinere Yachten dürfen hören. Segeln ohne Motor in Fahrwasser, Reeden und Hafengebieten nur bei Tag und Sicht > 5 kbl. Unter 2 kbl Sicht nur mit funktionierendem Radar (< 20 m). Fahrwasser vor anderem Fahrzeug nur mit mind. 5 kbl Abstand queren. Fahrzeuge mit Tiefgang bis 3 m müssen im Abschnitt Szeroki Nurt den Wąski Nurt (Kanał Policki) nutzen. Höchstgeschwindigkeit im Fahrwasser 8 bzw. 12 kn je Abschnitt, in Häfen (außer Świnoujście, Szczecin, Police) 5 kn.",
+   "src": [
+    {
+     "url": "https://ums.gov.pl/Zeglarze/Poradnik jachty.pdf",
+     "abruf": "2026-10-18",
+     "note": "v1.0, 30.05.2019 – kein amtliches Nautikdokument; maßgeblich Hafenordnung UMS Szczecin Nr. 3 vom 26.07.2013 i. d. g. F."
+    },
+    {
+     "url": "https://www.ums.gov.pl/nawigacyjne/poradnik/Port_regs_VTS_guidance_07082018.pdf",
+     "abruf": "2026-10-18",
+     "note": "Ver. 1.0.en 07.08.2018"
+    }
+   ],
+   "verified": {
+    "pos": false,
+    "geom": false,
+    "rule": true
+   },
+   "verified_overall": false
+  }
+ ]
+}

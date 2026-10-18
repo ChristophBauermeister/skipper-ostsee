@@ -1,0 +1,1926 @@
+[
+ {
+  "id": "dk-allinge-havn",
+  "name": "Allinge Havn",
+  "country": "DK",
+  "region": "Bornholm",
+  "type": "hafen",
+  "lat": 55.2785,
+  "lon": 14.80287,
+  "prot": {
+   "N": "full",
+   "NE": "part",
+   "E": "full",
+   "SE": "full",
+   "S": "full",
+   "SW": "full",
+   "W": "full",
+   "NW": "full"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "N",
+   "NE"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 4.0,
+  "depthBerthMin_m": 4.2,
+  "depthBerthMax_m": 4.4,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "N",
+      "NE"
+     ],
+     "m": 1.0
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "SW"
+     ],
+     "m": 1.0
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 56 92 23 28",
+  "web": "https://www.brk.dk",
+  "note": "prot abgeleitet: Laut Lods erlaubt das Tor zwischen Yder- und Inderhavn das Liegen in der Inderhavn auch bei auflandigem Sturm; gilt nur für die Inderhavn. Bornholm-Torhafen: bei auflandigem Wind Tor zur Inderhavn, Außenhafen/Einfahrt dann exponiert (entranceOpen aus Küstenlage NE-Küste abgeleitet). Einfahrt im Sommer zeitweise durch Fähren blockiert. Verkehrssignal 3 rote Lichter senkrecht / schwarzer Ball = Hafen nicht anlaufbar. Hafenplan: Inderhavn (Bassin I/II) mit Tor gegen Seegang; Zufahrt 209° mit 4 m. Tiefen in BSCD2000.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/a340e185-dfde-4c44-a6bc-d7a9b28c990f.html, Tekst 22-04-2026, abgerufen 2026-10-18",
+  "refuge": true,
+  "refugeLevel": "plan",
+  "plans": [
+   "BOTALNGE.jpg"
+  ],
+  "distHeiligenhafen_sm": 142.8,
+  "distBreege_sm": 64.0,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-arnager-baadehavn",
+  "name": "Arnager Bådehavn",
+  "country": "DK",
+  "region": "Bornholm",
+  "type": "marina",
+  "lat": 55.05098,
+  "lon": 14.78067,
+  "prot": {
+   "N": "full",
+   "NE": "part",
+   "E": "full",
+   "SE": "full",
+   "S": "full",
+   "SW": "full",
+   "W": "full",
+   "NW": "full"
+  },
+  "protSource": "plan",
+  "entranceOpen": [],
+  "swellOpen": null,
+  "depthEntrance_m": 2.1,
+  "depthBerthMin_m": 1.4,
+  "depthBerthMax_m": 1.4,
+  "maxDraft_m": null,
+  "maxLoa_m": 20,
+  "maxBeam_m": 7,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "N",
+      "NE",
+      "E"
+     ],
+     "m": 1.0
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "S",
+      "SW",
+      "W"
+     ],
+     "m": 1.0
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 56 97 60 54",
+  "web": null,
+  "note": "prot abgeleitet: kleines rechteckiges Becken am Ende eines 200-m-Stegs, Anlauf laut Lods von SE. Nur bei Tag. Von W kommend S um Arnager Rev/durch Storegab, von E S um Stengrund Blak. Ankerplatz Arnager Bugt ca. 300 m E, bei SW–SE Seegang. Hafenplan: Kleines Becken am Ende einer 200-m-Brücke, Becken nur 1,4 m; Einfahrt N zur nahen Küste. Arnager Rev S davon. Tiefen BSCD2000.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/097df890-7636-4869-ba2d-53dfff9ef701.html, Tekst 06-11-2025, abgerufen 2026-10-18",
+  "refuge": false,
+  "refugeLevel": null,
+  "plans": [
+   "BO_ARNAR.jpg"
+  ],
+  "distHeiligenhafen_sm": 137.9,
+  "distBreege_sm": 55.9,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-bakkerne-baadehavn",
+  "name": "Bakkerne Bådehavn",
+  "country": "DK",
+  "region": "Bornholm",
+  "type": "marina",
+  "lat": 54.9994,
+  "lon": 14.98953,
+  "prot": null,
+  "protSource": null,
+  "entranceOpen": null,
+  "swellOpen": null,
+  "depthEntrance_m": 0.9,
+  "depthBerthMin_m": 0.9,
+  "depthBerthMax_m": 0.9,
+  "maxDraft_m": null,
+  "maxLoa_m": 7,
+  "maxBeam_m": 2.5,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "NE"
+     ],
+     "m": 1.0
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "SE"
+     ],
+     "m": 0.5
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": null,
+  "web": null,
+  "note": "Winziger Privathafen hinter 1 m hoher Betonmole mit 80-m-Steg; laut Lods täglich voll belegt, nur im Notfall oder für kurze Besuche anlaufen. Nur bei Tag. Für Kielyachten ungeeignet (0,9 m). Leitfeuer 011° brennt nur, wenn Hafenboote draußen sind.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": false,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/3c38456d-b2cd-4915-85e2-600dea975b1c.html, Tekst 06-11-2025, abgerufen 2026-10-18",
+  "refuge": false,
+  "refugeLevel": null,
+  "plans": null,
+  "distHeiligenhafen_sm": 144.1,
+  "distBreege_sm": 61.1,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-balka-havn",
+  "name": "Balka Havn",
+  "country": "DK",
+  "region": "Bornholm",
+  "type": "hafen",
+  "lat": 55.0395,
+  "lon": 15.11135,
+  "prot": null,
+  "protSource": null,
+  "entranceOpen": [
+   "E",
+   "SE",
+   "S"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 0.9,
+  "depthBerthMin_m": null,
+  "depthBerthMax_m": null,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "NE",
+      "E"
+     ],
+     "m": null
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "S",
+      "SW"
+     ],
+     "m": null
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": null,
+  "web": null,
+  "note": "Nur für kleine ortsansässige Jollen, Tiefen in den Becken stark wechselnd. Nur bei Tag; laut Lods bei auflandigem Sturm nicht anlaufbar (entranceOpen aus Küstenlage SE-Küste abgeleitet).",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": false,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/04150efe-562f-4121-a11a-c3bccc2f94c4.html, Tekst 06-11-2025, abgerufen 2026-10-18",
+  "refuge": false,
+  "refugeLevel": null,
+  "plans": null,
+  "distHeiligenhafen_sm": 148.7,
+  "distBreege_sm": 65.9,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-boderne-havn",
+  "name": "Boderne Havn",
+  "country": "DK",
+  "region": "Bornholm",
+  "type": "hafen",
+  "lat": 55.02232,
+  "lon": 14.90488,
+  "prot": {
+   "N": "full",
+   "NE": "full",
+   "E": "part",
+   "SE": "part",
+   "S": "full",
+   "SW": "full",
+   "W": "full",
+   "NW": "full"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "E",
+   "SE"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 0.9,
+  "depthBerthMin_m": 1.2,
+  "depthBerthMax_m": 1.7,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "NE"
+     ],
+     "m": 1.0
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "W",
+      "SW"
+     ],
+     "m": 1.0
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 61 68 50 02",
+  "web": "https://www.bodernehavn.dk",
+  "note": "Kleiner Vereinshafen ca. 1 sm WNW Raghammer Odde. Sandwanderung: angegebene Tiefen vor und im Hafen nicht verlässlich. Größte Schiffe 10×3,5 m. Hafenplan: Plan bestätigt 0,9 m in der Einfahrt; Sandwanderung, Tiefen unsicher. BSCD2000.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/661b2484-3fb6-43db-836a-661e428208b7.html, Tekst 06-11-2025, abgerufen 2026-10-18",
+  "refuge": false,
+  "refugeLevel": null,
+  "plans": [
+   "BO_BODRN.jpg"
+  ],
+  "distHeiligenhafen_sm": 141.6,
+  "distBreege_sm": 59.0,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-boelshavn",
+  "name": "Bølshavn",
+  "country": "DK",
+  "region": "Bornholm",
+  "type": "hafen",
+  "lat": 55.15492,
+  "lon": 15.0768,
+  "prot": null,
+  "protSource": null,
+  "entranceOpen": null,
+  "swellOpen": null,
+  "depthEntrance_m": 1.1,
+  "depthBerthMin_m": 0.7,
+  "depthBerthMax_m": 0.7,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "NE"
+     ],
+     "m": 0.8
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "SW"
+     ],
+     "m": 0.8
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 56 92 23 38",
+  "web": "https://www.brk.dk",
+  "note": "Zwei niedrige N-S-Steinbollwerke, nur für Jollen. Nur bei Tag. Telefon über Svaneke Havn.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/2d350b9b-0839-4b00-a35f-b6b05cfd8a50.html, Tekst 06-11-2025, abgerufen 2026-10-18",
+  "refuge": false,
+  "refugeLevel": null,
+  "plans": null,
+  "distHeiligenhafen_sm": 149.4,
+  "distBreege_sm": 67.8,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-gudhjem-havn",
+  "name": "Gudhjem Havn",
+  "country": "DK",
+  "region": "Bornholm",
+  "type": "hafen",
+  "lat": 55.21265,
+  "lon": 14.9717,
+  "prot": {
+   "N": "part",
+   "NE": "part",
+   "E": "full",
+   "SE": "full",
+   "S": "full",
+   "SW": "full",
+   "W": "full",
+   "NW": "full"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "N",
+   "NE"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 3.9,
+  "depthBerthMin_m": 1.9,
+  "depthBerthMax_m": 3.9,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "N",
+      "NE",
+      "E"
+     ],
+     "m": 0.5
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "S",
+      "SW",
+      "W"
+     ],
+     "m": 0.5
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 56 92 23 36",
+  "web": "https://www.brk.dk",
+  "note": "prot abgeleitet: Einfahrt laut Lods von NNE, Granitmolen mit Wellenschirmen. Bornholm-Torhafen: Schiebetor zwischen Yder- und Mellemhavn wird bei auflandigem Wind geschlossen – Innenbecken dann geschützt, Zugang aber gesperrt. Verkehrssignal roter Ball (Tag) / gelöschte Leitfeuer (Nacht) = nicht anlaufbar. Hafen bis 3,9 m (Untergrenze unbekannt). Hafenplan: Einfahrt von NNE (196°) 3,9 m; Becken 3,9 m, kleines S-Becken 1,9 m; Schiebetor zwischen Yder- und Mellemhavn. BSCD2000. Grenzfall: Tor wird bei auflandigem Wind geschlossen – dann kein Zugang.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/c9c4a27f-eb86-479b-98f6-1e346364ab5d.html, Tekst 06-11-2025, abgerufen 2026-10-18",
+  "refuge": false,
+  "refugeLevel": "grenzfall",
+  "plans": [
+   "BOTGUHJS.jpg"
+  ],
+  "distHeiligenhafen_sm": 147.0,
+  "distBreege_sm": 66.4,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-hammer-havn",
+  "name": "Hammer Havn",
+  "country": "DK",
+  "region": "Bornholm",
+  "type": "hafen",
+  "lat": 55.27773,
+  "lon": 14.75608,
+  "prot": {
+   "N": "full",
+   "NE": "full",
+   "E": "full",
+   "SE": "full",
+   "S": "full",
+   "SW": "part",
+   "W": "part",
+   "NW": "full"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "W",
+   "SW"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 2.9,
+  "depthBerthMin_m": 0.9,
+  "depthBerthMax_m": 4.4,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "NE"
+     ],
+     "m": 1.0
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "W"
+     ],
+     "m": 0.8
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 56 92 23 24",
+  "web": "https://www.brk.dk",
+  "note": "Yder- und Inderhavn, Wellenbrecherarm von der N-Mole nach E. Sandwanderung: Tiefen vor und im Hafen nicht verlässlich, nur im Plan. Telefon über Allinge Havn. Hafenplan: Plan: 'Dybderne er usikre pga. sandvandring'. Einfahrt WSW 2,9 m; Inderhavn 0,9–4,4 m. Grenzfall: Plan warnt vor Versandung.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/98da1935-3112-48d4-8eb6-fd190135bf46.html, Tekst 24-06-2026, abgerufen 2026-10-18",
+  "refuge": false,
+  "refugeLevel": "grenzfall",
+  "plans": [
+   "BO_HAMRH.jpg"
+  ],
+  "distHeiligenhafen_sm": 141.3,
+  "distBreege_sm": 62.7,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-hasle-havn",
+  "name": "Hasle Havn",
+  "country": "DK",
+  "region": "Bornholm",
+  "type": "hafen",
+  "lat": 55.18795,
+  "lon": 14.70063,
+  "prot": {
+   "N": "full",
+   "NE": "full",
+   "E": "full",
+   "SE": "full",
+   "S": "part",
+   "SW": "part",
+   "W": "full",
+   "NW": "full"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "W",
+   "NW"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 3.4,
+  "depthBerthMin_m": 0.7,
+  "depthBerthMax_m": 2.9,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "E",
+      "NE"
+     ],
+     "m": 0.8
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "SW",
+      "W"
+     ],
+     "m": 0.8
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 56 92 23 22",
+  "web": "https://www.brk.dk",
+  "note": "prot abgeleitet: Leitlinie 097° im gebaggerten, befeuerten Fahrwasser → Einfahrt nach W. Flach mit Steinen (3 m) dicht N der Einfahrt. Fünf Becken, Tiefen nur im Plan. Hafenplan: Lystbådehavn im N-Becken (0,7–2,9 m, O-Teil sehr flach); Zufahrt 097° 4,9–6,9 m, innere Öffnung 3,4 m. Bassin I–IV 2,9–4,4 m. BSCD2000.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/3e417454-df4f-4948-aacd-d85db6e1b796.html, Tekst 26-08-2026, abgerufen 2026-10-18",
+  "refuge": true,
+  "refugeLevel": "plan",
+  "plans": [
+   "BOTHASLE.jpg"
+  ],
+  "distHeiligenhafen_sm": 137.7,
+  "distBreege_sm": 57.9,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-helligpeder-havn",
+  "name": "Helligpeder Havn",
+  "country": "DK",
+  "region": "Bornholm",
+  "type": "hafen",
+  "lat": 55.21192,
+  "lon": 14.70665,
+  "prot": {
+   "N": "part",
+   "NE": "full",
+   "E": "full",
+   "SE": "full",
+   "S": "full",
+   "SW": "full",
+   "W": "full",
+   "NW": "part"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "NW",
+   "N"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 2.5,
+  "depthBerthMin_m": 0.9,
+  "depthBerthMax_m": 2.7,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "NE"
+     ],
+     "m": 1.0
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "SW"
+     ],
+     "m": 0.6
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 56 96 47 98",
+  "web": null,
+  "note": "Laut Lods nur bei Tag und nicht bei auflandigem Sturm anlaufbar (entranceOpen aus Küstenlage W-Küste abgeleitet). Steine unter 2 m N und NW des Hafens. Teilweise bis 2,7 m, sonst nur Plan. Hafenplan: Yderhavn 2,5–2,7 m, Inderhavn 0,9–1,9 m; N/NW der Einfahrt Steine < 2 m. BSCD2000.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/6d8dc4dc-d71e-4576-bc7b-70f8fa1d9873.html, Tekst 19-08-2026, abgerufen 2026-10-18",
+  "refuge": true,
+  "refugeLevel": "plan",
+  "plans": [
+   "BO_HLIPD.jpg"
+  ],
+  "distHeiligenhafen_sm": 138.4,
+  "distBreege_sm": 58.9,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-kampeloekke-havn",
+  "name": "Kampeløkke Havn",
+  "country": "DK",
+  "region": "Bornholm",
+  "type": "hafen",
+  "lat": 55.28107,
+  "lon": 14.7981,
+  "prot": null,
+  "protSource": null,
+  "entranceOpen": null,
+  "swellOpen": null,
+  "depthEntrance_m": 1.3,
+  "depthBerthMin_m": 1.1,
+  "depthBerthMax_m": 1.1,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "N"
+     ],
+     "m": null
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "SW"
+     ],
+     "m": null
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 20 98 74 21",
+  "web": "https://www.kampeloekke.dk",
+  "note": "Zwei kleine Becken 0,2 sm N Allinge. Nur bei Tag, Anlauf in der Bakenlinie. Größte Schiffe 6,4×2,3 m.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/fdfa6902-9d98-4f15-8983-d226a9bbfaa0.html, Tekst 06-11-2025, abgerufen 2026-10-18",
+  "refuge": false,
+  "refugeLevel": null,
+  "plans": null,
+  "distHeiligenhafen_sm": 142.7,
+  "distBreege_sm": 63.9,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-listed-havn",
+  "name": "Listed Havn",
+  "country": "DK",
+  "region": "Bornholm",
+  "type": "hafen",
+  "lat": 55.14618,
+  "lon": 15.10992,
+  "prot": {
+   "N": "full",
+   "NE": "full",
+   "E": "full",
+   "SE": "full",
+   "S": "full",
+   "SW": "full",
+   "W": "part",
+   "NW": "part"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "N",
+   "NW"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 2.1,
+  "depthBerthMin_m": 1.4,
+  "depthBerthMax_m": 2.9,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "NE"
+     ],
+     "m": 1.0
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "S",
+      "SW"
+     ],
+     "m": 1.0
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 56 49 64 54",
+  "web": null,
+  "note": "prot abgeleitet: Leitlinie 201,6° → Einfahrt nach NNE; laut Lods sicherer, ruhiger Zufluchtsort für kleinere Fahrzeuge (ohne Richtungsangabe). refuge=false nur wegen fehlender Tiefenangabe (nur Plan). Größte Schiffe 16 m. Tel. 24 h: +45 56 49 60 90. Hafenplan: Ansteuerung über Leitlinie 201,6° mit 2,1 m; Yderhavn 2,7 m, Innenbecken 2,1–2,9 m, 1,4 m am Slip. Tiefen in BSCD2000 (DVR90).",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/df0fbbac-577e-42ed-9887-6148f9fb939d.html, Tekst 06-11-2025, abgerufen 2026-10-18",
+  "refuge": false,
+  "refugeLevel": null,
+  "plans": [
+   "BO_LISTD.jpg"
+  ],
+  "distHeiligenhafen_sm": 150.3,
+  "distBreege_sm": 68.6,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-melsted-havn",
+  "name": "Melsted Havn",
+  "country": "DK",
+  "region": "Bornholm",
+  "type": "hafen",
+  "lat": 55.20475,
+  "lon": 14.98262,
+  "prot": {
+   "N": "part",
+   "NE": "part",
+   "E": "part",
+   "SE": "part",
+   "S": "full",
+   "SW": "full",
+   "W": "full",
+   "NW": "full"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "N",
+   "NE"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 1.3,
+  "depthBerthMin_m": 1.5,
+  "depthBerthMax_m": 1.5,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "N",
+      "NE",
+      "E"
+     ],
+     "m": 1.0
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "SW"
+     ],
+     "m": 1.0
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 56 48 53 00",
+  "web": null,
+  "note": "Laut Lods nur für Ortskundige und nicht bei auflandigem Sturm (entranceOpen aus Küstenlage NE-Küste abgeleitet). Niedrige Granitmolen. Größte Schiffe 7,5×2,5 m, 1,2 m Tiefgang. Hafenplan: Rinne (208°) 1,3 m, Becken 1,5 m. Granitmolen nur 1 m hoch, daher E/SE nur 'part'. Nur für Ortskundige, nicht bei auflandigem Sturm.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/0d220542-1961-41af-b09c-9edefb6ca859.html, Tekst 06-11-2025, abgerufen 2026-10-18",
+  "refuge": false,
+  "refugeLevel": null,
+  "plans": [
+   "BO_MELST.jpg"
+  ],
+  "distHeiligenhafen_sm": 147.2,
+  "distBreege_sm": 66.5,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-nexoe-havn",
+  "name": "Nexø Havn",
+  "country": "DK",
+  "region": "Bornholm",
+  "type": "hafen",
+  "lat": 55.06323,
+  "lon": 15.13727,
+  "prot": {
+   "N": "full",
+   "NE": "part",
+   "E": "full",
+   "SE": "full",
+   "S": "full",
+   "SW": "full",
+   "W": "full",
+   "NW": "full"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "NE"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 4.9,
+  "depthBerthMin_m": 2.9,
+  "depthBerthMax_m": 3.6,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "NW",
+      "N",
+      "NE"
+     ],
+     "m": null
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "E"
+     ],
+     "m": null
+    }
+   ]
+  },
+  "season": null,
+  "vhf": "16, 13, 12",
+  "tel": "+45 56 49 22 50",
+  "web": null,
+  "note": "prot abgeleitet: Leitfeuerlinie 232° → Einfahrt nach NE; laut Lods bei auflandigem Sturm ausgehender NE-Strom bis 1,5 kn, für größere Fahrzeuge dann nicht anlaufbar. Gäste im Sommer im Gamle Bassin. Verkehrssignal 3 rote Lichter/schwarzer Ball = Hafen belegt. Querstrom vor der Einfahrt. Nexø Red guter Ankerplatz. Seenotstation. Hafenplan: Rinne (232°) 4,9–5,8 m; Gl. Bassin (Gastboote im Sommer) 2,9–3,6 m. Leitlinie führt direkt Richtung Gl. Bassin. Text: bei auflandigem Sturm nicht für größere Fahrzeuge; Sperrsignal.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": true,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/808210c8-d338-4ac1-a482-b41415244c6c.html, Tekst 06-11-2025, abgerufen 2026-10-18",
+  "refuge": true,
+  "refugeLevel": "plan",
+  "plans": [
+   "BOTNEXOE.jpg"
+  ],
+  "distHeiligenhafen_sm": 149.9,
+  "distBreege_sm": 67.3,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-noerrekaas-lystbaadehavn",
+  "name": "Nørrekås Lystbådehavn",
+  "country": "DK",
+  "region": "Bornholm",
+  "type": "marina",
+  "lat": 55.10557,
+  "lon": 14.69387,
+  "prot": {
+   "N": "full",
+   "NE": "full",
+   "E": "part",
+   "SE": "part",
+   "S": "full",
+   "SW": "full",
+   "W": "full",
+   "NW": "full"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "NE",
+   "E"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 2.7,
+  "depthBerthMin_m": 0.4,
+  "depthBerthMax_m": 3.2,
+  "maxDraft_m": null,
+  "maxLoa_m": 20,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "NE"
+     ],
+     "m": 1.2
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "SW"
+     ],
+     "m": 1.0
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 56 92 23 20",
+  "web": "https://www.brk.dk",
+  "note": "Sportboothafen bei Rønne. Tiefen an den Stegen im Außenhafen 2,9 bis 0,4 m, Altbecken bis 1,9 m (Durchfahrten 6 m breit) – Platz nach Tiefgang wählen. Größere Schiffe → Rønne Havn. Hafenplan: Einfahrt 2,7 m; Yderhavn 0,4–3,2 m, Gamle Havn 1,2–1,9 m. Plan zeigt bis 3,2 m, Text nennt 2,9 m max. an den Brücken.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/7b0a217c-710d-4d46-8efb-fe7abb2c698f.html, Tekst 06-11-2025, abgerufen 2026-10-18",
+  "refuge": true,
+  "refugeLevel": "plan",
+  "plans": [
+   "BO_NORKS.jpg"
+  ],
+  "distHeiligenhafen_sm": 135.9,
+  "distBreege_sm": 54.9,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-noerresand-havn",
+  "name": "Nørresand Havn",
+  "country": "DK",
+  "region": "Bornholm",
+  "type": "hafen",
+  "lat": 55.21505,
+  "lon": 14.96597,
+  "prot": {
+   "N": "full",
+   "NE": "full",
+   "E": "full",
+   "SE": "full",
+   "S": "full",
+   "SW": "full",
+   "W": "part",
+   "NW": "part"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "W",
+   "NW"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 3.5,
+  "depthBerthMin_m": 1.4,
+  "depthBerthMax_m": 3.5,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "N",
+      "NE",
+      "E"
+     ],
+     "m": 0.5
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "S",
+      "SW",
+      "W"
+     ],
+     "m": 0.5
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 56 92 23 34",
+  "web": "https://www.brk.dk",
+  "note": "Nur bei Licht und guter Sicht anlaufen; Ausweichhäfen Gudhjem oder Tejn. Strom folgt meist dem Wind. Telefon über Gudhjem Havn. Hafenplan: Rinne 3,5 m (deckt sich mit Text); Inderhavn 3,5 m, Yderhavn 1,4–3,5 m (0,5 m an Felsen). Nur bei Helligkeit und Sicht.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/36a22fe7-48f4-4fb2-a9f1-38e2bf7fa0d7.html, Tekst 06-11-2025, abgerufen 2026-10-18",
+  "refuge": true,
+  "refugeLevel": "plan",
+  "plans": [
+   "BOTNORSA.jpg"
+  ],
+  "distHeiligenhafen_sm": 146.8,
+  "distBreege_sm": 66.3,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-roenne-havn",
+  "name": "Rønne Havn",
+  "country": "DK",
+  "region": "Bornholm",
+  "type": "hafen",
+  "lat": 55.09607,
+  "lon": 14.68963,
+  "prot": {
+   "N": "full",
+   "NE": "full",
+   "E": "full",
+   "SE": "full",
+   "S": "full",
+   "SW": "full",
+   "W": "part",
+   "NW": "part"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "W",
+   "NW"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 6.9,
+  "depthBerthMin_m": 1.5,
+  "depthBerthMax_m": 6.9,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "E",
+      "N"
+     ],
+     "m": 1.2
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "W"
+     ],
+     "m": 1.0
+    }
+   ]
+  },
+  "season": null,
+  "vhf": "16, 12",
+  "tel": "+45 56 95 06 78",
+  "web": "https://www.roennehavn.dk",
+  "note": "Großer Fähr-/Handelshafen mit vielen Becken inkl. Søndre Bådehavn; Sportboote auch Nørrekås. Anmeldung 1 h vor Ankunft auf VHF. N-/S-Strom vor der Einfahrt. Grüne Stange am S-Molenkopf derzeit fehlend (Lods-Anmerkung). Ankern N oder S außerhalb der Feuerlinie. Hafenwache 24 h +45 51 36 37 47. Hafenplan: Einfahrt 10,9 m, Forhavnsbassin 6,9 m; unklar, wo Sportboote liegen: Nordhavnen 5,4–6,9 m, Søndre Bådehavn 1,5–2,9 m (Mündung 2,2 m). Tiefen BSCD2000.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": true,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/f45e83c9-05b1-40f1-957d-165695fcc1c5.html, Tekst 17-09-2026, abgerufen 2026-10-18",
+  "refuge": true,
+  "refugeLevel": "plan",
+  "plans": [
+   "BOTRONNE.jpg"
+  ],
+  "distHeiligenhafen_sm": 135.6,
+  "distBreege_sm": 54.5,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-sandvig-havn",
+  "name": "Sandvig Havn",
+  "country": "DK",
+  "region": "Bornholm",
+  "type": "hafen",
+  "lat": 55.28945,
+  "lon": 14.78263,
+  "prot": {
+   "N": "part",
+   "NE": "full",
+   "E": "full",
+   "SE": "full",
+   "S": "full",
+   "SW": "full",
+   "W": "full",
+   "NW": "part"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "N",
+   "NW"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 1.7,
+  "depthBerthMin_m": 0.9,
+  "depthBerthMax_m": 1.7,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "N",
+      "NE"
+     ],
+     "m": 1.0
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "W"
+     ],
+     "m": 0.8
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 56 92 23 26",
+  "web": "https://www.brk.dk",
+  "note": "prot abgeleitet: Baken in 175° durch die Einfahrtsrinne → Einfahrt nach N. Laut Lods nur für Ortskundige und nicht bei auflandigem Sturm; Außenhafen versandet bei starkem N/NE. Telefon über Allinge Havn. Hafenplan: Einfahrt (175°) 1,7 m, Becken 1,4–1,7 m, Innenbecken 0,9 m. Nur für Ortskundige; Versandung bei N/NE-Wind.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/0581a640-0844-4b14-b702-ce30681ce418.html, Tekst 06-11-2025, abgerufen 2026-10-18",
+  "refuge": false,
+  "refugeLevel": null,
+  "plans": [
+   "BO_SANVI.jpg"
+  ],
+  "distHeiligenhafen_sm": 142.4,
+  "distBreege_sm": 63.9,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-snogebaek-havn",
+  "name": "Snogebæk Havn",
+  "country": "DK",
+  "region": "Bornholm",
+  "type": "hafen",
+  "lat": 55.02523,
+  "lon": 15.12238,
+  "prot": {
+   "N": "full",
+   "NE": "full",
+   "E": "full",
+   "SE": "part",
+   "S": "part",
+   "SW": "part",
+   "W": "part",
+   "NW": "full"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "SE",
+   "S"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 1.9,
+  "depthBerthMin_m": 0.9,
+  "depthBerthMax_m": 1.9,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "E"
+     ],
+     "m": null
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "W"
+     ],
+     "m": 0.5
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 24 89 65 46",
+  "web": "https://www.snogebaek.info",
+  "note": "prot abgeleitet: Leitfeuer 318,2° dicht um Broens Rev → Einfahrt nach SE. Fischerhafen. Ankern S des Hafens. Hafenplan: Leitlinie 318,2°, Einfahrt 1,9 m; Becken 1,4–1,9 m, Jollehavn 0,9 m. Freistehender Wellenbrecher im E.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/bcde46f8-d46f-4562-b465-083972e84d98.html, Tekst 06-11-2025, abgerufen 2026-10-18",
+  "refuge": false,
+  "refugeLevel": null,
+  "plans": [
+   "BO_SNGBK.jpg"
+  ],
+  "distHeiligenhafen_sm": 148.9,
+  "distBreege_sm": 66.0,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-svaneke-havn",
+  "name": "Svaneke Havn",
+  "country": "DK",
+  "region": "Bornholm",
+  "type": "hafen",
+  "lat": 55.136,
+  "lon": 15.14548,
+  "prot": {
+   "N": "full",
+   "NE": "full",
+   "E": "full",
+   "SE": "part",
+   "S": "part",
+   "SW": "full",
+   "W": "full",
+   "NW": "full"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "SE"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 4.3,
+  "depthBerthMin_m": 1.4,
+  "depthBerthMax_m": 4.3,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "NE"
+     ],
+     "m": 1.0
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "S",
+      "SW"
+     ],
+     "m": 1.0
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 56 92 23 30",
+  "web": "https://www.brk.dk",
+  "note": "Bornholm-Torhafen: Tor zwischen Yder- und Inderhavn hält Dünung aus dem Innenhafen; weißes Festlicht unter dem Vorfeuer W der Yderhavn = Tor geschlossen. Verkehrssignal 3 rote Lichter/schwarzer Ball = Hafen wegen Wetter oder Platzmangel gesperrt. entranceOpen aus Küstenlage (E-Seite) abgeleitet; Einfahrtsrichtung im Lods nicht genannt, prot daher null. Vorhafen nur für Kleinboote. Hafenplan: Einfahrt/Yderhavn 4,3 m, Inderhavn 3,4 m (Tor gegen Schwell), Forhavn für Kleinboote 1,4 m. Sperrsignal bei Wetter/Platzmangel. Grenzfall: Tor bei auflandigem Wind, Einfahrtsrichtung unklar.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/961bb30a-aca5-474b-afa1-021287e8fa1f.html, Tekst 13-07-2026, abgerufen 2026-10-18",
+  "refuge": false,
+  "refugeLevel": "grenzfall",
+  "plans": [
+   "BOTSVANK.jpg"
+  ],
+  "distHeiligenhafen_sm": 151.3,
+  "distBreege_sm": 69.4,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-teglkaas-baadehavn",
+  "name": "Teglkås Bådehavn",
+  "country": "DK",
+  "region": "Bornholm",
+  "type": "marina",
+  "lat": 55.22273,
+  "lon": 14.71147,
+  "prot": {
+   "N": "part",
+   "NE": "full",
+   "E": "full",
+   "SE": "full",
+   "S": "full",
+   "SW": "full",
+   "W": "full",
+   "NW": "part"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "N",
+   "NW"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 1.3,
+  "depthBerthMin_m": 1.6,
+  "depthBerthMax_m": 1.6,
+  "maxDraft_m": null,
+  "maxLoa_m": 15,
+  "maxBeam_m": 3,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "NE"
+     ],
+     "m": 0.5
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "W"
+     ],
+     "m": 0.5
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 20 33 78 48",
+  "web": null,
+  "note": "Privater Bootshafen. Laut Lods nur bei Tag und nicht bei auflandigem Sturm (entranceOpen aus Küstenlage W-Küste abgeleitet). Tiefen nur im Plan. Hafenplan: Vor der Einfahrt 1,3 m (0,5 m E davon), Becken 1,6 m. Nur bei Tag, nicht bei auflandigem Sturm.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/f8a639cc-1749-43bd-87fc-8bc84d10cba7.html, Tekst 06-11-2025, abgerufen 2026-10-18",
+  "refuge": false,
+  "refugeLevel": null,
+  "plans": [
+   "BO_TELKS.jpg"
+  ],
+  "distHeiligenhafen_sm": 138.7,
+  "distBreege_sm": 59.5,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-tejn-havn",
+  "name": "Tejn Havn",
+  "country": "DK",
+  "region": "Bornholm",
+  "type": "hafen",
+  "lat": 55.24917,
+  "lon": 14.8368,
+  "prot": {
+   "N": "part",
+   "NE": "full",
+   "E": "full",
+   "SE": "full",
+   "S": "full",
+   "SW": "full",
+   "W": "full",
+   "NW": "part"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "N",
+   "NW"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 1.4,
+  "depthBerthMin_m": 1.4,
+  "depthBerthMax_m": 2.4,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "N",
+      "E"
+     ],
+     "m": 0.5
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "W",
+      "SW"
+     ],
+     "m": 0.5
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 56 92 23 32",
+  "web": "https://www.brk.dk",
+  "note": "prot abgeleitet: Leitlinie 144,4° in den Vorhafen → Einfahrt nach NW. Viele Becken inkl. Sportboot-/Jollenhafen. Hafenmeister fungiert als Lotse. Ankern NE des Hafens. Hafenplan: Hauptrinne (144,4°) 3,9–4,9 m, Durchfahrt zur Lystbådehavn 1,4 m, Becken 2,4 m; Leitlinie zeigt direkt in die Lystbådehavn.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/aa6debb7-3e83-4fd3-a379-73230950ee24.html, Tekst 06-11-2025, abgerufen 2026-10-18",
+  "refuge": false,
+  "refugeLevel": null,
+  "plans": [
+   "BOTTEJNX.jpg"
+  ],
+  "distHeiligenhafen_sm": 143.3,
+  "distBreege_sm": 63.8,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-vang-havn",
+  "name": "Vang Havn",
+  "country": "DK",
+  "region": "Bornholm",
+  "type": "hafen",
+  "lat": 55.24883,
+  "lon": 14.73577,
+  "prot": {
+   "N": "part",
+   "NE": "full",
+   "E": "full",
+   "SE": "full",
+   "S": "full",
+   "SW": "full",
+   "W": "full",
+   "NW": "part"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "N",
+   "NW"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 2.6,
+  "depthBerthMin_m": 2.0,
+  "depthBerthMax_m": 2.9,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "NE"
+     ],
+     "m": 1.0
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "SW"
+     ],
+     "m": 0.6
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 56 96 93 56",
+  "web": null,
+  "note": "Privathafen; im Mittelbecken an der E-Kai mit Bug zur Kai, feste Heckanker. Wellenbrecher mit Schirm 3 m hoch. Größte Schiffe 20×6 m. Tiefen nur im Plan. Hafenplan: Ansteuerung 155°, Einfahrt 2,6 m, Yder-/Mellemhavn 2,9 m, Bådehavn 2 m. Wellenbrecher 3 m hoch (Text).",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/d089a2cc-5fc7-4fb4-8abb-b8e13a981575.html, Tekst 06-11-2025, abgerufen 2026-10-18",
+  "refuge": true,
+  "refugeLevel": "plan",
+  "plans": [
+   "BO_VANGX.jpg"
+  ],
+  "distHeiligenhafen_sm": 140.1,
+  "distBreege_sm": 61.1,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-vang-pier",
+  "name": "Vang Pier",
+  "country": "DK",
+  "region": "Bornholm",
+  "type": "hafen",
+  "lat": 55.24555,
+  "lon": 14.72902,
+  "prot": {
+   "N": "open",
+   "NE": "open",
+   "E": "full",
+   "SE": "full",
+   "S": "full",
+   "SW": "full",
+   "W": "full",
+   "NW": "open"
+  },
+  "protSource": "plan",
+  "entranceOpen": [
+   "NW",
+   "N",
+   "NE"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": null,
+  "depthBerthMin_m": 5.6,
+  "depthBerthMax_m": 7.4,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "N"
+     ],
+     "m": 1.0
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "W"
+     ],
+     "m": 0.5
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 56 92 23 28",
+  "web": null,
+  "note": "prot abgeleitet: freistehende Verladepier an der W-Küste, zum offenen Wasser hin ungeschützt. Anlauf nur mit Sondergenehmigung (Bornholms Regionskommune +45 56 92 23 56); Kai N-Seite 5,6 m, W-Seite 7,4 m. Hafenplan: Offene Pier ohne Einfahrt; N-Seite 5,6 m, W-Seite 7,4 m (deckt sich mit Text). Anlegen nur mit Genehmigung.",
+  "verified": {
+   "pos": true,
+   "prot": false,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/d8440b8c-bf45-459f-bf81-220d3b597f64.html, Tekst 06-11-2025, abgerufen 2026-10-18",
+  "refuge": false,
+  "refugeLevel": null,
+  "plans": [
+   "BOTVANGP.jpg"
+  ],
+  "distHeiligenhafen_sm": 139.8,
+  "distBreege_sm": 60.8,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-aarsdale-havn",
+  "name": "Årsdale Havn",
+  "country": "DK",
+  "region": "Bornholm",
+  "type": "hafen",
+  "lat": 55.10778,
+  "lon": 15.14557,
+  "prot": {
+   "N": "full",
+   "NE": "full",
+   "E": "full",
+   "SE": "full",
+   "S": "full",
+   "SW": "full",
+   "W": "full",
+   "NW": "full"
+  },
+  "protSource": "quelle+plan",
+  "entranceOpen": [
+   "N"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 2.1,
+  "depthBerthMin_m": 2.4,
+  "depthBerthMax_m": 2.9,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "NE"
+     ],
+     "m": 1.0
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "SW"
+     ],
+     "m": 1.0
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 23 45 76 91",
+  "web": null,
+  "note": "Laut Lods vollständig sicher und ruhig bei allen Winden. Bei auflandigem Wind kräftiger Strom in der Einfahrt (entranceOpen aus Küstenlage E-Seite abgeleitet). refuge=false nur wegen fehlender Tiefenangabe (nur Plan). Größte Schiffe ca. 12×4,4 m. Hafenplan: Leitlinie 248,5°, auf der Linie 2,1 m; Becken 2,4–2,9 m. Text: völlig sicher bei allen Winden, aber Strom in der Einfahrt bei auflandigem Wind.",
+  "verified": {
+   "pos": true,
+   "prot": true,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/f7e815a9-1ba6-4b37-8303-37fd0c864084.html, Tekst 06-11-2025, abgerufen 2026-10-18",
+  "refuge": false,
+  "refugeLevel": null,
+  "plans": [
+   "BO_ARDAL.jpg"
+  ],
+  "distHeiligenhafen_sm": 150.9,
+  "distBreege_sm": 68.6,
+  "zone": "kern"
+ },
+ {
+  "id": "dk-christiansoe-havn",
+  "name": "Christiansø Havn",
+  "country": "DK",
+  "region": "Christiansø",
+  "type": "hafen",
+  "lat": 55.32015,
+  "lon": 15.18588,
+  "prot": {
+   "N": "full",
+   "NE": "full",
+   "E": "full",
+   "SE": "part",
+   "S": "open",
+   "SW": "part",
+   "W": "full",
+   "NW": "full"
+  },
+  "protSource": "quelle+plan",
+  "entranceOpen": [
+   "N",
+   "S"
+  ],
+  "swellOpen": null,
+  "depthEntrance_m": 4.4,
+  "depthBerthMin_m": 1.1,
+  "depthBerthMax_m": 5.4,
+  "maxDraft_m": null,
+  "maxLoa_m": null,
+  "maxBeam_m": null,
+  "catFriendly": null,
+  "bridgeIds": [],
+  "surge": {
+   "high": [
+    {
+     "dirs": [
+      "E",
+      "N"
+     ],
+     "m": 0.6
+    }
+   ],
+   "low": [
+    {
+     "dirs": [
+      "S",
+      "SW",
+      "W"
+     ],
+     "m": 0.4
+    }
+   ]
+  },
+  "season": null,
+  "vhf": null,
+  "tel": "+45 40 45 20 14",
+  "web": "https://www.christiansoe.dk",
+  "note": "Laut Lods guter Nothafen für kleinere Schiffe, sicher bei allen Winden außer S-Sturm (SE/SW vorsichtshalber part, Lods nennt nur S); entranceOpen daraus abgeleitet. Sehr wenig Platz, lange Schiffe können nicht schwojen. Brücke zwischen Christiansø und Frederiksø öffnet (bis 3,9 m Tiefgang). Kai S-Hafen E-Seite bis 2,9 m Tiefgang; Yachten im Sommer an Bojen auf den W-Seiten. Starker N-/S-Strom im Hafen. Ab 20 BRT nur mit Genehmigung. Verkehrssignal 3 rote Lichter/schwarzer Ball = nicht anlaufen (Seegang in der Einfahrt oder Hafen voll). Bis Ende 12/2026 Molenarbeiten (DANASUND, Kanal 16). Hafenplan: Plan: S-Einfahrt mind. 4,4 m (Text 3,9 m), N-Einfahrt 6,8 m. Laut Text unsicher bei S-Sturm. Liegeplätze 1,1–2,9 m an den Kais, Brückenbereich 5,4 m. BSCD2000. Grenzfall: bei S-Sturm Seegang in der Einfahrt; Gastplätze wegen Sanierung eingeschränkt (Stand prüfen).",
+  "verified": {
+   "pos": true,
+   "prot": true,
+   "entrance": false,
+   "depth": true,
+   "vhf": false,
+   "tel": true,
+   "season": false,
+   "surge": true
+  },
+  "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/harbours/9e2fa413-7fa8-4529-b646-eddf85255091.html, Tekst 01-10-2026, abgerufen 2026-10-18",
+  "refuge": false,
+  "refugeLevel": "grenzfall",
+  "plans": [
+   "BOTCHRSO.jpg"
+  ],
+  "distHeiligenhafen_sm": 156.0,
+  "distBreege_sm": 76.1,
+  "zone": "kern"
+ }
+]
