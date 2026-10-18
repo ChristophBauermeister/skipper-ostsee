@@ -147,6 +147,10 @@ Liefert `{level: g|y|r|n, items:[{level,text}], reasons, unverified, refugeLabel
 
 Kein Hafen ist „immer grün“ (Lehre §9). Fehlt die Windrichtung → n „Windrichtung wählen“.
 
+**Rangfolge (Abnahme-Korrektur 19.10.2026):** r > n > y > g. Ein bekannter roter Grund wird nie durch „unbekannt“ verdeckt.
+
+**Ungeprüfte Brückenhöhe (Abnahme-Korrektur):** `bridgeCheck` liefert bei `verified.clearance !== true` nie g. Reicht die Höhe rechnerisch, aber die Reserve ist < 3,0 m → y „Höhe ungeprüft, Reserve nur X m – Seekarte/Bekanntmachung prüfen“; Reserve ≥ 3,0 m → y „Höhe ungeprüft“ nur als Info-Item. Gilt in Gate (§4.4/4) und Hafenstatus (§4.5/6).
+
 ### 4.6 Liste und Empfehlung
 - `rank`: alle Häfen nach Entfernung (Haversine) mit Kurs (rwK, Grad) und ETA (`dist / speed`).
 - `recommend`: `green` = nächster Hafen mit Level g **und** `refugeLevel ∈ {belegt, plan, abgeleitet}`; `belegt` = nächster g mit `refugeLevel==='belegt'`; `far` wenn kein green < 20 sm; dann `fallback` = nächster Zuflucht-Hafen mit Level y.
@@ -230,6 +234,10 @@ Profil im Test = Default (Tiefgang 1,95, Zuschlag 0,3, Mast 18,5, Abstand 1,0, L
 34. PDF A4; Seite 1 enthält „MAYDAY“, „NAVTEX“, „Bremen“, „124 124“ oder „124124“, „JRCC“.
 35. PDF: jeder Hafen genau einmal, Spalten vollständig, je Gruppe lat absteigend, kein Gruppenkopf als letzte Zeile einer Seite.
 36. Keine Zahl in UI-Texten, die nicht aus `CONST`/Daten kommt: Regeln-Screen-Schwellen == `CONST` (Test liest DOM und vergleicht).
+
+**Nachträge aus der Abnahme**
+37. Rangfolge: `de-rerik` Wind N, Default-Profil → Level r (maxDraft rot schlägt „Schutz unbekannt“). `de-rerik` Wind N mit Flachkiel → n.
+38. Ungeprüfte Brücke: Position 3 sm von `de-bro-fehmarnsund` (22 m, clearance ungeprüft), Mast 18,5 → Gate y mit „ungeprüft“ und „Reserve 2,5 m“; nie g. Synthetische Brücke 30 m `verified.clearance:true` → kein Gate (nur Info).
 
 ## 10. Abnahme (durch Opus, nicht Teil des Baus)
 Tests selbst laufen lassen, alle Screenshots und PDF-Seiten ansehen, Stichprobe 15 Häfen gegen Quelle (Lotse-URL/Plan), Flugmodus-Test auf Honor 200 + Huawei-Tablet durch Christoph.

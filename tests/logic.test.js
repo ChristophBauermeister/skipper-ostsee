@@ -84,14 +84,14 @@ const NOW = Date.UTC(2026, 6, 15, 9, 0); // 15.07.2026 11:00 MESZ: fixed clock, 
   }
   // 4
   {
-    const p = await posOf('de-heiligenhafen-marina');
+    const p = await posOf('de-barhoeft');
     const st = { ...base, pos: p, dir: 'W', windTrue: 5, gust: 8 };
     const n = await E({ ...st, sicht: 'nebel' }), g = await E({ ...st, gewitter: true }), c = await E(st);
     check('4  Nebel -> overall mind. gelb; Gewitter -> mind. gelb; Kontrolle grün', ['y', 'r'].includes(n.overall.level) && ['y', 'r'].includes(g.overall.level) && c.overall.level === 'g' && /Radar\/AIS/.test(n.general.text) && /Hafen vorher erreichen/.test(g.general.text), JSON.stringify([n.overall.level, g.overall.level, c.overall.level]));
   }
   // 5
   {
-    const p = await posOf('de-heiligenhafen-marina');
+    const p = await posOf('de-barhoeft');
     const r = {};
     for (const v of [0, -60, -100, 100, 150]) r[v] = await E({ ...base, pos: p, dir: 'W', windTrue: 5, gust: 8, pegel: v });
     const ok = r[0].pegel === null && r[-60].pegel && r[-60].pegel.level === 'i' && r[-60].info.some(i => i.id === 'pegel') && r[-60].overall.level === 'g'
@@ -187,8 +187,8 @@ const NOW = Date.UTC(2026, 6, 15, 9, 0); // 15.07.2026 11:00 MESZ: fixed clock, 
   {
     const w = await hs('dk-klintholm-havn', { ...base, dir: 'W', windTrue: 10, gust: 12 });
     const sw = await hs('dk-klintholm-havn', { ...base, dir: 'SW', windTrue: 10, gust: 12 });
-    const n = await hs('de-rerik', { ...base, dir: 'N', windTrue: 10, gust: 12 });
-    check('14 Windschutz: Klintholm W nicht rot (full); SW gelb (part); Rerik N -> n "Schutz unbekannt"', w.level !== 'r' && item(w, 'prot')?.level === 'g' && item(sw, 'prot')?.level === 'y' && sw.level !== 'g' && n.level === 'n' && has(n, /Schutz bei Wind aus N unbekannt/), JSON.stringify([w.level, sw.level, n.level, n.reasons]));
+    const n = await hs('de-rerik', { ...base, dir: 'N', windTrue: 10, gust: 12, boat: { draft: 1.62 } });
+    check('14 Windschutz: Klintholm W nicht rot (full); SW gelb (part); Rerik N (Flachkiel) -> Gesamtlevel n "Schutz unbekannt"', w.level !== 'r' && item(w, 'prot')?.level === 'g' && item(sw, 'prot')?.level === 'y' && sw.level !== 'g' && n.level === 'n' && has(n, /Schutz bei Wind aus N unbekannt/), JSON.stringify([w.level, sw.level, n.level, n.reasons]));
   }
   // 15
   {
@@ -212,20 +212,20 @@ const NOW = Date.UTC(2026, 6, 15, 9, 0); // 15.07.2026 11:00 MESZ: fixed clock, 
       const bad = [];
       ids.forEach(id => ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'].forEach(d => {
         const s = SKIPPER.harborStatus(SKIPPER.DATA.find(h => h.id === id), Object.assign({}, base, { dir: d, windTrue: 5, gust: 8 }));
-        if (s.level !== 'n' || !s.items.some(i => i.text === 'Tiefe unbekannt')) bad.push([id, d, s.level]);
+        if (s.level === 'g' || !s.items.some(i => i.text === 'Tiefe unbekannt') || (s.level !== 'n' && !s.items.some(i => !i.noLevel && i.level === 'r'))) bad.push([id, d, s.level]);
       }));
       return { n: ids.length, bad };
     }, base);
     const g = [];
     for (const d of DIRS) g.push((await hs('de-grossenbrode-kommunal', { ...base, dir: d, windTrue: 5, gust: 8 })).level);
-    check('17 Beide Tiefen unbekannt -> Level n, "Tiefe unbekannt", nie grün (alle 8 Richtungen, alle betroffenen Häfen)', r.n > 0 && r.bad.length === 0 && g.every(l => l === 'n'), JSON.stringify({ r, g }));
+    check('17 Beide Tiefen unbekannt -> Level n (oder r, wenn ein roter Grund bekannt ist), "Tiefe unbekannt", nie grün (alle 8 Richtungen, alle betroffenen Häfen)', r.n > 0 && r.bad.length === 0 && g.every(l => l === 'n'), JSON.stringify({ r, g }));
   }
   // 18
   {
     const st = { ...base, dir: 'SW', windTrue: 8, gust: 10 };
     const a = await hs('de-rerik', st);
     const b = await hs('de-rerik', { ...st, boat: { draft: 1.62 } });
-    check('18 maxDraft Rerik (1,8): Tiefgang 1,95 -> rot "max. Tiefgang"; Flachkiel 1,62 -> kein maxDraft-Grund', item(a, 'depth', 'r') && /max\. Tiefgang/.test(item(a, 'depth', 'r').text) && !has(b, /max\. Tiefgang/), JSON.stringify([a.reasons, b.reasons]));
+    check('18 maxDraft Rerik (1,8): Tiefgang 1,95 -> Gesamtlevel rot "max. Tiefgang"; Flachkiel 1,62 -> kein maxDraft-Grund', a.level === 'r' && item(a, 'depth', 'r') && /max\. Tiefgang/.test(item(a, 'depth', 'r').text) && !has(b, /max\. Tiefgang/), JSON.stringify([a.reasons, b.reasons]));
   }
   // 19
   {
@@ -289,6 +289,25 @@ const NOW = Date.UTC(2026, 6, 15, 9, 0); // 15.07.2026 11:00 MESZ: fixed clock, 
       return bad;
     }, base);
     check('24 Nie "immer grün": jeder Hafen bei Böen 40 in jeder Richtung nicht grün', r.length === 0, JSON.stringify(r.slice(0, 5)));
+  }
+
+  // 37 / 38 (Abnahme-Korrekturen)
+  {
+    const st = { ...base, dir: 'N', windTrue: 8, gust: 10 };
+    const a = await hs('de-rerik', st), b = await hs('de-rerik', { ...st, boat: { draft: 1.62 } });
+    const o = await ev((base) => { const bad = []; SKIPPER.DATA.forEach(h => ['N','NE','E','SE','S','SW','W','NW'].forEach(d => { const s = SKIPPER.harborStatus(h, Object.assign({}, base, { dir: d, windTrue: 8, gust: 10 })); if (s.items.some(i => !i.noLevel && i.level === 'r') && s.level !== 'r') bad.push([h.id, d, s.level]); })); return bad; }, base);
+    check('37 Rangfolge r > n > y > g: Rerik N Default -> r; mit Flachkiel -> n; nirgends verdeckt n ein rotes Item', a.level === 'r' && b.level === 'n' && o.length === 0, JSON.stringify([a.level, b.level, o.slice(0, 3)]));
+  }
+  {
+    const fs = await ev(() => SKIPPER.BRIDGES.find(b => b.id === 'de-bro-fehmarnsund'));
+    const p = { lat: fs.lat - 3 / 60, lon: fs.lon };
+    const a = await E({ ...base, pos: p, dir: 'W', windTrue: 8, gust: 10 });
+    const g = gate(a, 'bridge-de-bro-fehmarnsund');
+    const syn = await ev(() => {
+      const mk = (h, v) => Object.assign({}, SKIPPER.BRIDGES.find(b => b.id === 'dk-bro-storeb-ltsbroen-vestbroen'), { clearanceClosed_m: h, verified: { clearance: v } });
+      return { ok: SKIPPER.bridgeCheck(mk(30, true), undefined, 0), unv: SKIPPER.bridgeCheck(mk(30, false), undefined, 0), near: SKIPPER.bridgeCheck(mk(20, false), undefined, 0) };
+    });
+    check('38 Ungeprüfte Brücke: Fehmarnsund 22 m, Mast 18,5 -> Gate gelb "ungeprüft" + "Reserve 2,5 m"; 30 m geprüft -> g; 30 m ungeprüft -> nur Info, nie g', g?.level === 'y' && /ungeprüft/.test(g.text) && /Reserve (nur )?2,5 m/.test(g.text) && syn.ok.level === 'g' && syn.unv.level === 'i' && syn.near.level === 'y', JSON.stringify({ g, syn: [syn.ok.level, syn.unv.level, syn.near.level] }));
   }
 
   // ---------- Liste / Empfehlung / Rechnen ----------

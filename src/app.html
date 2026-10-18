@@ -688,6 +688,11 @@ function bridgeCheck(b,boat,pegel){
     else{
       var frei=closed-Math.max(0,p),res=frei-N.mastNeed;
       if(lt(frei,N.mastNeed))r={level:'r',text:'Mast '+fm(bt.mast)+' m passt nicht unter '+b.name+' ('+fm(closed)+' m '+ref+(p>0?', Pegel +'+Math.round(p*100)+' cm abgezogen':'')+'; nötig '+fm(N.mastNeed)+' m inkl. Abstand)'};
+      else if(!(b.verified&&b.verified.clearance===true)){
+        var rs=Math.round(res*100)/100;
+        if(rs<3)r={level:'y',text:'Höhe ungeprüft, Reserve nur '+fm(rs)+' m – Seekarte/Bekanntmachung prüfen ('+b.name+')',reserve:rs,unverified:true};
+        else r={level:'i',text:'Höhe ungeprüft ('+b.name+', Reserve '+fm(rs)+' m)',reserve:rs,unverified:true};
+      }
       else r={level:'g',text:'passt unter '+b.name+' (Reserve '+fm(res)+' m)',reserve:Math.round(res*100)/100};
     }
   }else{
@@ -732,7 +737,7 @@ function countryOf(pos){
    ===================================================================== */
 var RANK={g:1,y:2,r:3};
 function worst(a,b){return (RANK[b]||0)>(RANK[a]||0)?b:a;}
-var RANK2={g:1,y:2,r:3,n:4};   // for harbours: unknown ("n") outranks everything – never plan on unknown data
+var RANK2={g:1,y:2,n:3,r:4};   // harbours: r > n > y > g (a known red reason is never hidden by "unknown")
 
 /* BSH label for a water level (cm) taken from radio.json (DE water_level) */
 function pegelLabel(p){
@@ -1761,7 +1766,7 @@ function buildPrint(){
   p+='<section class="pp"><h1>Brücken</h1><div class="sub">Höhe geschlossen laut Datenbestand. Spalte „Mast '+fm(D.mast)+' m?“: Default-Profil (Mast '+fm(D.mast)+' m + Sicherheitsabstand '+fm(D.bridgeMargin)+' m), Pegel 0.</div>';
   p+='<table><colgroup><col style="width:38mm"><col style="width:7mm"><col style="width:11mm"><col style="width:20mm"><col style="width:68mm"><col style="width:16mm"><col style="width:34mm"></colgroup><thead><tr><th>Name</th><th>Land</th><th>Art</th><th>Höhe</th><th>Öffnung</th><th>VHF</th><th>Mast '+fm(D.mast)+' m?</th></tr></thead><tbody>';
   BRIDGES.slice().sort(function(a,b){return b.lat-a.lat;}).forEach(function(b){
-    var c=bridgeCheck(b,D,0),m=c.level==='g'?'✔ passt (Reserve '+fm(c.reserve)+' m)':c.level==='r'?'✖ passt nicht':c.level==='i'?'passt, Öffnung nötig?':'? '+(b.clearanceClosed_m==null?'Höhe unbekannt':'Öffnung nötig');
+    var c=bridgeCheck(b,D,0),m=c.unverified?'? ungeprüft (Reserve '+fm(c.reserve)+' m)':c.level==='g'?'✔ passt (Reserve '+fm(c.reserve)+' m)':c.level==='r'?'✖ passt nicht':c.level==='i'?'passt, Öffnung nötig?':'? '+(b.clearanceClosed_m==null?'Höhe unbekannt':'Öffnung nötig');
     p+='<tr><td><b>'+esc(b.name)+'</b></td><td>'+esc(b.country)+'</td><td>'+esc(b.kind)+'</td><td>'+(b.clearanceClosed_m!=null?fm(b.clearanceClosed_m)+' m':'?')+'<br>'+esc(b.clearanceRef||'')+'</td><td>'+esc(b.opening||'–')+(c.note?'<br><i><b>Hinweis:</b> '+esc(c.note)+'</i>':'')+'</td><td>'+esc(b.vhf||'?')+'</td><td>'+m+(c.note&&c.level!=='y'?'<br><span class="unv">Höhe/Einschränkung: siehe Hinweis</span>':'')+'</td></tr>';
   });
   p+='</tbody></table></section>';
