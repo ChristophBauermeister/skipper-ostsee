@@ -767,7 +767,7 @@ function bridgeCheck(b,boat,pegel){
       else r={level:'g',text:'passt unter '+b.name+' (Reserve '+fmr(res)+' m)',reserve:Math.round(res*100)/100};
     }
   }else{
-    var op='nur zu Öffnungszeiten: '+(b.opening||'Zeiten unbekannt')+' ('+b.name+')';
+    var op='nur zu Öffnungszeiten ('+b.name+')'+(b.opening?' – Zeiten und Kontakt siehe unten':' – Zeiten unbekannt');
     if(!N.bridgeOk&&closed!=null)r={level:'n',text:'Bootsdaten fehlen (Masthöhe/Sicherheitsabstand)',boatdata:true};
     else if(closed==null||!N.bridgeOk||lt(closed-Math.max(0,p),N.mastNeed))r={level:'y',text:op};
     else r={level:'i',text:op+' – Mast passt auch geschlossen'};

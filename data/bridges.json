@@ -904,14 +904,14 @@
    "clearanceClosed_m": 5.3,
    "clearanceRef": "MW",
    "clearanceOpen_m": null,
-   "opening": "16.03.-15.10.: 05:45, 07:45, 12:45 (15.05.-04.09.2026: 12:50), 17:45, 20:45; 23:45 nur Berufsschifffahrt nach Anmeldung. 16.10.-15.03.: 05:45, 08:45, 12:45, 17:45, 20:45 – laut BfS 147/24 im Winter nur Berufsschifffahrt mit Anmeldung. Je max. 15 min.",
+   "opening": "16.03.–15.10.: 05:45, 07:45, 12:45, 17:45, 20:45; 23:45 nur 01.06.–30.09. und nur Berufsschifffahrt (Anmeldung bis 20:30 am Vortag). 16.10.–15.03.: 05:45, 08:45, 12:45, 17:45; 20:45 nur Berufsschifffahrt (Anmeldung bis 17:30). Je max. 15 min (BfS 371/25, gültig bis 31.12.2026).",
    "vhf": null,
    "tel": "+49 3836 2324458 / +49 175 5773610",
    "note": "5,30 m bei MW nur SkipperGuide (2016); de-WP: Fahrbahn 5,48 m über NHN. Seit 07.04.2026 Baustelle neue Peenestrombrücke (42 m, frühestens 2028) östlich Tonne PN 58, Bauleitung UKW 09 'Wolgast Traffic'/16. Sept. 2026 defekt, BfS 276/26: seit 10.09.2026 wieder Regelzeiten.",
    "verified": {
     "pos": true,
     "clearance": false,
-    "opening": false,
+    "opening": true,
     "tel": true
    },
    "src": "de.wikipedia.org/wiki/Peenebrücke_Wolgast; ELWIS BfS 276/26 https://www.elwis.de/DE/dynamisch/Bfs/print:320808; ELWIS BfS 147/24 WSA Ostsee (23.04.2024-16.03.2025, abgelaufen) https://www.elwis.de/DE/dynamisch/Bfs/print:312145; YACHT 2026 https://www.yacht.de/reisen-chartern/deutschland/ostseekueste-was-sich-2026-um-ruegen-und-usedom-aendert/, abgerufen 2026-10-18 | WSA Ostsee BfS 371/25 vom 10.12.2025 (gültig bis 31.12.2026), https://linchart60.bsh.de/chartserver/supplementary_information/bridges_locks/Br%C3%BCcken_MVP.pdf, abgerufen 2026-10-19"
