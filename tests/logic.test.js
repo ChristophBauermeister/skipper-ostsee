@@ -445,6 +445,9 @@ const NOW = Date.UTC(2026, 6, 15, 9, 0); // 15.07.2026 11:00 MESZ: fixed clock, 
     const words = ['MAYDAY', 'NAVTEX', 'Bremen', 'JRCC'].filter(w => !p1.includes(w));
     const tel = /124 124|124124/.test(p1);
     check('34 PDF A4; Seite 1 enthält MAYDAY, NAVTEX, Bremen, 124 124/124124, JRCC', a4 && words.length === 0 && tel, JSON.stringify({ a4, words, tel }));
+    { const all = txt.join('\n'); const bp = txt.find(x => /Brücken/.test(x) && /Tel\./.test(x)) || '';
+      check('51 PDF-Brückenseite: Spalte "Tel." und "+49 3836 2324458"', /Tel\./.test(bp) && all.includes('+49 3836 2324458'), JSON.stringify({ hasCol: /Tel\./.test(bp), pages }));
+    }
 
     const dom = await ev(() => {
       const ids = [...document.querySelectorAll('#printdoc tbody.pl')].map(x => x.dataset.hid);
@@ -586,6 +589,26 @@ const NOW = Date.UTC(2026, 6, 15, 9, 0); // 15.07.2026 11:00 MESZ: fixed clock, 
     await page.click('nav button[data-scr="scr-lage"]');
     const shown = await page.evaluate(() => /rwK/.test(document.getElementById('result').textContent));
     check('47 Ziel über Suche, manuell und "Als Ziel": keine JS-Fehler, 0 externe Requests, Löschen geht', /Rønne/.test(viaSearch || '') && cleared === null && manual === 55.1 && !!viaBtn && shown && errors.length === nErr && external.length === nExt, JSON.stringify({ viaSearch, cleared, manual, viaBtn, shown, errors: errors.slice(nErr) }));
+  }
+  // ---- v1.6 bridge opening times and contact (spec §13) ----
+  {
+    await page.evaluate(() => { SKIPPER.state.target = null; });
+    const wg = await ev(() => SKIPPER.BRIDGES.find(b => b.id === 'de-bro-wolgast'));
+    await page.evaluate((b) => { Object.assign(SKIPPER.state, { pos: { lat: b.lat - 2 / 60, lon: b.lon, src: 'manual', t: Date.now() }, dir: 'W', windTrue: 8, gust: 10, seaDir: null, seaH: 0 }); SKIPPER.update(); }, wg);
+    await page.click('nav button[data-scr="scr-lage"]');
+    const w = await page.evaluate(() => { const el = document.querySelector('#result [data-bc="de-bro-wolgast"]'); return el ? { tels: [...el.querySelectorAll('a[href^="tel:+49"]')].map(a => a.getAttribute('href')), txt: el.textContent, inBanner: !!el.closest('.banner') } : null; });
+    check('48 Wolgast im Brücken-Banner: zwei tel:+49-Links (+4938362324458, +491755773610) und "05:45"', w && w.inBanner && w.tels.length === 2 && w.tels.includes('tel:+4938362324458') && w.tels.includes('tel:+491755773610') && /05:45/.test(w.txt), JSON.stringify(w));
+    const g = await ev(() => {
+      const h = SKIPPER.DATA.find(x => (x.bridgeIds || []).includes('dk-bro-guldborgbroen'));
+      const s = Object.assign({}, SKIPPER.state, { pos: { lat: h.lat, lon: h.lon } });
+      const it = SKIPPER.evaluate(s).list.find(x => x.h.id === h.id);
+      const d = document.createElement('div'); d.innerHTML = SKIPPER.harborCardHTML(it, SKIPPER.normalize(s));
+      const bd = d.querySelector('details.bdet');
+      return { id: h.id, tel: !!(bd && bd.querySelector('a[href="tel:+4554770017"]')), txt: bd ? bd.textContent : '' };
+    });
+    check('49 Hafenkarte mit Guldborgbroen: Brückendetails mit Tel.-Link +4554770017 und "UKW 16"', g.tel && /Tel\./.test(g.txt) && /UKW 16/.test(g.txt), JSON.stringify(g));
+    const l = await ev(() => { const b = SKIPPER.BRIDGES.find(x => x.id === 'de-bro-lindaunis'); const d = document.createElement('div'); d.innerHTML = SKIPPER.bridgeContactHTML(b); return d.textContent; });
+    check('50 Lindaunis: "Kontakt: nicht belegt"', /Kontakt: nicht belegt/.test(l), l);
   }
   await browser.close();
   const failed = results.filter(r => !r.ok);

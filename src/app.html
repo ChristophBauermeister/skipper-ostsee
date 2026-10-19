@@ -73,6 +73,8 @@ p,.note{font-size:1rem;line-height:1.5}
 .btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:56px;padding:12px 14px;border:2px solid var(--on);border-radius:12px;background:var(--btn);color:var(--ink);font-weight:800;font-size:1.05rem;cursor:pointer;text-align:center}
 .btn.prim{background:var(--on);color:var(--onink)}
 .btn.sm{min-height:48px;font-size:1rem}
+.bcontact{margin-top:6px;font-size:.95rem;line-height:1.45;word-break:break-word}
+.banner .bcontact a{color:inherit;text-decoration:underline;font-weight:800}
 #tsearch{width:100%;min-height:52px;font-size:1.05rem;padding:8px 12px;border:2px solid var(--on);border-radius:10px;background:var(--btn);color:var(--ink)}
 #tsug .btn{width:100%}
 details{margin-top:10px;background:var(--card);border:1.5px solid var(--line);border-radius:12px}
@@ -892,9 +894,9 @@ function gates(s,pos,T){
     var c=bridgeCheck(b,s.boat,s.pegel),id='bridge-'+b.id,dd=' (≈ '+nm1(d)+' sm)';
     var txt=c.text+dd+(c.note?' · Hinweis aus den Daten: '+c.note:'');
     // bridges never colour the overall light; they get their own block
-    if(c.level==='r'||c.level==='y')bridges.push({id:id,level:c.level,title:c.level==='r'?'MAST PASST NICHT':'PRÜFEN',text:txt});
-    else if(c.level==='n')bridges.push({id:id,level:'y',title:'BOOTSDATEN FEHLEN',text:txt});
-    else bridges.push({id:id,level:c.level==='g'?'g':'i',title:b.name,text:txt});
+    if(c.level==='r'||c.level==='y')bridges.push({id:id,bid:b.id,level:c.level,title:c.level==='r'?'MAST PASST NICHT':'PRÜFEN',text:txt});
+    else if(c.level==='n')bridges.push({id:id,bid:b.id,level:'y',title:'BOOTSDATEN FEHLEN',text:txt});
+    else bridges.push({id:id,bid:b.id,level:c.level==='g'?'g':'i',title:b.name,text:txt});
   });
   // 5 hazards near (centre point only) + region-matched hazards without geometry
   var nh=nearestOf(pos,DATA).item,toks=tokensOfRegion(nh.region),shown=0;
@@ -1143,7 +1145,7 @@ function targetInfo(s){
     if(d>K.bridgeLineNm)return;
     var c=bridgeCheck(b,s.boat,s.pegel);
     if(c.level==='g')return;
-    o.bridges.push({id:'line-'+b.id,level:c.level==='n'?'y':c.level,title:b.name,text:b.name+' liegt ≈ '+nm1(d)+' sm neben der Luftlinie – prüfen, ob die Route darunter führt. '+c.text,dist:d,check:c.text});
+    o.bridges.push({id:'line-'+b.id,bid:b.id,level:c.level==='n'?'y':c.level,title:b.name,text:b.name+' liegt ≈ '+nm1(d)+' sm neben der Luftlinie – prüfen, ob die Route darunter führt. '+c.text,dist:d,check:c.text});
   });
   // red first, then nearest to the line
   o.bridges.sort(function(a,b){return ((RANK[b.level]||0)-(RANK[a.level]||0))||(a.dist-b.dist);});
@@ -1355,6 +1357,22 @@ function seasonText(h){
 function bridgeText(h){
   return (h.bridgeIds||[]).map(function(id){var b=BR_BY_ID[id];if(!b)return '';return b.name+(b.clearanceClosed_m!=null?' ('+fm(b.clearanceClosed_m)+' m)':' (Höhe unbekannt)');}).filter(Boolean).join(', ');
 }
+/* bridge opening times and contact (spec section 13); every phone number becomes its own tel: link */
+function bridgeContactHTML(b){
+  var movable=b.kind!=='fest',parts=[];
+  if(movable&&b.opening)parts.push('Öffnung: '+esc(b.opening));
+  if(b.vhf)parts.push('UKW '+esc(b.vhf));
+  if(b.tel)parts.push('Tel. '+linkTel(b.tel)+((b.verified&&b.verified.tel===false)?' <span class="badge unv">ungeprüft</span>':''));
+  if(movable&&!b.tel&&!b.vhf)parts.push('Kontakt: nicht belegt');
+  if(!parts.length)return '';
+  return '<div class="bcontact" data-bc="'+esc(b.id)+'">'+parts.join(' · ')+'</div>';
+}
+function bridgeDetailsHTML(h){
+  var l=(h.bridgeIds||[]).map(function(id){return BR_BY_ID[id];}).filter(Boolean);
+  if(!l.length)return '';
+  return '<details class="bdet"><summary>Brückendetails</summary><div class="in small">'+l.map(function(b){
+    return '<p><b>'+esc(b.name)+'</b> · '+(b.clearanceClosed_m!=null?fm(b.clearanceClosed_m)+' m':'Höhe unbekannt')+(b.kind!=='fest'?' · '+esc(b.kind):'')+bridgeContactHTML(b)+'</p>';}).join('')+'</div></details>';
+}
 function harborCard(it,s,opts){
   var h=it.h,st=it.status,lv=st.level;
   var head='<div><div class="hname">'+esc(h.name)+' <span class="fl">'+esc(h.country)+'</span><span class="badge'+(h.type==='nothafen'?' dark':'')+'">'+TYPE_LABEL[h.type]+'</span></div>';
@@ -1370,7 +1388,7 @@ function harborCard(it,s,opts){
   var br=bridgeText(h);
   var body='<div class="hwide"><div class="sectors">'+sectorText(h)+((h.swellOpen&&h.swellOpen.length)?' · <span style="color:var(--swell)"><b>≈ Schwell/See offen:</b></span> '+h.swellOpen.join(' '):'')+((h.entranceOpen&&h.entranceOpen.length)?' · <b>Ansteuerung offen:</b> '+h.entranceOpen.join(' '):'')+'</div>';
   body+='<div class="hmeta" style="margin-top:4px">Tiefe '+esc(depthText(h))+' · '+esc(seasonText(h))+'</div>';
-  if(br)body+='<div class="hmeta" style="margin-top:4px">Brücken: '+esc(br)+'</div>';
+  if(br)body+='<div class="hmeta" style="margin-top:4px">Brücken: '+esc(br)+'</div>'+bridgeDetailsHTML(h);
   body+='<div class="hmeta" style="margin-top:4px">'+esc(vhf)+' · '+tel+(ref.length?' · '+esc(ref.join(' · ')):'')+'</div>';
   body+='<div style="margin-top:5px">'+verBadges(h)+'</div>';
   if(!(opts&&opts.noTarget))body+='<button class="btn sm" data-target="'+esc(h.id)+'" style="margin-top:8px">'+(s.target&&s.target.id===h.id?'✔ Ziel (löschen)':'Als Ziel')+'</button>';
@@ -1410,6 +1428,8 @@ function renderChip(res){
 
 /* ---- Lage: result ---- */
 function banner(level,title,text){return '<div class="banner b-'+level+'"><div class="bt"><span class="sym">'+SYM[level]+'</span>'+esc(title)+'</div><div class="bd">'+esc(text)+'</div></div>';}
+function bannerH(level,title,text,html){return '<div class="banner b-'+level+'"><div class="bt"><span class="sym">'+SYM[level]+'</span>'+esc(title)+'</div><div class="bd">'+esc(text)+(html||'')+'</div></div>';}
+function contactOf(bid){var b=BR_BY_ID[bid];return b?bridgeContactHTML(b):'';}
 function infoBox(i){return '<details class="infobox"><summary>ℹ '+esc(i.title)+'</summary><div class="in">'+esc(i.text)+'</div></details>';}
 function p3(x){x=Math.round(x)%360;return (x<100?'0':'')+(x<10?'0':'')+x;}
 function renderTarget(res){
@@ -1429,7 +1449,7 @@ function renderTarget(res){
   if(T.item)h+=harborCard(T.item,s,{noTarget:true});
   if(T.bridges.length){
     var worstB=T.bridges.reduce(function(a,b){return worst(a,b.level);},'g');
-    var rows=T.bridges.map(function(b){return '<li data-bridge="'+esc(b.id)+'">'+(SYM[b.level]||'')+' <b>'+esc(b.title)+'</b> · ≈ '+nm1(b.dist)+' sm neben der Linie – '+esc(b.check)+'</li>';}).join('');
+    var rows=T.bridges.map(function(b){return '<li data-bridge="'+esc(b.id)+'">'+(SYM[b.level]||'')+' <b>'+esc(b.title)+'</b> · ≈ '+nm1(b.dist)+' sm neben der Linie – '+esc(b.check)+contactOf(b.bid)+'</li>';}).join('');
     var bl=worstB==='g'?'y':worstB;
     h+='<div class="banner b-'+bl+'" id="linebridges"><div class="bt"><span class="sym">'+SYM[bl]+'</span>'+esc('Brücken bis '+nm1(CONST.target.bridgeLineNm)+' sm neben der Luftlinie ('+T.bridges.length+')')+'</div><div class="bd">Nur Hinweis – prüfen, ob die Route darunter führt.<ul class="bridgelist" style="margin:6px 0 0 18px;padding:0">'+rows+'</ul></div></div>';
   }
@@ -1447,8 +1467,8 @@ function renderResult(res){
   if(res.bridges&&res.bridges.length){
     h+='<h2>Brücken in der Nähe</h2>';
     res.bridges.forEach(function(b){
-      if(b.level==='r'||b.level==='y')h+=banner(b.level,'Brücke: '+b.title,b.text);
-      else h+=infoBox({title:'Brücke: '+b.title,text:b.text});
+      if(b.level==='r'||b.level==='y')h+=bannerH(b.level,'Brücke: '+b.title,b.text,contactOf(b.bid));
+      else h+='<details class="infobox"><summary>ℹ Brücke: '+esc(b.title)+'</summary><div class="in">'+esc(b.text)+contactOf(b.bid)+'</div></details>';
     });
   }
   if(res.reff){
@@ -1714,8 +1734,7 @@ function renderRegeln(){
   $('rg-bridges').innerHTML=bt+'</table><div class="note small">Ampel gegen Masthöhe + Sicherheitsabstand '+FAUST+' und aktuellen Pegel. Höhe laut Datenbestand, Bezug siehe Quelle.</div>';
   var op=BRIDGES.filter(function(b){return b.kind==='klapp'||b.kind==='dreh'||b.kind==='schiebe';}),ot='';
   op.forEach(function(b){
-    ot+='<details><summary>'+esc(b.name)+' · '+esc(b.kind)+(b.clearanceClosed_m!=null?' · '+fm(b.clearanceClosed_m)+' m':'')+'</summary><div class="in small"><p>Öffnung: '+esc(b.opening||'unbekannt')+'</p>'
-      +(b.vhf||b.tel?'<p>'+(b.vhf?'VHF '+esc(b.vhf)+' ':'')+(b.tel?linkTel(b.tel):'')+'</p>':'')+(b.note?'<p class="hmeta">'+esc(b.note)+'</p>':'')+'</div></details>';
+    ot+='<details><summary>'+esc(b.name)+' · '+esc(b.kind)+(b.clearanceClosed_m!=null?' · '+fm(b.clearanceClosed_m)+' m':'')+'</summary><div class="in small">'+bridgeContactHTML(b)+(b.note?'<p class="hmeta">'+esc(b.note)+'</p>':'')+'</div></details>';
   });
   $('rg-opening').innerHTML=ot;
   // national park & protected area rules
@@ -1900,10 +1919,10 @@ function buildPrint(){
 
   // bridges
   p+='<section class="pp"><h1>Brücken</h1><div class="sub">Höhe geschlossen laut Datenbestand. Spalte „Mast '+fmr(D.mast)+' m?“: Default-Profil (Mast '+fmr(D.mast)+' m + Sicherheitsabstand '+fm(D.bridgeMargin)+' m), Pegel 0.</div>';
-  p+='<table><colgroup><col style="width:38mm"><col style="width:7mm"><col style="width:11mm"><col style="width:20mm"><col style="width:68mm"><col style="width:16mm"><col style="width:34mm"></colgroup><thead><tr><th>Name</th><th>Land</th><th>Art</th><th>Höhe</th><th>Öffnung</th><th>VHF</th><th>Mast '+fmr(D.mast)+' m?</th></tr></thead><tbody>';
+  p+='<table><colgroup><col style="width:30mm"><col style="width:7mm"><col style="width:10mm"><col style="width:17mm"><col style="width:58mm"><col style="width:9mm"><col style="width:29mm"><col style="width:34mm"></colgroup><thead><tr><th>Name</th><th>Land</th><th>Art</th><th>Höhe</th><th>Öffnung</th><th>VHF</th><th>Tel.</th><th>Mast '+fmr(D.mast)+' m?</th></tr></thead><tbody>';
   BRIDGES.slice().sort(function(a,b){return b.lat-a.lat;}).forEach(function(b){
     var c=bridgeCheck(b,D,0),m=c.unverified?'? ungeprüft (Reserve '+fmr(c.reserve)+' m)':c.level==='g'?'✔ passt (Reserve '+fmr(c.reserve)+' m)':c.level==='r'?'✖ passt nicht':c.level==='i'?'passt, Öffnung nötig?':'? '+(b.clearanceClosed_m==null?'Höhe unbekannt':'Öffnung nötig');
-    p+='<tr><td><b>'+esc(b.name)+'</b></td><td>'+esc(b.country)+'</td><td>'+esc(b.kind)+'</td><td>'+(b.clearanceClosed_m!=null?fm(b.clearanceClosed_m)+' m':'?')+'<br>'+esc(b.clearanceRef||'')+'</td><td>'+esc(b.opening||'–')+(c.note?'<br><i><b>Hinweis:</b> '+esc(c.note)+'</i>':'')+'</td><td>'+esc(b.vhf||'?')+'</td><td>'+m+(c.note&&c.level!=='y'?'<br><span class="unv">Höhe/Einschränkung: siehe Hinweis</span>':'')+'</td></tr>';
+    p+='<tr><td><b>'+esc(b.name)+'</b></td><td>'+esc(b.country)+'</td><td>'+esc(b.kind)+'</td><td>'+(b.clearanceClosed_m!=null?fm(b.clearanceClosed_m)+' m':'?')+'<br>'+esc(b.clearanceRef||'')+'</td><td>'+esc(b.opening||'–')+(c.note?'<br><i><b>Hinweis:</b> '+esc(c.note)+'</i>':'')+'</td><td>'+esc(b.vhf||'?')+'</td><td>'+(b.tel?esc(b.tel)+(b.verified&&b.verified.tel===false?' (ungeprüft)':''):(b.kind==='fest'?'–':'nicht belegt'))+'</td><td>'+m+(c.note&&c.level!=='y'?'<br><span class="unv">Höhe/Einschränkung: siehe Hinweis</span>':'')+'</td></tr>';
   });
   p+='</tbody></table></section>';
 
@@ -2046,7 +2065,7 @@ function init(){
   registerSW();
 }
 
-window.SKIPPER={harborCardHTML:function(it,s){return harborCard(it,s,{});},DATA:DATA,BRIDGES:BRIDGES,HAZARDS:HAZARDS,RADIO:RADIO,SEAAREAS:SEAAREAS,BOATS:BOATS,CONST:CONST,DIRS:DIRS,DEFAULT_BOAT:DEFAULT_BOAT,PROFILES:PROFILES,REGIONS:REGIONS,
+window.SKIPPER={bridgeContactHTML:bridgeContactHTML,harborCardHTML:function(it,s){return harborCard(it,s,{});},DATA:DATA,BRIDGES:BRIDGES,HAZARDS:HAZARDS,RADIO:RADIO,SEAAREAS:SEAAREAS,BOATS:BOATS,CONST:CONST,DIRS:DIRS,DEFAULT_BOAT:DEFAULT_BOAT,PROFILES:PROFILES,REGIONS:REGIONS,
   state:S,update:update,normalize:normalize,evaluate:evaluate,harborStatus:harborStatus,rank:rank,recommend:recommend,reffLevel:reffLevel,reffStufe:reffStufe,
   apparentWind:apparentWind,generalLevel:generalLevel,pegelLevel:pegelLevel,haversineNm:haversineNm,bearingDeg:bearingDeg,formatDM:formatDM,formatPos:formatPos,parseDM:parseDM,
   isOutOfArea:isOutOfArea,euOffset:euOffset,utcToLocal:utcToLocal,sunTimes:sunTimes,seaAreaOf:seaAreaOf,countryOf:countryOf,boatNeeds:boatNeeds,bridgeCheck:bridgeCheck,

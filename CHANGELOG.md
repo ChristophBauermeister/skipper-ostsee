@@ -36,3 +36,13 @@ Erstausgabe der Ostsee-App nach SPEC_v1.md, aufbauend auf Skipper-Assistent Sard
 - Kurs zum Wind automatisch aus Ziel; manuelle Eingabe gilt, mit Hinweis bei Abweichung und Button "Automatik".
 - Zielhafen als Hafenkarte (Sonnenuntergang mit Ziel-ETA); Brücken nahe der Luftlinie nur als Hinweis, ohne Einfluss auf die Gesamtampel.
 - Tests 40–47; Screenshots 11 und 12; Service-Worker-Cache `skipper-ostsee-v1.4-20261019`.
+
+## v1.5 (19.10.2026) Änderungen der Koordination
+- Brückenkorridor 7 sm neben der Luftlinie als nach Ampel und Abstand sortierte Liste im Ziel-Block.
+- Fix: `seasonText` stürzt bei unvollständigen Saisondaten nicht mehr ab.
+- Tests 45b/45c; `SKIPPER.harborCardHTML`; `bridges.json` mit neuen `tel`/`opening`-Werten.
+
+## v1.6 (19.10.2026) Brücken: Öffnungszeiten und Kontakt (SPEC §13)
+- `bridgeContactHTML`: Öffnung, UKW und Tel.; jede Nummer ein eigener `tel:`-Link, Zusatztext bleibt sichtbar; "Kontakt: nicht belegt" bei beweglichen Brücken ohne Tel und UKW; Badge "ungeprüft" bei `verified.tel===false`.
+- Angezeigt im Banner "Brücken in der Nähe", in der Liste neben der Luftlinie, auf der Hafenkarte (einklappbar "Brückendetails"), in der Klappbrücken-Liste der Regeln und im PDF (neue Spalte "Tel.").
+- Tests 48–51; Screenshot 13; SW-Cache `skipper-ostsee-v1.6-20261019`.

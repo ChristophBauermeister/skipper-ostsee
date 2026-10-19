@@ -65,6 +65,15 @@ const { chromium } = require('playwright');
   await page.click('#zlist [data-target]');
   await page.evaluate(() => window.scrollTo(0, 0));
   await shot('12-zuflucht-als-ziel', false);
+  // v1.6: bridge banner with opening times and contact (Wolgast)
+  await page.evaluate(() => { SKIPPER.state.target = null; });
+  const wg = await page.evaluate(() => SKIPPER.BRIDGES.find(b => b.id === 'de-bro-wolgast'));
+  await set({ pos: { lat: wg.lat - 2 / 60, lon: wg.lon, src: 'manual', t: Date.now() }, dir: 'W', windTrue: 8, gust: 10, seaDir: null, seaH: 0 });
+  await go('scr-lage');
+  const yb = await page.evaluate(() => { const h = [...document.querySelectorAll('#scr-lage h2')].find(x => /Brücken in der Nähe/.test(x.textContent)); return Math.max(0, h.getBoundingClientRect().top + window.scrollY - 8); });
+  await page.addStyleTag({ content: 'nav{position:static !important}' });
+  await page.screenshot({ path: path.join(out, '13-lage-bruecke-wolgast-kontakt.png'), fullPage: true, clip: { x: 0, y: yb, width: 390, height: 900 } });
+  await page.addStyleTag({ content: 'nav{position:fixed !important}' });
   const w = await page.evaluate(() => ({ sw: document.documentElement.scrollWidth, cw: document.documentElement.clientWidth }));
   await browser.close();
   console.log('errors:', JSON.stringify(errs), 'scrollWidth/clientWidth:', JSON.stringify(w));
