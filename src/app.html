@@ -505,7 +505,7 @@ var DEFAULT_BOAT={profile:'',name:'',call:'',mmsi:'',type:'mono',loa:10.50,beam:
 function buildProfiles(){
   // owner-confirmed boat first = default; mast/draft are owner statements (19.10.2026)
   var out=[{id:'owner-dehler35-cws',label:'Dehler 35 CWS (BJ 1994, Flachkiel)',type:'mono',loa:10.50,beam:3.30,draft:1.55,mast:19.0,margin:0.3,bridgeMargin:1.0,
-    note:'Länge/Breite: sailboatdata (CWS). Tiefgang und Masthöhe: Angabe Eigner 19.10.2026.',mastOwner:true}];
+    note:'Länge/Breite: sailboatdata (CWS). Tiefgang und Masthöhe (19,0 m inkl. Antenne und Windex): Angabe Eigner 19.10.2026.',mastOwner:true}];
   (BOATS.variants||[]).forEach(function(v){
     if(!v.loa_m||!v.keels||!v.keels.length)return;
     var base=String(v.name).replace(/\s*\(.*$/,''),yr=String(v.years||'').replace(/\s*\(.*$/,'').trim();

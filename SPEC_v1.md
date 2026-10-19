@@ -49,7 +49,7 @@ Die Struktur der Untereinträge in `radio.json`/`hazards.json` ist uneinheitlich
 
 | Feld | Default | Wirkung |
 |---|---|---|
-| Profil | „Dehler 35 CWS (BJ 1994, Flachkiel)“ (vom Eigner bestätigt) | Erstes Profil der Auswahl; Quelle im Boot-Tab: Länge/Breite sailboatdata (CWS), Tiefgang und Masthöhe „Angabe Eigner 19.10.2026“ |
+| Profil | „Dehler 35 CWS (BJ 1994, Flachkiel)“ (vom Eigner bestätigt) | Erstes Profil der Auswahl; Quelle im Boot-Tab: Länge/Breite sailboatdata (CWS), Tiefgang und Masthöhe (inkl. Antenne und Windex) „Angabe Eigner 19.10.2026“ |
 | Name / Rufzeichen / MMSI | leer | MAYDAY-Text |
 | Typ | Einrumpf | Katamaran: Hinweis „Kat: Boxen oft zu schmal – längsseits/Stirnseite“, `catFriendly===false` → gelb |
 | Länge (m) | 10,50 | `maxLoa_m` |
