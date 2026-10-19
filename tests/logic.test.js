@@ -548,6 +548,23 @@ const NOW = Date.UTC(2026, 6, 15, 9, 0); // 15.07.2026 11:00 MESZ: fixed clock, 
     const fs = a.T.bridges.find(x => /Fehmarnsund/.test(x.title));
     check('45 Heiligenhafen->Burgtiefe: Hinweis Fehmarnsundbrücke (gelb, ungeprüft); Gesamtampel unberührt', fs && fs.level === 'y' && /ungeprüft/.test(fs.text) && a.overall === b.overall, JSON.stringify([a.T.bridges.map(x => [x.title, x.level]), a.overall, b.overall]));
   }
+  // 45b corridor 7 nm
+  {
+    const hp = await posOf('de-heiligenhafen-marina');
+    const a = await run({ ...base, boat: undefined, pos: hp, target: { id: 'dk-kerteminde-havn-marina' }, dir: 'W', windTrue: 5, gust: 8 });
+    const sb = a.T.bridges.find(x => /Vestbro/.test(x.title));
+    const all = a.T.bridges.every(x => x.dist <= 7.0001);
+    const sorted = a.T.bridges.every((x, i, arr) => i === 0 || ({ r: 3, y: 2, g: 1 }[arr[i - 1].level] || 0) >= ({ r: 3, y: 2, g: 1 }[x.level] || 0));
+    const corr = await ev(() => SKIPPER.CONST.target.bridgeLineNm);
+    check('45b Korridor 7 sm: Heiligenhafen->Kerteminde zeigt Storebælt-Vestbro (≈6,4 sm) rot; alle ≤ 7 sm; rot zuerst', corr === 7 && sb && sb.level === 'r' && Math.abs(sb.dist - 6.4) < 0.3 && all && sorted, JSON.stringify(a.T.bridges.map(x => [x.title, x.level, x.dist])));
+  }
+  // 45c every harbour card renders (regression: season with missing close date crashed the list)
+  {
+    const r = await ev(() => { const bad = []; const st = SKIPPER.normalize({ dir: 'W', windTrue: 10, gust: 12 });
+      SKIPPER.DATA.forEach(h => { try { const html = SKIPPER.harborCardHTML({ h, status: SKIPPER.harborStatus(h, st), dist: 1, brg: 0, eta: 0.2 }, st); if (typeof html !== 'string' || html.length < 50) bad.push(h.id); } catch (e) { bad.push(h.id + ':' + e.message); } });
+      return bad; });
+    check('45c Jede Hafenkarte rendert ohne Fehler (430), inkl. Saison mit fehlendem Enddatum', r.length === 0, JSON.stringify(r.slice(0, 10)));
+  }
   // 46
   {
     const kp = await posOf('dk-klintholm-havn');

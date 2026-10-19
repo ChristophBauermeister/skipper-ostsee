@@ -528,7 +528,7 @@ var CONST={
       box:{latMin:56.35,latMax:56.85,lonMin:11.0,lonMax:11.95}}
   },
   /* keys whose thresholds are Faustregeln (no official source) */
-  target:{kreuzenTwa:45,amWindTwa:75,halbTwa:111,raumTwa:151,kreuzFactor:1.41,bridgeLineNm:1},
+  target:{kreuzenTwa:45,amWindTwa:75,halbTwa:111,raumTwa:151,kreuzFactor:1.41,bridgeLineNm:7},
   faustregel:['target','sea','harborSea','harborGust','entrance','crossing','offsets','season','bridgeMargin','reff','traffic']
 };
 var DEFAULT_BOAT={profile:'',name:'',call:'',mmsi:'',type:'mono',loa:10.50,beam:3.30,draft:1.55,mast:19.0,margin:0.3,bridgeMargin:1.0};
@@ -1149,8 +1149,10 @@ function targetInfo(s){
     if(d>K.bridgeLineNm)return;
     var c=bridgeCheck(b,s.boat,s.pegel);
     if(c.level==='g')return;
-    o.bridges.push({id:'line-'+b.id,level:c.level==='n'?'y':c.level,title:b.name,text:b.name+' liegt nahe der Luftlinie (≈ '+nm1(d)+' sm) – prüfen, ob die Route darunter führt. '+c.text,dist:d});
+    o.bridges.push({id:'line-'+b.id,level:c.level==='n'?'y':c.level,title:b.name,text:b.name+' liegt ≈ '+nm1(d)+' sm neben der Luftlinie – prüfen, ob die Route darunter führt. '+c.text,dist:d,check:c.text});
   });
+  // red first, then nearest to the line
+  o.bridges.sort(function(a,b){return ((RANK[b.level]||0)-(RANK[a.level]||0))||(a.dist-b.dist);});
   return o;
 }
 
@@ -1353,7 +1355,7 @@ function depthText(h){
 function seasonText(h){
   if(!h.season)return 'Saison: unbekannt';
   if(typeof h.season==='string')return 'Saison: '+h.season;
-  function dm(x){return x.slice(3)+'.'+x.slice(0,2)+'.';}
+  function dm(x){return (typeof x==='string'&&x.length===5)?x.slice(3)+'.'+x.slice(0,2)+'.':'?';}
   return 'Saison: '+dm(h.season.open)+'–'+dm(h.season.close);
 }
 function bridgeText(h){
@@ -1431,7 +1433,12 @@ function renderTarget(res){
   h+='<div style="margin-top:6px">Fahrzeit ≈ <b>'+fmtEta(T.eta)+'</b> bei '+nm1(s.speed)+' kn'+(T.kreuzen?' · Kreuzen: ca. 1,4-facher Weg (≈ '+nm1(T.effDist)+' sm, Faustregel)':'')+'</div>';
   h+='</div>';
   if(T.item)h+=harborCard(T.item,s,{noTarget:true});
-  T.bridges.forEach(function(b){h+=(b.level==='r'||b.level==='y')?banner(b.level,'Brücke nahe der Luftlinie',b.text):infoBox({title:'Brücke nahe der Luftlinie: '+b.title,text:b.text});});
+  if(T.bridges.length){
+    var worstB=T.bridges.reduce(function(a,b){return worst(a,b.level);},'g');
+    var rows=T.bridges.map(function(b){return '<li data-bridge="'+esc(b.id)+'">'+(SYM[b.level]||'')+' <b>'+esc(b.title)+'</b> · ≈ '+nm1(b.dist)+' sm neben der Linie – '+esc(b.check)+'</li>';}).join('');
+    var bl=worstB==='g'?'y':worstB;
+    h+='<div class="banner b-'+bl+'" id="linebridges"><div class="bt"><span class="sym">'+SYM[bl]+'</span>'+esc('Brücken bis '+nm1(CONST.target.bridgeLineNm)+' sm neben der Luftlinie ('+T.bridges.length+')')+'</div><div class="bd">Nur Hinweis – prüfen, ob die Route darunter führt.<ul class="bridgelist" style="margin:6px 0 0 18px;padding:0">'+rows+'</ul></div></div>';
+  }
   return h;
 }
 function renderResult(res){
@@ -2045,7 +2052,7 @@ function init(){
   registerSW();
 }
 
-window.SKIPPER={DATA:DATA,BRIDGES:BRIDGES,HAZARDS:HAZARDS,RADIO:RADIO,SEAAREAS:SEAAREAS,BOATS:BOATS,CONST:CONST,DIRS:DIRS,DEFAULT_BOAT:DEFAULT_BOAT,PROFILES:PROFILES,REGIONS:REGIONS,
+window.SKIPPER={harborCardHTML:function(it,s){return harborCard(it,s,{});},DATA:DATA,BRIDGES:BRIDGES,HAZARDS:HAZARDS,RADIO:RADIO,SEAAREAS:SEAAREAS,BOATS:BOATS,CONST:CONST,DIRS:DIRS,DEFAULT_BOAT:DEFAULT_BOAT,PROFILES:PROFILES,REGIONS:REGIONS,
   state:S,update:update,normalize:normalize,evaluate:evaluate,harborStatus:harborStatus,rank:rank,recommend:recommend,reffLevel:reffLevel,reffStufe:reffStufe,
   apparentWind:apparentWind,generalLevel:generalLevel,pegelLevel:pegelLevel,haversineNm:haversineNm,bearingDeg:bearingDeg,formatDM:formatDM,formatPos:formatPos,parseDM:parseDM,
   isOutOfArea:isOutOfArea,euOffset:euOffset,utcToLocal:utcToLocal,sunTimes:sunTimes,seaAreaOf:seaAreaOf,countryOf:countryOf,boatNeeds:boatNeeds,bridgeCheck:bridgeCheck,

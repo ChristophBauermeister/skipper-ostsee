@@ -263,7 +263,7 @@ Freileitung Wittower Fähre ohne Höhe; Fehmarnsund 22/23 m, Gerüststatus nach 
 - **Automatik:** Mit Ziel, Position und Windrichtung setzt die App `state.course` automatisch (Anzeige „automatisch aus Ziel“). Tippt der Skipper selbst einen Kurs, gilt der manuell (Anzeige „manuell“, Button „Automatik“). Zieländerung oder neue Windrichtung bei manuellem Kurs: Hinweis „Kurs passt evtl. nicht mehr“, aber nicht überschreiben.
 - ETA: `dist / speed`; bei Kreuzen `dist × 1,41 / speed` (Faustregel Wendewinkel 90°), Text „Kreuzen: ca. 1,4-facher Weg“.
 - Zielhafen (falls `id`): Hafenkarte des Ziels oben im Ergebnis mit `harborStatus`; Sonnenuntergangsprüfung mit dieser ETA.
-- **Brücke nahe der Linie** (nur Hinweis): feste Brücken/Freileitungen mit `bridgeCheck` ≠ g, deren Abstand zur Strecke Start–Ziel ≤ 1,0 sm ist → Info „<Brücke> liegt nahe der Luftlinie – prüfen, ob die Route darunter führt“ mit Level aus `bridgeCheck`. Fließt nicht in die Gesamtampel.
+- **Brücke nahe der Linie** (nur Hinweis): feste Brücken/Freileitungen mit `bridgeCheck` ≠ g, deren Abstand zur Strecke Start–Ziel ≤ 7,0 sm ist (v1.5, Wunsch Christoph; `CONST.target.bridgeLineNm`). Anzeige als ein Block, rot zuerst, dann nach Abstand, je Brücke Abstand zur Linie → Info „<Brücke> liegt nahe der Luftlinie – prüfen, ob die Route darunter führt“ mit Level aus `bridgeCheck`. Fließt nicht in die Gesamtampel.
 - **Überfahrt-Gates** (Bornholm/Anholt) zusätzlich aktiv, wenn Start ≤ 15 sm von einem Absprunghafen einer Seite und Ziel ≤ 15 sm von einem Absprunghafen der anderen Seite oder in der Box liegt.
 
 ### 12.3 Tests
