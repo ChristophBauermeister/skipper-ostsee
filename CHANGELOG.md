@@ -24,3 +24,8 @@ Erstausgabe der Ostsee-App nach SPEC_v1.md, aufbauend auf Skipper-Assistent Sard
 - Notfall-Tab: DSC-Distress/MAYDAY-CH-16-Block ganz oben; danach Nummern der Länder an der Position, 112, übrige Länder unter "Weitere Länder".
 - PDF-Hafentabellen: Spalte Brücke nur "<Name> <Höhe> m" bzw. "<Name> ?".
 - Tests 4/5 wieder mit Heiligenhafen als Grün-Kontrolle; Tests 10/11/12/38 auf `res.bridges`; Test 10 prüft zusätzlich overall g bei roter Brücke.
+
+## v1.3 (19.10.2026) Eigner-Boot als Default
+- Default-Profil: "Dehler 35 CWS (BJ 1994, Flachkiel)" 10,50 / 3,30 / Tiefgang 1,55 / Mast 19,0 m (Angabe Eigner 19.10.2026); Hinweis "Masthöhe geschätzt" entfällt dafür, Quellenzeile im Boot-Tab. 18,5 m nur noch in den Profilen "Dehler 35 (ab 2010)".
+- PDF-Brückenseite: Spalte "Mast 19,0 m?" aus dem Default-Profil. Reserve-Angaben mit mindestens einer Nachkommastelle.
+- Tests setzen das Boot explizit; neuer Test 39. SPEC_v1.md §3 angepasst.

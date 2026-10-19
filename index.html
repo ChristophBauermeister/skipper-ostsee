@@ -434,6 +434,7 @@ nav button .ic{font-size:1.2rem}
   </div>
   <label class="switch"><input type="checkbox" id="b-kids"><span>Kinder an Bord<small>Schwellen −3 kn</small></span></label>
   <div class="notice" id="bt-mast">Masthöhe am Boot messen (inkl. Antenne/Windex) – Default ist geschätzt.</div>
+  <div class="note" id="bt-src" style="display:none"></div>
   <div class="notice" id="bt-kat" style="display:none">Kat: Boxen oft zu schmal – längsseits/Stirnseite.</div>
   <div class="note" id="bt-msg"></div>
   <button class="btn prim" id="bt-confirm" style="margin-top:12px">Profil übernehmen</button>
@@ -505,10 +506,12 @@ var CONST={
   /* keys whose thresholds are Faustregeln (no official source) */
   faustregel:['sea','harborSea','harborGust','entrance','crossing','offsets','season','bridgeMargin','reff','traffic']
 };
-var DEFAULT_BOAT={profile:'',name:'',call:'',mmsi:'',type:'mono',loa:10.51,beam:3.49,draft:1.95,mast:CONST.defaultMast,margin:0.3,bridgeMargin:1.0};
+var DEFAULT_BOAT={profile:'',name:'',call:'',mmsi:'',type:'mono',loa:10.50,beam:3.30,draft:1.55,mast:19.0,margin:0.3,bridgeMargin:1.0};
 
 function buildProfiles(){
-  var out=[];
+  // owner-confirmed boat first = default; mast/draft are owner statements (19.10.2026)
+  var out=[{id:'owner-dehler35-cws',label:'Dehler 35 CWS (BJ 1994, Flachkiel)',type:'mono',loa:10.50,beam:3.30,draft:1.55,mast:19.0,margin:0.3,bridgeMargin:1.0,
+    note:'Länge/Breite: sailboatdata (CWS). Tiefgang und Masthöhe: Angabe Eigner 19.10.2026.',mastOwner:true}];
   (BOATS.variants||[]).forEach(function(v){
     if(!v.loa_m||!v.keels||!v.keels.length)return;
     var base=String(v.name).replace(/\s*\(.*$/,''),yr=String(v.years||'').replace(/\s*\(.*$/,'').trim();
@@ -530,6 +533,7 @@ function isNum(x){return typeof x==='number'&&isFinite(x);}
 function num(x){if(x===null||x===undefined||x==='')return null;var n=Number(String(x).replace(',','.'));return isFinite(n)?n:null;}
 function pad(n){return (n<10?'0':'')+n;}
 function fm(x){return String(Math.round(x*100)/100).replace('.',',');}        // metres, up to 2 decimals
+function fmr(x){var s=fm(x);return s.indexOf(',')<0?s+',0':s;}   // reserve: at least one decimal
 function f1(x){return (Math.round(x*10)/10).toFixed(1).replace('.',',');}
 function fsig(p){return (p>0?'+':p<0?'−':'')+Math.abs(p);}
 function lt(a,b){return a<b-1e-9;}
@@ -696,10 +700,10 @@ function bridgeCheck(b,boat,pegel){
       if(lt(frei,N.mastNeed))r={level:'r',text:'Mast '+fm(bt.mast)+' m passt nicht unter '+b.name+' ('+fm(closed)+' m '+ref+(p>0?', Pegel +'+Math.round(p*100)+' cm abgezogen':'')+'; nötig '+fm(N.mastNeed)+' m inkl. Abstand)'};
       else if(!(b.verified&&b.verified.clearance===true)){
         var rs=Math.round(res*100)/100;
-        if(rs<3)r={level:'y',text:'Höhe ungeprüft, Reserve nur '+fm(rs)+' m – Seekarte/Bekanntmachung prüfen ('+b.name+')',reserve:rs,unverified:true};
-        else r={level:'i',text:'Höhe ungeprüft ('+b.name+', Reserve '+fm(rs)+' m)',reserve:rs,unverified:true};
+        if(rs<3)r={level:'y',text:'Höhe ungeprüft, Reserve nur '+fmr(rs)+' m – Seekarte/Bekanntmachung prüfen ('+b.name+')',reserve:rs,unverified:true};
+        else r={level:'i',text:'Höhe ungeprüft ('+b.name+', Reserve '+fmr(rs)+' m)',reserve:rs,unverified:true};
       }
-      else r={level:'g',text:'passt unter '+b.name+' (Reserve '+fm(res)+' m)',reserve:Math.round(res*100)/100};
+      else r={level:'g',text:'passt unter '+b.name+' (Reserve '+fmr(res)+' m)',reserve:Math.round(res*100)/100};
     }
   }else{
     var op='nur zu Öffnungszeiten: '+(b.opening||'Zeiten unbekannt')+' ('+b.name+')';
@@ -1675,12 +1679,16 @@ function bootToUI(){
 }
 function renderBootNotes(){
   var N=boatNeeds(S.boat);
+  var cp=PROFILES.filter(function(x){return x.id===S.boat.profile;})[0];
+  var own=!!(cp&&cp.mastOwner&&S.boat.mast===cp.mast);
+  $('bt-mast').style.display=own?'none':'block';
+  $('bt-src').style.display=own?'block':'none';$('bt-src').textContent=own?cp.note:'';
   $('bt-kat').style.display=S.boat.type==='kat'?'block':'none';
   $('bt-first').style.display=S.confirmed?'none':'block';
   $('bt-msg').textContent=N.missing.length?'Es fehlt: '+N.missing.join(', ')+'. Die zugehörigen Prüfungen (Tiefe, Brücken, Maße) zeigen dann „Bootsdaten fehlen“.':'Profil vollständig.';
   var bn=$('boatnote');
   if(N.missing.length){bn.style.display='block';bn.textContent='Bootsdaten unvollständig ('+N.missing.join(', ')+') – Tiefen-/Brückenprüfung ist grau. Im Boot-Tab ergänzen.';}
-  else if(!S.confirmed){bn.style.display='block';bn.textContent='Bootsprofil noch nicht bestätigt (Default: Dehler 35). Im Boot-Tab prüfen und „Profil übernehmen“.';}
+  else if(!S.confirmed){bn.style.display='block';bn.textContent='Bootsprofil noch nicht bestätigt (Default: Dehler 35 CWS). Im Boot-Tab prüfen und „Profil übernehmen“.';}
   else bn.style.display='none';
 }
 function bootFromUI(changed){
@@ -1781,10 +1789,10 @@ function buildPrint(){
   p+='</table></section>';
 
   // bridges
-  p+='<section class="pp"><h1>Brücken</h1><div class="sub">Höhe geschlossen laut Datenbestand. Spalte „Mast '+fm(D.mast)+' m?“: Default-Profil (Mast '+fm(D.mast)+' m + Sicherheitsabstand '+fm(D.bridgeMargin)+' m), Pegel 0.</div>';
-  p+='<table><colgroup><col style="width:38mm"><col style="width:7mm"><col style="width:11mm"><col style="width:20mm"><col style="width:68mm"><col style="width:16mm"><col style="width:34mm"></colgroup><thead><tr><th>Name</th><th>Land</th><th>Art</th><th>Höhe</th><th>Öffnung</th><th>VHF</th><th>Mast '+fm(D.mast)+' m?</th></tr></thead><tbody>';
+  p+='<section class="pp"><h1>Brücken</h1><div class="sub">Höhe geschlossen laut Datenbestand. Spalte „Mast '+fmr(D.mast)+' m?“: Default-Profil (Mast '+fmr(D.mast)+' m + Sicherheitsabstand '+fm(D.bridgeMargin)+' m), Pegel 0.</div>';
+  p+='<table><colgroup><col style="width:38mm"><col style="width:7mm"><col style="width:11mm"><col style="width:20mm"><col style="width:68mm"><col style="width:16mm"><col style="width:34mm"></colgroup><thead><tr><th>Name</th><th>Land</th><th>Art</th><th>Höhe</th><th>Öffnung</th><th>VHF</th><th>Mast '+fmr(D.mast)+' m?</th></tr></thead><tbody>';
   BRIDGES.slice().sort(function(a,b){return b.lat-a.lat;}).forEach(function(b){
-    var c=bridgeCheck(b,D,0),m=c.unverified?'? ungeprüft (Reserve '+fm(c.reserve)+' m)':c.level==='g'?'✔ passt (Reserve '+fm(c.reserve)+' m)':c.level==='r'?'✖ passt nicht':c.level==='i'?'passt, Öffnung nötig?':'? '+(b.clearanceClosed_m==null?'Höhe unbekannt':'Öffnung nötig');
+    var c=bridgeCheck(b,D,0),m=c.unverified?'? ungeprüft (Reserve '+fmr(c.reserve)+' m)':c.level==='g'?'✔ passt (Reserve '+fmr(c.reserve)+' m)':c.level==='r'?'✖ passt nicht':c.level==='i'?'passt, Öffnung nötig?':'? '+(b.clearanceClosed_m==null?'Höhe unbekannt':'Öffnung nötig');
     p+='<tr><td><b>'+esc(b.name)+'</b></td><td>'+esc(b.country)+'</td><td>'+esc(b.kind)+'</td><td>'+(b.clearanceClosed_m!=null?fm(b.clearanceClosed_m)+' m':'?')+'<br>'+esc(b.clearanceRef||'')+'</td><td>'+esc(b.opening||'–')+(c.note?'<br><i><b>Hinweis:</b> '+esc(c.note)+'</i>':'')+'</td><td>'+esc(b.vhf||'?')+'</td><td>'+m+(c.note&&c.level!=='y'?'<br><span class="unv">Höhe/Einschränkung: siehe Hinweis</span>':'')+'</td></tr>';
   });
   p+='</tbody></table></section>';

@@ -31,8 +31,9 @@ const NOW = Date.UTC(2026, 6, 15, 9, 0); // 15.07.2026 11:00 MESZ: fixed clock, 
 
   const ev = (fn, arg) => page.evaluate(fn, arg);
   const posOf = (id) => ev((i) => { const h = SKIPPER.DATA.find(x => x.id === i); return { lat: h.lat, lon: h.lon }; }, id);
-  // Test profile = default boat; summer season + fixed clock for determinism unless a test says otherwise.
-  const base = { kids: false, course: 'am Wind', seaDir: null, seaH: 0, trend: false, season: 'sommer', pegel: 0, sicht: 'gut', now: NOW };
+  // Test profile = explicit TB (independent of the app default); summer season + fixed clock for determinism unless a test says otherwise.
+  const TB = { type: 'mono', loa: 10.51, beam: 3.49, draft: 1.95, mast: 18.5, margin: 0.3, bridgeMargin: 1.0 };
+  const base = { boat: TB, kids: false, course: 'am Wind', seaDir: null, seaH: 0, trend: false, season: 'sommer', pegel: 0, sicht: 'gut', now: NOW };
   const E = (st) => ev((s) => {
     const r = SKIPPER.evaluate(s);
     return { gates: r.gates, info: r.info, bridges: r.bridges, general: r.general, overall: r.overall, reff: r.reff, pegel: r.pegel, missing: r.missing, rec: r.rec && { green: r.rec.green && r.rec.green.h.id, far: r.rec.far }, T: r.T };
@@ -146,7 +147,7 @@ const NOW = Date.UTC(2026, 6, 15, 9, 0); // 15.07.2026 11:00 MESZ: fixed clock, 
     const p = { lat: vb.lat - 3 / 60, lon: vb.lon };
     const d = await ev((p) => SKIPPER.haversineNm(p, SKIPPER.BRIDGES.find(b => b.id === 'dk-bro-storeb-ltsbroen-vestbroen')), p);
     const a = await E({ ...base, pos: p, dir: 'W', windTrue: 8, gust: 10 });
-    const b = await E({ ...base, pos: p, dir: 'W', windTrue: 8, gust: 10, boat: { mast: 15 } });
+    const b = await E({ ...base, pos: p, dir: 'W', windTrue: 8, gust: 10, boat: { ...TB, mast: 15 } });
     const ga = bridge(a, 'bridge-' + vb.id), gb = bridge(b, 'bridge-' + vb.id);
     check('10 3 sm vor Storebælt-Vestbro (18 m): Mast 18,5 -> Gate rot "passt nicht"; Mast 15 -> kein rot; overall bleibt g trotz roter Brücke', Math.abs(d - 3) < 0.1 && ga?.level === 'r' && /passt nicht/.test(ga.text) && (!gb || gb.level !== 'r') && a.overall.level === 'g' && a.bridges.some(x => x.level === 'r'), JSON.stringify({ d, ga, gb }));
   }
@@ -188,7 +189,7 @@ const NOW = Date.UTC(2026, 6, 15, 9, 0); // 15.07.2026 11:00 MESZ: fixed clock, 
   {
     const w = await hs('dk-klintholm-havn', { ...base, dir: 'W', windTrue: 10, gust: 12 });
     const sw = await hs('dk-klintholm-havn', { ...base, dir: 'SW', windTrue: 10, gust: 12 });
-    const n = await hs('de-rerik', { ...base, dir: 'N', windTrue: 10, gust: 12, boat: { draft: 1.62 } });
+    const n = await hs('de-rerik', { ...base, dir: 'N', windTrue: 10, gust: 12, boat: { ...TB, draft: 1.62 } });
     check('14 Windschutz: Klintholm W nicht rot (full); SW gelb (part); Rerik N (Flachkiel) -> Gesamtlevel n "Schutz unbekannt"', w.level !== 'r' && item(w, 'prot')?.level === 'g' && item(sw, 'prot')?.level === 'y' && sw.level !== 'g' && n.level === 'n' && has(n, /Schutz bei Wind aus N unbekannt/), JSON.stringify([w.level, sw.level, n.level, n.reasons]));
   }
   // 15
@@ -203,7 +204,7 @@ const NOW = Date.UTC(2026, 6, 15, 9, 0); // 15.07.2026 11:00 MESZ: fixed clock, 
     const st = { ...base, dir: 'N', windTrue: 8, gust: 10 };
     const a = await hs('dk-marstal-havn', st);
     const b = await hs('dk-marstal-havn', { ...st, pegel: -80 });
-    const c = await hs('dk-marstal-havn', { ...st, boat: { draft: 1.62 } });
+    const c = await hs('dk-marstal-havn', { ...st, boat: { ...TB, draft: 1.62 } });
     check('16 Tiefe Marstal: Default gelb "nur an den tiefsten Plätzen"; Pegel -80 rot; Flachkiel 1,62 gelb', item(a, 'depth', 'y') && /nur an den tiefsten Plätzen/.test(item(a, 'depth').text) && !item(a, 'depth', 'r') && item(b, 'depth', 'r') && b.level === 'r' && item(c, 'depth', 'y') && !item(c, 'depth', 'r'), JSON.stringify([a.reasons, b.reasons, c.reasons]));
   }
   // 17
@@ -225,7 +226,7 @@ const NOW = Date.UTC(2026, 6, 15, 9, 0); // 15.07.2026 11:00 MESZ: fixed clock, 
   {
     const st = { ...base, dir: 'SW', windTrue: 8, gust: 10 };
     const a = await hs('de-rerik', st);
-    const b = await hs('de-rerik', { ...st, boat: { draft: 1.62 } });
+    const b = await hs('de-rerik', { ...st, boat: { ...TB, draft: 1.62 } });
     check('18 maxDraft Rerik (1,8): Tiefgang 1,95 -> Gesamtlevel rot "max. Tiefgang"; Flachkiel 1,62 -> kein maxDraft-Grund', a.level === 'r' && item(a, 'depth', 'r') && /max\. Tiefgang/.test(item(a, 'depth', 'r').text) && !has(b, /max\. Tiefgang/), JSON.stringify([a.reasons, b.reasons]));
   }
   // 19
@@ -234,7 +235,7 @@ const NOW = Date.UTC(2026, 6, 15, 9, 0); // 15.07.2026 11:00 MESZ: fixed clock, 
     const klapp = await hs('dk-guldborg-bro-og-baadehavn', st);
     const syn = await synth('dk-marstal-havn', { bridgeIds: ['dk-bro-storeb-ltsbroen-vestbroen'] });
     const fest = await hsX(syn, st);
-    const ok16 = await hsX(syn, { ...st, boat: { mast: 15 } });
+    const ok16 = await hsX(syn, { ...st, boat: { ...TB, mast: 15 } });
     check('19 Brücke auf Zufahrt: Klappbrücke (Guldborg) -> gelb "nur zu Öffnungszeiten"; synthetisch feste Brücke 18 m unter Mast -> rot; Mast 15 -> kein rot', item(klapp, 'bridge', 'y') && /nur zu Öffnungszeiten/.test(item(klapp, 'bridge').text) && item(fest, 'bridge', 'r') && fest.level === 'r' && !item(ok16, 'bridge', 'r'), JSON.stringify([klapp.reasons, fest.reasons]));
   }
   // 20
@@ -295,7 +296,7 @@ const NOW = Date.UTC(2026, 6, 15, 9, 0); // 15.07.2026 11:00 MESZ: fixed clock, 
   // 37 / 38 (Abnahme-Korrekturen)
   {
     const st = { ...base, dir: 'N', windTrue: 8, gust: 10 };
-    const a = await hs('de-rerik', st), b = await hs('de-rerik', { ...st, boat: { draft: 1.62 } });
+    const a = await hs('de-rerik', st), b = await hs('de-rerik', { ...st, boat: { ...TB, draft: 1.62 } });
     const o = await ev((base) => { const bad = []; SKIPPER.DATA.forEach(h => ['N','NE','E','SE','S','SW','W','NW'].forEach(d => { const s = SKIPPER.harborStatus(h, Object.assign({}, base, { dir: d, windTrue: 8, gust: 10 })); if (s.items.some(i => !i.noLevel && i.level === 'r') && s.level !== 'r') bad.push([h.id, d, s.level]); })); return bad; }, base);
     check('37 Rangfolge r > n > y > g: Rerik N Default -> r; mit Flachkiel -> n; nirgends verdeckt n ein rotes Item', a.level === 'r' && b.level === 'n' && o.length === 0, JSON.stringify([a.level, b.level, o.slice(0, 3)]));
   }
@@ -418,7 +419,7 @@ const NOW = Date.UTC(2026, 6, 15, 9, 0); // 15.07.2026 11:00 MESZ: fixed clock, 
     }
     await page.click('#themebtn'); const night = await ev(() => document.documentElement.getAttribute('data-theme')); await page.click('#themebtn');
     const day = await ev(() => document.documentElement.getAttribute('data-theme'));
-    await page.selectOption('#b-profile', await ev(() => SKIPPER.PROFILES.find(p => /Flachkiel/.test(p.label)).id));
+    await page.selectOption('#b-profile', await ev(() => SKIPPER.PROFILES.find(p => /ab 2010.*Flachkiel/.test(p.label)).id));
     const draft = await ev(() => SKIPPER.state.boat.draft);
     await page.selectOption('#b-profile', await ev(() => SKIPPER.PROFILES.find(p => p.id === 'kat').id));
     const katMissing = await ev(() => SKIPPER.boatNeeds(SKIPPER.state.boat).missing.length);
@@ -493,6 +494,19 @@ const NOW = Date.UTC(2026, 6, 15, 9, 0); // 15.07.2026 11:00 MESZ: fixed clock, 
     check('36 Regeln-Screen: alle Schwellen im DOM == CONST/effThresholds (data-c)', r.n >= 40 && r.bad.length === 0 && r.kinds >= 8, JSON.stringify({ n: r.n, kinds: r.kinds, bad: r.bad.slice(0, 5) }));
   }
 
+  // 39 default profile (owner-confirmed boat), no explicit boat in state
+  {
+    const D = await ev(() => { const d = SKIPPER.DEFAULT_BOAT; return [d.draft, d.mast, d.loa, d.beam, SKIPPER.PROFILES[0].label]; });
+    const at = async (id, st) => { const b = await ev((i) => SKIPPER.BRIDGES.find(x => x.id === i), id); return E({ ...base, boat: undefined, pos: { lat: b.lat - 3 / 60, lon: b.lon }, dir: 'W', windTrue: 8, gust: 10, ...st }); };
+    const f0 = await at('dk-bro-sj-lland-far-broen', {}), f10 = await at('dk-bro-sj-lland-far-broen', { pegel: 10 });
+    const sb = await at('dk-bro-storeb-ltsbroen-vestbroen', {}), fs = await at('de-bro-fehmarnsund', {});
+    const bf = (r, id) => r.bridges.find(x => x.id === 'bridge-' + id);
+    check('39 Default-Profil 1,55/19,0/10,50/3,30; Farø Pegel 0 nicht rot, +10 cm rot; Storebælt rot; Fehmarnsund gelb "Reserve nur 2,0 m"',
+      D[0] === 1.55 && D[1] === 19 && D[2] === 10.5 && D[3] === 3.3 && /Dehler 35 CWS/.test(D[4]) &&
+      bf(f0, 'dk-bro-sj-lland-far-broen').level !== 'r' && bf(f10, 'dk-bro-sj-lland-far-broen').level === 'r' &&
+      bf(sb, 'dk-bro-storeb-ltsbroen-vestbroen').level === 'r' && bf(fs, 'de-bro-fehmarnsund').level === 'y' && /Reserve nur 2,0 m/.test(bf(fs, 'de-bro-fehmarnsund').text),
+      JSON.stringify([D, bf(f0, 'dk-bro-sj-lland-far-broen'), bf(f10, 'dk-bro-sj-lland-far-broen'), bf(fs, 'de-bro-fehmarnsund')]));
+  }
   await browser.close();
   const failed = results.filter(r => !r.ok);
   console.log('\n' + (results.length - failed.length) + '/' + results.length + ' checks passed');

@@ -49,21 +49,21 @@ Die Struktur der Untereinträge in `radio.json`/`hazards.json` ist uneinheitlich
 
 | Feld | Default | Wirkung |
 |---|---|---|
-| Profil | „Dehler 35 (ab 2010, Standardkiel)“ | Vorauswahl aus `boats.json` |
+| Profil | „Dehler 35 CWS (BJ 1994, Flachkiel)“ (vom Eigner bestätigt) | Erstes Profil der Auswahl; Quelle im Boot-Tab: Länge/Breite sailboatdata (CWS), Tiefgang und Masthöhe „Angabe Eigner 19.10.2026“ |
 | Name / Rufzeichen / MMSI | leer | MAYDAY-Text |
 | Typ | Einrumpf | Katamaran: Hinweis „Kat: Boxen oft zu schmal – längsseits/Stirnseite“, `catFriendly===false` → gelb |
-| Länge (m) | 10,51 | `maxLoa_m` |
-| Breite (m) | 3,49 | `maxBeam_m` |
-| Tiefgang (m) | 1,95 | Tiefenlogik |
-| Masthöhe über WL inkl. Antenne (m) | 18,5 | Brücken |
+| Länge (m) | 10,50 | `maxLoa_m` |
+| Breite (m) | 3,30 | `maxBeam_m` |
+| Tiefgang (m) | 1,55 | Tiefenlogik |
+| Masthöhe über WL inkl. Antenne (m) | 19,0 | Brücken |
 | Tiefen-Zuschlag unter Kiel (m) | 0,3 | Tiefenlogik |
 | Brücken-Sicherheitsabstand (m) | 1,0 | Brücken (Faustregel) |
 | Kinder an Bord | aus | −3 kn |
 | Saison | „automatisch“ | §4.2 |
 | Fahrt (kn) | 5,5 | ETA |
 
-- Profile zur Auswahl: Dehler 35 ab 2010 Standardkiel (10,51 / 3,49 / 1,95), Flachkiel (1,62), Regattakiel (2,15), Dehler 35 CWS 1993–98 (10,50 / 3,30 / 1,90), „Katamaran (eigene Werte)“ (alle Maße leer → Pflichteingabe), „Eigene Werte“.
-- Masthöhe 18,5 m ist eine **Annahme** (sailboatdata 17,64 m ohne Antenne + Zuschlag). Im Boot-Tab Hinweis „Masthöhe am Boot messen (inkl. Antenne/Windex) – Default ist geschätzt“.
+- Profile zur Auswahl (nach dem Default-Profil): Dehler 35 ab 2010 Standardkiel (10,51 / 3,49 / 1,95), Flachkiel (1,62), Regattakiel (2,15), Dehler 35 CWS 1993–98 (10,50 / 3,30 / 1,90), „Katamaran (eigene Werte)“ (alle Maße leer → Pflichteingabe), „Eigene Werte“.
+- Default-Profil: Masthöhe 19,0 m und Tiefgang 1,55 m sind Angaben des Eigners (19.10.2026); der Hinweis „Masthöhe geschätzt“ entfällt dafür. Die Annahme 18,5 m (sailboatdata 17,64 m ohne Antenne + Zuschlag) gilt nur noch für die Profile „Dehler 35 (ab 2010)“; dort bleibt der Hinweis „Masthöhe am Boot messen (inkl. Antenne/Windex) – Default ist geschätzt“.
 - Erster Start (kein Profil gespeichert): Boot-Tab zuerst zeigen mit Button „Profil übernehmen“.
 - Ohne vollständiges Profil: Tiefen-/Brückenprüfung liefert grau „Bootsdaten fehlen“.
 
@@ -182,14 +182,14 @@ Wie Sardinien v2 (Nachtmodus rot/schwarz, `prefers-color-scheme`, große Tap-Zie
 ## 7. Bordkarte (PDF, A4, Print-Stylesheet aus derselben Datenquelle)
 - Seite 1: Notfall + Funk aller Länder (DE, DK, SE, PL-Haff) mit MAYDAY-Schema, NAVTEX, UKW-Seewetter, BSH-Pegelstufen, Disclaimer.
 - Hafentabellen gruppiert nach Land → Region, innerhalb Gruppe Nord→Süd (lat absteigend), jeder Hafen genau einmal. Spalten: Name, Typ, Position, Schutz (Kurzform „voll: … / teilw.: … / offen: …“, unbekannt „?“), Tiefe E / L, Brücke, VHF, Tel, Zuflucht (Kürzel B/P/A/G/N/–), Status (ungeprüft-Kennzeichen). Schrift ≥ 7 pt.
-- Brücken-Seite: alle BRIDGES mit Höhe, Art, Öffnung; Spalte „Mast 18,5 m?“ gegen das **Default**-Profil.
+- Brücken-Seite: alle BRIDGES mit Höhe, Art, Öffnung; Spalte „Mast 19,0 m?“ (aus Default-Profil) gegen das **Default**-Profil.
 - Gruppenköpfe nie allein am Seitenende (`break-after: avoid` + Test).
 
 ## 8. Offline
 Wie Sardinien: SW nur bei http/https registrieren, Fehler still, Statuszeile ehrlich („offline bereit“ erst nach erfolgreichem Cache). PNG-Icons vorhanden.
 
 ## 9. Akzeptanztests (`tests/logic.test.js`, alle müssen PASS)
-Profil im Test = Default (Tiefgang 1,95, Zuschlag 0,3, Mast 18,5, Abstand 1,0, Länge 10,51, Breite 3,49), Pegel 0, Sicht gut, sofern nicht anders genannt. `ev`-Helper wie Sardinien.
+Profil im Test wird explizit gesetzt (Tiefgang 1,95, Zuschlag 0,3, Mast 18,5, Abstand 1,0, Länge 10,51, Breite 3,49), unabhängig vom Default, Pegel 0, Sicht gut, sofern nicht anders genannt. `ev`-Helper wie Sardinien.
 
 **Reff/Ampel/Offsets**
 1. Reff wie Sardinien Test 8/8b (Grundschwellen 18/23/28, keine Lücke 0–60, monoton) – mit Kinder **und** mit Saison je −3; Kinder+Saison: −6, Untergrenze 12/17/22 greift (Test mit Wert 11 → Vollzeug, 12 → 1. Reff).
@@ -246,3 +246,4 @@ Tests selbst laufen lassen, alle Screenshots und PDF-Seiten ansehen, Stichprobe 
 
 ## 11. Bekannte Datenlücken (in App sichtbar, nicht im Code „reparieren“)
 Freileitung Wittower Fähre ohne Höhe; Fehmarnsund 22/23 m, Gerüststatus nach 31.05.2026 unbelegt; Ziegelgraben-Koordinate Platzhalter; Seegebiets-Grenzen geschätzt; Hazard-Radien unbekannt; Schweden dünn (keine Zuflucht); DE ohne Pegel-je-Hafen; Heiligenhafen nur N/NW-Schutz abgeleitet; Burgtiefe Liegeplatz 1,8 m vs. maxDraft 2,8 m.
+39. Default-Profil: 1,55 / 19,0 / 10,50 / 3,30. Mit Default: Farø-Brücke (20,0 m) bei Pegel 0 nicht rot (Reserve 0,0 m), bei Pegel +10 cm rot; Storebælt-Vestbro rot; Fehmarnsund gelb „Reserve nur 2,0 m“.
