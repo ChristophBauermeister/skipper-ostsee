@@ -54,14 +54,15 @@
    "clearanceOpen_m": null,
    "opening": "Hverdags Sperrzeit 06:30-09:00 und 14:00-18:00; gratis 05:30-06:30 (Bestellung bis 14 Uhr Vortag), 09:00-14:00 (Bestellung 2 h vorher), 18:00-22:00 (Bestellung bis 14 Uhr, Bestätigung 3 h vorher); Sa/So/Feiertag gratis 05:30-22:00; nachts 22:00-05:30 gegen Gebühr 1.250 DKK. Ganzjährig.",
    "vhf": "12",
-   "tel": "+45 43668888",
+   "tel": "+45 40 42 39 77 (By & Havn Maritime, cphport@byoghavn.dk); laut Havnelods: +45 43668888",
    "note": "Drehbrücke; 5,4 m gilt im festen Durchfahrtsfeld (19 m breit). Drehfeld 34 m breit, Höhe des geschlossenen Drehfelds nicht angegeben. Bestellung Kemp & Lauritzen, Brückenwärter ca. 10 min vorher UKW 12.",
    "verified": {
     "pos": true,
     "clearance": true,
-    "opening": true
+    "opening": true,
+    "tel": true
    },
-   "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/bridges/3e65013f-317b-4eef-8192-7b613d92aa1c.html, Tekst 21-04-2026, abgerufen 2026-10-18"
+   "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/bridges/3e65013f-317b-4eef-8192-7b613d92aa1c.html, Tekst 21-04-2026, abgerufen 2026-10-18 | Københavns Kommune „Sådan får du åbnet en bro“, https://www.kk.dk/brug-byen/vandet-i-byen/saadan-faar-du-aabnet-en-bro, abgerufen 2026-10-19"
   },
   {
    "id": "dk-bro-bryghusbroen",
@@ -75,14 +76,15 @@
    "clearanceOpen_m": null,
    "opening": "Hverdags Sperrzeit 06:30-09:00 und 14:00-18:00; gratis 05:30-06:30 (Bestellung bis 14 Uhr Vortag), 09:00-14:00 (Bestellung 2 h vorher), 18:00-22:00 (Bestellung bis 14 Uhr, Bestätigung 3 h vorher); Sa/So/Feiertag gratis 05:30-22:00; nachts 22:00-05:30 gegen Gebühr 1.250 DKK. Ganzjährig.",
    "vhf": null,
-   "tel": "+45 33769800",
+   "tel": "+45 40 42 39 77 (By & Havn Maritime, cphport@byoghavn.dk); laut Havnelods: +45 33769800",
    "note": "Einflügelige Klappbrücke Inderhavn, Feld 9,4 m. Bestellung By & Havn, Kontakt zum Brückenwärter per Mobiltelefon.",
    "verified": {
     "pos": true,
     "clearance": true,
-    "opening": true
+    "opening": true,
+    "tel": true
    },
-   "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/bridges/9101ee14-e6bf-4dff-a439-ba7bb519f59a.html, Tekst 01-05-2025, abgerufen 2026-10-18"
+   "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/bridges/9101ee14-e6bf-4dff-a439-ba7bb519f59a.html, Tekst 01-05-2025, abgerufen 2026-10-18 | Københavns Kommune „Sådan får du åbnet en bro“, https://www.kk.dk/brug-byen/vandet-i-byen/saadan-faar-du-aabnet-en-bro, abgerufen 2026-10-19"
   },
   {
    "id": "dk-bro-cirkelbroen",
@@ -96,14 +98,15 @@
    "clearanceOpen_m": null,
    "opening": "01.04.-31.10.: 06:00-24:00 gratis nach Bestellung; 01.11.-31.03.: 08:00-22:00 gratis nach Bestellung; nachts gegen Gebühr. Bestellung mind. 4 h vorher, Wochenende bis Fr 16 Uhr.",
    "vhf": null,
-   "tel": null,
+   "tel": "+45 40 49 41 46",
    "note": "Drehbrücke Christianshavns Kanal. Geschlossen in Feld 3: 2,25 m bei max. 3,0 m Breite, 1,90 m bei voller Breite 7,70 m; offen Durchfahrt in Feld 5 (9,0 m). Kontakt laut broercph.dk. (Regex-Wert 3,0 m war die Breite.)",
    "verified": {
     "pos": true,
     "clearance": true,
-    "opening": true
+    "opening": true,
+    "tel": true
    },
-   "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/bridges/5d229776-78ce-4168-9398-440c70f6de79.html, Tekst 22-09-2026, abgerufen 2026-10-18"
+   "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/bridges/5d229776-78ce-4168-9398-440c70f6de79.html, Tekst 22-09-2026, abgerufen 2026-10-18 | Den danske Havnelods (Brückentext), abgerufen 2026-10-18"
   },
   {
    "id": "dk-bro-dronning-alexandrines-bro-ulvsundbroen",
@@ -264,14 +267,15 @@
    "clearanceOpen_m": null,
    "opening": "Hverdags Sperrzeit 06:30-09:00 und 14:00-18:00; gratis 05:30-06:30 (Bestellung bis 14 Uhr Vortag), 09:00-14:00 (Bestellung 2 h vorher), 18:00-22:00 (Bestellung bis 14 Uhr, Bestätigung 3 h vorher); Sa/So/Feiertag gratis 05:30-22:00; nachts 22:00-05:30 gegen Gebühr 1.250 DKK. Ganzjährig.",
    "vhf": "12",
-   "tel": "+45 33769800",
+   "tel": "+45 40 42 39 77 (By & Havn Maritime, cphport@byoghavn.dk); laut Havnelods: +45 33769800",
    "note": "Doppelflügelige Schiebebrücke; 5,4 m auf 20 m Breite geschlossen, offen 45 m zwischen Leitwerken. Bei > 20 m/s keine Öffnung.",
    "verified": {
     "pos": true,
     "clearance": true,
-    "opening": true
+    "opening": true,
+    "tel": true
    },
-   "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/bridges/c67979a0-633a-461e-862f-acf0fc40bb6f.html, Tekst 08-08-2025, abgerufen 2026-10-18"
+   "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/bridges/c67979a0-633a-461e-862f-acf0fc40bb6f.html, Tekst 08-08-2025, abgerufen 2026-10-18 | Københavns Kommune „Sådan får du åbnet en bro“, https://www.kk.dk/brug-byen/vandet-i-byen/saadan-faar-du-aabnet-en-bro, abgerufen 2026-10-19"
   },
   {
    "id": "dk-bro-kalvebodbroen-og-sorterendebroen",
@@ -327,14 +331,15 @@
    "clearanceOpen_m": null,
    "opening": "Hverdags Sperrzeit 06:30-09:00 und 14:00-18:00; gratis 05:30-06:30 (Bestellung bis 14 Uhr Vortag), 09:00-14:00 (Bestellung 2 h vorher), 18:00-22:00 (Bestellung bis 14 Uhr, Bestätigung 3 h vorher); Sa/So/Feiertag gratis 05:30-22:00; nachts 22:00-05:30 gegen Gebühr 1.250 DKK. Ganzjährig.",
    "vhf": "12",
-   "tel": "+45 33769800",
+   "tel": "+45 40 42 39 77 (By & Havn Maritime, cphport@byoghavn.dk); laut Havnelods: +45 33769800",
    "note": "Doppelklappbrücke, Klappfeld 34 m. Bei > 20 m/s keine Öffnung.",
    "verified": {
     "pos": true,
     "clearance": true,
-    "opening": true
+    "opening": true,
+    "tel": true
    },
-   "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/bridges/8f944295-8c34-43d5-b823-1bba87f7c46a.html, Tekst 17-12-2025, abgerufen 2026-10-18"
+   "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/bridges/8f944295-8c34-43d5-b823-1bba87f7c46a.html, Tekst 17-12-2025, abgerufen 2026-10-18 | Københavns Kommune „Sådan får du åbnet en bro“, https://www.kk.dk/brug-byen/vandet-i-byen/saadan-faar-du-aabnet-en-bro, abgerufen 2026-10-19"
   },
   {
    "id": "dk-bro-kong-christian-x-s-bro",
@@ -432,14 +437,15 @@
    "clearanceOpen_m": null,
    "opening": "Hverdags Sperrzeit 06:30-09:00 und 14:00-18:00; gratis 05:30-06:30 (Bestellung bis 14 Uhr Vortag), 09:00-14:00 (Bestellung 2 h vorher), 18:00-22:00 (Bestellung bis 14 Uhr, Bestätigung 3 h vorher); Sa/So/Feiertag gratis 05:30-22:00; nachts 22:00-05:30 gegen Gebühr 1.250 DKK. Ganzjährig.",
    "vhf": "12",
-   "tel": "+45 40494146",
+   "tel": "+45 40 42 39 77 (By & Havn Maritime, cphport@byoghavn.dk); laut Havnelods: +45 40494146",
    "note": "Doppelklappbrücke, Klappfeld 35 m. Bei > 20 m/s keine Öffnung.",
    "verified": {
     "pos": true,
     "clearance": true,
-    "opening": true
+    "opening": true,
+    "tel": true
    },
-   "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/bridges/7d17393b-3e61-4157-be25-b8861a78b9ad.html, Tekst 22-06-2026, abgerufen 2026-10-18"
+   "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/bridges/7d17393b-3e61-4157-be25-b8861a78b9ad.html, Tekst 22-06-2026, abgerufen 2026-10-18 | Københavns Kommune „Sådan får du åbnet en bro“, https://www.kk.dk/brug-byen/vandet-i-byen/saadan-faar-du-aabnet-en-bro, abgerufen 2026-10-19"
   },
   {
    "id": "dk-bro-langelandsbroen",
@@ -474,14 +480,15 @@
    "clearanceOpen_m": null,
    "opening": "Hverdags Sperrzeit 06:30-09:00 und 14:00-18:00; gratis 05:30-06:30 (Bestellung bis 14 Uhr Vortag), 09:00-14:00 (Bestellung 2 h vorher), 18:00-22:00 (Bestellung bis 14 Uhr, Bestätigung 3 h vorher); Sa/So/Feiertag gratis 05:30-22:00; nachts 22:00-05:30 gegen Gebühr 1.250 DKK. Ganzjährig.",
    "vhf": "12",
-   "tel": "+45 40494146",
+   "tel": "+45 40 42 39 77 (By & Havn Maritime, cphport@byoghavn.dk); laut Havnelods: +45 40494146",
    "note": "Doppelflügelige Drehbrücke, Feld 35 m, bedient von Langebro.",
    "verified": {
     "pos": true,
     "clearance": true,
-    "opening": true
+    "opening": true,
+    "tel": true
    },
-   "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/bridges/f3b00da3-73f5-471b-b691-071367eb74fe.html, Tekst 22-06-2026, abgerufen 2026-10-18"
+   "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/bridges/f3b00da3-73f5-471b-b691-071367eb74fe.html, Tekst 22-06-2026, abgerufen 2026-10-18 | Københavns Kommune „Sådan får du åbnet en bro“, https://www.kk.dk/brug-byen/vandet-i-byen/saadan-faar-du-aabnet-en-bro, abgerufen 2026-10-19"
   },
   {
    "id": "dk-bro-lilleb-ltsbro-w-lige",
@@ -579,14 +586,15 @@
    "clearanceOpen_m": null,
    "opening": "Hverdags Sperrzeit 06:30-09:00 und 15:30-17:30; gratis 05:30-06:30 (Bestellung Vortag 14 Uhr), 09:00-15:30 (2 h vorher), 17:30-22:00 (bis 14 Uhr); Sa/So/Feiertag gratis 05:30-22:00; nachts gegen Gebühr. Ganzjährig.",
    "vhf": null,
-   "tel": "+45 21658375",
+   "tel": "+45 21 65 83 75 (Nyhavns Skipperlaug)",
    "note": "Einflügelige Klappbrücke Nyhavn, Feld 9,1 m. Bei normaler Öffnung ragt die Klappenspitze 2,35 m über die Öffnung (voll offen 1,46 m). Bestellung Nyhavns Skipperlaug.",
    "verified": {
     "pos": true,
     "clearance": true,
-    "opening": true
+    "opening": true,
+    "tel": true
    },
-   "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/bridges/5500e1d7-47ba-46d8-b5ec-c800c7e35f14.html, Tekst 01-05-2025, abgerufen 2026-10-18"
+   "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/bridges/5500e1d7-47ba-46d8-b5ec-c800c7e35f14.html, Tekst 01-05-2025, abgerufen 2026-10-18 | Københavns Kommune „Sådan får du åbnet en bro“, https://www.kk.dk/brug-byen/vandet-i-byen/saadan-faar-du-aabnet-en-bro, abgerufen 2026-10-19"
   },
   {
    "id": "dk-bro-n-stved-svingbro",
@@ -642,14 +650,15 @@
    "clearanceOpen_m": null,
    "opening": "01.04.-31.10. 06:00-24:00 gratis nach Bestellung (2 h vorher); 01.11.-31.03. 08:00-22:00 gratis; nachts gegen Gebühr (4 h vorher). Klappe max. 15 min offen.",
    "vhf": null,
-   "tel": null,
+   "tel": "+45 40 49 41 46; bei Störung Kemp & Lauritzen +45 43 66 88 88 (Tag und Nacht)",
    "note": "Klappbrücke Proviantmagasingraven, 15 m. Dahinter Frederiksholmbroen (2,60 m über MSL), beide durch Frederiksholmbroens Brolaug bedient (Liste frederiksholmbroen.dk).",
    "verified": {
     "pos": true,
     "clearance": true,
-    "opening": true
+    "opening": true,
+    "tel": true
    },
-   "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/bridges/ac3b96f0-0989-484b-9c15-b0889491cab7.html, Tekst 17-09-2026, abgerufen 2026-10-18"
+   "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/bridges/ac3b96f0-0989-484b-9c15-b0889491cab7.html, Tekst 17-09-2026, abgerufen 2026-10-18 | Den danske Havnelods (Brückentext), abgerufen 2026-10-18; Københavns Kommune „Sådan får du åbnet en bro“, https://www.kk.dk/brug-byen/vandet-i-byen/saadan-faar-du-aabnet-en-bro, abgerufen 2026-10-19"
   },
   {
    "id": "dk-bro-sj-lland-far-broen",
@@ -768,14 +777,15 @@
    "clearanceOpen_m": null,
    "opening": "Hverdags Sperrzeit 07:30-09:00 und 15:30-17:30; gratis 05:30-07:30, 09:00-15:30, 17:30-22:00 nach Bestellung; Sa/So/Feiertag gratis 05:30-22:00; nachts gegen Gebühr. Ganzjährig.",
    "vhf": "12",
-   "tel": "+45 43668888",
+   "tel": "+45 40 42 39 77 (By & Havn Maritime, cphport@byoghavn.dk); laut Havnelods: +45 43668888",
    "note": "Einflügelige Klappbrücke Teglværksløbet, 15 m.",
    "verified": {
     "pos": true,
     "clearance": true,
-    "opening": true
+    "opening": true,
+    "tel": true
    },
-   "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/bridges/b31d7b55-5349-469a-80bc-011c541dbd38.html, Tekst 01-05-2025, abgerufen 2026-10-18"
+   "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/bridges/b31d7b55-5349-469a-80bc-011c541dbd38.html, Tekst 01-05-2025, abgerufen 2026-10-18 | Københavns Kommune „Sådan får du åbnet en bro“, https://www.kk.dk/brug-byen/vandet-i-byen/saadan-faar-du-aabnet-en-bro, abgerufen 2026-10-19"
   },
   {
    "id": "dk-bro-trangravsbroen",
@@ -789,14 +799,15 @@
    "clearanceOpen_m": null,
    "opening": "Sommer (01.04.-31.10.): Mo-Fr 06:00, 07:00, 09:00-15:00 und 17:30-23:30 stündlich bei Bedarf, Sa/So 06:00-16:00 und 17:30-23:30; Winter (01.11.-31.03.): nach Bestellung Mo-Fr 09-15, 17:30-21:30, Sa/So 08-16, 17:30-21:30; nachts nach Bestellung gegen Gebühr. Hverdags Sperrzeit 07:30-09:00, 15:30-17:30.",
    "vhf": "12",
-   "tel": null,
+   "tel": "+45 22 37 72 93 (Brovagt)",
    "note": "Doppelklappbrücke über Christianshavns Kanal und Trangraven, 15 m. Bestellkontakt im Lods nicht genannt.",
    "verified": {
     "pos": true,
     "clearance": true,
-    "opening": true
+    "opening": true,
+    "tel": true
    },
-   "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/bridges/2c1f2d46-286e-4241-bf52-7824b4c4663b.html, Tekst 30-09-2026, abgerufen 2026-10-18"
+   "src": "Den danske Havnelods (Geodatastyrelsen), https://danskehavnelods.dk/Havnelodsen/bridges/2c1f2d46-286e-4241-bf52-7824b4c4663b.html, Tekst 30-09-2026, abgerufen 2026-10-18 | Københavns Kommune „Sådan får du åbnet en bro“, https://www.kk.dk/brug-byen/vandet-i-byen/saadan-faar-du-aabnet-en-bro, abgerufen 2026-10-19"
   },
   {
    "id": "dk-bro-vejlefjordbroen",
@@ -850,16 +861,17 @@
    "clearanceClosed_m": 6.0,
    "clearanceRef": "unbekannt",
    "clearanceOpen_m": null,
-   "opening": "Ganzjährig täglich 05:20, 08:20, 12:20, 15:20, 17:20, 21:30 (02:30 bei Bedarf), je max. 20 min. Sportboote ca. 10 min vorher am Leitwerk/Wartedalben. Stand BfS 2024/25 und YACHT 10/2025; Plan 2026 amtlich nicht abgerufen.",
+   "opening": "Täglich 05:20, 08:20, 12:20, 15:20, 17:20, 21:30, je max. 20 min (BfS 371/25, bis 31.12.2026). Sportboote ca. 10 min vorher am Leitwerk/Wartedalben.",
    "vhf": null,
-   "tel": null,
+   "tel": "+49 3831 253630 (Hafenamt Stralsund – allgemeine Nummer, keine brückeneigene belegt)",
    "note": "POSITION NUR PLATZHALTER (Koordinate der Strelasundquerung, ca. 1 km daneben) – aus Seekarte/OSM ersetzen. 6 m geschlossen (YACHT 2025, de-WP Strelasundquerung). Okt. 2025 mehrere Tage defekt, BfS 310/25: seit 15.10.2025 wieder Regelbetrieb. SkipperGuide (2010) nennt UKW 67 Stralsund Traffic – veraltet, nicht übernommen.",
    "verified": {
     "pos": false,
     "clearance": true,
-    "opening": false
+    "opening": true,
+    "tel": true
    },
-   "src": "ELWIS BfS 310/25 https://www.elwis.de/DE/dynamisch/Bfs/print:318401; ELWIS BfS 147/24 WSA Ostsee (23.04.2024-16.03.2025, abgelaufen) https://www.elwis.de/DE/dynamisch/Bfs/print:312145; de.wikipedia.org/wiki/Strelasundquerung; YACHT ca. 10/2025 https://www.yacht.de/en/travel-and-charter/germany/baltic-sea-ruegen-ziegelgrabenbruecke-works-again/, abgerufen 2026-10-18"
+   "src": "ELWIS BfS 310/25 https://www.elwis.de/DE/dynamisch/Bfs/print:318401; ELWIS BfS 147/24 WSA Ostsee (23.04.2024-16.03.2025, abgelaufen) https://www.elwis.de/DE/dynamisch/Bfs/print:312145; de.wikipedia.org/wiki/Strelasundquerung; YACHT ca. 10/2025 https://www.yacht.de/en/travel-and-charter/germany/baltic-sea-ruegen-ziegelgrabenbruecke-works-again/, abgerufen 2026-10-18 | WSA Ostsee BfS 371/25 vom 10.12.2025 (gültig bis 31.12.2026), https://linchart60.bsh.de/chartserver/supplementary_information/bridges_locks/Br%C3%BCcken_MVP.pdf, abgerufen 2026-10-19; Hafenamt: https://www.stralsund.de/hafenamt-stralsund/brueckenoeffnung/"
   },
   {
    "id": "de-bro-ruegenbruecke",
@@ -899,9 +911,10 @@
    "verified": {
     "pos": true,
     "clearance": false,
-    "opening": false
+    "opening": false,
+    "tel": true
    },
-   "src": "de.wikipedia.org/wiki/Peenebrücke_Wolgast; ELWIS BfS 276/26 https://www.elwis.de/DE/dynamisch/Bfs/print:320808; ELWIS BfS 147/24 WSA Ostsee (23.04.2024-16.03.2025, abgelaufen) https://www.elwis.de/DE/dynamisch/Bfs/print:312145; YACHT 2026 https://www.yacht.de/reisen-chartern/deutschland/ostseekueste-was-sich-2026-um-ruegen-und-usedom-aendert/, abgerufen 2026-10-18"
+   "src": "de.wikipedia.org/wiki/Peenebrücke_Wolgast; ELWIS BfS 276/26 https://www.elwis.de/DE/dynamisch/Bfs/print:320808; ELWIS BfS 147/24 WSA Ostsee (23.04.2024-16.03.2025, abgelaufen) https://www.elwis.de/DE/dynamisch/Bfs/print:312145; YACHT 2026 https://www.yacht.de/reisen-chartern/deutschland/ostseekueste-was-sich-2026-um-ruegen-und-usedom-aendert/, abgerufen 2026-10-18 | WSA Ostsee BfS 371/25 vom 10.12.2025 (gültig bis 31.12.2026), https://linchart60.bsh.de/chartserver/supplementary_information/bridges_locks/Br%C3%BCcken_MVP.pdf, abgerufen 2026-10-19"
   },
   {
    "id": "de-bro-zecherin",
@@ -920,9 +933,10 @@
    "verified": {
     "pos": true,
     "clearance": true,
-    "opening": false
+    "opening": false,
+    "tel": true
    },
-   "src": "de.wikipedia.org/wiki/Zecheriner_Brücke; ELWIS BfS 147/24 WSA Ostsee (23.04.2024-16.03.2025, abgelaufen) https://www.elwis.de/DE/dynamisch/Bfs/print:312145; YACHT 26.03.2025 https://www.yacht.de/reisen-chartern/deutschland/ostsee-brueckenoeffnungen-zum-saisonstart/; YACHT 02.10.2025 https://www.yacht.de/reisen-chartern/deutschland/usedom-zecheriner-bruecke-oeffnet-nur-morgens/, abgerufen 2026-10-18"
+   "src": "de.wikipedia.org/wiki/Zecheriner_Brücke; ELWIS BfS 147/24 WSA Ostsee (23.04.2024-16.03.2025, abgelaufen) https://www.elwis.de/DE/dynamisch/Bfs/print:312145; YACHT 26.03.2025 https://www.yacht.de/reisen-chartern/deutschland/ostsee-brueckenoeffnungen-zum-saisonstart/; YACHT 02.10.2025 https://www.yacht.de/reisen-chartern/deutschland/usedom-zecheriner-bruecke-oeffnet-nur-morgens/, abgerufen 2026-10-18 | WSA Ostsee BfS 371/25 vom 10.12.2025 (gültig bis 31.12.2026), https://linchart60.bsh.de/chartserver/supplementary_information/bridges_locks/Br%C3%BCcken_MVP.pdf, abgerufen 2026-10-19"
   },
   {
    "id": "de-bro-meiningen",
@@ -934,16 +948,17 @@
    "clearanceClosed_m": 2.1,
    "clearanceRef": "MW",
    "clearanceOpen_m": null,
-   "opening": "Saison 2025 (17.03.-27.10.): 09:45, 11:55, 17:45, 20:00, je bis 30 min. Winter (BfS 147/24): Di 10:30, Do nach Anmeldung 24 h vorher, keine Öffnung an Feiertagen. Plan 2026 nicht amtlich belegt.",
+   "opening": "KW 12 (Mo) bis KW 44 (So): täglich 09:45, 11:55, 17:45, 20:00. KW 45 bis KW 11: Mo–Fr (außer Feiertage) 10:30. Je max. 15 min (BfS 371/25, bis 31.12.2026).",
    "vhf": null,
-   "tel": "+49 38321 417",
+   "tel": "+49 38321 417 (nur YACHT 2023, in BfS 371/25 keine Nummer – ungeprüft)",
    "note": "Alte Drehbrücke seit 2020 dauerhaft offen fixiert; Durchfahrt über die Behelfs-Klappbrücke (2012, Durchfahrt 13 m), geschlossen 2,10 m über MW (BOOTE 2012). Neubau bis 2031 geplant. Koordinate = alte Drehbrücke (de-WP), Behelfsbrücke liegt daneben.",
    "verified": {
     "pos": false,
     "clearance": false,
-    "opening": false
+    "opening": true,
+    "tel": false
    },
-   "src": "de.wikipedia.org/wiki/Meiningenbrücke; BOOTE 28.10.2012 https://www.boote-magazin.de/en/travel-and-charter/territories/temporary-bridge-over-zingster-strom-completed/; ELWIS BfS 147/24 WSA Ostsee (23.04.2024-16.03.2025, abgelaufen) https://www.elwis.de/DE/dynamisch/Bfs/print:312145; YACHT 26.03.2025 https://www.yacht.de/reisen-chartern/deutschland/ostsee-brueckenoeffnungen-zum-saisonstart/, abgerufen 2026-10-18"
+   "src": "de.wikipedia.org/wiki/Meiningenbrücke; BOOTE 28.10.2012 https://www.boote-magazin.de/en/travel-and-charter/territories/temporary-bridge-over-zingster-strom-completed/; ELWIS BfS 147/24 WSA Ostsee (23.04.2024-16.03.2025, abgelaufen) https://www.elwis.de/DE/dynamisch/Bfs/print:312145; YACHT 26.03.2025 https://www.yacht.de/reisen-chartern/deutschland/ostsee-brueckenoeffnungen-zum-saisonstart/, abgerufen 2026-10-18 | WSA Ostsee BfS 371/25 vom 10.12.2025 (gültig bis 31.12.2026), https://linchart60.bsh.de/chartserver/supplementary_information/bridges_locks/Br%C3%BCcken_MVP.pdf, abgerufen 2026-10-19"
   },
   {
    "id": "de-bro-wieck",
@@ -955,16 +970,17 @@
    "clearanceClosed_m": null,
    "clearanceRef": "unbekannt",
    "clearanceOpen_m": null,
-   "opening": "Saison 2025: 24.04.-10.09. stündlich 09-20 Uhr außer 12 Uhr; 11.09.-09.10. ohne 20 Uhr; 22.03.-23.04. und 10.-22.10. 09, 11, 13, 15, 17 Uhr (Sa/So/Feiertag zusätzlich 10, 14, 16); Winter Anmeldung am Vortag 08-12 Uhr. Öffnung nur bis Bft 7.",
+   "opening": "2026: 02.01.–20.03. Mo–Fr 09, 11, 13, 15 Uhr nur nach Anmeldung; 23.03.–26.04. täglich 09, 11, 13, 15, 17 Uhr, Sa/So/Feiertag zusätzlich 10, 14, 16 Uhr; 27.04.–13.09. täglich 09–20 Uhr stündlich; übrige Zeiträume siehe BfS 371/25; 19.12.–31.12.2026 keine Öffnung. Nur bei Bedarf und bis Windstärke 7. Anmeldung am Vortag 08–12 Uhr. Fischerfest 18./19.07.2026 nur 4 Öffnungen.",
    "vhf": null,
-   "tel": "+49 3834 85362933",
+   "tel": "+49 3834 85362933 / -34 / -35 (Hafenamt Greifswald, hafenamt@greifswald.de)",
    "note": "Holzklappbrücke, Durchfahrt 10,7 m (de-WP). Höhe geschlossen nicht belegt – praktisch nur zu Öffnungszeiten. Sperrwerk Wieck am 08./09.07. und 12./13.08.2026 11:15-12:45 nicht passierbar. Anmeldung auch hafenamt@greifswald.de.",
    "verified": {
     "pos": true,
     "clearance": false,
-    "opening": false
+    "opening": true,
+    "tel": true
    },
-   "src": "de.wikipedia.org/wiki/Wiecker_Brücke; YACHT 26.03.2025 https://www.yacht.de/reisen-chartern/deutschland/ostsee-brueckenoeffnungen-zum-saisonstart/; Delius Klasing Nautische Meldungen 1-2026 Nr. 09/26, abgerufen 2026-10-18"
+   "src": "de.wikipedia.org/wiki/Wiecker_Brücke; YACHT 26.03.2025 https://www.yacht.de/reisen-chartern/deutschland/ostsee-brueckenoeffnungen-zum-saisonstart/; Delius Klasing Nautische Meldungen 1-2026 Nr. 09/26, abgerufen 2026-10-18 | WSA Ostsee BfS 371/25 vom 10.12.2025 (gültig bis 31.12.2026), https://linchart60.bsh.de/chartserver/supplementary_information/bridges_locks/Br%C3%BCcken_MVP.pdf, abgerufen 2026-10-19"
   },
   {
    "id": "de-bro-kappeln",
@@ -1000,11 +1016,12 @@
    "opening": "Seit 26.03.2026: 10:30, 11:30, 12:30, 13:30, 14:30, 15:30, 16:30, 17:30 (je ca. 20 min). Winter 03.11.2025 bis April 2026 gesperrt, Sonderpassagen nur mit ≥ 10 Werktagen Voranmeldung bei DB. Wintersperre 2026/27 nicht belegt.",
    "vhf": null,
    "tel": null,
-   "note": "Alte Klappe ist abgebaut; öffnende Behelfsbrücke für Fuß/Rad, Bauart und Höhe geschlossen nicht belegt (kind 'klapp' unbelegt). Max. 10 km/h (5,4 kn). Neubau Straße/Bahn (Klappbrücke) bis ca. Ende 2027. Koordinate = alte Brücke (Structurae).",
+   "note": "Alte Klappe ist abgebaut; öffnende Behelfsbrücke für Fuß/Rad, Bauart und Höhe geschlossen nicht belegt (kind 'klapp' unbelegt). Max. 10 km/h (5,4 kn). Neubau Straße/Bahn (Klappbrücke) bis ca. Ende 2027. Koordinate = alte Brücke (Structurae). Kontakt: Keine Anmeldenummer belegt. Sperrungen werden über ELWIS und DSV-Push-Meldung bekannt gegeben (DSV 07/2026).",
    "verified": {
     "pos": true,
     "clearance": false,
-    "opening": false
+    "opening": false,
+    "tel": false
    },
    "src": "https://structurae.net/en/structures/lindaunis-bridge; Delius Klasing Nautische Meldungen 1-2026 Nr. 02/26; YACHT 13.10.2025 https://www.yacht.de/reisen-chartern/deutschland/schlei-bruecke-lindaunis-dicht-von-november-bis-april/, abgerufen 2026-10-18"
   },
@@ -1042,11 +1059,12 @@
    "opening": "Stand 2024: Mo-Fr 06:20, 08:40, 09:55, 10:40, 12:30, 14:15, 15:15, 16:15 (bei Bedarf), 17:25, 18:20, 19:35, 21:40; Sa/So/Feiertag 08:40, 09:30, 10:25, 11:15, 12:30, 14:15, 15:45, 18:00, 19:50, 20:45; je ca. 15 min. Aktuelle Zeiten: Stadt Kiel.",
    "vhf": null,
    "tel": null,
-   "note": "Fuß-/Radbrücke (Faltbrücke) am Ende der Hörn, nur für Liegeplätze in der Hörn relevant. Höhe geschlossen nicht belegt.",
+   "note": "Fuß-/Radbrücke (Faltbrücke) am Ende der Hörn, nur für Liegeplätze in der Hörn relevant. Höhe geschlossen nicht belegt. Kontakt: Keine Telefonnummer belegt (kiel.de nicht abrufbar).",
    "verified": {
     "pos": true,
     "clearance": false,
-    "opening": false
+    "opening": false,
+    "tel": false
    },
    "src": "de.wikipedia.org/wiki/Hörnbrücke; en.wikipedia.org/wiki/H%C3%B6rn_Bridge; YACHT 17.06.2024 https://www.yacht.de/reisen-chartern/deutschland/ostsee-die-oeffnungszeiten-der-wichtigsten-bruecken-auf-einen-blick/, abgerufen 2026-10-18"
   },

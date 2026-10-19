@@ -275,3 +275,14 @@ Freileitung Wittower Fähre ohne Höhe; Fehmarnsund 22/23 m, Gerüststatus nach 
 45. Brücke nahe Linie: Heiligenhafen → Burgtiefe, Default-Profil → Hinweis Fehmarnsundbrücke (gelb, ungeprüft); Gesamtampel davon unberührt.
 46. Gate über Ziel: Start Sassnitz… bereits aktiv; zusätzlich Start Tromper Wiek ist durch §4.4 abgedeckt – neuer Fall: Start Klintholm (DK-Seite, Absprunghafen), Ziel Rønne, Böen 23 → Bornholm-Gate rot.
 47. Keine JS-Fehler/0 externe Requests nach Ziel setzen über Suche, manuell und „Als Ziel“.
+
+## 13. Brücken: Öffnungszeiten und Kontakt (v1.6, Wunsch Christoph 19.10.2026)
+Daten: `bridges.json` ergänzt (BfS 371/25 WSA Ostsee für MV, Københavns Kommune für Kopenhagen, Havnelods). 28/30 beweglichen Brücken haben `tel`, 30/30 `opening`.
+- `bridgeContactHTML(b)`: Block „Öffnung: <opening> · UKW <vhf> · Tel. <tel>“; jede Telefonnummer in `tel` (auch mehrere, durch „/“ oder „;“ getrennt, mit Zusätzen in Klammern) wird als eigener `tel:`-Link (nur Ziffern und führendes +) dargestellt, der Zusatztext bleibt sichtbar. Fehlende Felder weglassen; fehlt Tel und UKW: „Kontakt: nicht belegt“. `verified.tel===false` → Badge „ungeprüft“.
+- Anzeigen überall, wo eine Brücke erscheint: Banner „Brücken in der Nähe“, Liste „Brücken neben der Luftlinie“, Hafenkarte (Brücken auf der Zufahrt – einklappbar „Brückendetails“), Regeln-Screen (Klappbrücken-Liste), PDF-Brückenseite (neue Spalte „Tel.“, Öffnung vollständig, Schrift ≥ 7 pt).
+- Feste Brücken: nur Höhe/Reserve wie bisher; `tel/vhf` falls vorhanden anzeigen.
+Tests:
+48. `de-bro-wolgast` im Brücken-Banner (Position 2 sm entfernt): DOM enthält zwei `a[href^="tel:+49"]` (`tel:+4938362324458`, `tel:+491755773610`) und den Text „05:45“.
+49. Hafenkarte eines Hafens mit `bridgeIds` auf `dk-bro-guldborgbroen`: Details enthalten „Tel.“-Link `tel:+4554770017` und „UKW 16“.
+50. `de-bro-lindaunis`: Kontaktblock zeigt „Kontakt: nicht belegt“.
+51. PDF-Brückenseite enthält Spalte „Tel.“ und „+49 3836 2324458“.
