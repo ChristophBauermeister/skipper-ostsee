@@ -247,3 +247,31 @@ Tests selbst laufen lassen, alle Screenshots und PDF-Seiten ansehen, Stichprobe 
 ## 11. Bekannte Datenlücken (in App sichtbar, nicht im Code „reparieren“)
 Freileitung Wittower Fähre ohne Höhe; Fehmarnsund 22/23 m, Gerüststatus nach 31.05.2026 unbelegt; Ziegelgraben-Koordinate Platzhalter; Seegebiets-Grenzen geschätzt; Hazard-Radien unbekannt; Schweden dünn (keine Zuflucht); DE ohne Pegel-je-Hafen; Heiligenhafen nur N/NW-Schutz abgeleitet; Burgtiefe Liegeplatz 1,8 m vs. maxDraft 2,8 m.
 39. Default-Profil: 1,55 / 19,0 / 10,50 / 3,30. Mit Default: Farø-Brücke (20,0 m) bei Pegel 0 nicht rot (Reserve 0,0 m), bei Pegel +10 cm rot; Storebælt-Vestbro rot; Fehmarnsund gelb „Reserve nur 2,0 m“.
+
+## 12. Ziel, Kurs und Kurs zum Wind (v1.4, Wunsch Christoph 19.10.2026)
+
+### 12.1 Eingabe (Lage-Tab, neuer Abschnitt „3 · Ziel“ nach Wind und See)
+- Ziel wählen: Hafensuche (Textfeld mit Vorschlägen aus `DATA`, Name + Land), **oder** manuell Grad/Dezimalminuten (wie Position), **oder** Button „Als Ziel“ auf jeder Hafenkarte im Zuflucht-Tab.
+- „Ziel löschen“. Ziel in `state.target {lat, lon, id|null, name}` und `localStorage` (try/catch).
+- Start = aktuelle Position (`state.pos`).
+
+### 12.2 Rechnung
+- `rhumb(a, b)` → `{course, dist}`: Loxodrome (rechtweisender Kurs rwK 0–359°, Distanz in sm, Erdradius 3440,065 sm). Anzeige „rwK 074° · 8,0 sm (Luftlinie)“.
+- Hinweis fest darunter: „Luftlinie, rechtweisend. Land, Fahrwasser, Strom, Abdrift, Missweisung und Deviation sind nicht berücksichtigt.“ Keine Missweisungswerte einbauen (keine Quelle).
+- Windrichtung (8er-Rose) → Grad: N 0, NE 45, … NW 315. `twa = |((windDeg − course + 540) mod 360) − 180|` (0–180). Seite: Wind von Steuerbord, wenn `(windDeg − course + 360) mod 360` in (0,180), sonst Backbord; bei 0/180 „von vorn“/„von achtern“.
+- `courseToWind(twa)` (Faustregel, im Regeln-Screen so benannt): `< 45` → „Kreuzen (Ziel liegt im Wind)“, Reff-Kurs „am Wind“; `45–74` → „am Wind“; `75–110` → „halber Wind“; `111–150` → „raum“; `151–180` → „vorm Wind“.
+- **Automatik:** Mit Ziel, Position und Windrichtung setzt die App `state.course` automatisch (Anzeige „automatisch aus Ziel“). Tippt der Skipper selbst einen Kurs, gilt der manuell (Anzeige „manuell“, Button „Automatik“). Zieländerung oder neue Windrichtung bei manuellem Kurs: Hinweis „Kurs passt evtl. nicht mehr“, aber nicht überschreiben.
+- ETA: `dist / speed`; bei Kreuzen `dist × 1,41 / speed` (Faustregel Wendewinkel 90°), Text „Kreuzen: ca. 1,4-facher Weg“.
+- Zielhafen (falls `id`): Hafenkarte des Ziels oben im Ergebnis mit `harborStatus`; Sonnenuntergangsprüfung mit dieser ETA.
+- **Brücke nahe der Linie** (nur Hinweis): feste Brücken/Freileitungen mit `bridgeCheck` ≠ g, deren Abstand zur Strecke Start–Ziel ≤ 1,0 sm ist → Info „<Brücke> liegt nahe der Luftlinie – prüfen, ob die Route darunter führt“ mit Level aus `bridgeCheck`. Fließt nicht in die Gesamtampel.
+- **Überfahrt-Gates** (Bornholm/Anholt) zusätzlich aktiv, wenn Start ≤ 15 sm von einem Absprunghafen einer Seite und Ziel ≤ 15 sm von einem Absprunghafen der anderen Seite oder in der Box liegt.
+
+### 12.3 Tests
+40. `rhumb(de-heiligenhafen-marina → de-burgtiefe)` = 74 ± 1°, 8,0 ± 0,2 sm; `de-sassnitz → dk-roenne-havn` = 46 ± 1°, 50,9 ± 0,3 sm.
+41. Wind N: Kurs 000 → Kreuzen; 045 → am Wind; 090 → halber Wind; 135 → raum; 180 → vorm Wind. Wind N, Kurs 270 → „von Steuerbord“; Kurs 090 → „von Backbord“.
+42. Automatik: Position Sassnitz, Ziel Rønne, Wind NE 15/20 → `state.course` = „am Wind“ (Kreuzen), Reff mit Faktor 1,15 → scheinbar 23 → 2. Reff. Wind SW → „vorm Wind“.
+43. ETA Kreuzen: Sassnitz → Rønne, Wind NE, Fahrt 5,5 → 50,9 × 1,41 / 5,5 ≈ 13,0 h ± 0,2.
+44. Override: manuell „raum“ setzen → bleibt bei neuer Windrichtung; „Automatik“ → wieder automatisch.
+45. Brücke nahe Linie: Heiligenhafen → Burgtiefe, Default-Profil → Hinweis Fehmarnsundbrücke (gelb, ungeprüft); Gesamtampel davon unberührt.
+46. Gate über Ziel: Start Sassnitz… bereits aktiv; zusätzlich Start Tromper Wiek ist durch §4.4 abgedeckt – neuer Fall: Start Klintholm (DK-Seite, Absprunghafen), Ziel Rønne, Böen 23 → Bornholm-Gate rot.
+47. Keine JS-Fehler/0 externe Requests nach Ziel setzen über Suche, manuell und „Als Ziel“.

@@ -1,5 +1,5 @@
 /* Offline cache for Skipper-Assistent Ostsee. Cache-first, falls back to network; all errors are swallowed. */
-var CACHE='skipper-ostsee-v1-20261018';
+var CACHE='skipper-ostsee-v1.4-20261019';
 var FILES=['./','./index.html','./manifest.webmanifest','./icon.svg','./icon-192.png','./icon-512.png'];
 self.addEventListener('install',function(e){
   e.waitUntil(caches.open(CACHE).then(function(c){return c.addAll(FILES);}).then(function(){return self.skipWaiting();}).catch(function(){}));

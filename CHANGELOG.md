@@ -29,3 +29,10 @@ Erstausgabe der Ostsee-App nach SPEC_v1.md, aufbauend auf Skipper-Assistent Sard
 - Default-Profil: "Dehler 35 CWS (BJ 1994, Flachkiel)" 10,50 / 3,30 / Tiefgang 1,55 / Mast 19,0 m (Angabe Eigner 19.10.2026); Hinweis "Masthöhe geschätzt" entfällt dafür, Quellenzeile im Boot-Tab. 18,5 m nur noch in den Profilen "Dehler 35 (ab 2010)".
 - PDF-Brückenseite: Spalte "Mast 19,0 m?" aus dem Default-Profil. Reserve-Angaben mit mindestens einer Nachkommastelle.
 - Tests setzen das Boot explizit; neuer Test 39. SPEC_v1.md §3 angepasst.
+
+## v1.4 (19.10.2026) Ziel, Kurs und Kurs zum Wind (SPEC §12)
+- Lage-Tab: neuer Abschnitt "3 · Ziel" (Hafensuche, manuell Grad/Dezimalminuten, "Als Ziel" im Zuflucht-Tab, "Ziel löschen"); Ziel in `state.target` und localStorage.
+- Loxodrome rwK/Distanz (Luftlinie), Windwinkel, Seite, Kurs zum Wind (Faustregel, im Regeln-Screen), Kreuzen mit 1,4-fachem Weg für die Fahrzeit.
+- Kurs zum Wind automatisch aus Ziel; manuelle Eingabe gilt, mit Hinweis bei Abweichung und Button "Automatik".
+- Zielhafen als Hafenkarte (Sonnenuntergang mit Ziel-ETA); Brücken nahe der Luftlinie nur als Hinweis, ohne Einfluss auf die Gesamtampel.
+- Tests 40–47; Screenshots 11 und 12; Service-Worker-Cache `skipper-ostsee-v1.4-20261019`.

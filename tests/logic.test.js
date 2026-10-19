@@ -507,6 +507,69 @@ const NOW = Date.UTC(2026, 6, 15, 9, 0); // 15.07.2026 11:00 MESZ: fixed clock, 
       bf(sb, 'dk-bro-storeb-ltsbroen-vestbroen').level === 'r' && bf(fs, 'de-bro-fehmarnsund').level === 'y' && /Reserve nur 2,0 m/.test(bf(fs, 'de-bro-fehmarnsund').text),
       JSON.stringify([D, bf(f0, 'dk-bro-sj-lland-far-broen'), bf(f10, 'dk-bro-sj-lland-far-broen'), bf(fs, 'de-bro-fehmarnsund')]));
   }
+  // ---- v1.4 target / course (spec §12) ----
+  const run = (st) => ev((s) => { const r = SKIPPER.evaluate(s); return { course: r.state.course, auto: r.state.courseAuto, T: r.target, reff: r.reff, gates: r.gates, overall: r.overall && r.overall.level }; }, st);
+  const sass = await posOf('de-sassnitz');
+  // 40
+  {
+    const r1 = await ev(() => { const g = (i) => SKIPPER.DATA.find(h => h.id === i); const a = SKIPPER.rhumb(g('de-heiligenhafen-marina'), g('de-burgtiefe')), b = SKIPPER.rhumb(g('de-sassnitz'), g('dk-roenne-havn')); return [a, b]; });
+    check('40 rhumb Heiligenhafen->Burgtiefe 74°/8,0 sm; Sassnitz->Rønne 46°/50,9 sm', Math.abs(r1[0].course - 74) <= 1 && Math.abs(r1[0].dist - 8.0) <= 0.2 && Math.abs(r1[1].course - 46) <= 1 && Math.abs(r1[1].dist - 50.9) <= 0.3, JSON.stringify(r1));
+  }
+  // 41
+  {
+    const o = await ev(() => [0, 45, 90, 135, 180].map(c => SKIPPER.courseToWind('N', c).label).concat([SKIPPER.courseToWind('N', 270).side, SKIPPER.courseToWind('N', 90).side, SKIPPER.courseToWind('N', 0).reffCourse]));
+    check('41 Wind N: 000 Kreuzen, 045 am Wind, 090 halber Wind, 135 raum, 180 vorm Wind; Kurs 270 von Steuerbord, 090 von Backbord', /^Kreuzen/.test(o[0]) && o[1] === 'am Wind' && o[2] === 'halber Wind' && o[3] === 'raum' && o[4] === 'vorm Wind' && o[5] === 'von Steuerbord' && o[6] === 'von Backbord' && o[7] === 'am Wind', JSON.stringify(o));
+  }
+  // 42
+  {
+    const st = { ...base, pos: sass, target: { id: 'dk-roenne-havn' }, dir: 'NE', windTrue: 15, gust: 20, course: 'raum' };
+    const a = await run(st), b = await run({ ...st, dir: 'SW' });
+    check('42 Automatik Sassnitz->Rønne: Wind NE -> am Wind (Kreuzen), scheinbar 23 kn, 2. Reff; Wind SW -> vorm Wind', a.auto && a.course === 'am Wind' && a.T.kreuzen && a.reff.apparent === 23 && a.reff.idx === 2 && b.course === 'vorm Wind' && !b.T.kreuzen, JSON.stringify([a.course, a.reff, b.course]));
+  }
+  // 43
+  {
+    const a = await run({ ...base, pos: sass, target: { id: 'dk-roenne-havn' }, dir: 'NE', windTrue: 10, gust: 12, speed: 5.5 });
+    check('43 ETA Kreuzen Sassnitz->Rønne ≈ 13,0 h ± 0,2', Math.abs(a.T.eta - 50.9 * 1.41 / 5.5) < 0.2 && Math.abs(a.T.eta - 13.0) < 0.2, JSON.stringify(a.T.eta));
+  }
+  // 44
+  {
+    const o = await ev((b) => {
+      const st = Object.assign({}, b, { pos: { lat: 54.5, lon: 13.6 }, target: { id: 'dk-roenne-havn' }, dir: 'NE', windTrue: 10, gust: 12, courseMode: 'manual', course: 'raum' });
+      const m1 = SKIPPER.evaluate(st), m2 = SKIPPER.evaluate(Object.assign({}, st, { dir: 'SW' })), au = SKIPPER.evaluate(Object.assign({}, st, { courseMode: 'auto' }));
+      return [m1.state.course, m1.target.mismatch, m2.state.course, au.state.course, au.state.courseAuto];
+    }, base);
+    check('44 Override: manuell "raum" bleibt bei neuer Windrichtung (Hinweis), Automatik setzt wieder automatisch', o[0] === 'raum' && o[1] === true && o[2] === 'raum' && o[3] === 'am Wind' && o[4] === true, JSON.stringify(o));
+  }
+  // 45
+  {
+    const hp = await posOf('de-heiligenhafen-marina');
+    const st = { ...base, boat: undefined, pos: hp, target: { id: 'de-burgtiefe' }, dir: 'W', windTrue: 5, gust: 8 };
+    const a = await run(st), b = await run({ ...st, target: null });
+    const fs = a.T.bridges.find(x => /Fehmarnsund/.test(x.title));
+    check('45 Heiligenhafen->Burgtiefe: Hinweis Fehmarnsundbrücke (gelb, ungeprüft); Gesamtampel unberührt', fs && fs.level === 'y' && /ungeprüft/.test(fs.text) && a.overall === b.overall, JSON.stringify([a.T.bridges.map(x => [x.title, x.level]), a.overall, b.overall]));
+  }
+  // 46
+  {
+    const kp = await posOf('dk-klintholm-havn');
+    const a = await run({ ...base, pos: kp, target: { id: 'dk-roenne-havn' }, dir: 'W', windTrue: 15, gust: 23 });
+    check('46 Start Klintholm, Ziel Rønne, Böen 23: Bornholm-Gate rot', a.gates.some(g => g.id === 'bornholm' && g.level === 'r'), JSON.stringify(a.gates.map(g => [g.id, g.level])));
+  }
+  // 47
+  {
+    const nErr = errors.length, nExt = external.length;
+    await page.evaluate(() => { SKIPPER.state.pos = { lat: 54.51, lon: 13.64, src: 'manual', t: Date.now() }; SKIPPER.state.dir = 'NE'; SKIPPER.state.windTrue = 15; SKIPPER.state.gust = 20; SKIPPER.update(); });
+    await page.click('nav button[data-scr="scr-lage"]');
+    await page.fill('#tsearch', 'ronne'); await page.waitForSelector('#tsug [data-tid]');
+    await page.click('#tsug [data-tid]'); const viaSearch = await ev(() => SKIPPER.state.target && SKIPPER.state.target.name);
+    await page.click('#btn-tclear'); const cleared = await ev(() => SKIPPER.state.target);
+    await page.click('#det-tmanual summary'); await page.fill('#tlatd', '55'); await page.fill('#tlatm', '5.8'); await page.fill('#tlond', '14'); await page.fill('#tlonm', '41'); await page.click('#btn-tmanual');
+    const manual = await ev(() => SKIPPER.state.target && Math.round(SKIPPER.state.target.lat * 100) / 100);
+    await page.click('nav button[data-scr="scr-zuflucht"]');
+    await page.click('#zlist [data-target]'); const viaBtn = await ev(() => SKIPPER.state.target && SKIPPER.state.target.id);
+    await page.click('nav button[data-scr="scr-lage"]');
+    const shown = await page.evaluate(() => /rwK/.test(document.getElementById('result').textContent));
+    check('47 Ziel über Suche, manuell und "Als Ziel": keine JS-Fehler, 0 externe Requests, Löschen geht', /Rønne/.test(viaSearch || '') && cleared === null && manual === 55.1 && !!viaBtn && shown && errors.length === nErr && external.length === nExt, JSON.stringify({ viaSearch, cleared, manual, viaBtn, shown, errors: errors.slice(nErr) }));
+  }
   await browser.close();
   const failed = results.filter(r => !r.ok);
   console.log('\n' + (results.length - failed.length) + '/' + results.length + ' checks passed');
