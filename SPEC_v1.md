@@ -356,3 +356,11 @@ Ziel: Aus aktueller Wettervorhersage (online, auf Tippen) eine Route über 2–7
 - **Nachtfahrt** = Etappe, die durch Dunkelheit führt (Ankunft nach Sonnenuntergang − 30 min oder am Folgetag), bis „max. Nachtfahrt“. Lange Etappen nur bei Tageslicht über „max. Etappe“ bleiben verboten. Gleiche Schwellen wie am Tag (Wunsch Christoph); zusätzlich Info „Nachtfahrt: Wachplan, Lichterführung, Rettungswesten mit Licht“ und gelb „Ankunft bei Dunkelheit“. Kosten +3 je Nachtfahrt. Ziele für Nachtfahrten: ≥ 0,6 × max. Etappe, höchstens 60 je Hafen (gleichmäßig nach Distanz).
 - Endet die Nachtfahrt am Folgetag, ist dieser Tag „Ankunft nach Nachtfahrt“ (keine weitere Etappe); die Nachtprüfung läuft ab Ankunft.
 - Tests 66–68.
+
+## 17. Navily-Abgleich: Wetter übernehmen, 72-h-Schutzverlauf, Notizen, Über-Häfen (v2.5, Wunsch Christoph 01.11.2026)
+1. **Wetter übernehmen** (Lage-Tab, Abschnitt 2): Knopf übernimmt aus dem gespeicherten Wetterstand an Position und jetziger Uhrzeit Windrichtung (8er-Rose), Wind, Böen (≥ Wind), Seegang (0,25-m-Stufen) mit Richtung, Nebel (< 1000 m) und Gewitter (Code 95/96/99). Hinweis mit Stand, Zeit, Abstand zum Rasterpunkt und „Vorhersage, keine Messung“. Ohne Position oder Wetter: Meldung, nichts ändern.
+2. **72-h-Schutzverlauf** auf jeder Hafenkarte, wenn ein Wetterstand vorliegt: 24 Felder à 3 h ab der vollen Stunde, Ampel aus Windschutz, Ansteuerung, Seegang und Böen je Hafentyp (wie Nachtprüfung §14.4), ohne Vorhersage gestrichelt. Zusammenfassung „geschützt bis Di 03:00, dann eingeschränkt (W 25/32 kn)“. Faustregel wie die Hafenbewertung.
+3. **Meine Notiz** je Hafen: Text, eigene Sterne 0–5, „war schon da“; nur localStorage `skipperOst.notes`, im Backup-Export enthalten, beim Import neuere Einträge gewinnen.
+4. **Über-Häfen** im Törnplaner: bis 3, in fester Reihenfolge; Plan gilt nur, wenn alle besucht sind. Strahlsuche mit Restweg über die Über-Häfen zum Ende (0,25 je sm), Zustände ohne erreichbaren Restweg fallen weg.
+5. **Gesamtstrecke über dem Maximum** (Tage × max. Etappe + Nachtfahrten): eigener Hinweis mit dem Maximum und was man ändern kann; sonst Abweichung als „x sm kürzer/länger“.
+- Tests 69–72.

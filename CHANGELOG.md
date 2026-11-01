@@ -80,3 +80,10 @@ Erstausgabe der Ostsee-App nach SPEC_v1.md, aufbauend auf Skipper-Assistent Sard
 
 ## v2.4 (01.11.2026)
 - Boot-Tab: Abschnitt „Über die App“ (Herausgeber Christoph Bauermeister, Entwicklung AIxion Systems, Quellen und Lizenzen). SW-Cache `skipper-ostsee-v2.4-20261101`.
+
+## v2.5 (01.11.2026) Navily-Abgleich (SPEC §17)
+- Lage-Tab: Wind/Böen/Seegang aus dem Wetterstand übernehmen.
+- Hafenkarten: 72-h-Schutzverlauf in 3-h-Schritten mit Zusammenfassung.
+- Meine Notiz je Hafen (Text, Sterne, war schon da), im Backup.
+- Törnplaner: bis 3 Über-Häfen (z. B. Rund Fünen); Hinweis, wenn die Gesamtstrecke über dem Maximum liegt.
+- Tests 69–72, SW-Cache `skipper-ostsee-v2.5-20261101`.

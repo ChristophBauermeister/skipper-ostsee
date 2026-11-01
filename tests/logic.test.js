@@ -847,6 +847,49 @@ const NOW = Date.UTC(2026, 6, 15, 9, 0); // 15.07.2026 11:00 MESZ: fixed clock, 
     check('68 Nachtfahrt bis zum Folgetag → Folgetag „Ankunft nach Nachtfahrt“ ohne weitere Etappe; max. Nachtfahrt 12 h → kein Plan; Felder im Formular und Boot-Tab',
       (leg.arrDay === 0 || (arrive && arrive.d === leg.arrDay && !n1.days.some(x => x.type === 'leg' && x.d === leg.arrDay))) && !!short.error && ui, JSON.stringify({ leg, arrive, short: short.error, ui }));
   }
+
+  // ---- v2.5 Navily-Abgleich (spec §17) ----
+  {
+    const { makeWx } = require('./wxfixture.js');
+    const pts = await ev(() => SKIPPER.WXGRID.points);
+    const now = Date.now(), t0 = Date.UTC(new Date(now).getUTCFullYear(), new Date(now).getUTCMonth(), new Date(now).getUTCDate());
+    const nowWx = makeWx(pts, t0, (i, h) => (h < 30 ? { ws: 12, wd: 270, wg: 19, wh: 1.1, wdir: 270 } : { ws: 26, wd: 90, wg: 34, wh: 1.4, wdir: 90 }), { fetchedAt: now });
+    const f = await ev((snap) => {
+      SKIPPER.wxSet(snap); const h = SKIPPER.DATA.find(x => x.id === 'dk-klintholm-havn');
+      SKIPPER.state.pos = { lat: h.lat + 0.05, lon: h.lon, src: 'manual', t: Date.now() };
+      SKIPPER.state.dir = null; SKIPPER.state.windTrue = null; SKIPPER.state.gust = null;
+      const r = SKIPPER.wxFill(); SKIPPER.update();
+      const st = SKIPPER.state; return { r, dir: st.dir, w: st.windTrue, g: st.gust, sea: st.seaH, seaDir: st.seaDir };
+    }, nowWx);
+    check('69 Wetter übernehmen: Position + Wetterstand → W 12/19 kn, Seegang 1,0 m aus W (0,25-Stufen), Hinweis „Vorhersage, keine Messung“', f.r.ok && f.dir === 'W' && f.w === 12 && f.g === 19 && f.sea === 1 && f.seaDir === 'W' && /keine Messung/.test(f.r.text), JSON.stringify(f));
+    const calmW = makeWx(pts, t0, (i, h) => (h < 30 ? { ws: 12, wd: 90, wg: 17, wh: 0.3, wdir: 90 } : { ws: 26, wd: 270, wg: 34, wh: 1.4, wdir: 270 }), { fetchedAt: now + 1 });
+    await ev((snap) => { SKIPPER.wxSet(snap); SKIPPER.update(); }, calmW);
+    const tl = await ev(() => { const h = SKIPPER.DATA.find(x => x.id === 'dk-klintholm-havn'); const r = SKIPPER.harbourTimeline(h, SKIPPER.normalize(SKIPPER.state)); return { n: r.cells.length, lv: r.cells.map(c => c.level).join(''), sum: r.summary }; });
+    await page.click('nav button[data-scr="scr-zuflucht"]');
+    const tlDom = await page.evaluate(() => { const el = document.querySelector('#zlist .tl'); return el ? { cells: el.querySelectorAll('.tlc').length, txt: el.textContent } : null; });
+    check('70 72-h-Schutzverlauf: 24 Felder à 3 h; Klintholm bei E geschützt, später W 26/34 (Ansteuerung offen) nicht mehr grün; Zusammenfassung mit Wechselzeitpunkt; auf den Hafenkarten im Zuflucht-Tab',
+      tl.n === 24 && tl.lv[0] === 'g' && /[yrn]/.test(tl.lv.slice(12)) && /geschützt bis/.test(tl.sum) && tlDom && tlDom.cells === 24, JSON.stringify({ tl, tlDom }));
+    // notes
+    const nid = await page.evaluate(() => document.querySelector('#zlist textarea[data-note]').dataset.note);
+    await page.evaluate(() => { document.querySelector('#zlist details.mynote').open = true; });
+    await page.fill(`#zlist textarea[data-note="${nid}"]`, 'Liegeplatz am Kopfsteg, Hafenmeister sehr hilfsbereit');
+    await page.check(`#zlist input[data-visited="${nid}"]`); await page.selectOption(`#zlist select[data-stars="${nid}"]`, '4');
+    await page.waitForTimeout(500);
+    const stored = await page.evaluate(() => JSON.parse(localStorage.getItem('skipperOst.notes') || '{}'));
+    const n = stored[nid] || {};
+    await page.evaluate(() => SKIPPER.update());
+    const after = await page.evaluate((id) => { const t = document.querySelector(`#zlist textarea[data-note="${id}"]`); return t && t.value; }, nid);
+    check('71 Notiz je Hafen: Text, „war schon da“ und 4 Sterne in localStorage, bleiben nach Neuzeichnen erhalten', /Kopfsteg/.test(n.text || '') && n.visited === true && n.stars === 4 && /Kopfsteg/.test(after || ''), JSON.stringify({ n, after }));
+    // vias + capacity
+    const calm = makeWx(pts, Date.UTC(2026, 6, 15), () => ({ ws: 10, wd: 225, wg: 14, wh: 0.4 }));
+    const v = await ev((snap) => { SKIPPER.wxSet(snap); const o = { date: '2026-07-15', depHour: 8, maxLegH: 8, daylight: true, speed: 5.5, maxNightH: 24, mode: 'rund', start: 'de-heiligenhafen-marina', days: 7 };
+      const a = SKIPPER.planTrip(Object.assign({}, o, { vias: ['dk-middelfart-marina', 'dk-kerteminde-havn-marina'] }));
+      const c = SKIPPER.planTrip(Object.assign({}, o, { targetNm: 360 }));
+      const seq = a.days ? a.days.filter(x => x.type === 'leg').map(x => x.leg.to) : [];
+      return { err: a.error, seq, iM: seq.indexOf('dk-middelfart-marina'), iK: seq.indexOf('dk-kerteminde-havn-marina'), last: seq[seq.length - 1], cap: c.capNm, total: c.totalNm }; }, calm);
+    check('72 Über-Häfen: Rundtörn Heiligenhafen über Middelfart, dann Kerteminde (Rund Fünen), zurück nach Heiligenhafen; Vorgabe 360 sm > Maximum 308 sm wird erkannt',
+      !v.err && v.iM >= 0 && v.iK > v.iM && v.last === 'de-heiligenhafen-marina' && Math.round(v.cap) === 308 && v.total <= v.cap, JSON.stringify(v));
+  }
   await browser.close();
   const failed = results.filter(r => !r.ok);
   console.log('\n' + (results.length - failed.length) + '/' + results.length + ' checks passed');
