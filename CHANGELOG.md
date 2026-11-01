@@ -77,3 +77,6 @@ Erstausgabe der Ostsee-App nach SPEC_v1.md, aufbauend auf Skipper-Assistent Sard
 - Törn-Formular: Gesamtstrecke in sm (optional) und Anzahl Nachtfahrten; Boot-Tab: max. Nachtfahrt (h, Default 24).
 - Nachtfahrten nur durch Dunkelheit, gleiche Schwellen wie tags, Hinweis Ankunft bei Dunkelheit; Folgetag „Ankunft nach Nachtfahrt“.
 - Tests 66–68, SW-Cache `skipper-ostsee-v2.3-20261101`.
+
+## v2.4 (01.11.2026)
+- Boot-Tab: Abschnitt „Über die App“ (Herausgeber Christoph Bauermeister, Entwicklung AIxion Systems, Quellen und Lizenzen). SW-Cache `skipper-ostsee-v2.4-20261101`.
