@@ -59,3 +59,6 @@ Erstausgabe der Ostsee-App nach SPEC_v1.md, aufbauend auf Skipper-Assistent Sard
 
 ## v2.0.1 (01.11.2026)
 - Eigenes App-Icon (Ostsee-Leuchtturm) statt des Sardinien-Icons; SW-Cache `skipper-ostsee-v2.0.1-20261101`.
+
+## v2.0.2 (01.11.2026)
+- Manifest mit eigener `id`, damit Android die App mit neuem Icon neu installieren kann; SW-Cache `skipper-ostsee-v2.0.2-20261101`.
