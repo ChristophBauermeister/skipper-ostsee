@@ -774,7 +774,7 @@ const NOW = Date.UTC(2026, 6, 15, 9, 0); // 15.07.2026 11:00 MESZ: fixed clock, 
     // 63 online chart only on switch
     const png = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==', 'base64');
     const hosts = new Set();
-    await page.route('https://tile.openstreetmap.org/**', (rt) => { hosts.add('osm'); rt.fulfill({ status: 200, contentType: 'image/png', body: png }); });
+    await page.route('https://tile.openstreetmap.org/**', (rt) => { hosts.add('osm'); rt.fulfill({ status: 200, contentType: 'image/png', headers: { 'Access-Control-Allow-Origin': '*' }, body: png }); });
     await page.route('https://tiles.openseamap.org/**', (rt) => { hosts.add('seamark'); rt.fulfill({ status: 200, contentType: 'image/png', body: png }); });
     const before = external.length;
     await page.check('#m-online'); await page.waitForTimeout(500);
@@ -798,6 +798,31 @@ const NOW = Date.UTC(2026, 6, 15, 9, 0); // 15.07.2026 11:00 MESZ: fixed clock, 
     });
     check('64 GPX 1.1: wohlgeformt, je Segeltag ein rte mit allen Wegpunkten, startet am Starthafen, letzter Punkt = Zielhafen, Häfen als wpt, Hinweis enthalten',
       g.err === 0 && g.ns === 'http://www.topografix.com/GPX/1/1' && g.rtes === g.legs && g.pts === g.ptsExp && Math.abs(g.first[0] - g.st[0]) < 1e-4 && Math.abs(g.first[1] - g.st[1]) < 1e-4 && /Heiligenhafen/.test(g.lastName) && g.wpt >= 2 && g.disc && /\.gpx$/.test(g.name), JSON.stringify(g));
+  }
+
+  // ---- v2.2 viewed tiles offline (spec §15.4) ----
+  {
+    const png = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==', 'base64');
+    await page.route('https://tile.openstreetmap.org/**', (rt) => rt.fulfill({ status: 200, contentType: 'image/png', headers: { 'Access-Control-Allow-Origin': '*' }, body: png }));
+    await page.route('https://tiles.openseamap.org/**', (rt) => rt.fulfill({ status: 200, contentType: 'image/png', headers: { 'Access-Control-Allow-Origin': '*' }, body: png }));
+    await page.evaluate(() => SKIPPER.TILES.clear());
+    await page.evaluate(() => { SKIPPER.mapFit(null); SKIPPER.MAP.tiles = {}; SKIPPER.MAP.tz = null; document.getElementById('m-tiles').innerHTML = ''; document.getElementById('m-seamark').innerHTML = ''; });
+    await page.check('#m-online'); await page.waitForTimeout(800);
+    const stored = await page.evaluate(() => SKIPPER.TILES.stats());
+    const view = await page.evaluate(() => document.querySelectorAll('#m-tiles image').length);
+    await page.context().setOffline(true);
+    const before = external.length;
+    await page.evaluate(() => { SKIPPER.MAP.tiles = {}; SKIPPER.MAP.tz = null; document.getElementById('m-tiles').innerHTML = ''; document.getElementById('m-seamark').innerHTML = ''; SKIPPER.mapFit(null); });
+    await page.waitForTimeout(800);
+    const off = await page.evaluate(() => { const im = [...document.querySelectorAll('#m-tiles image, #m-seamark image')]; return { n: im.length, blob: im.filter(i => (i.getAttribute('href') || '').startsWith('blob:')).length }; });
+    const offReq = external.length - before;
+    await page.context().setOffline(false);
+    await page.click('#btn-tclearcache'); await page.waitForTimeout(300);
+    const cleared = await page.evaluate(() => SKIPPER.TILES.stats());
+    await page.uncheck('#m-online');
+    await page.unroute('https://tile.openstreetmap.org/**'); await page.unroute('https://tiles.openseamap.org/**');
+    check('65 Angesehene Kacheln (Basis + Seezeichen) liegen auf dem Gerät und kommen offline ohne Requests; „löschen“ leert den Speicher',
+      stored.n === 2 * view && view > 0 && off.n === 2 * view && off.blob === off.n && offReq === 0 && cleared.n === 0, JSON.stringify({ stored, view, off, offReq, cleared }));
   }
   await browser.close();
   const failed = results.filter(r => !r.ok);
