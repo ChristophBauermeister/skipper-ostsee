@@ -96,3 +96,7 @@ Erstausgabe der Ostsee-App nach SPEC_v1.md, aufbauend auf Skipper-Assistent Sard
 - Motor im Törnplaner (nie / Flaute / Flaute+Kreuzen, Motorfahrt kn).
 - Nach Nachtfahrt weiter ab 10–13 Uhr statt Ruhetag.
 - Tests 73–75, SW-Cache `skipper-ostsee-v2.6-20261101`.
+
+## v2.7 (01.11.2026) Hafensuche und Auswahl auf der Karte (SPEC §19)
+- Suchfelder für Start, Ziel und Über-Häfen; Karte im Formular mit allen Häfen, antippen → als Start/Über/Ziel.
+- Test 76, SW-Cache `skipper-ostsee-v2.7-20261101`.

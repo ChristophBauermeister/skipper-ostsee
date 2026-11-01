@@ -84,7 +84,7 @@ const { chromium } = require('playwright');
     await set({ pos: await posOf('de-heiligenhafen-marina'), dir: 'SW', windTrue: 12, gust: 17, seaDir: null, seaH: 0 });
     await go('scr-toern');
     await page.evaluate(() => { document.getElementById('p-date').value = '2026-07-15'; document.getElementById('p-date').dispatchEvent(new Event('change')); });
-    await page.selectOption('#p-start', 'de-heiligenhafen-marina'); await page.selectOption('#p-days', '5');
+    await page.evaluate(() => SKIPPER.pickerSet('p-start', 'de-heiligenhafen-marina')); await page.selectOption('#p-days', '5');
     await page.evaluate(() => { const r = SKIPPER.planTrip({ mode: 'rund', start: 'de-heiligenhafen-marina', date: '2026-07-15', days: 5, depHour: 8, maxLegH: 8, daylight: true, speed: 5.5 }); SKIPPER.PL.plan = SKIPPER.planSerialize(r); SKIPPER.renderPlan(); document.getElementById('wxstate').textContent = 'Wetterstand 07:00 MESZ, 15.07. (Open-Meteo) · 108 Punkte'; });
     await page.evaluate(() => window.scrollTo(0, 0));
     await shot('15-toern-wetter-form', false);

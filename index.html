@@ -269,6 +269,13 @@ table.wp th{text-transform:none;letter-spacing:0}
 .tmap polyline.leg{fill:none;stroke-width:3.5;stroke-linejoin:round;stroke-linecap:round;vector-effect:non-scaling-stroke;cursor:pointer}
 .tmap polyline.leg.sel{stroke-width:6.5}
 .tmap .mk{cursor:pointer}.tmap .mk text{fill:#fff;font-weight:700}
+.tmap .hkhit{fill:transparent;cursor:pointer}.tmap .hkdot{fill:var(--card);stroke:var(--ink);pointer-events:none}
+.tmap .mlab.small{font-weight:600;fill:var(--mute)}
+.mpick{margin-top:8px;padding:10px 12px;border:1.5px solid var(--line);border-radius:8px;background:var(--card)}
+.hpick{position:relative}.hpick input{width:100%;min-height:52px;font-size:1.05rem;padding:8px 12px;border:2px solid var(--on);border-radius:10px;background:var(--card);color:var(--ink);font-family:inherit}
+.hsug{display:flex;flex-direction:column;gap:4px;margin-top:4px}
+.hsugb{text-align:left;padding:10px 12px;border:1.5px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink);font:inherit;cursor:pointer}
+.hsugb span{color:var(--mute);font-size:.9rem}
 .tmap .mlab{fill:var(--ink);stroke:var(--mapsea);paint-order:stroke;font-weight:700;stroke-linejoin:round}
 :root[data-theme="night"] #m-tiles,:root[data-theme="night"] #m-seamark{filter:grayscale(1) brightness(.45) sepia(1) hue-rotate(-40deg) saturate(5)}
 .tmap-ctl{position:absolute;right:8px;top:8px;display:flex;flex-direction:column;gap:6px}
@@ -605,14 +612,22 @@ nav button .ic{font-size:1.2rem}
     <button class="tog sm" data-pmode="ziel" aria-pressed="false">Ziel</button>
     <button class="tog sm" data-pmode="frei" aria-pressed="false">Frei</button>
   </div>
+  <div id="mapbox">
+    <div class="tmap" id="tmap"></div>
+    <div id="m-pick"></div>
+    <div class="note small">Hafen auf der Karte antippen, um ihn als Start, Über-Hafen oder Ziel zu wählen. Nach dem Planen: Tag antippen hebt die Etappe hervor.</div>
+    <label class="switch"><input type="checkbox" id="m-online"><span>Seekarte (OpenStreetMap + OpenSeaMap)<small>Lädt nur den Ausschnitt, den du ansiehst. Angesehene Kacheln bleiben offline verfügbar – vor dem Ablegen die Route mit Netz in den nötigen Zoomstufen ansehen.</small></span></label>
+    <div class="note small" id="m-tstats"></div>
+    <button class="btn sm" id="btn-tclearcache" style="margin-top:6px">Gespeicherte Kartenkacheln löschen</button>
+  </div>
   <div class="fgrid" style="margin-top:8px">
-    <div class="full"><label for="p-start">Start</label><select id="p-start"></select></div>
-    <div class="full" id="p-zielwrap" style="display:none"><label for="p-ziel">Ziel</label><select id="p-ziel"></select></div>
+    <div class="full"><label for="p-start-q">Start</label><div class="hpick" data-sel="p-start"><input type="search" id="p-start-q" placeholder="Hafen suchen …" autocomplete="off" enterkeyhint="search"><div class="hsug" id="p-start-sug"></div></div><select id="p-start" hidden aria-hidden="true" tabindex="-1"></select></div>
+    <div class="full" id="p-zielwrap" style="display:none"><label for="p-ziel-q">Ziel</label><div class="hpick" data-sel="p-ziel"><input type="search" id="p-ziel-q" placeholder="Zielhafen suchen …" autocomplete="off" enterkeyhint="search"><div class="hsug" id="p-ziel-sug"></div></div><select id="p-ziel" hidden aria-hidden="true" tabindex="-1"></select></div>
     <div><label for="p-date">Startdatum</label><input type="date" id="p-date"></div>
     <div><label for="p-days">Tage</label><select id="p-days"></select></div>
     <div><label for="p-dep">Abfahrt</label><select id="p-dep"></select></div>
     <div class="full"><label>Über (optional, in dieser Reihenfolge)</label>
-      <select id="p-via1" aria-label="Über-Hafen 1"></select><select id="p-via2" aria-label="Über-Hafen 2" style="margin-top:6px"></select><select id="p-via3" aria-label="Über-Hafen 3" style="margin-top:6px"></select>
+      <div class="hpick" data-sel="p-via1"><input type="search" id="p-via1-q" placeholder="1. Über-Hafen suchen …" autocomplete="off" aria-label="Über-Hafen 1"><div class="hsug" id="p-via1-sug"></div></div><select id="p-via1" hidden aria-hidden="true" tabindex="-1"></select><div class="hpick" data-sel="p-via2" style="margin-top:6px"><input type="search" id="p-via2-q" placeholder="2. Über-Hafen suchen …" autocomplete="off" aria-label="Über-Hafen 2"><div class="hsug" id="p-via2-sug"></div></div><select id="p-via2" hidden aria-hidden="true" tabindex="-1"></select><div class="hpick" data-sel="p-via3" style="margin-top:6px"><input type="search" id="p-via3-q" placeholder="3. Über-Hafen suchen …" autocomplete="off" aria-label="Über-Hafen 3"><div class="hsug" id="p-via3-sug"></div></div><select id="p-via3" hidden aria-hidden="true" tabindex="-1"></select>
       <div class="note small">Z. B. Rund Fünen: über Middelfart und Kerteminde.</div></div>
     <div><label for="p-target">Gesamtstrecke (sm, optional)</label><input type="text" inputmode="numeric" id="p-target" placeholder="z. B. 200"></div>
     <div><label for="p-nights">Nachtfahrten max.</label><select id="p-nights"><option value="0">keine</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select></div>
@@ -622,13 +637,9 @@ nav button .ic{font-size:1.2rem}
   <button class="btn prim" id="btn-plan" style="margin-top:12px">Törn planen</button>
   <div id="planmsg"></div>
   <div id="planhead"></div>
-  <div id="mapbox" style="display:none">
-    <div class="tmap" id="tmap"></div>
-    <label class="switch"><input type="checkbox" id="m-online"><span>Seekarte (OpenStreetMap + OpenSeaMap)<small>Lädt nur den Ausschnitt, den du ansiehst. Angesehene Kacheln bleiben offline verfügbar – vor dem Ablegen die Route mit Netz in den nötigen Zoomstufen ansehen.</small></span></label>
-    <div class="note small" id="m-tstats"></div>
-    <button class="btn sm" id="btn-tclearcache" style="margin-top:6px">Gespeicherte Kartenkacheln löschen</button>
+  <div id="gpxbox" style="display:none">
     <div class="grid2" style="margin-top:8px"><button class="btn sm" id="btn-gpxshare">GPX teilen</button><button class="btn sm" id="btn-gpxsave">GPX speichern</button></div>
-    <div class="note small">GPX: eine Route je Segeltag mit Wegpunkten, die Häfen als Wegpunkte. Für Navionics, OpenCPN oder den Plotter – dort auf der Seekarte prüfen. Tag antippen (Karte oder Liste) hebt die Etappe hervor.</div>
+    <div class="note small">GPX: eine Route je Segeltag mit Wegpunkten, die Häfen als Wegpunkte. Für Navionics, OpenCPN oder den Plotter – dort auf der Seekarte prüfen.</div>
   </div>
   <div id="planres"></div>
 </section>
@@ -673,7 +684,7 @@ DATA.forEach(function(h){BY_ID[h.id]=h;});
 BRIDGES.forEach(function(b){BR_BY_ID[b.id]=b;});
 
 var CONST={
-  datenstand:'18.10.2026',appVersion:'2.6',
+  datenstand:'18.10.2026',appVersion:'2.7',
   reff:{base:[18,23,28],names:['Vollzeug','1. Reff','2. Reff','3. Reff + Zuflucht anlaufen']},
   courseFactor:{'am Wind':1.15,'halber Wind':1.05,'raum':0.9,'vorm Wind':0.8},
   courses:['am Wind','halber Wind','raum','vorm Wind'],
@@ -706,7 +717,7 @@ var CONST={
     fogM:1000,thunder:[95,96,99],confDays:[3,5],nightFromHour:15,snapNoteNm:0.3,maxLegH:8,maxLegMin:3,maxLegMax:14,defaultStart:'de-heiligenhafen-marina',
     disclaimer:'Planungshilfe. Netz aus Küstenlinie (GSHHG) und Tiefenmodell (GEBCO) – nicht für die Navigation. Jede Etappe in der Seekarte prüfen. Ab Tag 4 nur Trend – täglich neu planen.'},
   timeline:{steps:24,stepH:3},
-  map:{baseUrl:'https://tile.openstreetmap.org/{z}/{x}/{y}.png',seamarkUrl:'https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png',tileMin:5,tileMax:16,maxTiles:48,keepTiles:4000,tileMaxAgeD:30,zMin:5,zMax:15,zFitMax:11,labelZ:8.5},
+  map:{baseUrl:'https://tile.openstreetmap.org/{z}/{x}/{y}.png',seamarkUrl:'https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png',tileMin:5,tileMax:16,maxTiles:48,pickZ:8.2,allLabelZ:9.5,keepTiles:4000,tileMaxAgeD:30,zMin:5,zMax:15,zFitMax:11,labelZ:8.5},
   wx:{forecastUrl:'https://api.open-meteo.com/v1/forecast',marineUrl:'https://marine-api.open-meteo.com/v1/marine',
     hourly:'wind_speed_10m,wind_direction_10m,wind_gusts_10m,weather_code,visibility',marineHourly:'wave_height,wave_direction',days:7,keep:20,exportKeep:5,maxAgeH:12,hardAgeH:48},
   faustregel:['plan','target','sea','harborSea','harborGust','entrance','crossing','offsets','season','bridgeMargin','reff','traffic']
@@ -2818,16 +2829,24 @@ function mapRoute(){
   mapRender();
 }
 function mapMarks(v){
-  var g=$('m-marks'),P=PL.plan,h='',s=v.s;if(!P){g.innerHTML='';return;}
+  var g=$('m-marks'),P=PL.plan,h='',s=v.s;
   var r=9/s,fs=11/s,sw=2/s,seen={};
+  // all pickable harbours as small dots (tap = pick), visible area only
+  var hr=Math.max(3.2,Math.min(5,(MAP.z-5)*0.9))/s,hit=13/s,x0=v.x-hit,x1=v.x+v.w+hit,y0=v.y-hit,y1=v.y+v.h+hit;
+  DATA.forEach(function(hb){if(!pickable(hb))return;var m=merc(hb.lat,hb.lon);if(m.x<x0||m.x>x1||m.y<y0||m.y>y1)return;
+    h+='<g class="hk" data-hk="'+esc(hb.id)+'"><circle class="hkhit" cx="'+m.x+'" cy="'+m.y+'" r="'+hit+'"/><circle class="hkdot" cx="'+m.x+'" cy="'+m.y+'" r="'+hr+'" style="stroke-width:'+(1.2/s)+'"/></g>';});
+  if(MAP.z>=CONST.map.allLabelZ)DATA.forEach(function(hb){if(!pickable(hb))return;var m=merc(hb.lat,hb.lon);if(m.x<x0||m.x>x1||m.y<y0||m.y>y1)return;
+    h+='<text class="mlab small" x="'+(m.x+hr*1.8)+'" y="'+(m.y+fs*0.35)+'" style="font-size:'+(10.5/s)+'px;stroke-width:'+(3/s)+'px">'+esc(shortName(hb))+'</text>';});
   function dot(id,label,col,big){
     var hb=BY_ID[id];if(!hb)return;var m=merc(hb.lat,hb.lon),k=id;
     if(seen[k]){seen[k].push(label);return;}seen[k]=[label];
     h+='<g class="mk" data-mk="'+esc(id)+'"><circle cx="'+m.x+'" cy="'+m.y+'" r="'+(big?r*1.15:r)+'" style="fill:'+col+';stroke:#fff;stroke-width:'+sw+'"/>'
       +'<text x="'+m.x+'" y="'+(m.y+fs*0.36)+'" text-anchor="middle" style="font-size:'+fs+'px">'+esc(label)+'</text></g>';
   }
-  dot(P.opt.start,'S','#17324a',true);
-  planLegs(P).forEach(function(x){dot(x.leg.to,String(x.d+1),DAYCOL[x.d%DAYCOL.length]);});
+  if(P){dot(P.opt.start,'S','#17324a',true);planLegs(P).forEach(function(x){dot(x.leg.to,String(x.d+1),DAYCOL[x.d%DAYCOL.length]);});}
+  // current form selection (start, via, target) as rings, so picking on the map is visible before planning
+  var sel=[[PL.start,'S']].concat((PL.vias||[]).map(function(v,i){return [v,'Ü'+(i+1)];})).concat(PL.mode==='ziel'?[[PL.target,'Z']]:[]);
+  sel.forEach(function(q){if(!q[0]||!BY_ID[q[0]]||(P&&seen[q[0]]))return;dot(q[0],q[1],'#9a6b00',true);});
   // labels with harbour names at sufficient zoom
   if(MAP.z>=CONST.map.labelZ){
     Object.keys(seen).forEach(function(id){var hb=BY_ID[id],m=merc(hb.lat,hb.lon);
@@ -2877,7 +2896,8 @@ function bindMap(){
   function up(e){
     var was=P[e.pointerId];delete P[e.pointerId];
     if(was&&MAP.moved<8&&!Object.keys(P).length){
-      var t=e.target.closest&&e.target.closest('[data-d],[data-mk]');
+      var tg=document.elementFromPoint(e.clientX,e.clientY)||e.target,t=tg&&tg.closest&&tg.closest('[data-d],[data-mk],[data-hk]');   // pointer capture retargets to the svg
+      if(t&&t.dataset.hk){$('m-pick').innerHTML=mapPickHTML(t.dataset.hk);return;}
       if(t&&t.dataset.d!=null)mapSelect(+t.dataset.d,true);
       else if(t&&t.dataset.mk){var lg=planLegs(PL.plan).filter(function(x){return x.leg.to===t.dataset.mk;})[0];if(lg)mapSelect(lg.d,true);}
     }
@@ -2891,10 +2911,11 @@ function bindMap(){
 }
 function renderMap(){
   var box=$('mapbox');if(!box)return;
-  if(!PL.plan||!planLegs(PL.plan).length){box.style.display='none';return;}
-  box.style.display='';
+  var has=!!(PL.plan&&planLegs(PL.plan).length);
+  if($('gpxbox'))$('gpxbox').style.display=has?'':'none';
   mapInit();MAP.sel=null;mapRoute();
-  requestAnimationFrame(function(){mapFit(null);});
+  if(has)requestAnimationFrame(function(){mapFit(null);});
+  else if(!MAP.didInitView){MAP.didInitView=true;var h=BY_ID[PL.start];if(h){var m=merc(h.lat,h.lon);MAP.cx=m.x;MAP.cy=m.y;MAP.z=CONST.map.pickZ;}mapRender();}
 }
 
 /* ---- GPX export (SPEC §15.3): one <rte> per sailing day + overnight harbours as <wpt> ---- */
@@ -3008,6 +3029,54 @@ function bindNotes(){
   document.addEventListener('change',function(e){var el=e.target;if(!el.dataset)return;
     if(el.dataset.visited)upd(el.dataset.visited,{visited:el.checked});
     if(el.dataset.stars)upd(el.dataset.stars,{stars:+el.value});});
+}
+
+
+/* ---- SPEC §19: harbour search pickers and picking on the map ---- */
+function pickable(h){return inNet(h.id)&&h.type!=='nothafen';}
+function shortName(h){return h.name.replace(/\s*\(.*\)$/,'');}
+function harbourMatches(q,n){
+  q=foldName(q.trim());if(q.length<2)return [];
+  var a=[],b=[];
+  DATA.forEach(function(h){if(!pickable(h))return;var f=foldName(h.name),r=foldName(h.region||'');
+    if(f.indexOf(q)===0||f.split(/[\s\-(]+/).some(function(w){return w.indexOf(q)===0;}))a.push(h);else if(f.indexOf(q)>=0||r.indexOf(q)>=0)b.push(h);});
+  return a.concat(b).slice(0,n||8);
+}
+function pickerSet(sel,id){
+  var el=$(sel);if(!el)return;
+  if(id&&!Array.prototype.some.call(el.options,function(o){return o.value===id;}))return;
+  el.value=id||'';el.dispatchEvent(new Event('change'));
+  pickerShow(sel);
+}
+function pickerShow(sel){var el=$(sel),q=$(sel+'-q');if(!el||!q)return;var h=BY_ID[el.value];q.value=h?h.name+' · '+h.country:'';$(sel+'-sug').innerHTML='';}
+function initPickers(){
+  document.querySelectorAll('.hpick').forEach(function(w){
+    var sel=w.dataset.sel,q=$(sel+'-q'),sug=$(sel+'-sug');
+    q.addEventListener('focus',function(){q.select();});
+    q.addEventListener('input',function(){
+      var m=harbourMatches(q.value);
+      sug.innerHTML=q.value.trim().length<2?'':(m.length?m.map(function(h){return '<button type="button" class="hsugb" data-hid="'+esc(h.id)+'"><b>'+esc(h.name)+'</b> <span>'+esc(h.country+' · '+h.region)+'</span></button>';}).join(''):'<div class="note small">Kein Hafen im Netz gefunden.</div>');
+    });
+    q.addEventListener('keydown',function(e){if(e.key==='Enter'){var b=sug.querySelector('[data-hid]');if(b){e.preventDefault();pickerSet(sel,b.dataset.hid);q.blur();}}});
+    q.addEventListener('blur',function(){setTimeout(function(){if(!q.value.trim()&&sel!=='p-start')pickerSet(sel,'');else pickerShow(sel);},180);});
+    sug.addEventListener('mousedown',function(e){e.preventDefault();});
+    sug.addEventListener('click',function(e){var b=e.target.closest('[data-hid]');if(b){pickerSet(sel,b.dataset.hid);q.blur();}});
+    pickerShow(sel);
+  });
+}
+function mapPickHTML(id){
+  var h=BY_ID[id];if(!h)return '';
+  var full=(PL.vias||[]).filter(Boolean).length>=3;
+  return '<div class="mpick"><div class="mpt"><b>'+esc(h.name)+'</b> <span class="fl">'+esc(h.country)+'</span> <span class="note small">'+esc(h.region)+'</span></div>'
+    +'<div class="grid3" style="margin-top:6px"><button class="btn sm" data-mset="start" data-hid="'+esc(id)+'">Als Start</button>'
+    +'<button class="btn sm" data-mset="via" data-hid="'+esc(id)+'"'+(full?' disabled':'')+'>Über</button>'
+    +'<button class="btn sm" data-mset="ziel" data-hid="'+esc(id)+'">Als Ziel</button></div></div>';
+}
+function mapPickAction(kind,id){
+  if(kind==='start')pickerSet('p-start',id);
+  else if(kind==='ziel'){if(PL.mode!=='ziel'){PL.mode='ziel';savePL();renderToernForm();}pickerSet('p-ziel',id);}
+  else if(kind==='via'){var v=PL.vias||[];for(var i=0;i<3;i++){if(!v[i]){pickerSet('p-via'+(i+1),id);break;}}}
+  $('m-pick').innerHTML='';mapRender();
 }
 
 /* ---- Törn tab (SPEC §14) ---- */
@@ -3194,6 +3263,7 @@ function renderPlan(){
 function renderToernForm(){
   document.querySelectorAll('[data-pmode]').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.pmode===PL.mode?'true':'false');});
   $('p-zielwrap').style.display=PL.mode==='ziel'?'block':'none';
+  if($('p-afternight'))$('p-afternight').parentNode.style.display=PL.nights?'':'none';
   $('p-legnote').textContent=(S.maxLegH?fm(S.maxLegH)+' h ≈ '+Math.round(S.maxLegH*S.speed)+' sm'+(S.daylight?', vor Sonnenuntergang':''):(S.daylight?'bis Sonnenuntergang (− 30 min)':'bis '+CONST.plan.noCapMaxH+' h'))+(PL.nights?'; Nachtfahrt max. '+fm(S.maxNightH)+' h ≈ '+Math.round(S.maxNightH*S.speed)+' sm':'')+' (Boot-Tab)';
 }
 function initToern(){
@@ -3201,15 +3271,16 @@ function initToern(){
   if(!PL.start)PL.start=defaultStart();
   harbourOptions($('p-start'),PL.start,false);harbourOptions($('p-ziel'),PL.target,true);
   PL.vias=PL.vias||[];['p-via1','p-via2','p-via3'].forEach(function(id,i){harbourOptions($(id),PL.vias[i]||'',true);
-    $(id).addEventListener('change',function(){PL.vias[i]=$(id).value||null;savePL();});});
+    $(id).addEventListener('change',function(){PL.vias[i]=$(id).value||null;savePL();mapRender();});});
   if(PL.start)$('p-start').value=PL.start;else PL.start=$('p-start').value;
+  setTimeout(initPickers,0);
   PL.date=todayStr();$('p-date').value=PL.date;
   var ds='';for(var i=2;i<=7;i++)ds+='<option value="'+i+'"'+(i===PL.days?' selected':'')+'>'+i+'</option>';$('p-days').innerHTML=ds;
   var hs='';for(i=6;i<=12;i++)hs+='<option value="'+i+'"'+(i===PL.depHour?' selected':'')+'>'+pad(i)+':00</option>';$('p-dep').innerHTML=hs;
   $('p-plat').value=PL.plat||'';
-  document.querySelectorAll('[data-pmode]').forEach(function(b){b.addEventListener('click',function(){PL.mode=b.dataset.pmode;savePL();renderToernForm();});});
-  $('p-start').addEventListener('change',function(){PL.start=$('p-start').value;savePL();});
-  $('p-ziel').addEventListener('change',function(){PL.target=$('p-ziel').value||null;savePL();});
+  document.querySelectorAll('[data-pmode]').forEach(function(b){b.addEventListener('click',function(){PL.mode=b.dataset.pmode;savePL();renderToernForm();mapRender();});});
+  $('p-start').addEventListener('change',function(){PL.start=$('p-start').value;savePL();mapRender();});
+  $('p-ziel').addEventListener('change',function(){PL.target=$('p-ziel').value||null;savePL();mapRender();});
   $('p-date').addEventListener('change',function(){PL.date=$('p-date').value||todayStr();});
   $('p-days').addEventListener('change',function(){PL.days=+$('p-days').value;savePL();});
   $('p-dep').addEventListener('change',function(){PL.depHour=+$('p-dep').value;savePL();});
@@ -3227,6 +3298,7 @@ function initToern(){
   $('planres').addEventListener('click',function(e){var b=e.target.closest('[data-ptarget]');if(b){setTargetHarbor(b.dataset.ptarget);update();showScreen('scr-lage');return;}
     var t=e.target.closest('.pday .pt,.pday .pd');if(t){var c=t.closest('.pday');if(c&&c.querySelector('.pdot')){mapSelect(+c.dataset.d,false);if(MAP.sel!==null){mapFit(MAP.sel);$('tmap').scrollIntoView({block:'center',behavior:'smooth'});}}}});
   $('btn-gpxshare').addEventListener('click',gpxShare);
+  $('m-pick').addEventListener('click',function(e){var b=e.target.closest('[data-mset]');if(b)mapPickAction(b.dataset.mset,b.dataset.hid);});
   bindNotes();
   $('btn-wxfill').addEventListener('click',function(){var r=wxFill();$('wxfillmsg').innerHTML=r.error?banner('y','Nicht übernommen',r.error):'<div class="note small">'+esc(r.text)+'</div>';if(r.ok)update();});
   $('btn-tclearcache').addEventListener('click',function(){MAP.online=false;$('m-online').checked=false;store('skipperOst.mapOnline','0');TILES.clear().then(function(){MAP.tiles={};MAP.tz=null;$('m-tiles').innerHTML='';$('m-seamark').innerHTML='';mapRender();renderTileStats();});});$('btn-gpxsave').addEventListener('click',gpxSave);
@@ -3240,7 +3312,7 @@ window.SKIPPER={bridgeContactHTML:bridgeContactHTML,harborCardHTML:function(it,s
   isOutOfArea:isOutOfArea,euOffset:euOffset,utcToLocal:utcToLocal,sunTimes:sunTimes,seaAreaOf:seaAreaOf,countryOf:countryOf,boatNeeds:boatNeeds,bridgeCheck:bridgeCheck,
   rhumb:rhumb,courseToWind:courseToWind,effThresholds:effThresholds,filterList:filterList,emergencyNumbers:emergencyNumbers,DISCLAIMER:DISCLAIMER,
   NET:NET,WXGRID:WXGRID,netTree:netTree,netRoute:netRoute,routeBridges:routeBridges,treeOf:treeOf,inNet:inNet,wxAt:wxAt,wxSet:wxSet,wxFromOpenMeteo:wxFromOpenMeteo,wxUrls:wxUrls,wxValid:wxValid,
-  chunkLevel:chunkLevel,wxFill:wxFill,harbourTimeline:harbourTimeline,NOTES:NOTES,MAP:MAP,TILES:TILES,merc:merc,mapFit:mapFit,mapZoomAt:mapZoomAt,mapSelect:mapSelect,planGPX:planGPX,gpxFile:gpxFile,getWX:function(){return WX;},IDB:IDB,planTrip:planTrip,planCandidates:planCandidates,simLeg:simLeg,nightCheck:nightCheck,dayStartMs:dayStartMs,PL:PL,renderPlan:renderPlan,doImportText:doImportText,planSerialize:planSerialize};
+  chunkLevel:chunkLevel,pickerSet:pickerSet,harbourMatches:harbourMatches,wxFill:wxFill,harbourTimeline:harbourTimeline,NOTES:NOTES,MAP:MAP,TILES:TILES,merc:merc,mapFit:mapFit,mapZoomAt:mapZoomAt,mapSelect:mapSelect,planGPX:planGPX,gpxFile:gpxFile,getWX:function(){return WX;},IDB:IDB,planTrip:planTrip,planCandidates:planCandidates,simLeg:simLeg,nightCheck:nightCheck,dayStartMs:dayStartMs,PL:PL,renderPlan:renderPlan,doImportText:doImportText,planSerialize:planSerialize};
 
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();

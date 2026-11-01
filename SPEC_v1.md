@@ -371,3 +371,9 @@ Ziel: Aus aktueller Wettervorhersage (online, auf Tippen) eine Route über 2–7
 - **Motor** (Boot-Tab): nie / bei Flaute / bei Flaute und gegen den Wind; Fahrt unter Motor (kn, Default 6 – Faustregel, am Boot anpassen). Flaute = Wind < 6 kn (Faustregel). Unter Motor: Motorfahrt, kein Kreuzfaktor; Anzeige „davon ≈ x sm unter Motor“. Ohne Motor bei Flaute gelber Hinweis „Zeit unsicher“.
 - **Nach Nachtfahrt:** „Ruhetag“ oder „weiter ab 10/11/12/13 Uhr“ (Default 11, Nachtwache schläft); frühestens 1 h nach Ankunft, nur Tagesetappen. Reichweite zählt den Ankunftstag dann als Segeltag.
 - Tests 73–75.
+
+## 19. Hafensuche und Auswahl auf der Karte (v2.7, Wunsch Christoph 01.11.2026)
+- Start, Ziel und die drei Über-Häfen per Suchfeld (ab 2 Zeichen, ø/æ/å/ä/ö/ü/ß gefaltet, Wortanfang zuerst, max. 8 Vorschläge, nur Netzhäfen ohne Nothäfen). Enter oder Antippen übernimmt; leeres optionales Feld löscht.
+- Die Karte steht im Törn-Formular über den Feldern und ist auch ohne Plan sichtbar (Start auf Zoom 8,2). Alle wählbaren Häfen als Punkte, Namen ab Zoom 9,5. Antippen → Feld mit „Als Start“, „Über“ (nächster freier Platz, max. 3), „Als Ziel“ (schaltet Modus Ziel). Auswahl als Ringe S / Ü1–Ü3 / Z.
+- GPX-Knöpfe erst mit Plan.
+- Test 76.
