@@ -90,3 +90,9 @@ Erstausgabe der Ostsee-App nach SPEC_v1.md, aufbauend auf Skipper-Assistent Sard
 
 ## v2.5.1 (01.11.2026)
 - Nachtfahrten starten abends und kommen morgens an (statt 08:00 los); im Sommer sind damit auch 50–130-sm-Etappen planbar. Reichweite zählt 2 Tage je Nachtfahrt.
+
+## v2.6 (01.11.2026) Motor, Weiterfahrt nach Nachtfahrt, Etappe bis Sonnenuntergang (SPEC §18)
+- Max. Etappe leer = bis Sonnenuntergang (neuer Default), Abfahrt Default 09:00.
+- Motor im Törnplaner (nie / Flaute / Flaute+Kreuzen, Motorfahrt kn).
+- Nach Nachtfahrt weiter ab 10–13 Uhr statt Ruhetag.
+- Tests 73–75, SW-Cache `skipper-ostsee-v2.6-20261101`.

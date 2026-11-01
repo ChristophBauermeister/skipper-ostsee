@@ -546,8 +546,10 @@ nav button .ic{font-size:1.2rem}
     <div><label for="b-mast">Masthöhe über WL inkl. Antenne (m)</label><input type="text" inputmode="decimal" id="b-mast"></div>
     <div><label for="b-bmargin">Brücken-Sicherheitsabstand (m)</label><input type="text" inputmode="decimal" id="b-bmargin"></div>
     <div><label for="b-speed">Fahrt (kn)</label><input type="text" inputmode="decimal" id="b-speed"></div>
-    <div><label for="b-maxleg">max. Etappe (h, Törnplaner)</label><input type="text" inputmode="decimal" id="b-maxleg"></div>
+    <div><label for="b-maxleg">max. Etappe (h, leer = bis Sonnenuntergang)</label><input type="text" inputmode="decimal" id="b-maxleg" placeholder="bis Sonnenuntergang"></div>
     <div><label for="b-maxnight">max. Nachtfahrt (h)</label><input type="text" inputmode="decimal" id="b-maxnight"></div>
+    <div><label for="b-motor">Motor im Törnplaner</label><select id="b-motor"><option value="nie">nie (nur Segeln)</option><option value="flaute">bei Flaute</option><option value="kreuz">bei Flaute und gegen den Wind</option></select></div>
+    <div><label for="b-motorspeed">Fahrt unter Motor (kn)</label><input type="text" inputmode="decimal" id="b-motorspeed"></div>
     <div><label for="b-season">Saison</label><select id="b-season"><option value="auto">automatisch</option><option value="sommer">Sommer</option><option value="vor">Vor-/Nachsaison</option></select></div>
     <div class="full"><label for="b-name">Schiffsname</label><input type="text" id="b-name" autocomplete="off" autocapitalize="characters"></div>
     <div><label for="b-call">Rufzeichen</label><input type="text" id="b-call" autocomplete="off" autocapitalize="characters"></div>
@@ -614,6 +616,7 @@ nav button .ic{font-size:1.2rem}
       <div class="note small">Z. B. Rund Fünen: über Middelfart und Kerteminde.</div></div>
     <div><label for="p-target">Gesamtstrecke (sm, optional)</label><input type="text" inputmode="numeric" id="p-target" placeholder="z. B. 200"></div>
     <div><label for="p-nights">Nachtfahrten max.</label><select id="p-nights"><option value="0">keine</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select></div>
+    <div><label for="p-afternight">Nach Nachtfahrt</label><select id="p-afternight"><option value="rest">Ruhetag</option><option value="10">weiter ab 10:00</option><option value="11">weiter ab 11:00</option><option value="12">weiter ab 12:00</option><option value="13">weiter ab 13:00</option></select></div>
     <div class="full"><label>Etappe max.</label><div class="note" id="p-legnote" style="margin-top:2px"></div></div>
   </div>
   <button class="btn prim" id="btn-plan" style="margin-top:12px">Törn planen</button>
@@ -670,7 +673,7 @@ DATA.forEach(function(h){BY_ID[h.id]=h;});
 BRIDGES.forEach(function(b){BR_BY_ID[b.id]=b;});
 
 var CONST={
-  datenstand:'18.10.2026',appVersion:'2.5.1',
+  datenstand:'18.10.2026',appVersion:'2.6',
   reff:{base:[18,23,28],names:['Vollzeug','1. Reff','2. Reff','3. Reff + Zuflucht anlaufen']},
   courseFactor:{'am Wind':1.15,'halber Wind':1.05,'raum':0.9,'vorm Wind':0.8},
   courses:['am Wind','halber Wind','raum','vorm Wind'],
@@ -699,7 +702,7 @@ var CONST={
   /* keys whose thresholds are Faustregeln (no official source) */
   target:{kreuzenTwa:45,amWindTwa:75,halbTwa:111,raumTwa:151,kreuzFactor:1.41,bridgeLineNm:7},
   /* SPEC §14 – planner weights and limits are Faustregeln */
-  plan:{cost:{g:0,y:4,n:6,r:60},night:{g:0,y:3,n:5,r:60},stay:2,perNm:0.08,nightLeg:3,nightEstFactor:1.15,nightLatestDepH:2,maxNights:3,maxNightH:24,maxNightMin:10,maxNightMax:36,targetW:0.12,targetPace:0.5,nightMinFrac:0.6,nightCand:60,zielPerNm:0.05,zielGo:0.25,comfort:0.7,longH:0.5,kreuz:2,shallow:0.15,revisit:3,revisitNm:2,minLegNm:5,beam:40,chunkNm:3,bridgeNm:0.3,
+  plan:{cost:{g:0,y:4,n:6,r:60},night:{g:0,y:3,n:5,r:60},stay:2,perNm:0.08,nightLeg:3,noCapMaxH:16,motorWindKn:6,motorSpeed:6,afterNightMinH:1,nightEstFactor:1.15,nightLatestDepH:2,maxNights:3,maxNightH:24,maxNightMin:10,maxNightMax:36,targetW:0.12,targetPace:0.5,nightMinFrac:0.6,nightCand:60,zielPerNm:0.05,zielGo:0.25,comfort:0.7,longH:0.5,kreuz:2,shallow:0.15,revisit:3,revisitNm:2,minLegNm:5,beam:40,chunkNm:3,bridgeNm:0.3,
     fogM:1000,thunder:[95,96,99],confDays:[3,5],nightFromHour:15,snapNoteNm:0.3,maxLegH:8,maxLegMin:3,maxLegMax:14,defaultStart:'de-heiligenhafen-marina',
     disclaimer:'Planungshilfe. Netz aus Küstenlinie (GSHHG) und Tiefenmodell (GEBCO) – nicht für die Navigation. Jede Etappe in der Seekarte prüfen. Ab Tag 4 nur Trend – täglich neu planen.'},
   timeline:{steps:24,stepH:3},
@@ -1630,7 +1633,7 @@ function dayStartMs(dateStr,dayIdx,hour){
   return Date.UTC(+p[0],+p[1]-1,+p[2]+dayIdx,hour-off,0);
 }
 function confOf(dayIdx){var c=CONST.plan.confDays;return dayIdx<c[0]?'hoch':dayIdx<c[1]?'mittel':'nur Trend';}
-function planBase(s){return {boat:s.boat,kids:s.kids,season:s.season,speed:s.speed,pegel:0,trend:false,longWind:null,target:null,courseMode:'manual'};}
+function planBase(s){return {boat:s.boat,kids:s.kids,season:s.season,speed:s.speed,motorMode:s.motorMode,motorSpeed:s.motorSpeed,pegel:0,trend:false,longWind:null,target:null,courseMode:'manual'};}
 function planCandidates(s){
   var base=planBase(s),out=[];
   DATA.forEach(function(h){
@@ -1681,6 +1684,7 @@ function legGates(route){
 function crossSide(id,p){var G=CONST.gates[id],bx=G.box,inBox=p.lat>=bx.latMin&&p.lat<=bx.latMax&&p.lon>=bx.lonMin&&p.lon<=bx.lonMax;
   if(id==='bornholm')return inBox&&p.lon>=G.islandLon?'island':'main';return inBox?'island':'main';}
 function simLeg(route,dep,s,maxH){
+  var motorNm=0,flauteNm=0,mm=s.motorMode||'nie',ms=s.motorSpeed>0?s.motorSpeed:null;
   var gIds=legGates(route),P=CONST.plan,T=effThresholds(Object.assign({},planBase(s),{now:dep})),t=dep,lvl='g',agg={},noWx=false,noSea=false,kreuzNm=0,reffIdx=0,courses={};
   var w={wsMin:Infinity,wsMax:-Infinity,gMax:-Infinity,whMax:null,dirs:{}},limit=maxH?dep+maxH*3600000:Infinity;
   for(var si=0;si<route.segs.length&&t<=limit;si++){
@@ -1690,8 +1694,10 @@ function simLeg(route,dep,s,maxH){
       var x=wxAt(pos.lat,pos.lon,t);
       if(!x||x.none){noWx=true;t+=d/s.speed*3600000;continue;}
       var dir=x.wd==null?null:wxDir8(x.wd),ct=dir?courseToWind(dir,sg.course):null,course=ct?ct.reffCourse:'am Wind';
-      var spd=ct&&ct.kreuzen?s.speed/CONST.target.kreuzFactor:s.speed;
-      if(ct&&ct.kreuzen)kreuzNm+=d;
+      var flaute=x.ws<P.motorWindKn,motor=ms&&((mm!=='nie'&&flaute)||(mm==='kreuz'&&ct&&ct.kreuzen));
+      var spd=motor?ms:(ct&&ct.kreuzen?s.speed/CONST.target.kreuzFactor:s.speed);
+      if(motor)motorNm+=d;else if(flaute)flauteNm+=d;
+      if(ct&&ct.kreuzen&&!motor)kreuzNm+=d;
       if(ct)courses[ct.label]=(courses[ct.label]||0)+d;
       if(x.wh==null)noSea=true;
       var c=chunkLevel(x,T,course,pos,s,gIds);
@@ -1705,11 +1711,12 @@ function simLeg(route,dep,s,maxH){
   }
   var reasons={};
   Object.keys(agg).forEach(function(k){var a=agg[k],txt=a.t;if(k==='gust')txt='Böen bis '+Math.round(w.gMax)+' kn – '+a.t+offsetNote(T);if(k==='sea')txt='Welle bis '+fm(Math.round(w.whMax*10)/10)+' m – '+a.t;reasons[txt]=a.l;});
+  if(flauteNm>0.5){reasons['Flaute auf ≈ '+f1(flauteNm)+' sm (Wind < '+P.motorWindKn+' kn) – unter Segeln kaum Fahrt, Zeit unsicher'+(mm==='nie'?'; Motor im Boot-Tab erlauben':'')]='y';lvl=pworst(lvl,'y');}
   if(noWx){reasons['Für Teile der Etappe keine Vorhersage']='n';lvl=pworst(lvl,'n');}
   if(noSea&&!noWx){reasons['Seegang unbekannt (keine Wellendaten)']='n';lvl=pworst(lvl,'n');}
   var dirs=Object.keys(w.dirs).sort(function(a,b){return w.dirs[b]-w.dirs[a];});
   var cmain=Object.keys(courses).sort(function(a,b){return courses[b]-courses[a];})[0]||null;
-  return {dep:dep,arr:t,hours:(t-dep)/3600000,level:lvl,reasons:reasons,kreuzNm:kreuzNm,reff:CONST.reff.names[reffIdx],course:cmain,
+  return {dep:dep,arr:t,hours:(t-dep)/3600000,level:lvl,reasons:reasons,kreuzNm:kreuzNm,motorNm:motorNm,reff:CONST.reff.names[reffIdx],course:cmain,
     wx:{wsMin:isFinite(w.wsMin)?w.wsMin:null,wsMax:isFinite(w.wsMax)?w.wsMax:null,gMax:isFinite(w.gMax)?w.gMax:null,whMax:w.whMax,dirs:dirs.slice(0,2)}};
 }
 /* night (or harbour day) at harbour h between t1 and t2: worst harborStatus over the hours */
@@ -1729,8 +1736,16 @@ function nightCheck(h,t1,t2,s){
 }
 function planTrip(opt,progress){
   var P=CONST.plan,s=normalize(Object.assign({},S,{now:dayStartMs(opt.date,0,opt.depHour)}));
-  s.speed=opt.speed||s.speed;
-  var D=Math.max(1,Math.min(7,opt.days|0)),maxH=opt.maxLegH,maxNm=maxH*s.speed,mode=opt.mode;
+  s.speed=opt.speed||s.speed;s.motorMode=opt.motorMode||'nie';s.motorSpeed=opt.motorSpeed||null;
+  var D=Math.max(1,Math.min(7,opt.days|0)),maxH=opt.maxLegH,mode=opt.mode;
+  if(!(maxH>0)){   // SPEC §18: no fixed cap = sail until sunset (− buffer); longest daylight span of the trip bounds the search
+    if(!opt.daylight)maxH=P.noCapMaxH;
+    else{maxH=0;for(var dd=0;dd<Math.max(1,Math.min(7,opt.days|0));dd++){var hs=BY_ID[opt.start],sx=sunTimes(hs.lat,hs.lon,dayStartMs(opt.date,dd,12)),t0=dayStartMs(opt.date,dd,opt.depHour);
+      if(sx.sunsetMs)maxH=Math.max(maxH,(sx.sunsetMs-CONST.sunsetBufferMin*60000-Math.max(t0,sx.sunriseMs||t0))/3600000);}
+      maxH=Math.max(1,Math.min(P.noCapMaxH,maxH||P.noCapMaxH));}
+    opt=Object.assign({},opt,{maxLegHEff:maxH});
+  }
+  var maxNm=maxH*s.speed;
   var NN=Math.max(0,Math.min(P.maxNights,opt.nights|0)),maxNH=Math.max(maxH,opt.maxNightH||P.maxNightH),maxNNm=maxNH*s.speed;
   var T=opt.targetNm>0?+opt.targetNm:null;
   var endId=mode==='rund'?opt.start:mode==='ziel'?opt.target:null;
@@ -1750,7 +1765,9 @@ function planTrip(opt,progress){
   function viaStep(vIdx,h){return vIdx<V.length&&V[vIdx]===h?vIdx+1:vIdx;}
   // capacity of the remaining days (night legs count once each)
   // a night passage leaves in the evening and arrives the next morning: it uses two calendar days
-  function reach(restDays,nightsLeft){var n=Math.min(nightsLeft,Math.floor(restDays/2));return n*maxNNm+(restDays-2*n)*maxNm;}
+  function reach(restDays,nightsLeft){
+    if(opt.afterNightHour!=null){var m=Math.min(nightsLeft,restDays);return m*maxNNm+(restDays-m)*maxNm;}   // arrival day still usable (upper bound)
+    var n=Math.min(nightsLeft,Math.floor(restDays/2));return n*maxNNm+(restDays-2*n)*maxNm;}
   var legMemo={},nightMemo={},routeMemo={};
   var day0=localParts(dayStartMs(opt.date,0,12));
   function dayIndexOf(ms){var p=localParts(ms);return Math.round((Date.UTC(p.y,p.m-1,p.d)-Date.UTC(day0.y,day0.m-1,day0.d))/86400000);}
@@ -1758,9 +1775,9 @@ function planTrip(opt,progress){
     if(sun.sunriseMs&&t<sun.sunriseMs)t=Math.ceil(sun.sunriseMs/900000)*900000;return t;}
   function bridgeLevel(br){var bl='g';for(var i=0;i<br.length;i++){if(br[i].level==='r')return 'r';if(br[i].kind!=='fest'&&br[i].kind!=='freileitung')bl=pworst(bl,'y');else if(br[i].level==='y'||br[i].level==='n')bl=pworst(bl,'y');}return bl;}
   /* day legs (within max. Etappe and daylight) and, if night passages are allowed, night legs (≤ max. Nachtfahrt) */
-  function legsFrom(id,d,withNight){
-    var key=id+'|'+d+'|'+(withNight?1:0);if(legMemo[key])return legMemo[key];
-    var tree=treeOf(id),dep=depOf(id,d),out=[],lim=withNight?maxNNm:maxNm;
+  function legsFrom(id,d,withNight,depOverride){
+    var key=id+'|'+d+'|'+(withNight?1:0)+'|'+(depOverride||0);if(legMemo[key])return legMemo[key];
+    var tree=treeOf(id),dep=depOverride||depOf(id,d),out=[],lim=withNight?maxNNm:maxNm;
     var list=Object.keys(candSet).filter(function(b){
       if(b===id)return false;var c=tree.cost[NET.harbours[b][0]];
       return isFinite(c)&&c<=lim*1.3&&(!withNight||c>=P.nightMinFrac*maxNm);
@@ -1831,7 +1848,20 @@ function planTrip(opt,progress){
     if(progress)progress(d,D);
     var next=[],rest=D-d-1;
     beam.forEach(function(st){
-      if(st.busy>=d){next.push(st);return;}   // arrival day after a night passage
+      if(st.busy>d){next.push(st);return;}
+      if(st.busy===d){   // arrival day after a night passage: rest, or (if set) sail on from late morning while the night watch sleeps
+        next.push(st);
+        if(opt.afterNightHour==null)return;
+        var depA=Math.ceil(Math.max(st.arrT+P.afterNightMinH*3600000,dayStartMs(opt.date,d,opt.afterNightHour))/900000)*900000;
+        legsFrom(st.h,d,false,depA).forEach(function(L){
+          var nv=viaStep(st.via,L.to);
+          if(toGo(L.to,nv)>reach(Math.max(0,D-d-1),NN-st.nights)+0.01)return;
+          if(endId&&d===D-1&&L.to!==endId)return;
+          var nN=night(L.to,d),c=legCost(L,st.visited)+P.night[nN.level];
+          next.push({h:L.to,cost:st.cost+c,visited:st.visited+L.to+'|',days:st.days.concat([{type:'leg',d:d,from:st.h,leg:L,night:nN,cost:c,afterNight:true}]),nights:st.nights,total:st.total+L.route.dist,busy:-1,via:nv,arrT:0});
+        });
+        return;
+      }
       var nightsLeft=NN-st.nights;
       // harbour day
       var nS=night(st.h,d,dayStartMs(opt.date,d,opt.depHour));
@@ -1842,13 +1872,13 @@ function planTrip(opt,progress){
       var legs=legsFrom(st.h,d,false);
       if(nightsLeft>0)legs=legs.concat(legsFrom(st.h,d,true));
       legs.forEach(function(L){
-        var restAfter=D-L.arrDay-1,nl=nightsLeft-(L.night?1:0),nv=viaStep(st.via,L.to);
+        var goOn=L.arrDay>d&&opt.afterNightHour!=null,restAfter=D-L.arrDay-(goOn?0:1),nl=nightsLeft-(L.night?1:0),nv=viaStep(st.via,L.to);
         if(toGo(L.to,nv)>reach(Math.max(0,restAfter),nl)+0.01)return;
-        if(endId&&L.arrDay===D-1&&L.to!==endId)return;
+        if(endId&&L.arrDay===D-1&&L.to!==endId&&!goOn)return;
         var arrT=L.night?L.sim.arr:0,nN=night(L.to,L.arrDay,arrT),c=legCost(L,st.visited)+P.night[nN.level];
         var items=[{type:'leg',d:d,from:st.h,leg:L,night:nN,cost:c}];
         if(L.arrDay>d)items.push({type:'arrive',d:L.arrDay,at:L.to,arr:L.sim.arr,night:nN,cost:0});
-        next.push({h:L.to,cost:st.cost+c,visited:st.visited+L.to+'|',days:st.days.concat(items),nights:st.nights+(L.night?1:0),total:st.total+L.route.dist,busy:L.arrDay>d?L.arrDay:-1,via:nv});
+        next.push({h:L.to,cost:st.cost+c,visited:st.visited+L.to+'|',days:st.days.concat(items),nights:st.nights+(L.night?1:0),total:st.total+L.route.dist,busy:L.arrDay>d?L.arrDay:-1,via:nv,arrT:L.sim.arr});
       });
     });
     next.forEach(function(x){x.rank=rankOf(x,d);});
@@ -1878,7 +1908,7 @@ function planTrip(opt,progress){
    UI STATE
    ===================================================================== */
 var S={pos:null,dir:null,windTrue:null,gust:null,seaDir:null,seaH:0,pegel:0,sicht:'gut',gewitter:false,longWind:null,kids:false,trend:false,
-  course:'am Wind',courseMode:'auto',target:null,speed:CONST.speed,maxLegH:CONST.plan.maxLegH,maxNightH:CONST.plan.maxNightH,daylight:true,season:'auto',boat:Object.assign({},DEFAULT_BOAT),now:null,
+  course:'am Wind',courseMode:'auto',target:null,speed:CONST.speed,maxLegH:null,maxNightH:CONST.plan.maxNightH,motorMode:'nie',motorSpeed:CONST.plan.motorSpeed,daylight:true,season:'auto',boat:Object.assign({},DEFAULT_BOAT),now:null,
   fl:{refuge:true,fits:false,open:false,countries:{DE:true,DK:true,SE:true},region:''},show:40,confirmed:false};
 var SYM={g:'✔',y:'⚠',r:'✖',n:'?',i:'ℹ'};
 var ST_LABEL={g:'geschützt',y:'eingeschränkt',r:'nicht geeignet',n:'unbekannt'};
@@ -2391,18 +2421,18 @@ function renderDatenstand(){
 /* ---- Boot tab ---- */
 function saveProfile(){
   S.confirmed=true;
-  store('skipperOst.profile',JSON.stringify({boat:S.boat,kids:S.kids,season:S.season,speed:S.speed,maxLegH:S.maxLegH,maxNightH:S.maxNightH,daylight:S.daylight,confirmed:true}));
+  store('skipperOst.profile',JSON.stringify({boat:S.boat,kids:S.kids,season:S.season,speed:S.speed,maxLegH:S.maxLegH,v26:true,maxNightH:S.maxNightH,motorMode:S.motorMode,motorSpeed:S.motorSpeed,daylight:S.daylight,confirmed:true}));
 }
 function loadProfile(){
   var raw=load('skipperOst.profile');if(!raw)return false;
-  try{var o=JSON.parse(raw);if(o.boat)S.boat=normBoat(o.boat);S.kids=!!o.kids;if(['auto','sommer','vor'].indexOf(o.season)>=0)S.season=o.season;if(num(o.speed))S.speed=num(o.speed);if(num(o.maxLegH))S.maxLegH=num(o.maxLegH);if(num(o.maxNightH))S.maxNightH=num(o.maxNightH);if(o.daylight===false)S.daylight=false;S.confirmed=true;return true;}catch(e){return false;}
+  try{var o=JSON.parse(raw);if(o.boat)S.boat=normBoat(o.boat);S.kids=!!o.kids;if(['auto','sommer','vor'].indexOf(o.season)>=0)S.season=o.season;if(num(o.speed))S.speed=num(o.speed);if(num(o.maxLegH)&&!(num(o.maxLegH)===8&&!o.v26))S.maxLegH=num(o.maxLegH);/* old built-in default 8 h becomes „bis Sonnenuntergang“ */if(num(o.maxNightH))S.maxNightH=num(o.maxNightH);if(['nie','flaute','kreuz'].indexOf(o.motorMode)>=0)S.motorMode=o.motorMode;if(num(o.motorSpeed))S.motorSpeed=num(o.motorSpeed);if(o.daylight===false)S.daylight=false;S.confirmed=true;return true;}catch(e){return false;}
 }
 function fmtIn(x){return x==null?'':String(x).replace('.',',');}
 function bootToUI(){
   var b=S.boat;
   $('b-profile').value=b.profile;$('b-type').value=b.type;
   $('b-loa').value=fmtIn(b.loa);$('b-beam').value=fmtIn(b.beam);$('b-draft').value=fmtIn(b.draft);$('b-margin').value=fmtIn(b.margin);
-  $('b-mast').value=fmtIn(b.mast);$('b-bmargin').value=fmtIn(b.bridgeMargin);$('b-speed').value=fmtIn(S.speed);$('b-maxleg').value=fmtIn(S.maxLegH);$('b-maxnight').value=fmtIn(S.maxNightH);$('b-daylight').checked=S.daylight;$('b-season').value=S.season;
+  $('b-mast').value=fmtIn(b.mast);$('b-bmargin').value=fmtIn(b.bridgeMargin);$('b-speed').value=fmtIn(S.speed);$('b-maxleg').value=fmtIn(S.maxLegH);$('b-maxnight').value=fmtIn(S.maxNightH);$('b-motor').value=S.motorMode;$('b-motorspeed').value=fmtIn(S.motorSpeed);$('b-daylight').checked=S.daylight;$('b-season').value=S.season;
   $('b-name').value=b.name||'';$('b-call').value=b.call||'';$('b-mmsi').value=b.mmsi||'';$('b-kids').checked=S.kids;
   renderBootNotes();
 }
@@ -2428,8 +2458,9 @@ function bootFromUI(changed){
   b.name=$('b-name').value.trim();b.call=$('b-call').value.trim();b.mmsi=$('b-mmsi').value.trim();
   var sp=num($('b-speed').value);if(sp&&sp>0)S.speed=Math.min(30,sp);
   S.season=$('b-season').value;S.kids=$('b-kids').checked;
-  var ml=num($('b-maxleg').value);if(ml)S.maxLegH=Math.min(CONST.plan.maxLegMax,Math.max(CONST.plan.maxLegMin,ml));
+  var ml=num($('b-maxleg').value);S.maxLegH=ml?Math.min(CONST.plan.maxLegMax,Math.max(CONST.plan.maxLegMin,ml)):null;
   S.daylight=$('b-daylight').checked;
+  S.motorMode=$('b-motor').value;var mo=num($('b-motorspeed').value);if(mo&&mo>0)S.motorSpeed=Math.min(15,mo);
   var mn=num($('b-maxnight').value);if(mn)S.maxNightH=Math.min(CONST.plan.maxNightMax,Math.max(CONST.plan.maxNightMin,mn));
   if(changed==='b-loa'||changed==='b-beam'||changed==='b-draft'){b.profile='custom';$('b-profile').value='custom';}
   saveProfile();renderBootNotes();update();if($('p-legnote'))renderToernForm();
@@ -2656,8 +2687,8 @@ function init(){
   $('f-open').addEventListener('click',function(){S.fl.open=!S.fl.open;S.show=40;update();});
   document.querySelectorAll('[data-fc]').forEach(function(b){b.addEventListener('click',function(){S.fl.countries[b.dataset.fc]=S.fl.countries[b.dataset.fc]===false;S.show=40;update();});});
   $('f-region').addEventListener('change',function(){S.fl.region=$('f-region').value;S.show=40;update();});
-  ['b-type','b-loa','b-beam','b-draft','b-margin','b-mast','b-bmargin','b-speed','b-maxleg','b-maxnight','b-season','b-name','b-call','b-mmsi','b-kids','b-daylight'].forEach(function(id){
-    $(id).addEventListener(id==='b-type'||id==='b-season'||id==='b-kids'||id==='b-daylight'?'change':'input',function(){bootFromUI(id);});
+  ['b-type','b-loa','b-beam','b-draft','b-margin','b-mast','b-bmargin','b-speed','b-maxleg','b-maxnight','b-motor','b-motorspeed','b-season','b-name','b-call','b-mmsi','b-kids','b-daylight'].forEach(function(id){
+    $(id).addEventListener(id==='b-type'||id==='b-season'||id==='b-kids'||id==='b-daylight'||id==='b-motor'?'change':'input',function(){bootFromUI(id);});
   });
   $('b-profile').addEventListener('change',function(){applyProfile($('b-profile').value);});
   $('bt-confirm').addEventListener('click',function(){bootFromUI('');saveProfile();renderBootNotes();showScreen('scr-lage');});
@@ -2980,7 +3011,7 @@ function bindNotes(){
 }
 
 /* ---- Törn tab (SPEC §14) ---- */
-var PL={mode:'rund',start:null,target:null,date:null,days:7,depHour:8,plan:null,busy:false};
+var PL={mode:'rund',start:null,target:null,date:null,days:7,depHour:9,plan:null,busy:false};
 function harbourOptions(sel,selected,withEmpty){
   var groups={},h='';
   DATA.forEach(function(x){if(!inNet(x.id)||x.type==='nothafen')return;var k=x.country+' · '+x.region;(groups[k]=groups[k]||[]).push(x);});
@@ -2995,11 +3026,12 @@ function defaultStart(){
   return BY_ID[CONST.plan.defaultStart]?CONST.plan.defaultStart:null;
 }
 function todayStr(ms){var p=localParts(ms||Date.now());return p.y+'-'+pad(p.m)+'-'+pad(p.d);}
-function savePL(){store('skipperOst.toern',JSON.stringify({mode:PL.mode,start:PL.start,target:PL.target,days:PL.days,depHour:PL.depHour,plat:PL.plat||'',targetNm:PL.targetNm||null,nights:PL.nights||0,vias:(PL.vias||[]).filter(Boolean)}));}
+function savePL(){store('skipperOst.toern',JSON.stringify({mode:PL.mode,start:PL.start,target:PL.target,days:PL.days,depHour:PL.depHour,plat:PL.plat||'',targetNm:PL.targetNm||null,nights:PL.nights||0,afterNight:PL.afterNight||'11',vias:(PL.vias||[]).filter(Boolean)}));}
 function loadPL(){var raw=load('skipperOst.toern');if(!raw)return;try{var o=JSON.parse(raw);
   if(['rund','ziel','frei'].indexOf(o.mode)>=0)PL.mode=o.mode;if(o.start&&inNet(o.start))PL.start=o.start;if(o.target&&inNet(o.target))PL.target=o.target;
   if(o.days>=2&&o.days<=7)PL.days=o.days;if(o.depHour>=6&&o.depHour<=12)PL.depHour=o.depHour;PL.plat=o.plat||'';
   if(o.targetNm>0)PL.targetNm=o.targetNm;if(o.nights>=0&&o.nights<=3)PL.nights=o.nights;
+  if(o.afterNight)PL.afterNight=o.afterNight;
   if(Array.isArray(o.vias))PL.vias=o.vias.filter(function(v){return inNet(v);}).slice(0,3);}catch(e){}
   var pr=load('skipperOst.plan');if(pr){try{PL.plan=JSON.parse(pr);}catch(e){}}
 }
@@ -3063,7 +3095,7 @@ function doImportText(txt){
 }
 function planOpts(){
   return {mode:PL.mode,start:PL.start,target:PL.target,date:PL.date||todayStr(),days:PL.days,depHour:PL.depHour,maxLegH:S.maxLegH,daylight:S.daylight,speed:S.speed,
-    targetNm:PL.targetNm||null,nights:PL.nights||0,maxNightH:S.maxNightH,vias:(PL.vias||[]).filter(Boolean)};
+    targetNm:PL.targetNm||null,nights:PL.nights||0,maxNightH:S.maxNightH,motorMode:S.motorMode,motorSpeed:S.motorSpeed,afterNightHour:PL.afterNight==='rest'?null:(+PL.afterNight||11),vias:(PL.vias||[]).filter(Boolean)};
 }
 function doPlan(){
   if(PL.busy)return;
@@ -3085,7 +3117,7 @@ function planSerialize(r){
     pts:L.route.pts.map(function(p){return [Math.round(p.lat*1e5)/1e5,Math.round(p.lon*1e5)/1e5];}),segs:L.route.segs.map(function(s){return [Math.round(s.course),Math.round(s.dist*10)/10];}),
     sim:L.sim,bridges:L.bridges,bridgeLevel:L.bridgeLevel,night:!!L.night,arrDay:L.arrDay};}
   return {opt:r.opt,createdAt:r.createdAt,wxAt:r.wxAt,wxSource:r.wxSource,maxNm:r.maxNm,maxNightNm:r.maxNightNm,totalNm:r.totalNm,targetNm:r.targetNm,nightsUsed:r.nightsUsed,capNm:r.capNm,vias:r.vias,
-    days:r.days.map(function(x){return {type:x.type,d:x.d,date:x.date,conf:x.conf,from:x.from||null,at:x.at||null,arr:x.arr||null,night:x.night,leg:x.type==='leg'?leg(x.leg):null};}),
+    days:r.days.map(function(x){return {type:x.type,d:x.d,date:x.date,conf:x.conf,afterNight:!!x.afterNight,from:x.from||null,at:x.at||null,arr:x.arr||null,night:x.night,leg:x.type==='leg'?leg(x.leg):null};}),
     alts:r.alts.map(function(a){return {to:a.L.to,dist:a.L.route.dist,level:a.L.sim.level,hours:a.L.sim.hours,night:a.night.level};})};
 }
 var LVL_TXT={g:'FAHRBAR',y:'MIT EINSCHRÄNKUNG',n:'UNKLAR',r:'NICHT EMPFOHLEN'};
@@ -3102,12 +3134,13 @@ function wpTable(L){
   return h+'</table><div class="note small">rwK = rechtweisend (Loxodrome). Missweisung, Deviation, Strom und Abdrift nicht berücksichtigt. Wegpunkte aus GSHHG/GEBCO – nicht für die Navigation, in der Seekarte prüfen.</div>';
 }
 function pad3(x){x=Math.round(x)%360;return (x<10?'00':x<100?'0':'')+x;}
-function planDayHTML(x,i){
+function planDayHTML(x,i,P){
   var head=wdLocal(x.date)+' '+dmyLocal(x.date),h='';
   if(x.type==='arrive'){
     var hz=BY_ID[x.at];
     h+='<div class="pday lv-'+(x.night.level==='r'?'r':'g')+'" data-d="'+x.d+'"><div class="pd">Tag '+(i+1)+', '+head+'</div><div class="pt">Ankunft nach Nachtfahrt in '+esc(hz?hz.name:x.at)+'</div>';
-    h+='<div class="note">an <b>'+hhmmLocal(x.arr)+'</b> · danach ausschlafen, keine weitere Etappe an diesem Tag.</div>';
+    var cont=P.days.some(function(y){return y.type==='leg'&&y.d===x.d;});
+    h+='<div class="note">an <b>'+hhmmLocal(x.arr)+'</b> · '+(cont?'Nachtwache schläft, Weiterfahrt am späten Vormittag (nächste Karte).':'danach ausschlafen, keine weitere Etappe an diesem Tag.')+'</div>';
     h+='<div class="pn lv-'+x.night.level+'">'+SYM[x.night.level]+' Liegen in '+esc(hz?hz.name:x.at)+': '+esc(x.night.text||'')+'</div></div>';
     return h;
   }
@@ -3123,7 +3156,7 @@ function planDayHTML(x,i){
   h+='<div class="pchip b-'+lv+'">'+SYM[lv]+' '+LVL_TXT[lv]+'</div>'+(L.night?' <div class="pchip b-i">☾ Nachtfahrt</div>':'');
   h+='<div class="pl"><b>'+f1(L.dist)+' sm</b> · '+fmtEta(s.hours)+' · ab <b>'+hhmmLocal(s.dep)+'</b> an <b>'+(L.arrDay>x.d?wdLocal(s.arr)+' ':'')+hhmmLocal(s.arr)+'</b></div>';
   h+='<div class="pl">'+esc(wxLine(s.wx))+'</div>';
-  h+='<div class="pl">'+(s.course?esc(s.course)+(s.kreuzNm>0.5?' (Kreuzen ≈ '+f1(s.kreuzNm)+' sm, 1,4-facher Weg)':''):'')+' · Segelführung bis <b>'+esc(s.reff)+'</b></div>';
+  h+='<div class="pl">'+(s.course?esc(s.course)+(s.kreuzNm>0.5?' (Kreuzen ≈ '+f1(s.kreuzNm)+' sm, 1,4-facher Weg)':''):'')+' · Segelführung bis <b>'+esc(s.reff)+'</b>'+(s.motorNm>0.5?' · davon ≈ '+f1(s.motorNm)+' sm unter Motor':'')+'</div>';
   h+='<div class="note">Konfidenz: <b>'+esc(x.conf)+'</b></div>';
   var rs=Object.keys(s.reasons||{});
   if(rs.length)h+='<ul class="pr">'+rs.slice(0,6).map(function(t){return '<li>'+SYM[s.reasons[t]==='n'?'n':s.reasons[t]]+' '+esc(t)+'</li>';}).join('')+'</ul>';
@@ -3140,7 +3173,7 @@ function renderPlan(){
   if(!P){el.innerHTML='';$('planhead').innerHTML='';renderMap();return;}
   var o=P.opt,h='<h2><span class="step">3</span>Plan</h2>';
   var md={rund:'Rundtörn',ziel:'Ziel',frei:'Frei'}[o.mode];
-  h+='<div class="note">'+md+' ab '+esc(BY_ID[o.start]?BY_ID[o.start].name:o.start)+(o.mode==='ziel'&&BY_ID[o.target]?' nach '+esc(BY_ID[o.target].name):'')+' · '+o.days+' Tage ab '+esc(o.date.split('-').reverse().join('.'))+' · Abfahrt '+o.depHour+' Uhr · max. '+fm(o.maxLegH)+' h / '+fm(Math.round(P.maxNm))+' sm'+(o.nights?' · bis '+o.nights+' Nachtfahrt'+(o.nights>1?'en':'')+' à max. '+fm(o.maxNightH)+' h':'')+(o.vias&&o.vias.length?' · über '+o.vias.length+' Häfen':'')+(o.daylight?' · Ankunft vor Sonnenuntergang':'')+'</div>';
+  h+='<div class="note">'+md+' ab '+esc(BY_ID[o.start]?BY_ID[o.start].name:o.start)+(o.mode==='ziel'&&BY_ID[o.target]?' nach '+esc(BY_ID[o.target].name):'')+' · '+o.days+' Tage ab '+esc(o.date.split('-').reverse().join('.'))+' · Abfahrt '+o.depHour+' Uhr · '+(o.maxLegH?'max. '+fm(o.maxLegH)+' h / '+fm(Math.round(P.maxNm))+' sm':'Etappen bis Sonnenuntergang (≤ '+fm(Math.round(P.maxNm))+' sm)')+(o.nights?' · bis '+o.nights+' Nachtfahrt'+(o.nights>1?'en':'')+' à max. '+fm(o.maxNightH)+' h':'')+(o.vias&&o.vias.length?' · über '+o.vias.length+' Häfen':'')+(o.daylight?' · Ankunft vor Sonnenuntergang':'')+'</div>';
   h+='<div class="note small">Gerechnet '+dmyLocal(Date.parse(P.createdAt))+' '+hhmmLocal(Date.parse(P.createdAt))+' mit Wetterstand '+dmyLocal(Date.parse(P.wxAt))+' '+hhmmLocal(Date.parse(P.wxAt))+'.</div>';
   if(WX&&WX.fetchedAt!==P.wxAt)h+='<div class="notice">Neuerer Wetterstand vorhanden – neu planen.</div>';
   var tot=0;P.days.forEach(function(x){if(x.type==='leg')tot+=x.leg.dist;});
@@ -3148,7 +3181,7 @@ function renderPlan(){
   if(P.targetNm&&P.capNm&&P.targetNm>P.capNm)h+='<div class="notice">Vorgabe '+Math.round(P.targetNm)+' sm liegt über dem Maximum von '+Math.round(P.capNm)+' sm ('+o.days+' Tage × '+Math.round(P.maxNm)+' sm'+(o.nights?', bis '+o.nights+' Nachtfahrt'+(o.nights>1?'en':'')+' × '+Math.round(P.maxNightNm)+' sm':'')+'). Etappe im Boot-Tab verlängern, Nachtfahrten erlauben, mehr Tage oder Vorgabe senken.</div>';
   else if(P.targetNm&&Math.abs(tot-P.targetNm)>0.15*P.targetNm)h+='<div class="notice">Plan ist '+Math.abs(Math.round(tot-P.targetNm))+' sm '+(tot<P.targetNm?'kürzer':'länger')+' als die Vorgabe von '+Math.round(P.targetNm)+' sm – mit Wetter, Tageslicht und Häfen nicht besser erreichbar. Mit „Über“-Häfen (z. B. Rund Fünen) eine längere Runde erzwingen.</div>';
   $('planhead').innerHTML=h;h='';
-  P.days.forEach(function(x,i){h+=planDayHTML(x,i);});
+  P.days.forEach(function(x,i){h+=planDayHTML(x,i,P);});
   if(P.alts&&P.alts.length){
     h+='<h2>Alternativen Tag 1</h2>';
     P.alts.forEach(function(a){var t=BY_ID[a.to];h+='<div class="note">'+SYM[a.level]+' '+esc(t?t.name:a.to)+' · '+f1(a.dist)+' sm · '+fmtEta(a.hours)+' · Nacht '+SYM[a.night]+'</div>';});
@@ -3161,7 +3194,7 @@ function renderPlan(){
 function renderToernForm(){
   document.querySelectorAll('[data-pmode]').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.pmode===PL.mode?'true':'false');});
   $('p-zielwrap').style.display=PL.mode==='ziel'?'block':'none';
-  $('p-legnote').textContent=fm(S.maxLegH)+' h ≈ '+Math.round(S.maxLegH*S.speed)+' sm'+(S.daylight?', vor Sonnenuntergang':'')+(PL.nights?'; Nachtfahrt max. '+fm(S.maxNightH)+' h ≈ '+Math.round(S.maxNightH*S.speed)+' sm':'')+' (Boot-Tab)';
+  $('p-legnote').textContent=(S.maxLegH?fm(S.maxLegH)+' h ≈ '+Math.round(S.maxLegH*S.speed)+' sm'+(S.daylight?', vor Sonnenuntergang':''):(S.daylight?'bis Sonnenuntergang (− 30 min)':'bis '+CONST.plan.noCapMaxH+' h'))+(PL.nights?'; Nachtfahrt max. '+fm(S.maxNightH)+' h ≈ '+Math.round(S.maxNightH*S.speed)+' sm':'')+' (Boot-Tab)';
 }
 function initToern(){
   loadPL();
@@ -3181,6 +3214,8 @@ function initToern(){
   $('p-days').addEventListener('change',function(){PL.days=+$('p-days').value;savePL();});
   $('p-dep').addEventListener('change',function(){PL.depHour=+$('p-dep').value;savePL();});
   $('p-target').value=PL.targetNm?String(PL.targetNm):'';$('p-nights').value=String(PL.nights||0);
+  $('p-afternight').value=PL.afterNight||'11';
+  $('p-afternight').addEventListener('change',function(){PL.afterNight=$('p-afternight').value;savePL();});
   $('p-target').addEventListener('input',function(){var v=num($('p-target').value);PL.targetNm=v&&v>0?Math.min(2000,Math.round(v)):null;savePL();});
   $('p-nights').addEventListener('change',function(){PL.nights=+$('p-nights').value;savePL();renderToernForm();});
   $('p-plat').addEventListener('change',function(){PL.plat=$('p-plat').value.trim();savePL();});

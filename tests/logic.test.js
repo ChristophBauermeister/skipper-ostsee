@@ -890,6 +890,31 @@ const NOW = Date.UTC(2026, 6, 15, 9, 0); // 15.07.2026 11:00 MESZ: fixed clock, 
     check('72 Über-Häfen: Rundtörn Heiligenhafen über Middelfart, dann Kerteminde (Rund Fünen), zurück nach Heiligenhafen; Vorgabe 360 sm > Maximum 308 sm wird erkannt',
       !v.err && v.iM >= 0 && v.iK > v.iM && v.last === 'de-heiligenhafen-marina' && Math.round(v.cap) === 308 && v.total <= v.cap, JSON.stringify(v));
   }
+
+  // ---- v2.6 Motor, Weiterfahrt nach Nachtfahrt, Etappe bis Sonnenuntergang (spec §18) ----
+  {
+    const { makeWx } = require('./wxfixture.js');
+    const pts = await ev(() => SKIPPER.WXGRID.points);
+    const flaute = makeWx(pts, Date.UTC(2026, 6, 15), () => ({ ws: 3, wd: 225, wg: 5, wh: 0.2 }));
+    const m = await ev((snap) => { SKIPPER.wxSet(snap); const r = SKIPPER.netRoute('de-heiligenhafen-marina', 'dk-bagenkop-havn'), s0 = SKIPPER.normalize(Object.assign({}, SKIPPER.state, { speed: 5 }));
+      const dep = Date.UTC(2026, 6, 15, 7);
+      const a = SKIPPER.simLeg(r, dep, Object.assign({}, s0, { motorMode: 'nie' }), 16), b = SKIPPER.simLeg(r, dep, Object.assign({}, s0, { motorMode: 'flaute', motorSpeed: 6.5 }), 16);
+      return { dist: r.dist, ha: a.hours, hb: b.hours, mb: b.motorNm, ra: Object.keys(a.reasons).join('|'), rb: Object.keys(b.reasons).join('|') }; }, flaute);
+    check('73 Motor bei Flaute (Wind 3 kn): Fahrt 6,5 kn unter Motor, ganze Strecke als Motor-sm; ohne Motor Hinweis „Flaute … Zeit unsicher“',
+      Math.abs(m.hb - m.dist / 6.5) < 0.05 && Math.abs(m.mb - m.dist) < 0.1 && /Flaute.*Zeit unsicher/.test(m.ra) && !/Flaute/.test(m.rb), JSON.stringify(m));
+    const calm = makeWx(pts, Date.UTC(2026, 6, 15), () => ({ ws: 10, wd: 225, wg: 14, wh: 0.4 }));
+    const n = await ev((snap) => { SKIPPER.wxSet(snap); const o = { date: '2026-07-15', depHour: 9, maxLegH: 8, daylight: true, speed: 5.5, maxNightH: 24, mode: 'ziel', start: 'dk-gedser-lystbaadehavn', target: 'dk-christiansoe-havn', days: 2, nights: 1 };
+      const a = SKIPPER.planTrip(Object.assign({}, o, { afterNightHour: 11 })), b = SKIPPER.planTrip(Object.assign({}, o, { afterNightHour: null }));
+      const L = a.days ? a.days.find(x => x.type === 'leg' && x.afterNight) : null;
+      return { err: a.error, legs: a.days && a.days.map(x => x.type + ':' + (x.leg ? x.leg.to : x.at)), depLocal: L ? SKIPPER.utcToLocal(new Date(L.leg.sim.dep).toISOString().slice(11, 16), L.leg.sim.dep).text : null, restErr: b.error }; }, calm);
+    check('74 Nach Nachtfahrt weiter ab 11 Uhr: Gedser → Rønne (Nacht) → Christiansø in 2 Tagen, zweite Etappe ab ≥ 11:00; mit „Ruhetag“ kein Plan',
+      !n.err && !!n.depLocal && n.depLocal >= '11:00' && n.legs[n.legs.length - 1] === 'leg:dk-christiansoe-havn' && !!n.restErr, JSON.stringify(n));
+    const sun = await ev((snap) => { SKIPPER.wxSet(snap); const o = { date: '2026-06-20', depHour: 9, daylight: true, speed: 5.5, maxNightH: 24, mode: 'frei', start: 'de-heiligenhafen-marina', days: 2, nights: 0 };
+      const a = SKIPPER.planTrip(Object.assign({}, o, { maxLegH: null })), b = SKIPPER.planTrip(Object.assign({}, o, { maxLegH: 8 }));
+      return { a: a.maxNm, b: b.maxNm, aHours: a.days.filter(x => x.type === 'leg').map(x => x.leg.sim.hours), arrOk: a.days.filter(x => x.type === 'leg').every(x => { const h = SKIPPER.DATA.find(q => q.id === x.leg.to), st = SKIPPER.sunTimes(h.lat, h.lon, x.leg.sim.arr); return x.leg.sim.arr <= st.sunsetMs - 30 * 60000; }) }; }, makeWx(pts, Date.UTC(2026, 5, 20), () => ({ ws: 10, wd: 225, wg: 14, wh: 0.4 })));
+    check('75 Etappe bis Sonnenuntergang (leer): im Juni Suchreichweite > 8 h × Fahrt, jede Ankunft ≥ 30 min vor Sonnenuntergang',
+      sun.a > sun.b + 20 && sun.arrOk, JSON.stringify(sun));
+  }
   await browser.close();
   const failed = results.filter(r => !r.ok);
   console.log('\n' + (results.length - failed.length) + '/' + results.length + ' checks passed');

@@ -365,3 +365,9 @@ Ziel: Aus aktueller Wettervorhersage (online, auf Tippen) eine Route über 2–7
 4. **Über-Häfen** im Törnplaner: bis 3, in fester Reihenfolge; Plan gilt nur, wenn alle besucht sind. Strahlsuche mit Restweg über die Über-Häfen zum Ende (0,25 je sm), Zustände ohne erreichbaren Restweg fallen weg.
 5. **Gesamtstrecke über dem Maximum** (Tage × max. Etappe + Nachtfahrten): eigener Hinweis mit dem Maximum und was man ändern kann; sonst Abweichung als „x sm kürzer/länger“.
 - Tests 69–72.
+
+## 18. Motor, Weiterfahrt nach Nachtfahrt, Etappe bis Sonnenuntergang (v2.6, Wunsch Christoph 01.11.2026)
+- **Etappe bis Sonnenuntergang:** „max. Etappe (h)“ leer = Default. Erlaubt ist jede Etappe von der Abfahrt bis Sonnenuntergang − 30 min; die Suchreichweite ist die längste Hellphase der Törntage am Start (max. 16 h). Ein gesetzter Wert begrenzt zusätzlich. Alter Default 8 h wird beim Laden in „bis Sonnenuntergang“ umgewandelt. Default-Abfahrt 09:00 (Crew-Praxis Christoph: 07 Uhr auf, 08 Uhr Frühstück, 09 Uhr ab).
+- **Motor** (Boot-Tab): nie / bei Flaute / bei Flaute und gegen den Wind; Fahrt unter Motor (kn, Default 6 – Faustregel, am Boot anpassen). Flaute = Wind < 6 kn (Faustregel). Unter Motor: Motorfahrt, kein Kreuzfaktor; Anzeige „davon ≈ x sm unter Motor“. Ohne Motor bei Flaute gelber Hinweis „Zeit unsicher“.
+- **Nach Nachtfahrt:** „Ruhetag“ oder „weiter ab 10/11/12/13 Uhr“ (Default 11, Nachtwache schläft); frühestens 1 h nach Ankunft, nur Tagesetappen. Reichweite zählt den Ankunftstag dann als Segeltag.
+- Tests 73–75.
