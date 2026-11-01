@@ -251,6 +251,7 @@ nav button.sos.on{box-shadow:inset 0 0 0 3px var(--headink)}
 .pday .pt{font-size:1.15rem;margin-top:1px}
 .pday .pd{font-size:.92rem;color:var(--mute);font-weight:700}
 table.wp th{text-transform:none;letter-spacing:0}
+.about p{margin-top:6px;line-height:1.45}.about details p{margin-top:4px}
 :root{--mapsea:#f4f9fb;--mapland:#ecdfae;--maplandline:#a3925a}
 @media (prefers-color-scheme:dark){:root:not([data-theme]){--mapsea:#0f2232;--mapland:#2f3c2c;--maplandline:#5a6d52}}
 :root[data-theme="night"]{--mapsea:#000;--mapland:#1a0000;--maplandline:#6a1212}
@@ -551,6 +552,21 @@ nav button .ic{font-size:1.2rem}
   <div class="note" id="bt-msg"></div>
   <button class="btn prim" id="bt-confirm" style="margin-top:12px">Profil übernehmen</button>
   <div class="note small">Gespeichert wird nur auf diesem Gerät (localStorage).</div>
+
+  <h2>Über die App</h2>
+  <div class="about">
+    <p><b>Skipper Ostsee</b> <span id="ab-ver"></span></p>
+    <p>Herausgeber: Christoph Bauermeister · kostenlos, ohne Werbung, ohne Nutzerkonto</p>
+    <p>Entwicklung: ein Produkt von <b>AIxion Systems</b></p>
+    <p class="note small">Planungshilfe. Ersetzt weder Seekarte, Revierführer noch amtlichen Seewetterbericht. Entscheidung liegt beim Skipper.</p>
+    <details><summary>Quellen und Lizenzen</summary><div class="in note small">
+      <p>Wetter: Open-Meteo.com, Modelle u. a. DWD ICON / ICON-Wave (CC BY 4.0).</p>
+      <p>Küstenlinie: GSHHG 2.3.7 (NOAA NCEI, LGPL). Tiefen: GEBCO 2026 Grid (gemeinfrei). Beide nicht für die Navigation.</p>
+      <p>Online-Seekarte: © OpenStreetMap-Mitwirkende (ODbL), Seezeichen © OpenSeaMap (CC BY-SA 2.0).</p>
+      <p>Hafen-, Brücken- und Funkdaten: Quellen je Eintrag (u. a. Den danske Havnelods, BSH, WSA).</p>
+      <p>Schrift: Atkinson Hyperlegible, Braille Institute (SIL Open Font License 1.1).</p>
+    </div></details>
+  </div>
 </section>
 
 <!-- ============ TÖRN (SPEC §14) ============ -->
@@ -633,7 +649,7 @@ DATA.forEach(function(h){BY_ID[h.id]=h;});
 BRIDGES.forEach(function(b){BR_BY_ID[b.id]=b;});
 
 var CONST={
-  datenstand:'18.10.2026',
+  datenstand:'18.10.2026',appVersion:'2.4',
   reff:{base:[18,23,28],names:['Vollzeug','1. Reff','2. Reff','3. Reff + Zuflucht anlaufen']},
   courseFactor:{'am Wind':1.15,'halber Wind':1.05,'raum':0.9,'vorm Wind':0.8},
   courses:['am Wind','halber Wind','raum','vorm Wind'],
@@ -2606,6 +2622,7 @@ function init(){
   $('bt-confirm').addEventListener('click',function(){bootFromUI('');saveProfile();renderBootNotes();showScreen('scr-lage');});
   document.querySelectorAll('nav button').forEach(function(b){b.addEventListener('click',function(){showScreen(b.dataset.scr);});});
   bootToUI();
+  $('ab-ver').textContent='Version '+CONST.appVersion;
   initToern();
   update();
   if(!had)showScreen('scr-boot');
