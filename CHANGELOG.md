@@ -46,3 +46,13 @@ Erstausgabe der Ostsee-App nach SPEC_v1.md, aufbauend auf Skipper-Assistent Sard
 - `bridgeContactHTML`: Öffnung, UKW und Tel.; jede Nummer ein eigener `tel:`-Link, Zusatztext bleibt sichtbar; "Kontakt: nicht belegt" bei beweglichen Brücken ohne Tel und UKW; Badge "ungeprüft" bei `verified.tel===false`.
 - Angezeigt im Banner "Brücken in der Nähe", in der Liste neben der Luftlinie, auf der Hafenkarte (einklappbar "Brückendetails"), in der Klappbrücken-Liste der Regeln und im PDF (neue Spalte "Tel.").
 - Tests 48–51; Screenshot 13; SW-Cache `skipper-ostsee-v1.6-20261019`.
+
+## v2.0 (01.11.2026) Törnplaner mit Wetter, Wegpunkt-Netz und Backup (SPEC §14)
+- Neuer Tab „Törn“: Rundtörn, Ziel oder frei über 2–7 Tage aus der Open-Meteo-Vorhersage (Wind, Böen, Welle, Gewitter, Sicht), Abruf nur auf Tippen.
+- Wegpunkt-Netz `data/seanet.json` (7382 Knoten, 13969 Kanten) aus GSHHG-Küste und GEBCO-2026-Tiefen, erzeugt mit `tools/seanet/`; Flachwasser < 3 m/unbelegt markiert und teurer; 16 Häfen in Schlei, Trave, Mariager und Randers Fjord nicht im Netz.
+- Etappen werden mit der bestehenden Logik bewertet (Böen/Reff, Seegang, Kurs zum Wind, Kreuzen ×1,41, Bornholm/Anholt-Gate nur bei echter Überfahrt, Brücken an der Route, Tageslicht, Nachtschutz im Zielhafen). Rote Etappen werden nie geplant.
+- Wegpunktliste je Etappe (GG°MM,m′, rwK, sm), Konfidenz je Tag, Alternativen für Tag 1, „Als Ziel“.
+- Boot-Tab: „max. Etappe (h)“ (Default 8) und „Ankunft vor Sonnenuntergang“.
+- Backup: jeder Wetterstand in IndexedDB (letzte 20), Export/Import als JSON, Plattform-URL als Rückfall; Collector für die eigene Plattform in `platform/` (Python, systemd-Timer, PostgreSQL, latest.json mit CORS).
+- Design: Schrift Atkinson Hyperlegible (eingebettet, OFL), Seekarten-Palette, Überschriften ohne Versalien, Schritt-Nummern, 6 Tabs.
+- Tests 52–60, Screenshots 14/15, SW-Cache `skipper-ostsee-v2.0-20261101`.

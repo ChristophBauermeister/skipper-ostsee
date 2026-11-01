@@ -25,6 +25,8 @@ const RADIO = radio.RADIO;
 const RADIO_SOURCES = radio.sources;
 const SEAAREAS = read('data/seaareas.json').SEAAREAS;
 const BOATS = read('data/boats.json');
+const SEANET = read('data/seanet.json');
+const WXGRID = read('data/wxgrid.json');
 
 // Validation
 const seen = new Set();
@@ -43,6 +45,9 @@ DATA.forEach((h) => (h.bridgeIds || []).forEach((id) => {
   if (!bridgeIds.has(id)) fail('harbour ' + h.id + ' references unknown bridge ' + id);
 }));
 
+Object.keys(SEANET.harbours).forEach((id) => { if (!seen.has(id)) fail('seanet references unknown harbour ' + id); });
+if (SEANET.harbours['de-heiligenhafen-marina'] === undefined) fail('default start de-heiligenhafen-marina not in seanet');
+
 // Embed as minified JSON; "<" is escaped so the data can never close the script tag
 const js = (v) => JSON.stringify(v).replace(/</g, '\\u003c').replace(new RegExp('\\u2028', 'g'), '\\u2028').replace(new RegExp('\\u2029', 'g'), '\\u2029');
 const dataJs = [
@@ -52,7 +57,9 @@ const dataJs = [
   'var RADIO=' + js(RADIO) + ';',
   'var RADIO_SOURCES=' + js(RADIO_SOURCES) + ';',
   'var SEAAREAS=' + js(SEAAREAS) + ';',
-  'var BOATS=' + js(BOATS) + ';'
+  'var BOATS=' + js(BOATS) + ';',
+  'var SEANET=' + js(SEANET) + ';',
+  'var WXGRID=' + js(WXGRID) + ';'
 ].join('\n');
 
 const src = fs.readFileSync(path.join(ROOT, 'src', 'app.html'), 'utf8');

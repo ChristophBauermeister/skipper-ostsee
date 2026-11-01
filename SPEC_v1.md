@@ -286,3 +286,54 @@ Tests:
 49. Hafenkarte eines Hafens mit `bridgeIds` auf `dk-bro-guldborgbroen`: Details enthalten „Tel.“-Link `tel:+4554770017` und „UKW 16“.
 50. `de-bro-lindaunis`: Kontaktblock zeigt „Kontakt: nicht belegt“.
 51. PDF-Brückenseite enthält Spalte „Tel.“ und „+49 3836 2324458“.
+
+## 14. Törnplaner mit Wetter und Wegpunkt-Netz (v2.0, Wunsch Christoph 01.11.2026)
+
+Ziel: Aus aktueller Wettervorhersage (online, auf Tippen) eine Route über 2–7 Tage planen: Rundtörn, Ziel vorgeben oder frei. Daten lokal und auf der eigenen Plattform sichern.
+
+### 14.1 Wegpunkt-Netz (`data/seanet.json`, erzeugt mit `tools/seanet/`, nicht von Hand ändern)
+- Quellen: GSHHG 2.3.7 full (Küstenlinie, LGPL), GEBCO 2026 Grid (Tiefe, gemeinfrei). Beide „nicht für die Navigation“ – so in App, PDF-freier Hinweis und Wegpunktliste.
+- Inhalt: Knoten (lat/lon ×1e5, Int32, base64), Kanten `ea/eb` (Uint16), `esh` Flachwasseranteil in 0,1 sm (Uint8), `emd` GEBCO-Mindesttiefe in m (Int8, −1 = unbelegt). `harbours[id] = [Knoten, Abstand Hafen→Knoten sm]`, `notInNet` = Häfen ohne Netzanschluss (Schlei, Trave, Mariager, Randers – schmale Gewässer fehlen in GSHHG).
+- Flachwasser = GEBCO < 3 m (`deepM`) oder unbelegt. Route: Dijkstra, Kosten = Länge + Flachwasser-sm (`shallowPenalty` 1,0). Anzeige je Etappe: „x sm Flachwasser/Tiefe unbelegt – nur im betonnten Fahrwasser (Seekarte)“. Kein Ampelgrund, aber Planerkosten.
+- Abstand Hafen→Knoten > 0,3 sm: Hinweis „letzte x sm Zufahrt außerhalb des Netzes“.
+- `rwK` je Wegpunkt-Abschnitt als Loxodrome (`rhumb`), Hinweistext wie §12.2.
+
+### 14.2 Wetter (Tab „Törn“, Abschnitt 1)
+- **Nur auf Tippen** „Wetter laden (online)“. Beim Start und sonst: 0 externe Requests (Test 47 bleibt gültig).
+- Punkte: `data/wxgrid.json` (Raster 0,25° × 0,5°, nur Punkte mit Netzknoten ≤ 12 sm, 108 Punkte).
+- Open-Meteo Forecast `https://api.open-meteo.com/v1/forecast` mit allen Punkten in einem Aufruf: `hourly=wind_speed_10m,wind_direction_10m,wind_gusts_10m,weather_code,visibility`, `wind_speed_unit=kn`, `forecast_days=7`, `timezone=GMT`. Marine `https://marine-api.open-meteo.com/v1/marine`: `hourly=wave_height,wave_direction`, `forecast_days=7`, `timezone=GMT`. Fehlt Marine: Seegang „unbekannt“ (nicht 0), Ampel dafür n.
+- Snapshot-Format (identisch für App, Export und Plattform): `{type:"skipper-ostsee-wx", version:1, fetchedAt:ISO, source, points:[[lat,lon]], t0:ms, hours:n, ws, wd, wg, wc, vis, wh, wdir}` – je Variable Array pro Punkt, `null` = fehlt.
+- Wert an Ort/Zeit: nächster Rasterpunkt, Stunde linear interpoliert (Richtung über Vektor). Außerhalb des Zeitraums: „keine Vorhersage“ → n.
+- Gewitter: `weather_code` 95/96/99. Nebel: `visibility` < 1000 m (Faustregel).
+- Attribution sichtbar: „Wetter: Open-Meteo.com, Modelle u. a. DWD ICON / ICON-Wave (CC BY 4.0). Kein amtlicher Seewetterbericht.“
+- Alter: > 12 h gelb „Wetterstand x h alt – neu laden“, > 48 h Planer nur mit Bestätigungshinweis.
+- Konfidenz nach Vorhersagetag (Faustregel): Tag 0–2 „hoch“, 3–4 „mittel“, ab 5 „nur Trend“.
+
+### 14.3 Backup
+- **Lokal:** jeder Snapshot in IndexedDB `skipper-ostsee`/`wx` (letzte 30), letzter Plan in localStorage. Offline gilt der letzte Snapshot. Alle Zugriffe try/catch.
+- **Export/Import:** JSON-Datei `{type:"skipper-ostsee-backup", version:1, exportedAt, wx:[Snapshots], plan, settings}`; Import prüft `type`, übernimmt Snapshots und Plan.
+- **Plattform:** Feld „Plattform-URL“ (localStorage). „Vom Plattform-Backup laden“ holt `GET <url>` (Snapshot-Format). Schlägt Open-Meteo fehl und ist eine URL gesetzt, wird automatisch die Plattform versucht. Der Collector in `platform/` (Python, systemd-Timer, PostgreSQL, statische `latest.json` mit CORS) holt dieselben Punkte unabhängig von der App und archiviert jeden Lauf.
+
+### 14.4 Planer (Tab „Törn“, Abschnitt 2/3)
+- Eingaben: Modus Rundtörn / Ziel / Frei; Start (Hafen, Default nächster Netzhafen zur Position, sonst Heiligenhafen); Ziel (nur Modus Ziel); Startdatum; Tage 2–7 (Default 7); Abfahrt 06–12 Uhr (Default 08); aus dem Boot-Tab: Fahrt, „max. Etappe (h)“ (Default 8, 3–14) und „Ankunft vor Sonnenuntergang“ (Default an).
+- Kandidaten für die Nacht: im Netz, `type` ≠ nothafen, Schutz bekannt, `harborStatus` ohne roten Grund bei Tiefe/Maße/Brücke. Etappe ≥ 5 sm (Faustregel).
+- Etappe simulieren: entlang der Netzroute in Stücken ≤ 2 sm; je Stück Wetter an Ort/Zeit, Kurs zum Wind (§12), Kreuzen → Fahrt / 1,41; je Stück `generalLevel` (Böen, Seegang, Nebel, Gewitter, Kinder, Saison) und Überfahrt-Gates (Bornholm/Anholt) wie bisher. Brücken ≤ 0,3 sm neben der Route: `bridgeCheck`, rot = Etappe gesperrt, Klappbrücke gelb „nur zu Öffnungszeiten“.
+- Abfahrt = max(Abfahrtszeit, Sonnenaufgang). Fahrzeit ≤ max. Etappe; mit Tageslicht-Option Ankunft ≤ Sonnenuntergang − 30 min.
+- Nacht im Zielhafen: stärkste Böe von Ankunft bis Abfahrt am Folgetag mit ihrer Richtung und dem Seegang → `harborStatus`.
+- Hafentag: bleibt im Hafen, Nachtprüfung über 24 h.
+- Rote Etappen werden nie geplant. Überfahrt-Gates (Bornholm/Anholt) gelten im Planer nur für Etappen, deren Start und Ende auf verschiedenen Seiten liegen (Insel = in der Box, Bornholm östlich `islandLon`).
+- Bewertung (Faustregel Planer, in `CONST.plan`): Ampelkosten g 0, y 4, n 6; Nacht rot 60, gelb 3, n 5; Hafentag 2; −0,08 je sm (Rundtörn/Frei), Kreuzanteil × 2, Flachwasser-sm × 0,15, Hafen (oder Hafen ≤ 2 sm daneben) schon besucht 3; Modus Ziel: 0,05 je sm, Warten im erreichten Ziel kostenlos (außer Nacht rot), Rangfolge in der Strahlsuche mit 0,25 × Restdistanz.
+- Nacht im Hafen: von 15 Uhr bis Abfahrt am Folgetag (Hafentag: ab Abfahrtszeit), bewertet werden nur Windschutz, Ansteuerung, Seegang und Böen je Hafentyp.
+- Suche: Strahlsuche über die Tage (60 Zustände je Tag). Rundtörn endet am letzten Tag im Start, Ziel im Zielhafen (früher ankommen erlaubt, dann Hafentage); Zustände, von denen das Ende nicht mehr erreichbar ist (Netzdistanz > Resttage × max. Etappe × Fahrt), fallen weg. Findet sich kein Plan: Meldung mit Grund.
+- Ergebnis je Tag: Datum, Von → Nach bzw. „Hafentag“, sm, Fahrzeit, ab/an, Wind/Böen/Welle (min–max), Kurs zum Wind, Reff, Ampel mit Gründen, Konfidenz, Nachtprüfung, Brücken, Flachwasser, ausklappbare Wegpunktliste (Nr., Breite/Länge GG°MM,m', rwK, sm). Button „Als Ziel“ (setzt `state.target`). Für Tag 1 bis zu 3 Alternativen.
+- Hinweis fest unter dem Plan: „Planungshilfe. Netz aus Küstenlinie (GSHHG) und Tiefenmodell (GEBCO) – nicht für die Navigation. Jede Etappe in der Seekarte prüfen. Ab Tag 4 nur Trend – täglich neu planen.“
+
+### 14.5 Tests (Fixture-Wetter, keine echten Requests)
+52. Netz: 7382 Knoten, alle Häfen außer `notInNet` angeschlossen; Faaborg → Svendborg durch den Svendborgsund < 20 sm; Heiligenhafen → Burgtiefe < 12 sm.
+53. Start und Planer ohne Wetter: 0 externe Requests; „Wetter laden“ fragt nur `api.open-meteo.com` und `marine-api.open-meteo.com` (abgefangen), Snapshot liegt danach in IndexedDB und überlebt Neuladen.
+54. Ruhiges Fixture (SW 10/14, Welle 0,4): Rundtörn ab Heiligenhafen, 7 Tage → endet in Heiligenhafen, jede Etappe ≤ max. Etappe, Ankunft vor Sonnenuntergang, keine rote Etappe.
+55. Sturm-Fixture an Tag 3 (W 30/40 kn): Tag 3 Hafentag oder kurze grüne/gelbe Etappe, nie rote Etappe auf See; Nachtprüfung meldet Schutz.
+56. Modus Ziel Heiligenhafen → Rønne: Plan endet in Rønne; Überfahrt nicht an einem Tag mit Böen ≥ Gate-Schwelle.
+57. Mast 30 m: keine Route unter einer festen Brücke mit roter `bridgeCheck`.
+58. Export → Import stellt Snapshot und Plan wieder her; Open-Meteo-Fehler + Plattform-URL → Snapshot von der Plattform (abgefangen).
+59. Keine JS-Fehler im Törn-Tab; Screenshot 14 (Plan), 15 (Wetter/Backup).
