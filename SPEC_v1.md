@@ -337,3 +337,9 @@ Ziel: Aus aktueller Wettervorhersage (online, auf Tippen) eine Route über 2–7
 57. Mast 30 m: keine Route unter einer festen Brücke mit roter `bridgeCheck`.
 58. Export → Import stellt Snapshot und Plan wieder her; Open-Meteo-Fehler + Plattform-URL → Snapshot von der Plattform (abgefangen).
 59. Keine JS-Fehler im Törn-Tab; Screenshot 14 (Plan), 15 (Wetter/Backup).
+
+## 15. Törnkarte und GPX (v2.1, Wunsch Christoph 01.11.2026)
+- **Offline-Karte** im Törn-Tab über dem Plan: Küste aus `data/coast.json` (GSHHG full, vereinfacht 1 px bei Zoom 10 ≈ 90 m, Web-Mercator, erzeugt mit `tools/seanet/coast.py`). Routen je Tag in eigener Farbe, Starthafen „S“, Tageshäfen mit Tagesnummer, Hafennamen ab Zoom 8,5. Verschieben, Zwei-Finger-Zoom, Mausrad, Doppeltipp, Knöpfe +/−/„ganze Route“. Tag antippen (Karte oder Tageskarte) hebt die Etappe hervor. Hinweis unten: „keine Seekarte“.
+- **Online-Seekarte** nur per Schalter (Default aus, gespeichert): Kacheln `tile.openstreetmap.org` + Seezeichen `tiles.openseamap.org/seamark`, max. 48 Kacheln je Ansicht, Attribution sichtbar. Ohne Schalter 0 externe Requests.
+- **GPX 1.1**: je Segeltag ein `<rte>` (Name „Tag n Von – Nach“, `rtept` Start/Ziel mit Hafennamen, dazwischen „Tn WPxx“ mit rwK/sm), Häfen als `<wpt>`, Hinweis „nicht für die Navigation“ in `<metadata>`. „GPX teilen“ (Android-Teilen-Menü, sonst Download) und „GPX speichern“.
+- Tests 61–64.

@@ -27,6 +27,7 @@ const SEAAREAS = read('data/seaareas.json').SEAAREAS;
 const BOATS = read('data/boats.json');
 const SEANET = read('data/seanet.json');
 const WXGRID = read('data/wxgrid.json');
+const COAST = read('data/coast.json');
 
 // Validation
 const seen = new Set();
@@ -59,7 +60,8 @@ const dataJs = [
   'var SEAAREAS=' + js(SEAAREAS) + ';',
   'var BOATS=' + js(BOATS) + ';',
   'var SEANET=' + js(SEANET) + ';',
-  'var WXGRID=' + js(WXGRID) + ';'
+  'var WXGRID=' + js(WXGRID) + ';',
+  'var COAST=' + js(COAST) + ';'
 ].join('\n');
 
 const src = fs.readFileSync(path.join(ROOT, 'src', 'app.html'), 'utf8');

@@ -746,6 +746,59 @@ const NOW = Date.UTC(2026, 6, 15, 9, 0); // 15.07.2026 11:00 MESZ: fixed clock, 
       check('60 Planer-Schnellbewertung = generalLevel (Böen, Seegang, Kinder, Saison)', r.length === 0, JSON.stringify(r.slice(0, 5)));
     }
   }
+
+  // ---- v2.1 Törnkarte und GPX (spec §15) ----
+  {
+    const { makeWx } = require('./wxfixture.js');
+    const pts = await ev(() => SKIPPER.WXGRID.points);
+    const calm = makeWx(pts, Date.UTC(2026, 6, 15), () => ({ ws: 10, wd: 225, wg: 14, wh: 0.4 }));
+    await page.reload(); await page.waitForFunction(() => window.SKIPPER);
+    await page.evaluate(() => { try { localStorage.removeItem('skipperOst.mapOnline'); } catch (e) {} });
+    const nExt = external.length, nErr = errors.length;
+    await page.click('nav button[data-scr="scr-toern"]');
+    await ev((snap) => { SKIPPER.wxSet(snap); const r = SKIPPER.planTrip({ mode: 'rund', start: 'de-heiligenhafen-marina', date: '2026-07-15', days: 5, depHour: 8, maxLegH: 8, daylight: true, speed: 5.5 }); SKIPPER.PL.plan = SKIPPER.planSerialize(r); SKIPPER.renderPlan(); }, calm);
+    await page.waitForTimeout(200);
+    const m = await page.evaluate(() => {
+      const legs = SKIPPER.PL.plan.days.filter(d => d.type === 'leg').length;
+      const vb = SKIPPER.MAP.svg.getAttribute('viewBox').split(' ').map(Number);
+      const inView = SKIPPER.PL.plan.days.filter(d => d.type === 'leg').every(d => d.leg.pts.every(p => { const q = SKIPPER.merc(p[0], p[1]); return q.x >= vb[0] && q.x <= vb[0] + vb[2] && q.y >= vb[1] && q.y <= vb[1] + vb[3]; }));
+      return { legs, lines: document.querySelectorAll('#m-route polyline.leg').length, coast: (document.getElementById('m-coast').getAttribute('d') || '').length, marks: document.querySelectorAll('#m-marks .mk').length, inView, shown: document.getElementById('mapbox').style.display !== 'none' };
+    });
+    check('61 Karte: Küste gezeichnet, je Etappe eine Linie, Tageshäfen markiert, „ganze Route“ zeigt alle Wegpunkte; 0 externe Requests, keine JS-Fehler',
+      m.shown && m.coast > 100000 && m.lines === m.legs && m.legs > 0 && m.marks >= 2 && m.inView && external.length === nExt && errors.length === nErr, JSON.stringify({ m, ext: external.slice(nExt), err: errors.slice(nErr) }));
+    // 62 pan/zoom and day selection
+    const z = await page.evaluate(() => { const a = SKIPPER.MAP.z; SKIPPER.mapZoomAt(1); const b = SKIPPER.MAP.z; SKIPPER.mapFit(null); return { a, b, c: SKIPPER.MAP.z }; });
+    await page.click('#planres .pday[data-d="1"] .pt');
+    const sel = await page.evaluate(() => ({ sel: SKIPPER.MAP.sel, hl: document.querySelectorAll('#m-route polyline.leg.sel').length, card: !!document.querySelector('#planres .pday.mapsel[data-d="1"]') }));
+    check('62 Zoom +1 ändert die Ansicht, „ganze Route“ stellt sie wieder her; Tag 2 antippen hebt die Etappe auf der Karte hervor', Math.abs(z.b - z.a - 1) < 1e-6 && Math.abs(z.c - z.a) < 1e-6 && sel.sel === 1 && sel.hl === 1 && sel.card, JSON.stringify({ z, sel }));
+    // 63 online chart only on switch
+    const png = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==', 'base64');
+    const hosts = new Set();
+    await page.route('https://tile.openstreetmap.org/**', (rt) => { hosts.add('osm'); rt.fulfill({ status: 200, contentType: 'image/png', body: png }); });
+    await page.route('https://tiles.openseamap.org/**', (rt) => { hosts.add('seamark'); rt.fulfill({ status: 200, contentType: 'image/png', body: png }); });
+    const before = external.length;
+    await page.check('#m-online'); await page.waitForTimeout(500);
+    const onReq = external.slice(before).map(u => new URL(u).host);
+    const tiles = await page.evaluate(() => document.querySelectorAll('#m-tiles image').length);
+    await page.uncheck('#m-online'); await page.waitForTimeout(300);
+    const after = external.length; await page.evaluate(() => SKIPPER.mapZoomAt(0.5)); await page.waitForTimeout(300);
+    await page.unroute('https://tile.openstreetmap.org/**'); await page.unroute('https://tiles.openseamap.org/**');
+    check('63 Online-Seekarte nur per Schalter: dann nur tile.openstreetmap.org + tiles.openseamap.org (≤ 2 × 48 Kacheln), Schalter aus → keine weiteren Requests',
+      hosts.has('osm') && hosts.has('seamark') && onReq.length > 0 && onReq.every(h => h === 'tile.openstreetmap.org' || h === 'tiles.openseamap.org') && tiles > 0 && tiles <= 48 && external.length === after, JSON.stringify({ onReq: onReq.length, tiles, extra: external.length - after }));
+    // 64 GPX
+    const g = await page.evaluate(() => {
+      const P = SKIPPER.PL.plan, f = SKIPPER.gpxFile(), doc = new DOMParser().parseFromString(f.text, 'application/xml');
+      const legs = P.days.filter(d => d.type === 'leg'), rtes = [...doc.getElementsByTagName('rte')];
+      const first = rtes[0] && rtes[0].getElementsByTagName('rtept')[0], lastR = rtes[rtes.length - 1], lastP = lastR && [...lastR.getElementsByTagName('rtept')].pop();
+      const st = SKIPPER.DATA.find(h => h.id === P.opt.start);
+      return { name: f.name, err: doc.getElementsByTagName('parsererror').length, rtes: rtes.length, legs: legs.length,
+        pts: rtes.map(r => r.getElementsByTagName('rtept').length).join(','), ptsExp: legs.map(d => d.leg.pts.length).join(','),
+        first: first && [+first.getAttribute('lat'), +first.getAttribute('lon')], st: [st.lat, st.lon], lastName: lastP && lastP.getElementsByTagName('name')[0].textContent,
+        wpt: doc.getElementsByTagName('wpt').length, ns: doc.documentElement.namespaceURI, disc: /nicht für die Navigation/.test(f.text) };
+    });
+    check('64 GPX 1.1: wohlgeformt, je Segeltag ein rte mit allen Wegpunkten, startet am Starthafen, letzter Punkt = Zielhafen, Häfen als wpt, Hinweis enthalten',
+      g.err === 0 && g.ns === 'http://www.topografix.com/GPX/1/1' && g.rtes === g.legs && g.pts === g.ptsExp && Math.abs(g.first[0] - g.st[0]) < 1e-4 && Math.abs(g.first[1] - g.st[1]) < 1e-4 && /Heiligenhafen/.test(g.lastName) && g.wpt >= 2 && g.disc && /\.gpx$/.test(g.name), JSON.stringify(g));
+  }
   await browser.close();
   const failed = results.filter(r => !r.ok);
   console.log('\n' + (results.length - failed.length) + '/' + results.length + ' checks passed');
