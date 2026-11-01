@@ -722,7 +722,7 @@ const NOW = Date.UTC(2026, 6, 15, 9, 0); // 15.07.2026 11:00 MESZ: fixed clock, 
       await ev((s) => { SKIPPER.wxSet(s); }, fresh);
       await page.click('nav button[data-scr="scr-toern"]');
       await page.click('[data-pmode="rund"]');
-      await page.selectOption('#p-start', 'de-heiligenhafen-marina');
+      await page.evaluate(() => SKIPPER.pickerSet('p-start', 'de-heiligenhafen-marina'));
       await page.selectOption('#p-days', '3');
       await page.click('#btn-plan');
       await page.waitForFunction(() => /Tag 1/.test(document.getElementById('planres').textContent) || /Kein Plan/.test(document.getElementById('planmsg').textContent), null, { timeout: 20000 });
@@ -914,6 +914,31 @@ const NOW = Date.UTC(2026, 6, 15, 9, 0); // 15.07.2026 11:00 MESZ: fixed clock, 
       return { a: a.maxNm, b: b.maxNm, aHours: a.days.filter(x => x.type === 'leg').map(x => x.leg.sim.hours), arrOk: a.days.filter(x => x.type === 'leg').every(x => { const h = SKIPPER.DATA.find(q => q.id === x.leg.to), st = SKIPPER.sunTimes(h.lat, h.lon, x.leg.sim.arr); return x.leg.sim.arr <= st.sunsetMs - 30 * 60000; }) }; }, makeWx(pts, Date.UTC(2026, 5, 20), () => ({ ws: 10, wd: 225, wg: 14, wh: 0.4 })));
     check('75 Etappe bis Sonnenuntergang (leer): im Juni Suchreichweite > 8 h × Fahrt, jede Ankunft ≥ 30 min vor Sonnenuntergang',
       sun.a > sun.b + 20 && sun.arrOk, JSON.stringify(sun));
+  }
+
+  // ---- v2.7 Hafensuche und Auswahl auf der Karte (spec §19) ----
+  {
+    await page.click('nav button[data-scr="scr-toern"]');
+    await page.fill('#p-via1-q', 'kerte');
+    await page.waitForSelector('#p-via1-sug [data-hid]');
+    const sug = await page.evaluate(() => [...document.querySelectorAll('#p-via1-sug [data-hid]')].map(b => b.dataset.hid));
+    await page.click('#p-via1-sug [data-hid="dk-kerteminde-havn-marina"]');
+    const via1 = await page.evaluate(() => ({ sel: document.getElementById('p-via1').value, pl: SKIPPER.PL.vias[0], shown: document.getElementById('p-via1-q').value }));
+    const umlaut = await ev(() => SKIPPER.harbourMatches('ronne').map(h => h.id));
+    // pick on the map: zoom to Middelfart and tap its dot
+    await page.evaluate(() => { const h = SKIPPER.DATA.find(x => x.id === 'dk-middelfart-marina'), m = SKIPPER.merc(h.lat, h.lon); SKIPPER.MAP.cx = m.x; SKIPPER.MAP.cy = m.y; SKIPPER.MAP.z = 10; SKIPPER.mapZoomAt(0); });
+    await page.evaluate(() => document.getElementById('tmap').scrollIntoView({ block: 'center' }));
+    const pt = await page.evaluate(() => { const c = document.querySelector('#m-marks [data-hk="dk-middelfart-marina"] .hkhit'); const r = c.getBoundingClientRect(); return { x: r.x + r.width / 2, y: r.y + r.height / 2 }; });
+    await page.mouse.click(pt.x, pt.y);
+    await page.waitForSelector('#m-pick [data-mset="via"]');
+    const panel = await page.evaluate(() => document.getElementById('m-pick').textContent);
+    await page.click('#m-pick [data-mset="via"]');
+    const vias = await page.evaluate(() => SKIPPER.PL.vias.slice(0, 3));
+    const ring = await page.evaluate(() => [...document.querySelectorAll('#m-marks .mk text')].map(t => t.textContent));
+    check('76 Hafensuche: „kerte“ findet Kerteminde, „ronne“ findet Rønne; Hafen auf der Karte antippen → „Über“ setzt Middelfart als 2. Über-Hafen; Auswahl als Ring auf der Karte',
+      sug.includes('dk-kerteminde-havn-marina') && via1.sel === 'dk-kerteminde-havn-marina' && via1.pl === 'dk-kerteminde-havn-marina' && /Kerteminde/.test(via1.shown) && umlaut.includes('dk-roenne-havn') && /Middelfart/.test(panel) && vias[1] === 'dk-middelfart-marina' && ring.includes('Ü1') && ring.includes('Ü2'),
+      JSON.stringify({ sug, via1, umlaut, panel, vias, ring }));
+    await page.evaluate(() => { SKIPPER.pickerSet('p-via1', ''); SKIPPER.pickerSet('p-via2', ''); });
   }
   await browser.close();
   const failed = results.filter(r => !r.ok);
