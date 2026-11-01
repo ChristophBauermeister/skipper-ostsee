@@ -824,6 +824,29 @@ const NOW = Date.UTC(2026, 6, 15, 9, 0); // 15.07.2026 11:00 MESZ: fixed clock, 
     check('65 Angesehene Kacheln (Basis + Seezeichen) liegen auf dem Gerät und kommen offline ohne Requests; „löschen“ leert den Speicher',
       stored.n === 2 * view && view > 0 && off.n === 2 * view && off.blob === off.n && offReq === 0 && cleared.n === 0, JSON.stringify({ stored, view, off, offReq, cleared }));
   }
+
+  // ---- v2.3 Gesamtstrecke und Nachtfahrten (spec §16) ----
+  {
+    const { makeWx } = require('./wxfixture.js');
+    const pts = await ev(() => SKIPPER.WXGRID.points);
+    const calm = makeWx(pts, Date.UTC(2026, 6, 15), () => ({ ws: 10, wd: 225, wg: 14, wh: 0.4 }));
+    const run = (o) => ev(({ snap, o }) => { SKIPPER.wxSet(snap); const p = SKIPPER.planTrip(Object.assign({ date: '2026-07-15', depHour: 8, maxLegH: 8, daylight: true, speed: 5.5, maxNightH: 24 }, o));
+      return p.error ? { error: p.error } : { total: p.totalNm, nights: p.nightsUsed, days: p.days.map(x => ({ type: x.type, d: x.d, to: x.leg ? x.leg.to : x.at, night: x.leg ? x.leg.night : null, hours: x.leg ? x.leg.sim.hours : null, arrDay: x.leg ? x.leg.arrDay : null })) }; }, { snap: calm, o });
+    const a = await run({ mode: 'rund', start: 'de-heiligenhafen-marina', days: 5, targetNm: 120 });
+    const b = await run({ mode: 'rund', start: 'de-heiligenhafen-marina', days: 5, targetNm: 200 });
+    check('66 Gesamtstrecke: Vorgabe 120 sm → Plan 102–138 sm, Vorgabe 200 sm → deutlich länger; Rundtörn endet im Start',
+      !a.error && !b.error && a.total >= 102 && a.total <= 138 && b.total > a.total + 40 && a.days[a.days.length - 1].to === 'de-heiligenhafen-marina', JSON.stringify({ a: a.total, b: b.total }));
+    const n1 = await run({ mode: 'ziel', start: 'dk-gedser-lystbaadehavn', target: 'dk-roenne-havn', days: 2, nights: 1 });
+    const n0 = await run({ mode: 'ziel', start: 'dk-gedser-lystbaadehavn', target: 'dk-roenne-havn', days: 2, nights: 0 });
+    const leg = n1.days && n1.days.find(x => x.type === 'leg' && x.night);
+    check('67 Gedser → Rønne in 2 Tagen: mit 1 Nachtfahrt (max. 24 h) erreicht, genau 1 Nachtfahrt ≤ 24 h; ohne Nachtfahrt „kein Plan“',
+      !n1.error && n1.nights === 1 && leg && leg.hours <= 24 && n1.days.some(x => x.to === 'dk-roenne-havn') && !!n0.error, JSON.stringify({ n1, n0: n0.error }));
+    const arrive = n1.days.find(x => x.type === 'arrive');
+    const short = await run({ mode: 'ziel', start: 'dk-gedser-lystbaadehavn', target: 'dk-roenne-havn', days: 2, nights: 1, maxNightH: 12 });
+    const ui = await page.evaluate(() => { const d = document.createElement('div'); return !!document.getElementById('p-target') && !!document.getElementById('p-nights') && !!document.getElementById('b-maxnight'); });
+    check('68 Nachtfahrt bis zum Folgetag → Folgetag „Ankunft nach Nachtfahrt“ ohne weitere Etappe; max. Nachtfahrt 12 h → kein Plan; Felder im Formular und Boot-Tab',
+      (leg.arrDay === 0 || (arrive && arrive.d === leg.arrDay && !n1.days.some(x => x.type === 'leg' && x.d === leg.arrDay))) && !!short.error && ui, JSON.stringify({ leg, arrive, short: short.error, ui }));
+  }
   await browser.close();
   const failed = results.filter(r => !r.ok);
   console.log('\n' + (results.length - failed.length) + '/' + results.length + ' checks passed');

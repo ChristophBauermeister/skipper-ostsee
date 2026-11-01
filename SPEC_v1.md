@@ -349,3 +349,10 @@ Ziel: Aus aktueller Wettervorhersage (online, auf Tippen) eine Route über 2–7
 - Kacheln per `fetch` (CORS) laden, in IndexedDB `skipper-ostsee-tiles` ablegen (max. 4000, älteste zuerst gelöscht), 30 Tage frisch; offline wird jede gespeicherte Kachel gezeigt. Server ohne CORS: Kachel direkt anzeigen, nicht speichern, Hinweis.
 - Anzeige „Auf dem Gerät: n Kacheln (x MB)“ und Knopf „Gespeicherte Kartenkacheln löschen“ (schaltet die Seekarte aus, sonst würde der Ausschnitt sofort neu gespeichert).
 - Test 65: angesehene Kacheln kommen offline aus dem Gerätespeicher (0 Requests), Löschen leert ihn.
+
+## 16. Gesamtstrecke und Nachtfahrten (v2.3, Wunsch Christoph 01.11.2026)
+- Törn-Formular: „Gesamtstrecke (sm, optional)“ und „Nachtfahrten max.“ (keine/1/2/3). Boot-Tab: „max. Nachtfahrt (h)“, Default 24, 10–36.
+- **Gesamtstrecke:** Ersetzt den Streckenbonus. Abweichung kostet 0,12 je sm am Ende; in der Strahlsuche zählen Überschreitung, nicht mehr erreichbarer Rest und 0,5 × Abweichung vom gleichmäßigen Tempo. Weicht der Plan > 15 % ab, Hinweis mit Abweichung.
+- **Nachtfahrt** = Etappe, die durch Dunkelheit führt (Ankunft nach Sonnenuntergang − 30 min oder am Folgetag), bis „max. Nachtfahrt“. Lange Etappen nur bei Tageslicht über „max. Etappe“ bleiben verboten. Gleiche Schwellen wie am Tag (Wunsch Christoph); zusätzlich Info „Nachtfahrt: Wachplan, Lichterführung, Rettungswesten mit Licht“ und gelb „Ankunft bei Dunkelheit“. Kosten +3 je Nachtfahrt. Ziele für Nachtfahrten: ≥ 0,6 × max. Etappe, höchstens 60 je Hafen (gleichmäßig nach Distanz).
+- Endet die Nachtfahrt am Folgetag, ist dieser Tag „Ankunft nach Nachtfahrt“ (keine weitere Etappe); die Nachtprüfung läuft ab Ankunft.
+- Tests 66–68.
