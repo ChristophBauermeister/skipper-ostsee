@@ -377,3 +377,8 @@ Ziel: Aus aktueller Wettervorhersage (online, auf Tippen) eine Route über 2–7
 - Die Karte steht im Törn-Formular über den Feldern und ist auch ohne Plan sichtbar (Start auf Zoom 8,2). Alle wählbaren Häfen als Punkte, Namen ab Zoom 9,5. Antippen → Feld mit „Als Start“, „Über“ (nächster freier Platz, max. 3), „Als Ziel“ (schaltet Modus Ziel). Auswahl als Ringe S / Ü1–Ü3 / Z.
 - GPX-Knöpfe erst mit Plan.
 - Test 76.
+
+## 20. Begründung bei „Kein Plan“ (v2.7.1)
+- Findet der Planer keinen Plan, nennt er: Mindest-Seeweg über Start, Über-Häfen und Ende; die daraus nötigen Tagesetappen bei der aktuellen Tagesreichweite (Abfahrt bis Sonnenuntergang − 30 min); Teilstrecken länger als eine Tagesetappe; ob es nur am Wetter liegt; Vorschläge (früher ablegen mit Sonnenaufgang, mehr Tage/Nachtfahrten, Über-Hafen weglassen, Boot-Tab prüfen).
+- Der alte Plan wird dann ausgeblendet, damit Fehlermeldung und veralteter Plan nicht gemeinsam stehen.
+- Test 77.

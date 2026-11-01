@@ -940,6 +940,18 @@ const NOW = Date.UTC(2026, 6, 15, 9, 0); // 15.07.2026 11:00 MESZ: fixed clock, 
       JSON.stringify({ sug, via1, umlaut, panel, vias, ring }));
     await page.evaluate(() => { SKIPPER.pickerSet('p-via1', ''); SKIPPER.pickerSet('p-via2', ''); });
   }
+
+  // ---- v2.7.1 Begründung bei „Kein Plan“ (spec §20) ----
+  {
+    const { makeWx } = require('./wxfixture.js');
+    const pts = await ev(() => SKIPPER.WXGRID.points);
+    const nov = makeWx(pts, Date.UTC(2026, 10, 1), () => ({ ws: 9, wd: 225, wg: 12, wh: 0.4 }));
+    const r = await ev((snap) => { SKIPPER.wxSet(snap); return SKIPPER.planTrip({ mode: 'rund', start: 'de-heiligenhafen-marina', date: '2026-11-01', days: 7, depHour: 9, maxLegH: null, daylight: true, speed: 5.5, maxNightH: 24, nights: 1, afterNightHour: 11, targetNm: 360, vias: ['dk-spodsbjerg-havn', 'dk-ballen-havn', 'dk-dragoer-lystbaadehavn'] }); }, nov);
+    const d = r.diag || {};
+    const html = await ev((g) => { const el = document.createElement('div'); el.innerHTML = SKIPPER.diagHTML(g); return el.textContent; }, d);
+    check('77 Kein Plan (Rundtörn Heiligenhafen über Spodsbjerg, Ballen, Dragør im November): Begründung mit Mindeststrecke ≈ 296 sm, Tagesetappen > 7, zu lange Teilstrecken und Vorschlägen',
+      !!r.error && Math.abs(d.needNm - 296) < 8 && d.dayLegs > 7 && d.longSegs.some(x => /Dragør/.test(x)) && /Tagesetappen/.test(html) && /früher ablegen/.test(html), JSON.stringify({ err: r.error, d }));
+  }
   await browser.close();
   const failed = results.filter(r => !r.ok);
   console.log('\n' + (results.length - failed.length) + '/' + results.length + ' checks passed');

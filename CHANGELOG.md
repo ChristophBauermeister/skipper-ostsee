@@ -100,3 +100,6 @@ Erstausgabe der Ostsee-App nach SPEC_v1.md, aufbauend auf Skipper-Assistent Sard
 ## v2.7 (01.11.2026) Hafensuche und Auswahl auf der Karte (SPEC §19)
 - Suchfelder für Start, Ziel und Über-Häfen; Karte im Formular mit allen Häfen, antippen → als Start/Über/Ziel.
 - Test 76, SW-Cache `skipper-ostsee-v2.7-20261101`.
+
+## v2.7.1 (01.11.2026)
+- „Kein Plan“ mit Begründung (Mindeststrecke, nötige Tagesetappen, zu lange Teilstrecken, Wetter, Vorschläge); alter Plan wird dabei ausgeblendet. Test 77.
