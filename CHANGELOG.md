@@ -72,3 +72,8 @@ Erstausgabe der Ostsee-App nach SPEC_v1.md, aufbauend auf Skipper-Assistent Sard
 ## v2.2 (01.11.2026) Angesehene Kartenkacheln offline (SPEC §15.4)
 - Kacheln, die online angesehen wurden, bleiben auf dem Gerät (IndexedDB, max. 4000, 30 Tage frisch) und erscheinen ohne Netz; kein Vorab-Download (OSM-Nutzungsregeln).
 - Anzeige des Speichers und Knopf zum Löschen. Test 65, SW-Cache `skipper-ostsee-v2.2-20261101`.
+
+## v2.3 (01.11.2026) Gesamtstrecke und Nachtfahrten (SPEC §16)
+- Törn-Formular: Gesamtstrecke in sm (optional) und Anzahl Nachtfahrten; Boot-Tab: max. Nachtfahrt (h, Default 24).
+- Nachtfahrten nur durch Dunkelheit, gleiche Schwellen wie tags, Hinweis Ankunft bei Dunkelheit; Folgetag „Ankunft nach Nachtfahrt“.
+- Tests 66–68, SW-Cache `skipper-ostsee-v2.3-20261101`.
