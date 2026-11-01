@@ -68,3 +68,7 @@ Erstausgabe der Ostsee-App nach SPEC_v1.md, aufbauend auf Skipper-Assistent Sard
 - Schalter „Online-Seekarte (OpenSeaMap)“: OSM-Karte mit Seezeichen-Overlay, nur wenn eingeschaltet.
 - GPX-Export (teilen/speichern): eine Route je Segeltag, Häfen als Wegpunkte – für Navionics, OpenCPN, Plotter.
 - Tests 61–64, Screenshot 16, SW-Cache `skipper-ostsee-v2.1-20261101`.
+
+## v2.2 (01.11.2026) Angesehene Kartenkacheln offline (SPEC §15.4)
+- Kacheln, die online angesehen wurden, bleiben auf dem Gerät (IndexedDB, max. 4000, 30 Tage frisch) und erscheinen ohne Netz; kein Vorab-Download (OSM-Nutzungsregeln).
+- Anzeige des Speichers und Knopf zum Löschen. Test 65, SW-Cache `skipper-ostsee-v2.2-20261101`.

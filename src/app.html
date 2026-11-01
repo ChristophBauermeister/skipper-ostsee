@@ -590,7 +590,9 @@ nav button .ic{font-size:1.2rem}
   <div id="planhead"></div>
   <div id="mapbox" style="display:none">
     <div class="tmap" id="tmap"></div>
-    <label class="switch"><input type="checkbox" id="m-online"><span>Online-Seekarte (OpenSeaMap)<small>Lädt Kartenkacheln aus dem Netz – auf See oft nicht verfügbar</small></span></label>
+    <label class="switch"><input type="checkbox" id="m-online"><span>Seekarte (OpenStreetMap + OpenSeaMap)<small>Lädt nur den Ausschnitt, den du ansiehst. Angesehene Kacheln bleiben offline verfügbar – vor dem Ablegen die Route mit Netz in den nötigen Zoomstufen ansehen.</small></span></label>
+    <div class="note small" id="m-tstats"></div>
+    <button class="btn sm" id="btn-tclearcache" style="margin-top:6px">Gespeicherte Kartenkacheln löschen</button>
     <div class="grid2" style="margin-top:8px"><button class="btn sm" id="btn-gpxshare">GPX teilen</button><button class="btn sm" id="btn-gpxsave">GPX speichern</button></div>
     <div class="note small">GPX: eine Route je Segeltag mit Wegpunkten, die Häfen als Wegpunkte. Für Navionics, OpenCPN oder den Plotter – dort auf der Seekarte prüfen. Tag antippen (Karte oder Liste) hebt die Etappe hervor.</div>
   </div>
@@ -660,7 +662,7 @@ var CONST={
   plan:{cost:{g:0,y:4,n:6,r:60},night:{g:0,y:3,n:5,r:60},stay:2,perNm:0.08,zielPerNm:0.05,zielGo:0.25,comfort:0.7,longH:0.5,kreuz:2,shallow:0.15,revisit:3,revisitNm:2,minLegNm:5,beam:40,chunkNm:3,bridgeNm:0.3,
     fogM:1000,thunder:[95,96,99],confDays:[3,5],nightFromHour:15,snapNoteNm:0.3,maxLegH:8,maxLegMin:3,maxLegMax:14,defaultStart:'de-heiligenhafen-marina',
     disclaimer:'Planungshilfe. Netz aus Küstenlinie (GSHHG) und Tiefenmodell (GEBCO) – nicht für die Navigation. Jede Etappe in der Seekarte prüfen. Ab Tag 4 nur Trend – täglich neu planen.'},
-  map:{baseUrl:'https://tile.openstreetmap.org/{z}/{x}/{y}.png',seamarkUrl:'https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png',tileMin:5,tileMax:16,maxTiles:48,zMin:5,zMax:15,zFitMax:11,labelZ:8.5},
+  map:{baseUrl:'https://tile.openstreetmap.org/{z}/{x}/{y}.png',seamarkUrl:'https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png',tileMin:5,tileMax:16,maxTiles:48,keepTiles:4000,tileMaxAgeD:30,zMin:5,zMax:15,zFitMax:11,labelZ:8.5},
   wx:{forecastUrl:'https://api.open-meteo.com/v1/forecast',marineUrl:'https://marine-api.open-meteo.com/v1/marine',
     hourly:'wind_speed_10m,wind_direction_10m,wind_gusts_10m,weather_code,visibility',marineHourly:'wave_height,wave_direction',days:7,keep:20,exportKeep:5,maxAgeH:12,hardAgeH:48},
   faustregel:['plan','target','sea','harborSea','harborGust','entrance','crossing','offsets','season','bridgeMargin','reff','traffic']
@@ -2595,7 +2597,7 @@ function mapInit(){
   var c=merc(55.0,11.8);MAP.cx=c.x;MAP.cy=c.y;MAP.z=6.6;
   bindMap();
   $('m-online').checked=MAP.online;
-  mapRender();
+  mapRender();renderTileStats();
 }
 function mapSize(){var r=MAP.svg.getBoundingClientRect();return {w:Math.max(1,r.width),h:Math.max(1,r.height)};}
 function mapScale(){return Math.pow(2,MAP.z-MAPZ);}   // screen px per world unit
@@ -2608,6 +2610,45 @@ function mapRender(){
   $('m-coast').style.display=MAP.online?'none':'';
   mapTiles(v);mapMarks(v);
   $('m-attr').textContent=MAP.online?'© OpenStreetMap-Mitwirkende · Seezeichen © OpenSeaMap':'Küste: GSHHG, vereinfacht · keine Seekarte';
+}
+/* ---- viewed-tile store (SPEC §15.4): only tiles the skipper actually looked at are kept, never prefetched
+   (OSM tile usage policy forbids bulk/offline prefetch; re-visits from a local cache are allowed). ---- */
+var TILES={
+  db:null,mem:{},cors:{},
+  open:function(){var self=this;if(self.db)return Promise.resolve(self.db);
+    return new Promise(function(res,rej){try{var r=indexedDB.open('skipper-ostsee-tiles',1);
+      r.onupgradeneeded=function(){try{r.result.createObjectStore('t',{keyPath:'u'});}catch(e){}};
+      r.onsuccess=function(){self.db=r.result;res(self.db);};r.onerror=function(){rej(r.error);};}catch(e){rej(e);}});},
+  get:function(u){return this.open().then(function(db){return new Promise(function(res){try{var q=db.transaction('t').objectStore('t').get(u);q.onsuccess=function(){res(q.result||null);};q.onerror=function(){res(null);};}catch(e){res(null);}});}).catch(function(){return null;});},
+  put:function(u,blob){var self=this;return self.open().then(function(db){return new Promise(function(res){try{var tx=db.transaction('t','readwrite');tx.objectStore('t').put({u:u,b:blob,t:Date.now(),n:blob.size});tx.oncomplete=function(){res(true);};tx.onerror=function(){res(false);};}catch(e){res(false);}});}).then(function(ok){self.dirty=(self.dirty||0)+1;if(self.dirty%50===0)self.prune();return ok;}).catch(function(){return false;});},
+  stats:function(){return this.open().then(function(db){return new Promise(function(res){var n=0,b=0;try{var c=db.transaction('t').objectStore('t').openCursor();c.onsuccess=function(){var k=c.result;if(k){n++;b+=k.value.n||0;k.continue();}else res({n:n,bytes:b});};c.onerror=function(){res({n:0,bytes:0});};}catch(e){res({n:0,bytes:0});}});}).catch(function(){return {n:0,bytes:0};});},
+  prune:function(){return this.open().then(function(db){return new Promise(function(res){var all=[];var c=db.transaction('t').objectStore('t').openCursor();
+    c.onsuccess=function(){var k=c.result;if(k){all.push([k.value.u,k.value.t]);k.continue();}else{
+      if(all.length<=CONST.map.keepTiles){res(all.length);return;}
+      all.sort(function(a,b){return a[1]-b[1];});var drop=all.slice(0,all.length-CONST.map.keepTiles),tx=db.transaction('t','readwrite');
+      drop.forEach(function(d){tx.objectStore('t').delete(d[0]);});tx.oncomplete=function(){res(CONST.map.keepTiles);};}};});}).catch(function(){});},
+  clear:function(){var self=this;return self.open().then(function(db){return new Promise(function(res){var tx=db.transaction('t','readwrite');tx.objectStore('t').clear();tx.oncomplete=function(){res(true);};});}).catch(function(){return false;});},
+  /* resolve a tile URL to something an <image> can show: stored blob, freshly fetched blob (then stored), or the plain URL */
+  src:function(u){
+    var self=this,host=u.split('/')[2],online=navigator.onLine!==false;
+    return self.get(u).then(function(rec){
+      var fresh=rec&&(Date.now()-rec.t)<CONST.map.tileMaxAgeD*86400000;
+      if(rec&&(fresh||!online))return URL.createObjectURL(rec.b);
+      if(!online)return null;
+      if(self.cors[host]===false)return u;   // server without CORS: show directly, cannot store
+      return fetch(u,{mode:'cors',credentials:'omit'}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.blob();})
+        .then(function(b){self.cors[host]=true;self.put(u,b);return URL.createObjectURL(b);})
+        .catch(function(e){if(rec)return URL.createObjectURL(rec.b);if(self.cors[host]===undefined&&e instanceof TypeError){self.cors[host]=false;return u;}return null;});
+    });
+  }
+};
+function renderTileStats(){
+  var el=$('m-tstats');if(!el)return;
+  TILES.stats().then(function(st){
+    var nc=Object.keys(TILES.cors).filter(function(h){return TILES.cors[h]===false;});
+    el.textContent=st.n?('Auf dem Gerät: '+st.n+' angesehene Kartenkacheln ('+(Math.round(st.bytes/1e5)/10).toString().replace('.',',')+' MB) – offline verfügbar.'):'Noch keine Kartenkacheln gespeichert. Gespeichert wird nur, was du online ansiehst.';
+    if(nc.length)el.textContent+=' '+nc.join(', ')+' erlaubt kein Speichern – diese Ebene nur online.';
+  });
 }
 function mapTiles(v){
   var g=$('m-tiles'),gs=$('m-seamark');
@@ -2622,7 +2663,9 @@ function mapTiles(v){
     var xx=((tx%n)+n)%n;
     [[g,CONST.map.baseUrl],[gs,CONST.map.seamarkUrl]].forEach(function(p){
       var im=document.createElementNS('http://www.w3.org/2000/svg','image');
-      im.setAttribute('href',p[1].replace('{z}',zi).replace('{x}',xx).replace('{y}',ty));
+      var u=p[1].replace('{z}',zi).replace('{x}',xx).replace('{y}',ty),tz=zi;
+      TILES.src(u).then(function(src){if(!src||MAP.tz!==tz||!im.isConnected){if(src&&src.indexOf('blob:')===0)URL.revokeObjectURL(src);return;}
+        im.setAttribute('href',src);if(src.indexOf('blob:')===0)im.addEventListener('load',function(){setTimeout(function(){URL.revokeObjectURL(src);},0);},{once:true});clearTimeout(MAP.statT);MAP.statT=setTimeout(renderTileStats,800);});
       im.setAttribute('x',tx*ts);im.setAttribute('y',ty*ts);im.setAttribute('width',ts+0.5);im.setAttribute('height',ts+0.5);
       im.setAttribute('preserveAspectRatio','none');p[0].appendChild(im);
     });
@@ -2956,7 +2999,8 @@ function initToern(){
   $('f-import').addEventListener('change',function(){var f=this.files&&this.files[0];if(!f)return;var r=new FileReader();r.onload=function(){doImportText(String(r.result));};r.readAsText(f);this.value='';});
   $('planres').addEventListener('click',function(e){var b=e.target.closest('[data-ptarget]');if(b){setTargetHarbor(b.dataset.ptarget);update();showScreen('scr-lage');return;}
     var t=e.target.closest('.pday .pt,.pday .pd');if(t){var c=t.closest('.pday');if(c&&c.querySelector('.pdot')){mapSelect(+c.dataset.d,false);if(MAP.sel!==null){mapFit(MAP.sel);$('tmap').scrollIntoView({block:'center',behavior:'smooth'});}}}});
-  $('btn-gpxshare').addEventListener('click',gpxShare);$('btn-gpxsave').addEventListener('click',gpxSave);
+  $('btn-gpxshare').addEventListener('click',gpxShare);
+  $('btn-tclearcache').addEventListener('click',function(){MAP.online=false;$('m-online').checked=false;store('skipperOst.mapOnline','0');TILES.clear().then(function(){MAP.tiles={};MAP.tz=null;$('m-tiles').innerHTML='';$('m-seamark').innerHTML='';mapRender();renderTileStats();});});$('btn-gpxsave').addEventListener('click',gpxSave);
   renderToernForm();renderPlan();renderWxState();
   IDB.latest().then(function(sn){if(sn&&!WX){wxSet(sn);renderWxState();renderPlan();}}).catch(function(){});
 }
@@ -2967,7 +3011,7 @@ window.SKIPPER={bridgeContactHTML:bridgeContactHTML,harborCardHTML:function(it,s
   isOutOfArea:isOutOfArea,euOffset:euOffset,utcToLocal:utcToLocal,sunTimes:sunTimes,seaAreaOf:seaAreaOf,countryOf:countryOf,boatNeeds:boatNeeds,bridgeCheck:bridgeCheck,
   rhumb:rhumb,courseToWind:courseToWind,effThresholds:effThresholds,filterList:filterList,emergencyNumbers:emergencyNumbers,DISCLAIMER:DISCLAIMER,
   NET:NET,WXGRID:WXGRID,netTree:netTree,netRoute:netRoute,routeBridges:routeBridges,treeOf:treeOf,inNet:inNet,wxAt:wxAt,wxSet:wxSet,wxFromOpenMeteo:wxFromOpenMeteo,wxUrls:wxUrls,wxValid:wxValid,
-  chunkLevel:chunkLevel,MAP:MAP,merc:merc,mapFit:mapFit,mapZoomAt:mapZoomAt,mapSelect:mapSelect,planGPX:planGPX,gpxFile:gpxFile,getWX:function(){return WX;},IDB:IDB,planTrip:planTrip,planCandidates:planCandidates,simLeg:simLeg,nightCheck:nightCheck,dayStartMs:dayStartMs,PL:PL,renderPlan:renderPlan,doImportText:doImportText,planSerialize:planSerialize};
+  chunkLevel:chunkLevel,MAP:MAP,TILES:TILES,merc:merc,mapFit:mapFit,mapZoomAt:mapZoomAt,mapSelect:mapSelect,planGPX:planGPX,gpxFile:gpxFile,getWX:function(){return WX;},IDB:IDB,planTrip:planTrip,planCandidates:planCandidates,simLeg:simLeg,nightCheck:nightCheck,dayStartMs:dayStartMs,PL:PL,renderPlan:renderPlan,doImportText:doImportText,planSerialize:planSerialize};
 
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();

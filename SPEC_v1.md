@@ -343,3 +343,9 @@ Ziel: Aus aktueller Wettervorhersage (online, auf Tippen) eine Route über 2–7
 - **Online-Seekarte** nur per Schalter (Default aus, gespeichert): Kacheln `tile.openstreetmap.org` + Seezeichen `tiles.openseamap.org/seamark`, max. 48 Kacheln je Ansicht, Attribution sichtbar. Ohne Schalter 0 externe Requests.
 - **GPX 1.1**: je Segeltag ein `<rte>` (Name „Tag n Von – Nach“, `rtept` Start/Ziel mit Hafennamen, dazwischen „Tn WPxx“ mit rwK/sm), Häfen als `<wpt>`, Hinweis „nicht für die Navigation“ in `<metadata>`. „GPX teilen“ (Android-Teilen-Menü, sonst Download) und „GPX speichern“.
 - Tests 61–64.
+
+### 15.4 Angesehene Kacheln offline (v2.2)
+- Kein Vorab-Download eines Gebiets: Die OSM-Nutzungsregeln verbieten Prefetch/„Gebiet für später speichern“ (https://operations.osmfoundation.org/policies/tiles/). Gespeichert wird nur, was im Ausschnitt angezeigt wurde.
+- Kacheln per `fetch` (CORS) laden, in IndexedDB `skipper-ostsee-tiles` ablegen (max. 4000, älteste zuerst gelöscht), 30 Tage frisch; offline wird jede gespeicherte Kachel gezeigt. Server ohne CORS: Kachel direkt anzeigen, nicht speichern, Hinweis.
+- Anzeige „Auf dem Gerät: n Kacheln (x MB)“ und Knopf „Gespeicherte Kartenkacheln löschen“ (schaltet die Seekarte aus, sonst würde der Ausschnitt sofort neu gespeichert).
+- Test 65: angesehene Kacheln kommen offline aus dem Gerätespeicher (0 Requests), Löschen leert ihn.
