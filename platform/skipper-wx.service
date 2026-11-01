@@ -1,0 +1,19 @@
+[Unit]
+Description=Skipper Ostsee weather collector (Open-Meteo -> archive + latest.json)
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=skipperwx
+Group=skipperwx
+WorkingDirectory=/opt/skipper-wx
+Environment=SKIPPER_WX_GRID=/opt/skipper-wx/wxgrid.json
+Environment=SKIPPER_WX_OUT=/var/www/skipper-wx
+Environment=SKIPPER_WX_ARCHIVE=/var/lib/skipper-wx
+EnvironmentFile=-/etc/skipper-wx.env
+ExecStart=/usr/bin/python3 /opt/skipper-wx/collector.py
+NoNewPrivileges=true
+ProtectSystem=strict
+ReadWritePaths=/var/www/skipper-wx /var/lib/skipper-wx
+PrivateTmp=true

@@ -1,0 +1,5 @@
+tools/seanet/gebco/
+tools/seanet/bm/
+tools/seanet/*.npz
+tools/seanet/*.pkl
+tools/seanet/*.png

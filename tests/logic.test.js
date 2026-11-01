@@ -1,4 +1,4 @@
-// Acceptance tests for SPEC v1 §9 (numbers 1-36 are the test names).
+// Acceptance tests for SPEC v1 §9 (numbers 1-36 are the test names), §12-§14 (37-60).
 // Run (from outside the app dir): cd /home/claude && NODE_PATH=$(npm root -g) node skipper-ostsee/tests/logic.test.js
 const path = require('path');
 const { execFileSync } = require('child_process');
@@ -609,6 +609,142 @@ const NOW = Date.UTC(2026, 6, 15, 9, 0); // 15.07.2026 11:00 MESZ: fixed clock, 
     check('49 Hafenkarte mit Guldborgbroen: Brückendetails mit Tel.-Link +4554770017 und "UKW 16"', g.tel && /Tel\./.test(g.txt) && /UKW 16/.test(g.txt), JSON.stringify(g));
     const l = await ev(() => { const b = SKIPPER.BRIDGES.find(x => x.id === 'de-bro-lindaunis'); const d = document.createElement('div'); d.innerHTML = SKIPPER.bridgeContactHTML(b); return d.textContent; });
     check('50 Lindaunis: "Kontakt: nicht belegt"', /Kontakt: nicht belegt/.test(l), l);
+  }
+
+  // ---- v2.0 Törnplaner, Wetter, Wegpunkt-Netz, Backup (spec §14) ----
+  {
+    const { makeWx, toOpenMeteo } = require('./wxfixture.js');
+    const pts = await ev(() => SKIPPER.WXGRID.points);
+    const T0 = Date.UTC(2026, 6, 15);
+    const calm = makeWx(pts, T0, () => ({ ws: 10, wd: 225, wg: 14, wh: 0.4 }));
+    const O = { date: '2026-07-15', days: 7, depHour: 8, maxLegH: 8, daylight: true, speed: 5.5 };
+    const plan = (snap, opt, boat) => ev(({ snap, opt, boat }) => {
+      SKIPPER.wxSet(snap); const keep = Object.assign({}, SKIPPER.state.boat); if (boat) Object.assign(SKIPPER.state.boat, boat);
+      const p = SKIPPER.planTrip(opt); SKIPPER.state.boat = keep;
+      if (p.error) return { error: p.error };
+      return { days: p.days.map(x => x.type === 'leg' ? { type: 'leg', from: x.from, to: x.leg.to, dist: x.leg.route.dist, hours: x.leg.sim.hours, level: x.leg.sim.level, arr: x.leg.sim.arr, dep: x.leg.sim.dep, night: x.night.level,
+        reasons: Object.keys(x.leg.sim.reasons), bridges: x.leg.bridges.map(b => ({ id: b.id, level: b.level })), sunset: SKIPPER.sunTimes(SKIPPER.DATA.find(h => h.id === x.leg.to).lat, SKIPPER.DATA.find(h => h.id === x.leg.to).lon, x.leg.sim.arr).sunsetMs } : { type: 'stay', at: x.at, night: x.night.level }) };
+    }, { snap, opt, boat });
+    // 52
+    {
+      const r = await ev(() => {
+        const N = SKIPPER.NET, att = Object.keys(N.harbours).length, notIn = Object.keys(N.notIn).length;
+        const a = SKIPPER.netRoute('dk-faaborg-havn', 'dk-svendborg-havn'), b = SKIPPER.netRoute('de-heiligenhafen-marina', 'de-burgtiefe');
+        const tro = SKIPPER.netRoute('dk-svendborg-havn', 'dk-troense-dampskibsbro-og-baadehavn');
+        return { n: N.n, att, notIn, total: SKIPPER.DATA.length, a: a && a.dist, b: b && b.dist, tro: tro && tro.dist };
+      });
+      check('52 Netz: 7382 Knoten, alle Häfen außer notInNet angeschlossen; Faaborg→Svendborg < 20 sm (Svendborgsund), Svendborg→Troense < 3 sm, Heiligenhafen→Burgtiefe < 12 sm',
+        r.n === 7382 && r.att + r.notIn === r.total && r.a < 20 && r.tro < 3 && r.b < 12, JSON.stringify(r));
+    }
+    // 53
+    {
+      const nExt = external.length;
+      const fresh = makeWx(pts, Date.UTC(new Date().getUTCFullYear(), new Date().getUTCMonth(), new Date().getUTCDate()), () => ({ ws: 10, wd: 225, wg: 14, wh: 0.4 }), { fetchedAt: Date.now() });
+      await page.reload(); await page.waitForFunction(() => window.SKIPPER);
+      const before = external.length - nExt;
+      const hosts = [];
+      await page.route('https://api.open-meteo.com/**', (rt) => { hosts.push('api'); rt.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(toOpenMeteo(fresh, false)) }); });
+      await page.route('https://marine-api.open-meteo.com/**', (rt) => { hosts.push('marine'); rt.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(toOpenMeteo(fresh, true)) }); });
+      await page.click('nav button[data-scr="scr-toern"]');
+      const noReqYet = external.length - nExt === before;
+      await page.click('#btn-wx');
+      await page.waitForFunction(() => SKIPPER.getWX() && /Wetterstand/.test(document.getElementById('wxstate').textContent));
+      const extHosts = external.slice(nExt).map(u => new URL(u).host);
+      await page.waitForTimeout(300);
+      await page.unroute('https://api.open-meteo.com/**'); await page.unroute('https://marine-api.open-meteo.com/**');
+      await page.reload(); await page.waitForFunction(() => window.SKIPPER);
+      await page.waitForFunction(() => !!SKIPPER.getWX(), null, { timeout: 5000 }).catch(() => {});
+      const persisted = await ev(() => !!SKIPPER.getWX() && SKIPPER.getWX().points.length);
+      check('53 Start/Törn-Tab ohne Requests; „Wetter laden“ fragt nur api.open-meteo.com + marine-api.open-meteo.com; Snapshot in IndexedDB überlebt Neuladen',
+        before === 0 && noReqYet && hosts.sort().join() === 'api,marine' && extHosts.every(h => h === 'api.open-meteo.com' || h === 'marine-api.open-meteo.com') && persisted === pts.length, JSON.stringify({ before, noReqYet, hosts, extHosts, persisted }));
+    }
+    // 54
+    {
+      const r = await plan(calm, Object.assign({}, O, { mode: 'rund', start: 'de-heiligenhafen-marina' }));
+      const legs = (r.days || []).filter(d => d.type === 'leg'), last = r.days && r.days[r.days.length - 1];
+      const ok = !r.error && r.days.length === 7 && last.type === 'leg' && last.to === 'de-heiligenhafen-marina' && legs.every(l => l.hours <= 8 + 1e-6 && l.arr <= l.sunset - 30 * 60000 && l.level !== 'r');
+      check('54 Ruhiges Wetter: Rundtörn ab Heiligenhafen 7 Tage, endet in Heiligenhafen, Etappen ≤ 8 h, Ankunft ≥ 30 min vor Sonnenuntergang, keine rote Etappe', ok, JSON.stringify(r).slice(0, 600));
+    }
+    // 55
+    {
+      const storm = makeWx(pts, T0, (i, h) => (h >= 52 && h < 78) ? { ws: 26, wd: 270, wg: 35, wh: 1.6 } : { ws: 10, wd: 225, wg: 14, wh: 0.4 });
+      const r = await plan(storm, Object.assign({}, O, { mode: 'rund', start: 'de-heiligenhafen-marina' }));
+      const d3 = r.days && r.days[2];
+      const ok = !r.error && r.days.every(d => d.type !== 'leg' || d.level !== 'r') && d3 && (d3.type === 'stay' || d3.level !== 'r') && r.days.slice(1, 3).every(d => d.night !== 'r');
+      check('55 Sturm an Tag 3 (W 26/35, Welle 1,6): keine rote Etappe, Tag 3 Hafentag oder nicht rot, Nächte 2/3 nicht rot', ok, JSON.stringify(r.days || r).slice(0, 700));
+    }
+    // 56
+    {
+      const r = await plan(calm, Object.assign({}, O, { mode: 'ziel', start: 'de-heiligenhafen-marina', target: 'dk-roenne-havn', maxLegH: 10 }));
+      const gusty = makeWx(pts, T0, () => ({ ws: 16, wd: 225, wg: 23, wh: 0.8 }));
+      const g = await plan(gusty, Object.assign({}, O, { mode: 'ziel', start: 'de-heiligenhafen-marina', target: 'dk-roenne-havn', maxLegH: 10 }));
+      const arrived = r.days && r.days.some(d => d.type === 'leg' && d.to === 'dk-roenne-havn');
+      const gOk = g.error || g.days.every(d => d.type !== 'leg' || d.to !== 'dk-roenne-havn' || d.level !== 'r');
+      check('56 Ziel Heiligenhafen → Rønne: Plan erreicht Rønne; bei Böen 23 kn (≥ Gate 22) keine rote Bornholm-Etappe (sonst „kein Plan“)', arrived && gOk, JSON.stringify({ r: r.days && r.days.map(d => d.to || d.at), g: g.error || g.days.map(d => (d.to || d.at) + ':' + (d.level || ''))}));
+    }
+    // 57
+    {
+      const r = await plan(calm, Object.assign({}, O, { mode: 'rund', start: 'de-heiligenhafen-marina', days: 3 }), { mast: 30 });
+      const red = await ev(() => SKIPPER.BRIDGES.filter(b => (b.kind === 'fest' || b.kind === 'freileitung') && SKIPPER.bridgeCheck(b, Object.assign({}, SKIPPER.state.boat, { mast: 30 }), 0).level === 'r').map(b => b.id));
+      const hit = (r.days || []).some(d => d.type === 'leg' && d.bridges.some(b => red.includes(b.id)));
+      check('57 Mast 30 m: Plan führt unter keiner festen Brücke mit roter Prüfung durch', !r.error && red.length > 0 && !hit, JSON.stringify({ red: red.length, hit, err: r.error }));
+    }
+    // 58
+    {
+      const r = await ev(async (snap) => {
+        SKIPPER.wxSet(snap);
+        const p = SKIPPER.planTrip({ mode: 'frei', start: 'dk-svendborg-havn', date: '2026-07-15', days: 3, depHour: 8, maxLegH: 8, daylight: true, speed: 5.5 });
+        const ser = SKIPPER.planSerialize(p);
+        const backup = { type: 'skipper-ostsee-backup', version: 1, exportedAt: new Date().toISOString(), wx: [Object.assign({}, snap, { fetchedAt: '2026-07-15T05:00:00.000Z' })], plan: ser, settings: {} };
+        SKIPPER.wxSet(null); SKIPPER.PL.plan = null;
+        const ok = await SKIPPER.doImportText(JSON.stringify(backup));
+        const bad = await SKIPPER.doImportText('{"type":"x"}');
+        return { ok, bad, wx: !!SKIPPER.getWX() && SKIPPER.getWX().fetchedAt, plan: !!SKIPPER.PL.plan && SKIPPER.PL.plan.days.length, shown: /Tag 1/.test(document.getElementById('planres').textContent) };
+      }, calm);
+      // platform fallback when Open-Meteo fails
+      await page.route('https://api.open-meteo.com/**', (rt) => rt.fulfill({ status: 503, body: 'down' }));
+      await page.route('https://marine-api.open-meteo.com/**', (rt) => rt.fulfill({ status: 503, body: 'down' }));
+      await page.route('https://plattform.example/**', (rt) => rt.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(Object.assign({}, calm, { fetchedAt: '2026-07-15T06:30:00.000Z' })) }));
+      await page.click('nav button[data-scr="scr-toern"]');
+      await page.evaluate(() => { document.getElementById('det-backup').open = true; });
+      await page.fill('#p-plat', 'https://plattform.example/skipper-wx/latest.json'); await page.dispatchEvent('#p-plat', 'change');
+      await page.click('#btn-wx');
+      await page.waitForFunction(() => SKIPPER.getWX() && SKIPPER.getWX().source === 'plattform', null, { timeout: 5000 }).catch(() => {});
+      const plat = await ev(() => SKIPPER.getWX() && SKIPPER.getWX().source + '|' + SKIPPER.getWX().fetchedAt);
+      await page.unroute('https://api.open-meteo.com/**'); await page.unroute('https://marine-api.open-meteo.com/**'); await page.unroute('https://plattform.example/**');
+      check('58 Import stellt Wetterstand und Plan wieder her, fremde Datei abgelehnt; Open-Meteo 503 + Plattform-URL → Stand von der Plattform',
+        r.ok === true && r.bad === false && r.wx === '2026-07-15T05:00:00.000Z' && r.plan === 3 && r.shown && plat === 'plattform|2026-07-15T06:30:00.000Z', JSON.stringify({ r, plat }));
+    }
+    // 59
+    {
+      const nErr = errors.length;
+      const fresh = makeWx(pts, Date.UTC(new Date().getUTCFullYear(), new Date().getUTCMonth(), new Date().getUTCDate()), () => ({ ws: 12, wd: 250, wg: 17, wh: 0.6 }), { fetchedAt: Date.now() });
+      await ev((s) => { SKIPPER.wxSet(s); }, fresh);
+      await page.click('nav button[data-scr="scr-toern"]');
+      await page.click('[data-pmode="rund"]');
+      await page.selectOption('#p-start', 'de-heiligenhafen-marina');
+      await page.selectOption('#p-days', '3');
+      await page.click('#btn-plan');
+      await page.waitForFunction(() => /Tag 1/.test(document.getElementById('planres').textContent) || /Kein Plan/.test(document.getElementById('planmsg').textContent), null, { timeout: 20000 });
+      const ui = await page.evaluate(() => ({ days: document.querySelectorAll('#planres .pday').length, wp: document.querySelectorAll('#planres details.wpd').length, disc: /nicht für die Navigation/.test(document.getElementById('planres').textContent), msg: document.getElementById('planmsg').textContent }));
+      check('59 Törn-Tab: Plan über die Oberfläche (3 Tage), Wegpunktlisten, Hinweis „nicht für die Navigation“, keine JS-Fehler', ui.days === 3 && ui.wp >= 1 && ui.disc && errors.length === nErr, JSON.stringify({ ui, errors: errors.slice(nErr) }));
+    }
+    // 60
+    {
+      const r = await ev(() => {
+        const bad = [], base = { boat: SKIPPER.state.boat, kids: false, season: 'sommer', pegel: 0, speed: 5.5 };
+        const pos = { lat: 54.6, lon: 10.6 };
+        for (const kids of [false, true]) for (const season of ['sommer', 'vor']) for (const g of [10, 14, 15, 17, 18, 22, 27, 28, 33]) for (const wh of [0.2, 1.0, 1.25, 2.0]) for (const course of ['am Wind', 'raum']) {
+          const st = Object.assign({}, base, { kids, season, now: Date.UTC(2026, 6, 15, 10) });
+          const T = SKIPPER.effThresholds(st);
+          const c = SKIPPER.chunkLevel({ ws: g - 3 < 0 ? 0 : g - 3, wg: g, wh, wc: 0, vis: 20000 }, T, course, pos, st);
+          const gl = SKIPPER.generalLevel(Object.assign({}, st, { dir: 'W', windTrue: Math.max(0, g - 3), gust: g, seaH: wh, sicht: 'gut', course }));
+          if (c.level !== gl.level) bad.push([kids, season, g, wh, c.level, gl.level]);
+        }
+        return bad;
+      });
+      check('60 Planer-Schnellbewertung = generalLevel (Böen, Seegang, Kinder, Saison)', r.length === 0, JSON.stringify(r.slice(0, 5)));
+    }
   }
   await browser.close();
   const failed = results.filter(r => !r.ok);

@@ -74,6 +74,26 @@ const { chromium } = require('playwright');
   await page.addStyleTag({ content: 'nav{position:static !important}' });
   await page.screenshot({ path: path.join(out, '13-lage-bruecke-wolgast-kontakt.png'), fullPage: true, clip: { x: 0, y: yb, width: 390, height: 900 } });
   await page.addStyleTag({ content: 'nav{position:fixed !important}' });
+  // v2.0: Törnplaner (fixture weather, no network)
+  {
+    const { makeWx } = require('./wxfixture.js');
+    const pts = await page.evaluate(() => SKIPPER.WXGRID.points);
+    const t0 = Date.UTC(2026, 6, 15);
+    const snap = makeWx(pts, t0, (i, h) => ({ ws: 11 + 3 * Math.sin(h / 9), wd: 240 + 20 * Math.sin(h / 20), wg: 16 + 4 * Math.sin(h / 9), wh: 0.5 + 0.2 * Math.sin(h / 12) }), { fetchedAt: Date.UTC(2026, 6, 15, 5) });
+    await page.evaluate((s) => SKIPPER.wxSet(s), snap);
+    await set({ pos: await posOf('de-heiligenhafen-marina'), dir: 'SW', windTrue: 12, gust: 17, seaDir: null, seaH: 0 });
+    await go('scr-toern');
+    await page.evaluate(() => { document.getElementById('p-date').value = '2026-07-15'; document.getElementById('p-date').dispatchEvent(new Event('change')); });
+    await page.selectOption('#p-start', 'de-heiligenhafen-marina'); await page.selectOption('#p-days', '5');
+    await page.evaluate(() => { const r = SKIPPER.planTrip({ mode: 'rund', start: 'de-heiligenhafen-marina', date: '2026-07-15', days: 5, depHour: 8, maxLegH: 8, daylight: true, speed: 5.5 }); SKIPPER.PL.plan = SKIPPER.planSerialize(r); SKIPPER.renderPlan(); document.getElementById('wxstate').textContent = 'Wetterstand 07:00 MESZ, 15.07. (Open-Meteo) · 108 Punkte'; });
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await shot('15-toern-wetter-form', false);
+    await page.evaluate(() => { const d = document.querySelector('#planres details.wpd'); if (d) d.open = true; });
+    const yp = await page.evaluate(() => document.getElementById('planres').getBoundingClientRect().top + window.scrollY - 8);
+    await page.addStyleTag({ content: 'nav{position:static !important}' });
+    await page.screenshot({ path: path.join(out, '14-toern-plan.png'), fullPage: true, clip: { x: 0, y: yp, width: 390, height: 1400 } });
+    await page.addStyleTag({ content: 'nav{position:fixed !important}' });
+  }
   const w = await page.evaluate(() => ({ sw: document.documentElement.scrollWidth, cw: document.documentElement.clientWidth }));
   await browser.close();
   console.log('errors:', JSON.stringify(errs), 'scrollWidth/clientWidth:', JSON.stringify(w));
