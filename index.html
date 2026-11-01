@@ -670,7 +670,7 @@ DATA.forEach(function(h){BY_ID[h.id]=h;});
 BRIDGES.forEach(function(b){BR_BY_ID[b.id]=b;});
 
 var CONST={
-  datenstand:'18.10.2026',appVersion:'2.5',
+  datenstand:'18.10.2026',appVersion:'2.5.1',
   reff:{base:[18,23,28],names:['Vollzeug','1. Reff','2. Reff','3. Reff + Zuflucht anlaufen']},
   courseFactor:{'am Wind':1.15,'halber Wind':1.05,'raum':0.9,'vorm Wind':0.8},
   courses:['am Wind','halber Wind','raum','vorm Wind'],
@@ -699,7 +699,7 @@ var CONST={
   /* keys whose thresholds are Faustregeln (no official source) */
   target:{kreuzenTwa:45,amWindTwa:75,halbTwa:111,raumTwa:151,kreuzFactor:1.41,bridgeLineNm:7},
   /* SPEC §14 – planner weights and limits are Faustregeln */
-  plan:{cost:{g:0,y:4,n:6,r:60},night:{g:0,y:3,n:5,r:60},stay:2,perNm:0.08,nightLeg:3,maxNights:3,maxNightH:24,maxNightMin:10,maxNightMax:36,targetW:0.12,targetPace:0.5,nightMinFrac:0.6,nightCand:60,zielPerNm:0.05,zielGo:0.25,comfort:0.7,longH:0.5,kreuz:2,shallow:0.15,revisit:3,revisitNm:2,minLegNm:5,beam:40,chunkNm:3,bridgeNm:0.3,
+  plan:{cost:{g:0,y:4,n:6,r:60},night:{g:0,y:3,n:5,r:60},stay:2,perNm:0.08,nightLeg:3,nightEstFactor:1.15,nightLatestDepH:2,maxNights:3,maxNightH:24,maxNightMin:10,maxNightMax:36,targetW:0.12,targetPace:0.5,nightMinFrac:0.6,nightCand:60,zielPerNm:0.05,zielGo:0.25,comfort:0.7,longH:0.5,kreuz:2,shallow:0.15,revisit:3,revisitNm:2,minLegNm:5,beam:40,chunkNm:3,bridgeNm:0.3,
     fogM:1000,thunder:[95,96,99],confDays:[3,5],nightFromHour:15,snapNoteNm:0.3,maxLegH:8,maxLegMin:3,maxLegMax:14,defaultStart:'de-heiligenhafen-marina',
     disclaimer:'Planungshilfe. Netz aus Küstenlinie (GSHHG) und Tiefenmodell (GEBCO) – nicht für die Navigation. Jede Etappe in der Seekarte prüfen. Ab Tag 4 nur Trend – täglich neu planen.'},
   timeline:{steps:24,stepH:3},
@@ -1749,7 +1749,8 @@ function planTrip(opt,progress){
   function toGo(h,vIdx){if(vIdx>=V.length)return distToEnd(h);return dist(h,V[vIdx])+chain[vIdx];}
   function viaStep(vIdx,h){return vIdx<V.length&&V[vIdx]===h?vIdx+1:vIdx;}
   // capacity of the remaining days (night legs count once each)
-  function reach(restDays,nightsLeft){var n=Math.min(nightsLeft,restDays);return n*maxNNm+(restDays-n)*maxNm;}
+  // a night passage leaves in the evening and arrives the next morning: it uses two calendar days
+  function reach(restDays,nightsLeft){var n=Math.min(nightsLeft,Math.floor(restDays/2));return n*maxNNm+(restDays-2*n)*maxNm;}
   var legMemo={},nightMemo={},routeMemo={};
   var day0=localParts(dayStartMs(opt.date,0,12));
   function dayIndexOf(ms){var p=localParts(ms);return Math.round((Date.UTC(p.y,p.m-1,p.d)-Date.UTC(day0.y,day0.m-1,day0.d))/86400000);}
@@ -1773,10 +1774,18 @@ function planTrip(opt,progress){
       var B=NET.harbours[b];
       var rk=id+'>'+b,r=routeMemo[rk]||(routeMemo[rk]=netRoute(id,b,tree));
       if(!r||r.dist<P.minLegNm||r.dist>lim)return;
-      var sim=simLeg(r,dep,s,withNight?maxNH:maxH);
+      var dep2=dep;
+      if(withNight){   // SPEC §16.1: plan the night passage to arrive about one hour after the next sunrise
+        var hb0=BY_ID[b],sNext=sunTimes(hb0.lat,hb0.lon,dayStartMs(opt.date,d+1,12)),sToday=sunTimes(BY_ID[id].lat,BY_ID[id].lon,dayStartMs(opt.date,d,12));
+        var est=r.dist/s.speed*P.nightEstFactor*3600000;
+        if(r.dist/s.speed<=maxH)return;   // short enough for a day leg
+        if(sNext.sunriseMs&&sToday.sunsetMs)dep2=Math.max(dep,Math.min(sToday.sunsetMs+P.nightLatestDepH*3600000,sNext.sunriseMs+3600000-est));
+        dep2=Math.ceil(dep2/900000)*900000;
+      }
+      var sim=simLeg(r,dep2,s,withNight?maxNH:maxH);
       if(sim.level==='r')return;   // red legs are never planned
       var hb=BY_ID[b],sun=sunTimes(hb.lat,hb.lon,sim.arr),dark=sun.sunsetMs&&sim.arr>sun.sunsetMs-CONST.sunsetBufferMin*60000;
-      var inDarkness=dark||dayIndexOf(sim.arr)>d,isNight=inDarkness&&(sim.hours>maxH||opt.daylight||dayIndexOf(sim.arr)>d);
+      var inDarkness=dark||dayIndexOf(sim.arr)>d||(withNight&&sToday&&sToday.sunsetMs&&sim.dep>=sToday.sunsetMs-CONST.sunsetBufferMin*60000),isNight=inDarkness&&(sim.hours>maxH||opt.daylight||dayIndexOf(sim.arr)>d);
       if(!inDarkness&&sim.hours>maxH)return;            // long leg in daylight only: over max. Etappe
       if(isNight&&(!withNight||sim.hours>maxNH))return;
       if(!isNight&&withNight)return;   // day legs come from the day list

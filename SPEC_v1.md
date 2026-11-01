@@ -354,6 +354,7 @@ Ziel: Aus aktueller Wettervorhersage (online, auf Tippen) eine Route über 2–7
 - Törn-Formular: „Gesamtstrecke (sm, optional)“ und „Nachtfahrten max.“ (keine/1/2/3). Boot-Tab: „max. Nachtfahrt (h)“, Default 24, 10–36.
 - **Gesamtstrecke:** Ersetzt den Streckenbonus. Abweichung kostet 0,12 je sm am Ende; in der Strahlsuche zählen Überschreitung, nicht mehr erreichbarer Rest und 0,5 × Abweichung vom gleichmäßigen Tempo. Weicht der Plan > 15 % ab, Hinweis mit Abweichung.
 - **Nachtfahrt** = Etappe, die durch Dunkelheit führt (Ankunft nach Sonnenuntergang − 30 min oder am Folgetag), bis „max. Nachtfahrt“. Lange Etappen nur bei Tageslicht über „max. Etappe“ bleiben verboten. Gleiche Schwellen wie am Tag (Wunsch Christoph); zusätzlich Info „Nachtfahrt: Wachplan, Lichterführung, Rettungswesten mit Licht“ und gelb „Ankunft bei Dunkelheit“. Kosten +3 je Nachtfahrt. Ziele für Nachtfahrten: ≥ 0,6 × max. Etappe, höchstens 60 je Hafen (gleichmäßig nach Distanz).
+- **Abfahrtszeit (v2.5.1):** Nachtfahrten werden so gelegt, dass sie ca. 1 h nach dem nächsten Sonnenaufgang ankommen (Fahrzeit geschätzt mit Fahrt × 1,15), frühestens zur normalen Abfahrt, spätestens 2 h nach Sonnenuntergang. Eine Nachtfahrt belegt zwei Kalendertage (Abfahrt, Ankunft + Ruhe); die Reichweitenrechnung zählt das so.
 - Endet die Nachtfahrt am Folgetag, ist dieser Tag „Ankunft nach Nachtfahrt“ (keine weitere Etappe); die Nachtprüfung läuft ab Ankunft.
 - Tests 66–68.
 

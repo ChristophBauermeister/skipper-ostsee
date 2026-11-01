@@ -87,3 +87,6 @@ Erstausgabe der Ostsee-App nach SPEC_v1.md, aufbauend auf Skipper-Assistent Sard
 - Meine Notiz je Hafen (Text, Sterne, war schon da), im Backup.
 - Törnplaner: bis 3 Über-Häfen (z. B. Rund Fünen); Hinweis, wenn die Gesamtstrecke über dem Maximum liegt.
 - Tests 69–72, SW-Cache `skipper-ostsee-v2.5-20261101`.
+
+## v2.5.1 (01.11.2026)
+- Nachtfahrten starten abends und kommen morgens an (statt 08:00 los); im Sommer sind damit auch 50–130-sm-Etappen planbar. Reichweite zählt 2 Tage je Nachtfahrt.
