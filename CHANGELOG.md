@@ -62,3 +62,9 @@ Erstausgabe der Ostsee-App nach SPEC_v1.md, aufbauend auf Skipper-Assistent Sard
 
 ## v2.0.2 (01.11.2026)
 - Manifest mit eigener `id`, damit Android die App mit neuem Icon neu installieren kann; SW-Cache `skipper-ostsee-v2.0.2-20261101`.
+
+## v2.1 (01.11.2026) Törnkarte und GPX (SPEC §15)
+- Offline-Karte im Törn-Tab: Küste aus GSHHG (`data/coast.json`), Routen je Tag farbig, Tageshäfen nummeriert, Verschieben/Zoomen, Tag antippen hebt die Etappe hervor.
+- Schalter „Online-Seekarte (OpenSeaMap)“: OSM-Karte mit Seezeichen-Overlay, nur wenn eingeschaltet.
+- GPX-Export (teilen/speichern): eine Route je Segeltag, Häfen als Wegpunkte – für Navionics, OpenCPN, Plotter.
+- Tests 61–64, Screenshot 16, SW-Cache `skipper-ostsee-v2.1-20261101`.

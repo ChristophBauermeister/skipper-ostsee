@@ -251,6 +251,25 @@ nav button.sos.on{box-shadow:inset 0 0 0 3px var(--headink)}
 .pday .pt{font-size:1.15rem;margin-top:1px}
 .pday .pd{font-size:.92rem;color:var(--mute);font-weight:700}
 table.wp th{text-transform:none;letter-spacing:0}
+:root{--mapsea:#f4f9fb;--mapland:#ecdfae;--maplandline:#a3925a}
+@media (prefers-color-scheme:dark){:root:not([data-theme]){--mapsea:#0f2232;--mapland:#2f3c2c;--maplandline:#5a6d52}}
+:root[data-theme="night"]{--mapsea:#000;--mapland:#1a0000;--maplandline:#6a1212}
+.tmap{position:relative;margin-top:12px;border:1px solid var(--line);border-radius:8px;overflow:hidden;height:min(62vh,460px);background:var(--mapsea)}
+.tmap-svg{width:100%;height:100%;display:block;touch-action:none;cursor:grab;font-family:inherit}
+.tmap .sea{fill:var(--mapsea)}
+.tmap .land{fill:var(--mapland);stroke:var(--maplandline);stroke-width:1;vector-effect:non-scaling-stroke}
+.tmap polyline.leg{fill:none;stroke-width:3.5;stroke-linejoin:round;stroke-linecap:round;vector-effect:non-scaling-stroke;cursor:pointer}
+.tmap polyline.leg.sel{stroke-width:6.5}
+.tmap .mk{cursor:pointer}.tmap .mk text{fill:#fff;font-weight:700}
+.tmap .mlab{fill:var(--ink);stroke:var(--mapsea);paint-order:stroke;font-weight:700;stroke-linejoin:round}
+:root[data-theme="night"] #m-tiles,:root[data-theme="night"] #m-seamark{filter:grayscale(1) brightness(.45) sepia(1) hue-rotate(-40deg) saturate(5)}
+.tmap-ctl{position:absolute;right:8px;top:8px;display:flex;flex-direction:column;gap:6px}
+.mbtn{width:44px;height:44px;border-radius:8px;border:1.5px solid var(--on);background:var(--card);color:var(--ink);font-size:1.3rem;font-weight:700;cursor:pointer}
+.tmap-attr{position:absolute;left:0;bottom:0;font-size:.72rem;background:rgba(255,255,255,.85);padding:1px 6px;border-top-right-radius:6px;color:#17324a}
+:root[data-theme="night"] .tmap-attr{background:#000;color:var(--mute)}
+.pday .pdot{float:right;width:14px;height:14px;border-radius:50%;margin:4px 0 0 8px}
+.pday .pt,.pday .pd{cursor:pointer}
+.pday.mapsel{outline:3px solid var(--i);outline-offset:1px}
 input[type=date],input[type=url]{width:100%;min-height:52px;font-size:1.05rem;padding:8px 12px;border:2px solid var(--on);border-radius:10px;background:var(--card);color:var(--ink);font-family:inherit}
 .pchip{border-radius:6px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
@@ -568,6 +587,13 @@ nav button .ic{font-size:1.2rem}
   </div>
   <button class="btn prim" id="btn-plan" style="margin-top:12px">Törn planen</button>
   <div id="planmsg"></div>
+  <div id="planhead"></div>
+  <div id="mapbox" style="display:none">
+    <div class="tmap" id="tmap"></div>
+    <label class="switch"><input type="checkbox" id="m-online"><span>Online-Seekarte (OpenSeaMap)<small>Lädt Kartenkacheln aus dem Netz – auf See oft nicht verfügbar</small></span></label>
+    <div class="grid2" style="margin-top:8px"><button class="btn sm" id="btn-gpxshare">GPX teilen</button><button class="btn sm" id="btn-gpxsave">GPX speichern</button></div>
+    <div class="note small">GPX: eine Route je Segeltag mit Wegpunkten, die Häfen als Wegpunkte. Für Navionics, OpenCPN oder den Plotter – dort auf der Seekarte prüfen. Tag antippen (Karte oder Liste) hebt die Etappe hervor.</div>
+  </div>
   <div id="planres"></div>
 </section>
 </div>
@@ -634,6 +660,7 @@ var CONST={
   plan:{cost:{g:0,y:4,n:6,r:60},night:{g:0,y:3,n:5,r:60},stay:2,perNm:0.08,zielPerNm:0.05,zielGo:0.25,comfort:0.7,longH:0.5,kreuz:2,shallow:0.15,revisit:3,revisitNm:2,minLegNm:5,beam:40,chunkNm:3,bridgeNm:0.3,
     fogM:1000,thunder:[95,96,99],confDays:[3,5],nightFromHour:15,snapNoteNm:0.3,maxLegH:8,maxLegMin:3,maxLegMax:14,defaultStart:'de-heiligenhafen-marina',
     disclaimer:'Planungshilfe. Netz aus Küstenlinie (GSHHG) und Tiefenmodell (GEBCO) – nicht für die Navigation. Jede Etappe in der Seekarte prüfen. Ab Tag 4 nur Trend – täglich neu planen.'},
+  map:{baseUrl:'https://tile.openstreetmap.org/{z}/{x}/{y}.png',seamarkUrl:'https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png',tileMin:5,tileMax:16,maxTiles:48,zMin:5,zMax:15,zFitMax:11,labelZ:8.5},
   wx:{forecastUrl:'https://api.open-meteo.com/v1/forecast',marineUrl:'https://marine-api.open-meteo.com/v1/marine',
     hourly:'wind_speed_10m,wind_direction_10m,wind_gusts_10m,weather_code,visibility',marineHourly:'wave_height,wave_direction',days:7,keep:20,exportKeep:5,maxAgeH:12,hardAgeH:48},
   faustregel:['plan','target','sea','harborSea','harborGust','entrance','crossing','offsets','season','bridgeMargin','reff','traffic']
@@ -2416,6 +2443,7 @@ function buildPrint(){
 
 /* ---- navigation / init ---- */
 function showScreen(id){
+  if(id==='scr-toern'&&MAP.svg)setTimeout(function(){if(MAP.pendingFit)mapFit(MAP.needFit);else mapRender();},0);
   document.querySelectorAll('.screen').forEach(function(x){x.classList.toggle('active',x.id===id);});
   document.querySelectorAll('nav button').forEach(function(b){b.classList.toggle('on',b.dataset.scr===id);});
   window.scrollTo(0,0);
@@ -2536,6 +2564,202 @@ function init(){
   if(!had)showScreen('scr-boot');
   setInterval(renderPosline,30000);
   registerSW();
+}
+
+/* =====================================================================
+   TRIP MAP (SPEC §15) – offline coastline (GSHHG) in Web-Mercator px @ z10,
+   optional online chart tiles (OpenStreetMap + OpenSeaMap seamarks) only when switched on.
+   ===================================================================== */
+var MAPZ=10,MAPW=256*Math.pow(2,MAPZ);
+function merc(lat,lon){return {x:(lon+180)/360*MAPW,y:(1-Math.log(Math.tan(Math.PI/4+lat*Math.PI/360))/Math.PI)/2*MAPW};}
+function unmerc(x,y){var lon=x/MAPW*360-180,n=Math.PI-2*Math.PI*y/MAPW;return {lat:180/Math.PI*Math.atan(0.5*(Math.exp(n)-Math.exp(-n))),lon:lon};}
+var COAST_D=null;
+function coastPath(){
+  if(COAST_D)return COAST_D;
+  var parts=[];
+  COAST.rings.forEach(function(r){var s='M'+r[0]+' '+r[1]+'l';for(var i=2;i<r.length;i+=2)s+=r[i]+' '+r[i+1]+' ';parts.push(s+'Z');});
+  return (COAST_D=parts.join(''));
+}
+var DAYCOL=['#c4122f','#00804a','#2f6690','#d9480f','#6a3fb5','#0f7f86','#9a6b00'];
+var MAP={el:null,svg:null,cx:0,cy:0,z:7,sel:null,online:false,tiles:{},tz:null,ptr:{},moved:0};
+function mapInit(){
+  var el=$('tmap');if(!el||MAP.svg)return;
+  MAP.el=el;MAP.online=load('skipperOst.mapOnline')==='1';
+  el.innerHTML='<svg class="tmap-svg" role="img" aria-label="Karte des Törns" xmlns="http://www.w3.org/2000/svg">'
+    +'<rect class="sea" x="0" y="0" width="'+MAPW+'" height="'+MAPW+'"/>'
+    +'<g id="m-tiles"></g><path id="m-coast" class="land"/><g id="m-seamark"></g><g id="m-route"></g><g id="m-marks"></g></svg>'
+    +'<div class="tmap-ctl"><button class="mbtn" data-mz="1" aria-label="Hineinzoomen">+</button><button class="mbtn" data-mz="-1" aria-label="Herauszoomen">−</button><button class="mbtn" data-mfit aria-label="Ganze Route zeigen">⤢</button></div>'
+    +'<div class="tmap-attr" id="m-attr"></div>';
+  MAP.svg=el.querySelector('svg');
+  $('m-coast').setAttribute('d',coastPath());
+  var c=merc(55.0,11.8);MAP.cx=c.x;MAP.cy=c.y;MAP.z=6.6;
+  bindMap();
+  $('m-online').checked=MAP.online;
+  mapRender();
+}
+function mapSize(){var r=MAP.svg.getBoundingClientRect();return {w:Math.max(1,r.width),h:Math.max(1,r.height)};}
+function mapScale(){return Math.pow(2,MAP.z-MAPZ);}   // screen px per world unit
+function mapView(){var s=mapScale(),sz=mapSize();return {x:MAP.cx-sz.w/2/s,y:MAP.cy-sz.h/2/s,w:sz.w/s,h:sz.h/s,s:s,sw:sz.w,sh:sz.h};}
+function mapRender(){
+  if(!MAP.svg)return;
+  var r0=MAP.svg.getBoundingClientRect();if(r0.width<2||r0.height<2)return;
+  var v=mapView();
+  MAP.svg.setAttribute('viewBox',v.x+' '+v.y+' '+v.w+' '+v.h);
+  $('m-coast').style.display=MAP.online?'none':'';
+  mapTiles(v);mapMarks(v);
+  $('m-attr').textContent=MAP.online?'© OpenStreetMap-Mitwirkende · Seezeichen © OpenSeaMap':'Küste: GSHHG, vereinfacht · keine Seekarte';
+}
+function mapTiles(v){
+  var g=$('m-tiles'),gs=$('m-seamark');
+  if(!MAP.online){if(MAP.tz!==null){g.innerHTML='';gs.innerHTML='';MAP.tiles={};MAP.tz=null;}return;}
+  var zi=Math.max(CONST.map.tileMin,Math.min(CONST.map.tileMax,Math.round(MAP.z)));
+  if(zi!==MAP.tz){g.innerHTML='';gs.innerHTML='';MAP.tiles={};MAP.tz=zi;}
+  var ts=256*Math.pow(2,MAPZ-zi),n=Math.pow(2,zi);
+  var x0=Math.floor(v.x/ts),x1=Math.floor((v.x+v.w)/ts),y0=Math.max(0,Math.floor(v.y/ts)),y1=Math.min(n-1,Math.floor((v.y+v.h)/ts));
+  if((x1-x0+1)*(y1-y0+1)>CONST.map.maxTiles)return;
+  for(var tx=x0;tx<=x1;tx++)for(var ty=y0;ty<=y1;ty++){
+    var k=zi+'/'+tx+'/'+ty;if(MAP.tiles[k])continue;MAP.tiles[k]=1;
+    var xx=((tx%n)+n)%n;
+    [[g,CONST.map.baseUrl],[gs,CONST.map.seamarkUrl]].forEach(function(p){
+      var im=document.createElementNS('http://www.w3.org/2000/svg','image');
+      im.setAttribute('href',p[1].replace('{z}',zi).replace('{x}',xx).replace('{y}',ty));
+      im.setAttribute('x',tx*ts);im.setAttribute('y',ty*ts);im.setAttribute('width',ts+0.5);im.setAttribute('height',ts+0.5);
+      im.setAttribute('preserveAspectRatio','none');p[0].appendChild(im);
+    });
+  }
+}
+function planLegs(P){return (P&&P.days||[]).filter(function(x){return x.type==='leg';});}
+function mapRoute(){
+  if(!MAP.svg)return;
+  var g=$('m-route'),P=PL.plan,h='';
+  planLegs(P).forEach(function(x){
+    var pts=x.leg.pts.map(function(p){var m=merc(p[0],p[1]);return m.x.toFixed(1)+','+m.y.toFixed(1);}).join(' ');
+    var on=MAP.sel===null||MAP.sel===x.d;
+    h+='<polyline class="leg'+(MAP.sel===x.d?' sel':'')+'" data-d="'+x.d+'" points="'+pts+'" style="stroke:'+DAYCOL[x.d%DAYCOL.length]+';opacity:'+(on?1:.35)+'"/>';
+  });
+  g.innerHTML=h;
+  mapRender();
+}
+function mapMarks(v){
+  var g=$('m-marks'),P=PL.plan,h='',s=v.s;if(!P){g.innerHTML='';return;}
+  var r=9/s,fs=11/s,sw=2/s,seen={};
+  function dot(id,label,col,big){
+    var hb=BY_ID[id];if(!hb)return;var m=merc(hb.lat,hb.lon),k=id;
+    if(seen[k]){seen[k].push(label);return;}seen[k]=[label];
+    h+='<g class="mk" data-mk="'+esc(id)+'"><circle cx="'+m.x+'" cy="'+m.y+'" r="'+(big?r*1.15:r)+'" style="fill:'+col+';stroke:#fff;stroke-width:'+sw+'"/>'
+      +'<text x="'+m.x+'" y="'+(m.y+fs*0.36)+'" text-anchor="middle" style="font-size:'+fs+'px">'+esc(label)+'</text></g>';
+  }
+  dot(P.opt.start,'S','#17324a',true);
+  planLegs(P).forEach(function(x){dot(x.leg.to,String(x.d+1),DAYCOL[x.d%DAYCOL.length]);});
+  // labels with harbour names at sufficient zoom
+  if(MAP.z>=CONST.map.labelZ){
+    Object.keys(seen).forEach(function(id){var hb=BY_ID[id],m=merc(hb.lat,hb.lon);
+      h+='<text class="mlab" x="'+(m.x+r*1.4)+'" y="'+(m.y-r*0.6)+'" style="font-size:'+(12/s)+'px;stroke-width:'+(3/s)+'px">'+esc(hb.name.replace(/\s*\(.*\)$/,''))+'</text>';});
+  }
+  g.innerHTML=h;
+}
+function mapFit(dayIdx){
+  if(!MAP.svg)return;
+  var r0=MAP.svg.getBoundingClientRect();if(r0.width<150||r0.height<150){MAP.needFit=dayIdx===undefined?null:dayIdx;MAP.pendingFit=true;return;}  // hidden tab: fit when shown
+  MAP.pendingFit=false;
+  var P=PL.plan,xs=[],ys=[];
+  planLegs(P).forEach(function(x){if(dayIdx!=null&&x.d!==dayIdx)return;x.leg.pts.forEach(function(p){var m=merc(p[0],p[1]);xs.push(m.x);ys.push(m.y);});});
+  if(!xs.length&&P&&BY_ID[P.opt.start]){var m=merc(BY_ID[P.opt.start].lat,BY_ID[P.opt.start].lon);xs.push(m.x);ys.push(m.y);}
+  if(!xs.length)return;
+  var minx=Math.min.apply(null,xs),maxx=Math.max.apply(null,xs),miny=Math.min.apply(null,ys),maxy=Math.max.apply(null,ys),sz=mapSize(),pad=56;
+  MAP.cx=(minx+maxx)/2;MAP.cy=(miny+maxy)/2;
+  var s=Math.min((sz.w-2*pad)/Math.max(1,maxx-minx),(sz.h-2*pad)/Math.max(1,maxy-miny));
+  MAP.z=Math.max(CONST.map.zMin,Math.min(CONST.map.zFitMax,MAPZ+Math.log(s)/Math.LN2));
+  mapRender();
+}
+function mapZoomAt(dz,sx,sy){
+  var v=mapView(),sz=mapSize();sx=sx==null?sz.w/2:sx;sy=sy==null?sz.h/2:sy;
+  var wx=v.x+sx/v.s,wy=v.y+sy/v.s;
+  MAP.z=Math.max(CONST.map.zMin,Math.min(CONST.map.zMax,MAP.z+dz));
+  var s=mapScale();MAP.cx=wx-(sx-sz.w/2)/s;MAP.cy=wy-(sy-sz.h/2)/s;
+  mapRender();
+}
+function mapSelect(d,scroll){
+  MAP.sel=(MAP.sel===d)?null:d;mapRoute();
+  document.querySelectorAll('#planres .pday').forEach(function(c){c.classList.toggle('mapsel',MAP.sel!==null&&+c.dataset.d===MAP.sel);});
+  if(scroll&&MAP.sel!==null){var c=document.querySelector('#planres .pday[data-d="'+MAP.sel+'"]');if(c)c.scrollIntoView({block:'nearest',behavior:'smooth'});}
+}
+function bindMap(){
+  var svg=MAP.svg,P=MAP.ptr;
+  svg.addEventListener('pointerdown',function(e){svg.setPointerCapture(e.pointerId);P[e.pointerId]={x:e.clientX,y:e.clientY};MAP.moved=0;});
+  svg.addEventListener('pointermove',function(e){
+    var p=P[e.pointerId];if(!p)return;var ids=Object.keys(P);
+    if(ids.length===1){var s=mapScale();MAP.cx-=(e.clientX-p.x)/s;MAP.cy-=(e.clientY-p.y)/s;MAP.moved+=Math.abs(e.clientX-p.x)+Math.abs(e.clientY-p.y);p.x=e.clientX;p.y=e.clientY;mapRender();return;}
+    if(ids.length===2){
+      var o=P[ids[0]===String(e.pointerId)?ids[1]:ids[0]],d0=Math.hypot(p.x-o.x,p.y-o.y);
+      p.x=e.clientX;p.y=e.clientY;var d1=Math.hypot(p.x-o.x,p.y-o.y),r=svg.getBoundingClientRect();
+      if(d0>0&&d1>0)mapZoomAt(Math.log(d1/d0)/Math.LN2,(p.x+o.x)/2-r.left,(p.y+o.y)/2-r.top);
+      MAP.moved+=99;
+    }
+  });
+  function up(e){
+    var was=P[e.pointerId];delete P[e.pointerId];
+    if(was&&MAP.moved<8&&!Object.keys(P).length){
+      var t=e.target.closest&&e.target.closest('[data-d],[data-mk]');
+      if(t&&t.dataset.d!=null)mapSelect(+t.dataset.d,true);
+      else if(t&&t.dataset.mk){var lg=planLegs(PL.plan).filter(function(x){return x.leg.to===t.dataset.mk;})[0];if(lg)mapSelect(lg.d,true);}
+    }
+  }
+  svg.addEventListener('pointerup',up);svg.addEventListener('pointercancel',up);
+  svg.addEventListener('wheel',function(e){e.preventDefault();var r=svg.getBoundingClientRect();mapZoomAt(-e.deltaY/300,e.clientX-r.left,e.clientY-r.top);},{passive:false});
+  svg.addEventListener('dblclick',function(e){var r=svg.getBoundingClientRect();mapZoomAt(1,e.clientX-r.left,e.clientY-r.top);});
+  MAP.el.querySelector('.tmap-ctl').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;if(b.dataset.mfit!==undefined)mapFit(MAP.sel);else mapZoomAt(+b.dataset.mz);});
+  $('m-online').addEventListener('change',function(){MAP.online=$('m-online').checked;store('skipperOst.mapOnline',MAP.online?'1':'0');mapRender();});
+  window.addEventListener('resize',function(){if(MAP.svg)mapRender();});
+}
+function renderMap(){
+  var box=$('mapbox');if(!box)return;
+  if(!PL.plan||!planLegs(PL.plan).length){box.style.display='none';return;}
+  box.style.display='';
+  mapInit();MAP.sel=null;mapRoute();
+  requestAnimationFrame(function(){mapFit(null);});
+}
+
+/* ---- GPX export (SPEC §15.3): one <rte> per sailing day + overnight harbours as <wpt> ---- */
+function xesc(t){return String(t).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[c];});}
+function hname(id){var h=BY_ID[id];return h?h.name:id;}
+function planGPX(P){
+  var o=P.opt,md={rund:'Rundtörn',ziel:'Törn',frei:'Törn'}[o.mode],title='Skipper Ostsee – '+md+' ab '+hname(o.start)+' ('+o.date+')';
+  var x='<?xml version="1.0" encoding="UTF-8"?>\n<gpx version="1.1" creator="Skipper-Assistent Ostsee" xmlns="http://www.topografix.com/GPX/1/1">\n'
+    +'<metadata><name>'+xesc(title)+'</name><desc>'+xesc(CONST.plan.disclaimer)+'</desc><time>'+new Date().toISOString()+'</time></metadata>\n';
+  var seen={};
+  [o.start].concat(planLegs(P).map(function(d){return d.leg.to;})).forEach(function(id){
+    if(seen[id]||!BY_ID[id])return;seen[id]=1;var h=BY_ID[id];
+    x+='<wpt lat="'+h.lat.toFixed(5)+'" lon="'+h.lon.toFixed(5)+'"><name>'+xesc(h.name)+'</name><sym>Marina</sym></wpt>\n';
+  });
+  planLegs(P).forEach(function(d){
+    var L=d.leg,n=d.d+1;
+    x+='<rte><name>'+xesc('Tag '+n+' '+hname(d.from)+' – '+hname(L.to))+'</name><desc>'+xesc(f1(L.dist)+' sm, ab '+hhmmLocal(L.sim.dep)+', an '+hhmmLocal(L.sim.arr)+' (Plan '+dmyLocal(d.date)+')')+'</desc><number>'+n+'</number>\n';
+    L.pts.forEach(function(p,i){
+      var last=i===L.pts.length-1,nm=i===0?hname(d.from):last?hname(L.to):'T'+n+' WP'+pad(i),sg=i>0?L.segs[i-1]:null;
+      x+='  <rtept lat="'+p[0].toFixed(5)+'" lon="'+p[1].toFixed(5)+'"><name>'+xesc(nm)+'</name>'+(sg?'<desc>'+xesc('rwK '+pad3(sg[0])+'°, '+f1(sg[1])+' sm')+'</desc>':'')+'</rtept>\n';
+    });
+    x+='</rte>\n';
+  });
+  return x+'</gpx>\n';
+}
+function gpxFile(){
+  var P=PL.plan;if(!P)return null;
+  var name='skipper-ostsee-toern-'+P.opt.date.replace(/-/g,'')+'.gpx';
+  return {name:name,text:planGPX(P)};
+}
+function gpxSave(){
+  var f=gpxFile();if(!f)return;
+  var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([f.text],{type:'application/gpx+xml'}));a.download=f.name;
+  document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},1000);
+}
+function gpxShare(){
+  var f=gpxFile();if(!f)return;
+  try{
+    var file=new File([f.text],f.name,{type:'application/gpx+xml'});
+    if(navigator.canShare&&navigator.canShare({files:[file]})){navigator.share({files:[file],title:f.name}).catch(function(){});return;}
+  }catch(e){}
+  gpxSave();
 }
 
 /* ---- Törn tab (SPEC §14) ---- */
@@ -2661,13 +2885,13 @@ function planDayHTML(x,i){
   var head=wdLocal(x.date)+' '+dmyLocal(x.date),h='';
   if(x.type==='stay'){
     var ha=BY_ID[x.at];
-    h+='<div class="pday lv-'+(x.night.level==='r'?'r':'g')+'"><div class="pd">Tag '+(i+1)+', '+head+'</div><div class="pt">Hafentag in '+esc(ha?ha.name:x.at)+'</div>';
+    h+='<div class="pday lv-'+(x.night.level==='r'?'r':'g')+'" data-d="'+x.d+'"><div class="pd">Tag '+(i+1)+', '+head+'</div><div class="pt">Hafentag in '+esc(ha?ha.name:x.at)+'</div>';
     h+='<div class="note">Konfidenz: <b>'+esc(x.conf)+'</b> · im Hafen bleiben (Wetter, Etappe nicht sinnvoll oder Ziel erreicht).</div>';
     h+='<div class="pn lv-'+x.night.level+'">'+SYM[x.night.level==='n'?'n':x.night.level]+' Hafen über 24 h: '+esc(x.night.text||'')+'</div></div>';
     return h;
   }
   var L=x.leg,hf=BY_ID[x.from],ht=BY_ID[L.to],s=L.sim,lv=s.level;
-  h+='<div class="pday lv-'+lv+'"><div class="pd">Tag '+(i+1)+', '+head+'</div><div class="pt">'+esc(hf?hf.name:x.from)+' → '+esc(ht?ht.name:L.to)+'</div>';
+  h+='<div class="pday lv-'+lv+'" data-d="'+x.d+'"><span class="pdot" style="background:'+DAYCOL[x.d%DAYCOL.length]+'"></span><div class="pd">Tag '+(i+1)+', '+head+'</div><div class="pt">'+esc(hf?hf.name:x.from)+' → '+esc(ht?ht.name:L.to)+'</div>';
   h+='<div class="pchip b-'+lv+'">'+SYM[lv]+' '+LVL_TXT[lv]+'</div>';
   h+='<div class="pl"><b>'+f1(L.dist)+' sm</b> · '+fmtEta(s.hours)+' · ab <b>'+hhmmLocal(s.dep)+'</b> an <b>'+hhmmLocal(s.arr)+'</b></div>';
   h+='<div class="pl">'+esc(wxLine(s.wx))+'</div>';
@@ -2685,7 +2909,7 @@ function planDayHTML(x,i){
 }
 function renderPlan(){
   var el=$('planres'),P=PL.plan;
-  if(!P){el.innerHTML='';return;}
+  if(!P){el.innerHTML='';$('planhead').innerHTML='';renderMap();return;}
   var o=P.opt,h='<h2><span class="step">3</span>Plan</h2>';
   var md={rund:'Rundtörn',ziel:'Ziel',frei:'Frei'}[o.mode];
   h+='<div class="note">'+md+' ab '+esc(BY_ID[o.start]?BY_ID[o.start].name:o.start)+(o.mode==='ziel'&&BY_ID[o.target]?' nach '+esc(BY_ID[o.target].name):'')+' · '+o.days+' Tage ab '+esc(o.date.split('-').reverse().join('.'))+' · Abfahrt '+o.depHour+' Uhr · max. '+fm(o.maxLegH)+' h / '+fm(Math.round(P.maxNm))+' sm'+(o.daylight?' · Ankunft vor Sonnenuntergang':'')+'</div>';
@@ -2693,6 +2917,7 @@ function renderPlan(){
   if(WX&&WX.fetchedAt!==P.wxAt)h+='<div class="notice">Neuerer Wetterstand vorhanden – neu planen.</div>';
   var tot=0;P.days.forEach(function(x){if(x.type==='leg')tot+=x.leg.dist;});
   h+='<div class="note"><b>Gesamt ≈ '+f1(tot)+' sm</b>, '+P.days.filter(function(x){return x.type==='leg';}).length+' Etappen, '+(function(n){return n===0?'kein Hafentag':n===1?'1 Hafentag':n+' Hafentage';})(P.days.filter(function(x){return x.type==='stay';}).length)+'.</div>';
+  $('planhead').innerHTML=h;h='';
   P.days.forEach(function(x,i){h+=planDayHTML(x,i);});
   if(P.alts&&P.alts.length){
     h+='<h2>Alternativen Tag 1</h2>';
@@ -2701,6 +2926,7 @@ function renderPlan(){
   h+='<div class="notice" style="margin-top:14px">'+esc(CONST.plan.disclaimer)+'</div>';
   h+='<div class="note small">Wegpunkt-Netz: '+esc(NET.sources.join(' · '))+'. Wetter: Open-Meteo.com (DWD ICON / ICON-Wave u. a., CC BY 4.0). Gewichte und Konfidenzstufen sind Faustregeln.</div>';
   el.innerHTML=h;
+  renderMap();
 }
 function renderToernForm(){
   document.querySelectorAll('[data-pmode]').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.pmode===PL.mode?'true':'false');});
@@ -2728,7 +2954,9 @@ function initToern(){
   $('btn-plan').addEventListener('click',doPlan);
   $('btn-export').addEventListener('click',doExport);
   $('f-import').addEventListener('change',function(){var f=this.files&&this.files[0];if(!f)return;var r=new FileReader();r.onload=function(){doImportText(String(r.result));};r.readAsText(f);this.value='';});
-  $('planres').addEventListener('click',function(e){var b=e.target.closest('[data-ptarget]');if(b){setTargetHarbor(b.dataset.ptarget);update();showScreen('scr-lage');}});
+  $('planres').addEventListener('click',function(e){var b=e.target.closest('[data-ptarget]');if(b){setTargetHarbor(b.dataset.ptarget);update();showScreen('scr-lage');return;}
+    var t=e.target.closest('.pday .pt,.pday .pd');if(t){var c=t.closest('.pday');if(c&&c.querySelector('.pdot')){mapSelect(+c.dataset.d,false);if(MAP.sel!==null){mapFit(MAP.sel);$('tmap').scrollIntoView({block:'center',behavior:'smooth'});}}}});
+  $('btn-gpxshare').addEventListener('click',gpxShare);$('btn-gpxsave').addEventListener('click',gpxSave);
   renderToernForm();renderPlan();renderWxState();
   IDB.latest().then(function(sn){if(sn&&!WX){wxSet(sn);renderWxState();renderPlan();}}).catch(function(){});
 }
@@ -2739,7 +2967,7 @@ window.SKIPPER={bridgeContactHTML:bridgeContactHTML,harborCardHTML:function(it,s
   isOutOfArea:isOutOfArea,euOffset:euOffset,utcToLocal:utcToLocal,sunTimes:sunTimes,seaAreaOf:seaAreaOf,countryOf:countryOf,boatNeeds:boatNeeds,bridgeCheck:bridgeCheck,
   rhumb:rhumb,courseToWind:courseToWind,effThresholds:effThresholds,filterList:filterList,emergencyNumbers:emergencyNumbers,DISCLAIMER:DISCLAIMER,
   NET:NET,WXGRID:WXGRID,netTree:netTree,netRoute:netRoute,routeBridges:routeBridges,treeOf:treeOf,inNet:inNet,wxAt:wxAt,wxSet:wxSet,wxFromOpenMeteo:wxFromOpenMeteo,wxUrls:wxUrls,wxValid:wxValid,
-  chunkLevel:chunkLevel,getWX:function(){return WX;},IDB:IDB,planTrip:planTrip,planCandidates:planCandidates,simLeg:simLeg,nightCheck:nightCheck,dayStartMs:dayStartMs,PL:PL,renderPlan:renderPlan,doImportText:doImportText,planSerialize:planSerialize};
+  chunkLevel:chunkLevel,MAP:MAP,merc:merc,mapFit:mapFit,mapZoomAt:mapZoomAt,mapSelect:mapSelect,planGPX:planGPX,gpxFile:gpxFile,getWX:function(){return WX;},IDB:IDB,planTrip:planTrip,planCandidates:planCandidates,simLeg:simLeg,nightCheck:nightCheck,dayStartMs:dayStartMs,PL:PL,renderPlan:renderPlan,doImportText:doImportText,planSerialize:planSerialize};
 
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();

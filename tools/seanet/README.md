@@ -13,6 +13,7 @@ python3 mknet.py 0.3          # Knoten zusammenfassen -> net.pkl
 python3 evalnet.py            # Kontrolle: Netz-/Rasterweg, Verhältnis ~1,0
 python3 export.py             # -> ../../data/seanet.json, ../../data/wxgrid.json
 python3 drawnet.py suedsee 10.1 11.1 54.75 55.15 2   # Sichtprüfung als PNG
+python3 coast.py 1.0 2        # -> ../../data/coast.json (Offline-Karte im Törn-Tab)
 ```
 
 Quellen: GSHHG 2.3.7 full (NOAA NCEI, LGPL), GEBCO 2026 Grid (gemeinfrei). Beide ausdrücklich **nicht für die Navigation**. Das Netz ist eine Planungshilfe: Tiefen < 3 m oder unbelegt zählen als Flachwasser („nur im betonnten Fahrwasser“), schmale Fjorde/Flüsse (Schlei, Trave, Mariager, Randers) fehlen in GSHHG und sind als `notInNet` markiert.
