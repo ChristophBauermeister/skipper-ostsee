@@ -56,3 +56,6 @@ Erstausgabe der Ostsee-App nach SPEC_v1.md, aufbauend auf Skipper-Assistent Sard
 - Backup: jeder Wetterstand in IndexedDB (letzte 20), Export/Import als JSON, Plattform-URL als Rückfall; Collector für die eigene Plattform in `platform/` (Python, systemd-Timer, PostgreSQL, latest.json mit CORS).
 - Design: Schrift Atkinson Hyperlegible (eingebettet, OFL), Seekarten-Palette, Überschriften ohne Versalien, Schritt-Nummern, 6 Tabs.
 - Tests 52–60, Screenshots 14/15, SW-Cache `skipper-ostsee-v2.0-20261101`.
+
+## v2.0.1 (01.11.2026)
+- Eigenes App-Icon (Ostsee-Leuchtturm) statt des Sardinien-Icons; SW-Cache `skipper-ostsee-v2.0.1-20261101`.
