@@ -8,9 +8,9 @@
    53.8,
    14.8
   ],
-  "bytes": 2735779,
+  "bytes": 2762095,
   "pois": 6024,
-  "locks": 66,
+  "locks": 113,
   "bridges": 1154,
   "nodes": 16349,
   "pegel": 221
@@ -24,9 +24,9 @@
    54.6,
    14.5
   ],
-  "bytes": 1054930,
+  "bytes": 1064833,
   "pois": 4081,
-  "locks": 21,
+  "locks": 35,
   "bridges": 163,
   "nodes": 6776,
   "pegel": 106
@@ -40,9 +40,9 @@
    53.7,
    14.5
   ],
-  "bytes": 3611132,
+  "bytes": 3645009,
   "pois": 9153,
-  "locks": 65,
+  "locks": 132,
   "bridges": 1845,
   "nodes": 24572,
   "pegel": 281
@@ -56,9 +56,9 @@
    53.9,
    10.6
   ],
-  "bytes": 1650427,
+  "bytes": 1678229,
   "pois": 4928,
-  "locks": 0,
+  "locks": 77,
   "bridges": 1197,
   "nodes": 15580,
   "pegel": 164
@@ -72,9 +72,9 @@
    52.4,
    8.8
   ],
-  "bytes": 884272,
+  "bytes": 897306,
   "pois": 2466,
-  "locks": 0,
+  "locks": 40,
   "bridges": 765,
   "nodes": 6663,
   "pegel": 60
@@ -88,9 +88,9 @@
    50.9,
    8.4
   ],
-  "bytes": 701537,
+  "bytes": 714893,
   "pois": 2020,
-  "locks": 0,
+  "locks": 42,
   "bridges": 604,
   "nodes": 4369,
   "pegel": 72
@@ -104,9 +104,9 @@
    49.9,
    10.0
   ],
-  "bytes": 1043707,
+  "bytes": 1057399,
   "pois": 3697,
-  "locks": 0,
+  "locks": 57,
   "bridges": 1043,
   "nodes": 7627,
   "pegel": 50
@@ -120,9 +120,9 @@
    50.6,
    13.9
   ],
-  "bytes": 1590861,
+  "bytes": 1625800,
   "pois": 4656,
-  "locks": 0,
+  "locks": 137,
   "bridges": 1629,
   "nodes": 14675,
   "pegel": 73
@@ -136,7 +136,7 @@
    48.4,
    13.1
   ],
-  "bytes": 549251,
+  "bytes": 549416,
   "pois": 2518,
   "locks": 0,
   "bridges": 0,
