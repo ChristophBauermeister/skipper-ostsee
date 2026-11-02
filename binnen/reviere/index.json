@@ -56,9 +56,9 @@
    53.9,
    10.6
   ],
-  "bytes": 1612121,
+  "bytes": 1612927,
   "pois": 4871,
-  "locks": 77,
+  "locks": 78,
   "bridges": 1197,
   "nodes": 13235,
   "pegel": 164
@@ -152,9 +152,9 @@
    55.1,
    11.4
   ],
-  "bytes": 1046833,
+  "bytes": 1050947,
   "pois": 4257,
-  "locks": 15,
+  "locks": 21,
   "bridges": 363,
   "nodes": 6220,
   "pegel": 113
