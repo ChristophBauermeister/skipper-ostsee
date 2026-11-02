@@ -8,7 +8,7 @@
    53.8,
    14.8
   ],
-  "bytes": 2763769,
+  "bytes": 2769831,
   "pois": 6019,
   "locks": 113,
   "bridges": 1154,
@@ -24,7 +24,7 @@
    54.6,
    14.5
   ],
-  "bytes": 1147772,
+  "bytes": 1151290,
   "pois": 4081,
   "locks": 35,
   "bridges": 163,
@@ -40,7 +40,7 @@
    53.7,
    14.5
   ],
-  "bytes": 3667596,
+  "bytes": 3678595,
   "pois": 9148,
   "locks": 132,
   "bridges": 1845,
@@ -56,7 +56,7 @@
    53.9,
    10.6
   ],
-  "bytes": 1608471,
+  "bytes": 1612121,
   "pois": 4871,
   "locks": 77,
   "bridges": 1197,
@@ -72,7 +72,7 @@
    52.4,
    8.8
   ],
-  "bytes": 903546,
+  "bytes": 904193,
   "pois": 2361,
   "locks": 40,
   "bridges": 765,
@@ -88,7 +88,7 @@
    50.9,
    8.4
   ],
-  "bytes": 762802,
+  "bytes": 762813,
   "pois": 2018,
   "locks": 42,
   "bridges": 604,
@@ -104,7 +104,7 @@
    49.9,
    10.0
   ],
-  "bytes": 1054706,
+  "bytes": 1054717,
   "pois": 3691,
   "locks": 57,
   "bridges": 1043,
@@ -120,7 +120,7 @@
    50.6,
    13.9
   ],
-  "bytes": 1642385,
+  "bytes": 1642396,
   "pois": 4572,
   "locks": 137,
   "bridges": 1629,
@@ -136,11 +136,59 @@
    48.4,
    13.1
   ],
-  "bytes": 558347,
+  "bytes": 558695,
   "pois": 2518,
   "locks": 0,
   "bridges": 0,
   "nodes": 3267,
   "pegel": 2
+ },
+ {
+  "id": "schleswig-holstein",
+  "name": "Schleswig-Holstein (Nord-Ostsee-Kanal, Eider, Elbe-Lübeck-Kanal, Trave, Schlei, Holsteinische Seen)",
+  "bbox": [
+   53.3,
+   8.0,
+   55.1,
+   11.4
+  ],
+  "bytes": 1046833,
+  "pois": 4257,
+  "locks": 15,
+  "bridges": 363,
+  "nodes": 6220,
+  "pegel": 113
+ },
+ {
+  "id": "weserbergland-hessen",
+  "name": "Oberweser, Fulda, Werra, Edersee",
+  "bbox": [
+   50.5,
+   8.6,
+   52.1,
+   10.4
+  ],
+  "bytes": 284016,
+  "pois": 825,
+  "locks": 1,
+  "bridges": 0,
+  "nodes": 2961,
+  "pegel": 22
+ },
+ {
+  "id": "thueringen-sachsen",
+  "name": "Thüringen und Sachsen (Talsperren, Oberlausitz)",
+  "bbox": [
+   50.2,
+   10.0,
+   51.6,
+   15.1
+  ],
+  "bytes": 733065,
+  "pois": 1887,
+  "locks": 7,
+  "bridges": 158,
+  "nodes": 6232,
+  "pegel": 15
  }
 ]
