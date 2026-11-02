@@ -8,11 +8,11 @@
    53.8,
    14.8
   ],
-  "bytes": 2831066,
+  "bytes": 2735779,
   "pois": 6024,
   "locks": 66,
   "bridges": 1154,
-  "nodes": 18516,
+  "nodes": 16349,
   "pegel": 221
  },
  {
@@ -24,11 +24,11 @@
    54.6,
    14.5
   ],
-  "bytes": 1082677,
+  "bytes": 1054930,
   "pois": 4081,
   "locks": 21,
   "bridges": 163,
-  "nodes": 7361,
+  "nodes": 6776,
   "pegel": 106
  },
  {
@@ -40,11 +40,11 @@
    53.7,
    14.5
   ],
-  "bytes": 3787605,
+  "bytes": 3611132,
   "pois": 9153,
   "locks": 65,
   "bridges": 1845,
-  "nodes": 28647,
+  "nodes": 24572,
   "pegel": 281
  },
  {
@@ -56,11 +56,11 @@
    53.9,
    10.6
   ],
-  "bytes": 1763867,
+  "bytes": 1650427,
   "pois": 4928,
   "locks": 0,
   "bridges": 1197,
-  "nodes": 18219,
+  "nodes": 15580,
   "pegel": 164
  },
  {
@@ -72,11 +72,11 @@
    52.4,
    8.8
   ],
-  "bytes": 920986,
+  "bytes": 884272,
   "pois": 2466,
   "locks": 0,
   "bridges": 765,
-  "nodes": 7542,
+  "nodes": 6663,
   "pegel": 60
  },
  {
@@ -88,11 +88,11 @@
    50.9,
    8.4
   ],
-  "bytes": 706121,
+  "bytes": 701537,
   "pois": 2020,
   "locks": 0,
   "bridges": 604,
-  "nodes": 4412,
+  "nodes": 4369,
   "pegel": 72
  },
  {
@@ -104,28 +104,28 @@
    49.9,
    10.0
   ],
-  "bytes": 1055466,
+  "bytes": 1043707,
   "pois": 3697,
   "locks": 0,
   "bridges": 1043,
-  "nodes": 7853,
+  "nodes": 7627,
   "pegel": 50
  },
  {
   "id": "main-donau",
-  "name": "Main, Main-Donau-Kanal, Donau",
+  "name": "Main (ab Mainz), Main-Donau-Kanal, Donau",
   "bbox": [
    48.2,
-   8.8,
+   8.2,
    50.6,
    13.9
   ],
-  "bytes": 1265871,
-  "pois": 3363,
+  "bytes": 1590861,
+  "pois": 4656,
   "locks": 0,
-  "bridges": 1216,
-  "nodes": 13038,
-  "pegel": 56
+  "bridges": 1629,
+  "nodes": 14675,
+  "pegel": 73
  },
  {
   "id": "bayern-seen",
@@ -136,11 +136,11 @@
    48.4,
    13.1
   ],
-  "bytes": 564160,
+  "bytes": 549251,
   "pois": 2518,
   "locks": 0,
   "bridges": 0,
-  "nodes": 4286,
+  "nodes": 3975,
   "pegel": 2
  }
 ]
