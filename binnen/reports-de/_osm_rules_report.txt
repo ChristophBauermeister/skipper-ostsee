@@ -1,2 +1,0 @@
-region de elements 39006 failed_tiles 10 unnamed_ways 10521
-[["stream", 21672], ["river", 5330], ["drain", 3631], ["ditch", 2765], ["canal", 2312], ["other", 1569], ["water", 956], ["no", 275], ["link", 149], ["fairway", 95], ["swimming_area", 46], ["flowline", 36], ["fish_pass", 32], ["fishing", 27], ["weir", 18], ["yes", 18], ["nature_reserve", 17], ["oxbow", 8], ["canoe_pass", 6], ["private", 4], ["fountain", 3], ["marina", 3], ["slipway", 3], ["access_point", 3], ["ferry_terminal", 2], ["dam", 2], ["rapids", 2], ["customers", 2], ["barrage", 1], ["scrub", 1]]

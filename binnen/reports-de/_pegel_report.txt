@@ -1,2 +1,0 @@
-stations 690
-CORS *

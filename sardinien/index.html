@@ -735,7 +735,7 @@ nav button .ic{font-size:1.2rem}
     <div class="tmap" id="tmap"></div>
     <div id="m-pick"></div>
     <div class="note small">Hafen auf der Karte antippen, um ihn als Start, Über-Hafen oder Ziel zu wählen. Nach dem Planen: Tag antippen hebt die Etappe hervor.</div>
-    <label class="switch"><input type="checkbox" id="m-online"><span>Seekarte (OpenStreetMap + OpenSeaMap)<small>Lädt nur den Ausschnitt, den du ansiehst. Angesehene Kacheln bleiben offline verfügbar – vor dem Ablegen die Route mit Netz in den nötigen Zoomstufen ansehen.</small></span></label>
+    <label class="switch"><input type="checkbox" id="m-online"><span>Seekarte (OpenStreetMap + OpenSeaMap)<small>Lädt nur den Ausschnitt, den du ansiehst. Angesehene Seezeichen bleiben offline verfügbar – vor dem Ablegen die Route mit Netz in den nötigen Zoomstufen ansehen. Die Grundkarte von OpenStreetMap gibt es nur mit Netz, ohne Netz zeigt die App die eigene Küstenlinie.</small></span></label>
     <div class="note small" id="m-tstats"></div>
     <button class="btn sm" id="btn-tclearcache" style="margin-top:6px">Gespeicherte Kartenkacheln löschen</button>
   </div>
@@ -812,7 +812,7 @@ var HPOI={};
      R.crossTitles         titles of the open-water crossing gates      -> core/sea/gates.js
      R.expose              extra members of window.SKIPPER (tests)      -> core/sea/expose.js
    ===================================================================== */
-var REVIER={"id":"sardinien-korsika","title":"Skipper-Assistent Sardinien-Korsika","appName":"Skipper Sardinien-Korsika","type":"sea","licence":true,"storagePrefix":"skipperSard","snapPrefix":"skipper-sardinien","idb":{"db":"skipper-sardinien","tiles":"skipper-sardinien-tiles"},"legalUrl":"https://christophbauermeister.github.io/skipper-ostsee/legal/","langs":["de"],"defaultLang":"de","langMap":{},"countries":["IT","FR"],"countryLabel":{"IT":"Italien (Sardinien)","FR":"Frankreich (Korsika)"},"features":{"planner":true,"bridges":false},"defaultBoat":{"type":"mono","loa":10.5,"beam":3.3,"draft":1.55,"mast":19,"margin":0.3,"bridgeMargin":1,"short":"Dehler 35 CWS","profile":{"id":"owner-dehler35-cws","label":"Dehler 35 CWS (BJ 1994, Flachkiel)","type":"mono","loa":10.5,"beam":3.3,"draft":1.55,"mast":19,"margin":0.3,"bridgeMargin":1,"note":"Länge/Breite: sailboatdata (CWS). Tiefgang und Masthöhe (19,0 m inkl. Antenne und Windex): Angabe Eigner 19.10.2026.","mastOwner":true}},"const":{"datenstand":"02.11.2026","appVersion":"0.3.0","area":{"latMin":38.7,"latMax":43.1,"lonMin":7.9,"lonMax":10},"gates":{"sardkorsika":{"ids":["fr-bonifacio","fr-cavallo","fr-lavezzi-chiesa","fr-lavezzi-grecu","fr-lavezzi-lazarina","fr-lavezzi-ghiuncu","fr-piantarella","fr-paragnanu","fr-santamanza","fr-portovecchio","fr-pv-gulf-north","fr-pv-stagnolu","fr-santagiulia","fr-rondinara","fr-portonovo","fr-palombaggia"],"box":{"latMin":41.3,"latMax":41.7,"lonMin":8.85,"lonMax":9.6}}},"plan":{"defaultStart":"it-olbia-marina","defaultStartFallback":["it-puntaldia","it-porto-san-paolo","it-cagliari-marina-del-sole"]},"sk":{"anchorGust":{"yellow":20,"red":28,"open":15},"posidoniaLoaM":24,"mpaNearNm":0.5,"bonifacio":{"gust":18,"dirs":["W","NW","E","SE"],"area":{"latMin":41.15,"latMax":41.5,"lonMin":8.95,"lonMax":9.6}},"orosei":{"gust":18,"swellH":1.5,"windDirs":["N","NE","E","SE"],"swellDirs":["N","NE","E","SE"],"area":{"latMin":40,"latMax":41,"lonMin":9.45},"gulfLatMax":40.45},"west":{"gust":20,"swellH":2,"windDirs":["SW","W","NW"],"swellDirs":["W","NW"],"area":{"latMin":38.85,"latMax":41.3,"lonMin":7.9,"lonMax":8.85}},"teulada":{"area":{"latMin":38.75,"latMax":39.05,"lonMin":8.4,"lonMax":9.05},"pauseFrom":"06-01","pauseTo":"09-30","ucmTel":"0781 83071"},"capcorse":{"gust":20,"windDirs":["SW","W","NW"],"latMin":42.72},"lava":{"nearNm":3}}},"texts":{"steepSea":"kurze, steile See"},"css":["sk"],"wxBounds":{"lat0":38.5,"lat1":43.3,"lon0":7.7,"lon1":10.2},"mapCenter":{"lat":40.9,"lon":9,"z":6.9}};
+var REVIER={"id":"sardinien-korsika","title":"Skipper-Assistent Sardinien-Korsika","appName":"Skipper Sardinien-Korsika","type":"sea","licence":true,"storagePrefix":"skipperSard","snapPrefix":"skipper-sardinien","idb":{"db":"skipper-sardinien","tiles":"skipper-sardinien-tiles"},"legalUrl":"https://christophbauermeister.github.io/skipper-ostsee/legal/","langs":["de"],"defaultLang":"de","langMap":{},"countries":["IT","FR"],"countryLabel":{"IT":"Italien (Sardinien)","FR":"Frankreich (Korsika)"},"features":{"planner":true,"bridges":false},"defaultBoat":{"type":"mono","loa":10.5,"beam":3.3,"draft":1.55,"mast":19,"margin":0.3,"bridgeMargin":1,"short":"Dehler 35 CWS","profile":{"id":"owner-dehler35-cws","label":"Dehler 35 CWS (BJ 1994, Flachkiel)","type":"mono","loa":10.5,"beam":3.3,"draft":1.55,"mast":19,"margin":0.3,"bridgeMargin":1,"note":"Länge/Breite: sailboatdata (CWS). Tiefgang und Masthöhe (19,0 m inkl. Antenne und Windex): Angabe Eigner 19.10.2026.","mastOwner":true}},"const":{"datenstand":"02.11.2026","appVersion":"0.3.1","area":{"latMin":38.7,"latMax":43.1,"lonMin":7.9,"lonMax":10},"gates":{"sardkorsika":{"ids":["fr-bonifacio","fr-cavallo","fr-lavezzi-chiesa","fr-lavezzi-grecu","fr-lavezzi-lazarina","fr-lavezzi-ghiuncu","fr-piantarella","fr-paragnanu","fr-santamanza","fr-portovecchio","fr-pv-gulf-north","fr-pv-stagnolu","fr-santagiulia","fr-rondinara","fr-portonovo","fr-palombaggia"],"box":{"latMin":41.3,"latMax":41.7,"lonMin":8.85,"lonMax":9.6}}},"plan":{"defaultStart":"it-olbia-marina","defaultStartFallback":["it-puntaldia","it-porto-san-paolo","it-cagliari-marina-del-sole"]},"sk":{"anchorGust":{"yellow":20,"red":28,"open":15},"posidoniaLoaM":24,"mpaNearNm":0.5,"bonifacio":{"gust":18,"dirs":["W","NW","E","SE"],"area":{"latMin":41.15,"latMax":41.5,"lonMin":8.95,"lonMax":9.6}},"orosei":{"gust":18,"swellH":1.5,"windDirs":["N","NE","E","SE"],"swellDirs":["N","NE","E","SE"],"area":{"latMin":40,"latMax":41,"lonMin":9.45},"gulfLatMax":40.45},"west":{"gust":20,"swellH":2,"windDirs":["SW","W","NW"],"swellDirs":["W","NW"],"area":{"latMin":38.85,"latMax":41.3,"lonMin":7.9,"lonMax":8.85}},"teulada":{"area":{"latMin":38.75,"latMax":39.05,"lonMin":8.4,"lonMax":9.05},"pauseFrom":"06-01","pauseTo":"09-30","ucmTel":"0781 83071"},"capcorse":{"gust":20,"windDirs":["SW","W","NW"],"latMin":42.72},"lava":{"nearNm":3}}},"texts":{"steepSea":"kurze, steile See"},"css":["sk"],"wxBounds":{"lat0":38.5,"lat1":43.3,"lon0":7.7,"lon1":10.2},"mapCenter":{"lat":40.9,"lon":9,"z":6.9}};
 /* packages without bridges (Sardinia-Corsica) set revier.json features.bridges=false: only affects explanatory texts */
 var HAS_BRIDGES=!(REVIER.features&&REVIER.features.bridges===false);
 /* default map view when no position/route is known (revier.json "mapCenter"; Baltic as before) */
@@ -833,7 +833,7 @@ var COUNTRY_LABEL=REVIER.countryLabel;
 /* Platform base values (map tiles, weather API, climate archive). Package overrides: revier.json "const". */
 var CONST={
   /* SPEC §15 */
-  map:{baseUrl:'https://tile.openstreetmap.org/{z}/{x}/{y}.png',seamarkUrl:'https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png',tileMin:5,tileMax:16,maxTiles:48,pickZ:8.2,allLabelZ:9.5,keepTiles:4000,tileMaxAgeD:30,zMin:5,zMax:15,zFitMax:11,labelZ:8.5,zNear:8},
+  map:{baseUrl:'https://tile.openstreetmap.org/{z}/{x}/{y}.png',seamarkUrl:'https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png',tileMin:5,tileMax:16,maxTiles:48,pickZ:8.2,allLabelZ:9.5,keepTiles:4000,tileMaxAgeD:30,baseMaxAgeD:7,baseOffline:false,seamarkOffline:true,zMin:5,zMax:15,zFitMax:11,labelZ:8.5,zNear:8},
   wx:{forecastUrl:'https://api.open-meteo.com/v1/forecast',marineUrl:'https://marine-api.open-meteo.com/v1/marine',
     hourly:'wind_speed_10m,wind_direction_10m,wind_gusts_10m,weather_code,visibility',marineHourly:'wave_height,wave_direction,wave_period',days:7,keep:20,exportKeep:5,maxAgeH:12,hardAgeH:48},
   /* SPEC §21 – climatology for Vorplanung; dayH = UTC hours counted as daytime (≈ 07–20 Uhr MESZ) */
@@ -1403,12 +1403,15 @@ function mapRender(){
   var r0=MAP.svg.getBoundingClientRect();if(r0.width<2||r0.height<2)return;
   var v=mapView();
   MAP.svg.setAttribute('viewBox',v.x+' '+v.y+' '+v.w+' '+v.h);
-  $('m-coast').style.display=MAP.online?'none':'';
+  var net=navigator.onLine!==false;
+  $('m-coast').style.display=(MAP.online&&(net||CONST.map.baseOffline))?'none':'';
   mapTiles(v);mapMarks(v);
-  $('m-attr').textContent=MAP.online?'© OpenStreetMap-Mitwirkende · Seezeichen © OpenSeaMap':'Küste: GSHHG, vereinfacht · keine Seekarte';
+  $('m-attr').textContent=MAP.online?((net||CONST.map.baseOffline)?'© OpenStreetMap-Mitwirkende · Seezeichen © OpenSeaMap':'Küste: GSHHG, vereinfacht · Seezeichen © OpenSeaMap'):'Küste: GSHHG, vereinfacht · keine Seekarte';
 }
-/* ---- viewed-tile store (SPEC §15.4): only tiles the skipper actually looked at are kept, never prefetched
-   (OSM tile usage policy forbids bulk/offline prefetch; re-visits from a local cache are allowed). ---- */
+/* ---- viewed-tile store (SPEC §15.4): only tiles the skipper actually looked at are kept, never prefetched.
+   OSM tile usage policy: offline use of tile.openstreetmap.org is not permitted; re-visits from a local cache
+   (>= 7 days) are. So base tiles are cached for online re-visits only (CONST.map.baseOffline=false) and the
+   own GSHHG coastline is shown without network. OpenSeaMap seamark tiles (CC BY-SA) stay available offline. ---- */
 var TILES={
   db:null,mem:{},cors:{},
   open:function(){var self=this;if(self.db)return Promise.resolve(self.db);
@@ -1425,16 +1428,18 @@ var TILES={
       drop.forEach(function(d){tx.objectStore('t').delete(d[0]);});tx.oncomplete=function(){res(CONST.map.keepTiles);};}};});}).catch(function(){});},
   clear:function(){var self=this;return self.open().then(function(db){return new Promise(function(res){var tx=db.transaction('t','readwrite');tx.objectStore('t').clear();tx.oncomplete=function(){res(true);};});}).catch(function(){return false;});},
   /* resolve a tile URL to something an <image> can show: stored blob, freshly fetched blob (then stored), or the plain URL */
-  src:function(u){
-    var self=this,host=u.split('/')[2],online=navigator.onLine!==false;
+  src:function(u,opt){
+    opt=opt||{};var self=this,host=u.split('/')[2],online=navigator.onLine!==false,offOk=opt.offline!==false;
+    var maxAge=(opt.maxAgeD||CONST.map.tileMaxAgeD)*86400000;
+    if(!online&&!offOk)return Promise.resolve(null);
     return self.get(u).then(function(rec){
-      var fresh=rec&&(Date.now()-rec.t)<CONST.map.tileMaxAgeD*86400000;
-      if(rec&&(fresh||!online))return URL.createObjectURL(rec.b);
+      var fresh=rec&&(Date.now()-rec.t)<maxAge;
+      if(rec&&(fresh||(!online&&offOk)))return URL.createObjectURL(rec.b);
       if(!online)return null;
       if(self.cors[host]===false)return u;   // server without CORS: show directly, cannot store
       return fetch(u,{mode:'cors',credentials:'omit'}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.blob();})
         .then(function(b){self.cors[host]=true;self.put(u,b);return URL.createObjectURL(b);})
-        .catch(function(e){if(rec)return URL.createObjectURL(rec.b);if(self.cors[host]===undefined&&e instanceof TypeError){self.cors[host]=false;return u;}return null;});
+        .catch(function(e){if(rec&&offOk)return URL.createObjectURL(rec.b);if(self.cors[host]===undefined&&e instanceof TypeError){self.cors[host]=false;return u;}return null;});
     });
   }
 };
@@ -1442,7 +1447,7 @@ function renderTileStats(){
   var el=$('m-tstats');if(!el)return;
   TILES.stats().then(function(st){
     var nc=Object.keys(TILES.cors).filter(function(h){return TILES.cors[h]===false;});
-    el.textContent=st.n?('Auf dem Gerät: '+st.n+' angesehene Kartenkacheln ('+(Math.round(st.bytes/1e5)/10).toString().replace('.',',')+' MB) – offline verfügbar.'):'Noch keine Kartenkacheln gespeichert. Gespeichert wird nur, was du online ansiehst.';
+    el.textContent=st.n?('Auf dem Gerät: '+st.n+' angesehene Kartenkacheln ('+(Math.round(st.bytes/1e5)/10).toString().replace('.',',')+' MB). Seezeichen offline verfügbar, Grundkarte nur mit Netz.'):'Noch keine Kartenkacheln gespeichert. Gespeichert wird nur, was du online ansiehst.';
     if(nc.length)el.textContent+=' '+nc.join(', ')+' erlaubt kein Speichern – diese Ebene nur online.';
   });
 }
@@ -1458,10 +1463,10 @@ function tilesFor(MAP,g,gs,v,online){   // MAP = any map state {z,tz,tiles}
   for(var tx=x0;tx<=x1;tx++)for(var ty=y0;ty<=y1;ty++){
     var k=zi+'/'+tx+'/'+ty;if(MAP.tiles[k])continue;MAP.tiles[k]=1;
     var xx=((tx%n)+n)%n;
-    [[g,CONST.map.baseUrl],[gs,CONST.map.seamarkUrl]].forEach(function(p){
+    [[g,CONST.map.baseUrl,{offline:CONST.map.baseOffline,maxAgeD:CONST.map.baseMaxAgeD}],[gs,CONST.map.seamarkUrl,{offline:CONST.map.seamarkOffline}]].forEach(function(p){
       var im=document.createElementNS('http://www.w3.org/2000/svg','image');
       var u=p[1].replace('{z}',zi).replace('{x}',xx).replace('{y}',ty),tz=zi;
-      TILES.src(u).then(function(src){if(!src||MAP.tz!==tz||!im.isConnected){if(src&&src.indexOf('blob:')===0)URL.revokeObjectURL(src);return;}
+      TILES.src(u,p[2]).then(function(src){if(!src||MAP.tz!==tz||!im.isConnected){if(src&&src.indexOf('blob:')===0)URL.revokeObjectURL(src);return;}
         im.setAttribute('href',src);if(src.indexOf('blob:')===0)im.addEventListener('load',function(){setTimeout(function(){URL.revokeObjectURL(src);},0);},{once:true});clearTimeout(MAP.statT);MAP.statT=setTimeout(function(){if($('m-tstats'))renderTileStats();},800);});
       im.setAttribute('x',tx*ts);im.setAttribute('y',ty*ts);im.setAttribute('width',ts+0.5);im.setAttribute('height',ts+0.5);
       im.setAttribute('preserveAspectRatio','none');p[0].appendChild(im);
@@ -1507,6 +1512,7 @@ function bindMap(){
   svg.addEventListener('dblclick',function(e){var r=svg.getBoundingClientRect();mapZoomAt(1,e.clientX-r.left,e.clientY-r.top);});
   MAP.el.querySelector('.tmap-ctl').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;if(b.dataset.mfit!==undefined)mapFit(MAP.sel);else mapZoomAt(+b.dataset.mz);});
   $('m-online').addEventListener('change',function(){MAP.online=$('m-online').checked;store(sk('mapOnline'),MAP.online?'1':'0');mapRender();});
+  ['online','offline'].forEach(function(ev){window.addEventListener(ev,function(){if(!MAP.svg)return;MAP.tiles={};MAP.tz=null;$('m-tiles').innerHTML='';$('m-seamark').innerHTML='';mapRender();});});
   window.addEventListener('resize',function(){if(MAP.svg)mapRender();});
 }
 function renderMap(){
@@ -4134,7 +4140,7 @@ function zmRender(){
   if(!ZM.svg)return;var r0=ZM.svg.getBoundingClientRect();if(r0.width<2||r0.height<2)return;
   var v=zmView(),on=mapOnline();
   ZM.svg.setAttribute('viewBox',v.x+' '+v.y+' '+v.w+' '+v.h);
-  $('z-coast').style.display=on?'none':'';
+  $('z-coast').style.display=(on&&(navigator.onLine!==false||CONST.map.baseOffline))?'none':'';
   tilesFor(ZM,$('z-tiles'),$('z-seamark'),v,on);
   var s=v.s,h='',rd=Math.max(4.5,Math.min(8,(ZM.z-4)*1.1))/s,hit=14/s,x0=v.x-hit,x1=v.x+v.w+hit,y0=v.y-hit,y1=v.y+v.h+hit,lab=ZM.z>=CONST.map.allLabelZ-0.5,L='';
   // worst on top: draw grey/green first, then yellow, then red
