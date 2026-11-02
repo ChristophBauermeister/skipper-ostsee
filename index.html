@@ -6383,7 +6383,7 @@ R.hooks.lineBridges=function(s,K){
    1. it decides by the trip's date, not by today;
    2. if no plan exists because legs under a too-low fixed obstacle were dropped, the obstacle is taken out of the waypoint network for one more run,
       so the route goes round it (around Fehmarn instead of through the Sund). Length Infinity = edge unusable; restored afterwards. */
-var BR_EDGES={};
+var BR_EDGES={},BR_AVOIDED=[];
 function bridgeEdges(b){
   if(BR_EDGES[b.id])return BR_EDGES[b.id];
   var out=[],lim=CONST.plan.bridgeNm,m=lim/60;
@@ -6405,7 +6405,7 @@ function blockedBridges(boat,now){
 var planTripBase=planTrip;
 planTrip=function(opt,progress){
   var t=opt&&opt.date?dayStartMs(opt.date,0,12):Date.now();
-  BR_PLAN_T=t;
+  BR_PLAN_T=t;BR_AVOIDED=[];
   try{
     var r=planTripBase(opt,progress),blocked=r&&r.error?blockedBridges(S.boat,t):[],saved=[];
     if(!blocked.length)return r;   // legs under an obstacle are dropped by the core; a detour is only tried when that leaves no plan
@@ -6415,6 +6415,7 @@ planTrip=function(opt,progress){
       var r2=planTripBase(opt,progress);
       if(r2.error)return r;
       r2.avoided=blocked.filter(function(b){return r2.days.some(function(x){return x.leg&&x.leg.route.pts.some(function(p){return haversineNm(b,p)<=25;});});}).map(function(b){return b.name;});
+      BR_AVOIDED=r2.avoided;
       return r2;
     }finally{saved.forEach(function(x){NET.L[x[0]]=x[1];});TREE_CACHE={};}
   }finally{BR_PLAN_T=null;}
@@ -6422,8 +6423,8 @@ planTrip=function(opt,progress){
 var renderPlanBase=renderPlan;
 renderPlan=function(){
   renderPlanBase();
-  var P=PL.plan,a=P&&P.avoided;
-  if(a&&a.length)$('planres').insertAdjacentHTML('afterbegin',bannerH('i','Route meidet Durchfahrt','Mast passt nicht unter: '+esc(a.join(', '))+'. Der Plan führt außen herum.'));
+  var a=PL.plan?BR_AVOIDED:[];   // the stored plan keeps no such field; a plan restored after a reload shows no note
+  if(a.length)$('planres').insertAdjacentHTML('afterbegin',bannerH('i','Route meidet Durchfahrt','Mast passt nicht unter: '+esc(a.join(', '))+'. Der Plan führt außen herum.'));
 };
 R.hooks.routeBridges=routeBridges;                                   // trip planner: bridges along a route
 R.hooks.contactOf=function(bid){var b=BR_BY_ID[bid];return b?bridgeContactHTML(b):'';};
