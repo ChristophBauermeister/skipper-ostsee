@@ -1006,11 +1006,14 @@ function sunTimes(lat,lon,date){
 }
 /* default boat of the package (revier.json "defaultBoat"): first profile and start values of the boat tab */
 var DB=REVIER.defaultBoat;
-var DEFAULT_BOAT={profile:'',name:'',call:'',mmsi:'',type:DB.type,loa:DB.loa,beam:DB.beam,draft:DB.draft,mast:DB.mast,margin:DB.margin,bridgeMargin:DB.bridgeMargin};
+var DEFAULT_BOAT={profile:'',name:'',call:'',mmsi:'',type:DB.type,loa:DB.loa,beam:DB.beam,draft:DB.draft,mast:DB.mast,margin:DB.margin,bridgeMargin:DB.bridgeMargin,
+  lwl:DB.lwl==null?null:DB.lwl,tank:DB.tank==null?null:DB.tank,fuel:DB.fuel==null?null:DB.fuel};
+/* name/call sign/MMSI are never prefilled from a demo profile: they go into the MAYDAY text */
 
 function buildProfiles(){
   // owner-confirmed boat first = default; mast/draft are owner statements (19.10.2026)
   var out=[Object.assign({},DB.profile)];
+  (DB.more||[]).forEach(function(p){out.push(Object.assign({},p));});   // further package profiles (e.g. owner boat behind a demo boat)
   (BOATS.variants||[]).forEach(function(v){
     if(!v.loa_m||!v.keels||!v.keels.length)return;
     var base=String(v.name).replace(/\s*\(.*$/,''),yr=String(v.years||'').replace(/\s*\(.*$/,'').trim();
@@ -3446,7 +3449,8 @@ function renderBootNotes(){
   var cp=PROFILES.filter(function(x){return x.id===S.boat.profile;})[0];
   var own=!!(cp&&cp.mastOwner&&S.boat.mast===cp.mast);
   $('bt-mast').style.display=own?'none':'block';
-  $('bt-src').style.display=own?'block':'none';$('bt-src').textContent=own?cp.note:'';
+  var showSrc=!!(cp&&cp.note&&(own||cp.demo));
+  $('bt-src').style.display=showSrc?'block':'none';$('bt-src').textContent=showSrc?cp.note:'';
   $('bt-kat').style.display=S.boat.type==='kat'?'block':'none';
   if($('bt-hull'))$('bt-hull').textContent=hullSpeedText(S.boat,num($('b-speed').value)||S.speed);
   $('bt-first').style.display=S.confirmed?'none':'block';
@@ -3478,6 +3482,8 @@ function applyProfile(id){
   var b=S.boat;b.profile=p.id;
   if(p.id!=='custom'){
     b.type=p.type;b.loa=p.loa==null?null:p.loa;b.beam=p.beam==null?null:p.beam;b.draft=p.draft==null?null:p.draft;b.mast=p.mast==null?null:p.mast;
+    if('lwl' in p||'tank' in p||'fuel' in p||p.demo){b.lwl=p.lwl==null?null:p.lwl;b.tank=p.tank==null?null:p.tank;b.fuel=p.fuel==null?null:p.fuel;}
+    else{var q=PROFILES.filter(function(x){return x.lwl!=null||x.tank!=null;});if(q.some(function(x){return x.lwl===b.lwl&&x.tank===b.tank;})){b.lwl=null;b.tank=null;b.fuel=null;}}   // do not carry the demo boat's LWL/tank/consumption over to another boat
   }
   bootToUI();saveProfile();update();
 }
