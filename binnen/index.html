@@ -33,6 +33,7 @@ h2{font-size:1.15rem;margin:14px 0 8px}
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
 .chip{border:2px solid var(--line);background:var(--chip);border-radius:999px;padding:6px 12px;font-weight:700;font-size:.85rem;cursor:pointer}
 .chip.on{background:var(--head);color:#fff;border-color:var(--head)}
+.ac{position:relative}.acl{position:absolute;left:0;right:0;top:100%;z-index:30;background:var(--card);border:1px solid var(--line);border-radius:10px;box-shadow:0 6px 18px rgba(0,0,0,.25);max-height:55vh;overflow:auto;display:none}.acl.on{display:block}.acl button{display:block;width:100%;text-align:left;padding:11px 12px;border:0;border-bottom:1px solid var(--line);background:none;color:inherit;font:inherit}.acl button:last-child{border-bottom:0}
 .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin:8px 0}
 .card .t{font-weight:800;font-size:1.02rem}
 .meta{color:var(--mute);font-size:.85rem}
@@ -88,10 +89,9 @@ label{font-weight:700;font-size:.85rem;display:block;margin:8px 0 2px}
 <section class="screen" id="scr-toern">
   <div class="cols"><div>
   <h2>Törnplanung</h2>
-  <label for="t-from">Start</label><input id="t-from" list="t-places" placeholder="Hafen, Ort oder Schleuse">
+  <label for="t-from">Start</label><div class="ac"><input id="t-from" autocomplete="off" placeholder="Hafen, Ort oder Schleuse"><div class="acl" id="t-from-ac"></div></div>
   <button class="btn sec sm" id="t-here">◎ Meine Position als Start</button>
-  <label for="t-to">Ziel</label><input id="t-to" list="t-places" placeholder="Hafen, Ort oder Schleuse">
-  <datalist id="t-places"></datalist>
+  <label for="t-to">Ziel</label><div class="ac"><input id="t-to" autocomplete="off" placeholder="Hafen, Ort oder Schleuse"><div class="acl" id="t-to-ac"></div></div>
   <div class="grid2">
     <div><label for="t-speed">Fahrt (km/h)</label><input id="t-speed" inputmode="decimal" value="8"></div>
     <div><label for="t-dep">Abfahrt</label><input id="t-dep" type="datetime-local"></div>
@@ -183,7 +183,7 @@ function dc(x){return LANG==='en'?String(x):String(x).replace('.',',');}
 function locTok(s){if(LANG==='de'||s==null)return s;return String(s).replace(/(^|[^A-Za-zÄÖÜäöüß])(Feiertage|Feiertag|täglich|geschlossen|Uhr|und|Mo|Di|Mi|Do|Fr|Sa|So)(?![A-Za-zäöüß])/g,function(m,a,w){var v=I18N.tok[w];return a+(v&&v[LANG]!=null?v[LANG]:w);});}
 function trDom(){var w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,null),n;while((n=w.nextNode())){if(n.parentNode.closest('script,#list,#detail,#mdetail,#locks,#bridges,#cats,#legend,#charterbox,#nf-charter,#myposout,#cnt,#srcs,#posline,#mattr,#bootmsg,#lang'))continue;if(n._de==null){var tx=n.nodeValue.trim();if(!tx||!I18N.ui[tx])continue;n._de=tx;n._pre=n.nodeValue.slice(0,n.nodeValue.indexOf(tx));n._post=n.nodeValue.slice(n.nodeValue.indexOf(tx)+tx.length);}n.nodeValue=n._pre+t(n._de)+n._post;}
   document.querySelectorAll('[placeholder]').forEach(function(e){if(e._de==null)e._de=e.getAttribute('placeholder');e.setAttribute('placeholder',t(e._de));});document.documentElement.lang=LANG;}
-var VERSION='0.6.3';
+var VERSION='0.6.4';
 var CATS=[['hafen','Häfen','⚓','#0f6e8c'],['anleger','Anleger','⛵','#4aa3c0'],['tanken','Tanken','⛽','#d35400'],['absaugen','Absaugen','🚽','#8e44ad'],['wasser','Wasser','💧','#2e86de'],
   ['essen','Essen','🍽','#c0392b'],['einkauf','Einkauf','🛒','#27ae60'],['charter','Charter','🛥','#16a085'],['slip','Slip','⤓','#7f8c8d'],['werft','Werft','🔧','#555'],
   ['paddel','Paddeln','🛶','#b7950b'],['rast','Wasserwanderrast','⛺','#6d4c41'],['anker','Ankerplatz','⚓','#34495e'],['gas','Gas','🔥','#e67e22'],['muell','Müll','🗑','#566573']];
@@ -506,8 +506,19 @@ function planRoute(){
 function defDep(){var d=new Date();if(d.getHours()>=17||d.getHours()<7){if(d.getHours()>=17)d.setDate(d.getDate()+1);d.setHours(9,0,0,0);}return d;}
 function fitRoute(){if(!S.route)return;var la0=90,la1=-90,lo0=180,lo1=-180;S.route.path.forEach(function(n){var q=NET.nodes[n];la0=Math.min(la0,q[0]);la1=Math.max(la1,q[0]);lo0=Math.min(lo0,q[1]);lo1=Math.max(lo1,q[1]);});
   M.cy=(la0+la1)/2;M.cx=(lo0+lo1)/2;var el=$('map'),W=el.clientWidth||400,H=el.clientHeight||400;for(var z=15;z>=7;z--){M.z=z;if(mx(lo1)-mx(lo0)<W*0.85&&my(la0)-my(la1)<H*0.85)break;}mapRender();}
+// own suggestion list instead of <datalist>: Android WebView/APK and some mobile browsers do not take over a datalist pick
+function acInit(id){var inp=$(id),box=$(id+'-ac');if(!inp||!box||inp.dataset.ac)return;inp.dataset.ac='1';
+  function close(){box.classList.remove('on');box.innerHTML='';}
+  function show(){var v=fold(inp.value.trim());if(!PLACES)PLACES=placeIndex();if(v.length<2){close();return;}
+    var a=[],b=[];for(var i=0;i<PLACES.length&&a.length<12;i++){var f=fold(PLACES[i].n),k=f.indexOf(v);if(k===0)a.push(PLACES[i]);else if(k>0&&b.length<12)b.push(PLACES[i]);}
+    var L=a.concat(b).slice(0,12);if(!L.length||(L.length===1&&fold(L[0].n)===v)){close();return;}
+    box.innerHTML=L.map(function(p,i){return '<button type="button" data-i="'+i+'">'+esc(p.n)+'</button>';}).join('');box.classList.add('on');
+    Array.prototype.forEach.call(box.querySelectorAll('button'),function(btn){btn.addEventListener('pointerdown',function(e){e.preventDefault();inp.value=L[+btn.dataset.i].n;close();inp.blur();});
+      btn.addEventListener('click',function(){inp.value=L[+btn.dataset.i].n;close();});});}
+  inp.addEventListener('input',show);inp.addEventListener('focus',show);inp.addEventListener('blur',function(){setTimeout(close,200);});
+  inp.addEventListener('keydown',function(e){if(e.key==='Escape')close();if(e.key==='Enter'){var f=box.querySelector('button');if(f){inp.value=f.textContent;close();e.preventDefault();}}});}
 function initToern(){
-  if(!PLACES)PLACES=placeIndex();$('t-places').innerHTML=PLACES.map(function(p){return '<option value="'+esc(p.n)+'">';}).join('');
+  if(!PLACES)PLACES=placeIndex();acInit('t-from');acInit('t-to');
   try{var r=JSON.parse(load('skipperBinnen.route')||'null');if(r){$('t-from').value=r.f||'';$('t-to').value=r.t||'';$('t-speed').value=r.s||S.boat.speed||8;}else if(S.boat.speed)$('t-speed').value=String(S.boat.speed).replace('.',',');}catch(e){}
   $('t-here').onclick=function(){gps(function(){$('t-from').value=t('Meine Position');});};
   $('t-go').onclick=planRoute;
