@@ -1,0 +1,146 @@
+[
+ {
+  "id": "berlin-brandenburg",
+  "name": "Berlin, Brandenburg, Mecklenburgische Seenplatte",
+  "bbox": [
+   51.3,
+   11.2,
+   53.8,
+   14.8
+  ],
+  "bytes": 2831066,
+  "pois": 6024,
+  "locks": 66,
+  "bridges": 1154,
+  "nodes": 18516,
+  "pegel": 221
+ },
+ {
+  "id": "mecklenburg-vorpommern",
+  "name": "Mecklenburg-Vorpommern (Elde, Peene, Warnow, Schwerin)",
+  "bbox": [
+   53.0,
+   10.5,
+   54.6,
+   14.5
+  ],
+  "bytes": 1082677,
+  "pois": 4081,
+  "locks": 21,
+  "bridges": 163,
+  "nodes": 7361,
+  "pegel": 106
+ },
+ {
+  "id": "elbe-saale",
+  "name": "Elbe (Hamburg–Dresden), Saale, Elbe-Havel-Kanal",
+  "bbox": [
+   50.6,
+   9.6,
+   53.7,
+   14.5
+  ],
+  "bytes": 3787605,
+  "pois": 9153,
+  "locks": 65,
+  "bridges": 1845,
+  "nodes": 28647,
+  "pegel": 281
+ },
+ {
+  "id": "nordwest",
+  "name": "Nordwest (Weser, Ems, Hunte, Küstenkanal, Mittellandkanal West)",
+  "bbox": [
+   51.8,
+   6.6,
+   53.9,
+   10.6
+  ],
+  "bytes": 1763867,
+  "pois": 4928,
+  "locks": 0,
+  "bridges": 1197,
+  "nodes": 18219,
+  "pegel": 164
+ },
+ {
+  "id": "rhein-ruhr",
+  "name": "Niederrhein, Ruhr, westdeutsche Kanäle",
+  "bbox": [
+   50.6,
+   5.8,
+   52.4,
+   8.8
+  ],
+  "bytes": 920986,
+  "pois": 2466,
+  "locks": 0,
+  "bridges": 765,
+  "nodes": 7542,
+  "pegel": 60
+ },
+ {
+  "id": "mittelrhein-mosel",
+  "name": "Mittelrhein, Mosel, Saar, Lahn",
+  "bbox": [
+   49.0,
+   6.0,
+   50.9,
+   8.4
+  ],
+  "bytes": 706121,
+  "pois": 2020,
+  "locks": 0,
+  "bridges": 604,
+  "nodes": 4412,
+  "pegel": 72
+ },
+ {
+  "id": "oberrhein-neckar",
+  "name": "Oberrhein, Neckar",
+  "bbox": [
+   47.5,
+   7.4,
+   49.9,
+   10.0
+  ],
+  "bytes": 1055466,
+  "pois": 3697,
+  "locks": 0,
+  "bridges": 1043,
+  "nodes": 7853,
+  "pegel": 50
+ },
+ {
+  "id": "main-donau",
+  "name": "Main, Main-Donau-Kanal, Donau",
+  "bbox": [
+   48.2,
+   8.8,
+   50.6,
+   13.9
+  ],
+  "bytes": 1265871,
+  "pois": 3363,
+  "locks": 0,
+  "bridges": 1216,
+  "nodes": 13038,
+  "pegel": 56
+ },
+ {
+  "id": "bayern-seen",
+  "name": "Bayerische Seen und Bodensee",
+  "bbox": [
+   47.2,
+   8.9,
+   48.4,
+   13.1
+  ],
+  "bytes": 564160,
+  "pois": 2518,
+  "locks": 0,
+  "bridges": 0,
+  "nodes": 4286,
+  "pegel": 2
+ }
+]
