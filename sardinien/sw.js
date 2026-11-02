@@ -1,10 +1,15 @@
 /* Offline cache for Skipper-Assistent Sardinien-Korsika. Cache-first, falls back to network; all errors are swallowed. */
-var CACHE='skipper-sardinien-v0.3.1-20261102';
+var CACHE='skipper-sardinien-v0.4.0-20261102';
 var SHARE='skipper-sardinien-share';   // GPX received through the Web Share Target (kept apart from the app cache so updates do not delete it)
 var FAMILY='skipper-sardinien-v';  // only older versions of THIS app's cache are removed (the other app lives on the same origin)
 var FILES=['./','./index.html','./manifest.webmanifest','./icon.svg','./icon-192.png','./icon-512.png','./icon-180.png'];
+var VENDOR=['./vendor/pmtiles.js','./vendor/maplibre-gl.js','./vendor/maplibre-gl.css'];   // offline map pack libraries: cached when first used, carried over to a new version only if an older cache had them
+function carryVendor(c){
+  return caches.keys().then(function(ks){return Promise.all(ks.filter(function(k){return k!==CACHE&&k.indexOf(FAMILY)===0;}).map(function(k){return caches.open(k).then(function(o){return o.match('./vendor/maplibre-gl.js');});}));})
+    .then(function(f){return f.some(Boolean)?c.addAll(VENDOR).catch(function(){}):null;});
+}
 self.addEventListener('install',function(e){
-  e.waitUntil(caches.open(CACHE).then(function(c){return c.addAll(FILES);}).then(function(){return self.skipWaiting();}).catch(function(){}));
+  e.waitUntil(caches.open(CACHE).then(function(c){return c.addAll(FILES).then(function(){return carryVendor(c);});}).then(function(){return self.skipWaiting();}).catch(function(){}));
 });
 self.addEventListener('activate',function(e){
   e.waitUntil(caches.keys().then(function(ks){return Promise.all(ks.filter(function(k){return k!==CACHE&&k.indexOf(FAMILY)===0;}).map(function(k){return caches.delete(k);}));}).then(function(){return self.clients.claim();}).catch(function(){}));
@@ -27,7 +32,10 @@ function handleShare(req){
 self.addEventListener('fetch',function(e){
   if(e.request.method==='POST'&&/\/share-target$/.test(new URL(e.request.url).pathname)){e.respondWith(handleShare(e.request));return;}
   if(e.request.method!=='GET')return;
+  var vendor=/\/vendor\//.test(e.request.url);
   e.respondWith(caches.match(e.request,{ignoreSearch:true}).then(function(r){
-    return r||fetch(e.request).catch(function(){return caches.match('./index.html');});
+    if(r)return r;
+    if(vendor)return fetch(e.request).then(function(n){if(n&&n.ok){var cp=n.clone();caches.open(CACHE).then(function(c){return c.put(e.request,cp);}).catch(function(){});}return n;}).catch(function(){return new Response('',{status:404});});
+    return fetch(e.request).catch(function(){return caches.match('./index.html');});
   }));
 });

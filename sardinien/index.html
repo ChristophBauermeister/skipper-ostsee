@@ -301,6 +301,11 @@ table.wp th{text-transform:none;letter-spacing:0}
 :root[data-theme="night"]{--mapsea:#000;--mapland:#1a0000;--maplandline:#6a1212}
 .tmap{position:relative;margin-top:12px;border:1px solid var(--line);border-radius:8px;overflow:hidden;height:min(62vh,460px);background:var(--mapsea)}
 .tmap-svg{width:100%;height:100%;display:block;touch-action:none;cursor:grab;font-family:inherit}
+.tmap .tmap-gl{position:absolute!important;left:0;top:0;right:0;bottom:0;pointer-events:none;background:#9ccfe8}
+.tmap .tmap-gl canvas{pointer-events:none}
+.tmap-svg{position:relative}
+:root[data-theme="night"] .tmap .tmap-gl canvas{filter:brightness(.34) saturate(.55) sepia(.35) hue-rotate(-25deg)}
+@media (prefers-color-scheme:dark){:root:not([data-theme]) .tmap .tmap-gl canvas{filter:brightness(.55) saturate(.7)}}
 .tmap .sea{fill:var(--mapsea)}
 .tmap .land{fill:var(--mapland);stroke:var(--maplandline);stroke-width:1;vector-effect:non-scaling-stroke}
 .tmap polyline.leg{fill:none;stroke-width:3.5;stroke-linejoin:round;stroke-linecap:round;vector-effect:non-scaling-stroke;cursor:pointer}
@@ -687,6 +692,7 @@ nav button .ic{font-size:1.2rem}
       <p>Wetter: Open-Meteo.com, Modelle u. a. DWD ICON / ICON-Wave (CC BY 4.0).</p>
       <p>Küstenlinie: GSHHG 2.3.7 (NOAA NCEI, LGPL). Tiefen: GEBCO 2026 Grid (gemeinfrei). Beide nicht für die Navigation.</p>
       <p>Online-Seekarte: © OpenStreetMap-Mitwirkende (ODbL), Seezeichen © OpenSeaMap (CC BY-SA 2.0).</p>
+      <p>Kartenpakete (Offline-Grundkarte): © OpenStreetMap-Mitwirkende (ODbL), Basiskarte Protomaps (Produced Work), Schrift Noto Sans (SIL Open Font License 1.1). Darstellung mit MapLibre GL JS (BSD-3-Clause) und pmtiles (BSD-3-Clause), Lizenztexte im Ordner <code>vendor/</code>.</p>
       <p>Hafen-, Ankerplatz- und Funkdaten: Quellen und Quellenart je Eintrag (amtliche Akte, Betreiber, sea-seek, Nautica Assistance, CruisersWiki, Météo Consult u. a.); Regeln aus Ordinanze, Arrêtés und Schutzgebietsreglements. Werte, die nur von Navily stammen, sind nicht übernommen. Version 0.1: Oberfläche nur Deutsch.</p>
       <p>Schrift: Atkinson Hyperlegible, Braille Institute (SIL Open Font License 1.1).</p>
     </div></details>
@@ -738,6 +744,15 @@ nav button .ic{font-size:1.2rem}
     <label class="switch"><input type="checkbox" id="m-online"><span>Seekarte (OpenStreetMap + OpenSeaMap)<small>Lädt nur den Ausschnitt, den du ansiehst. Angesehene Seezeichen bleiben offline verfügbar – vor dem Ablegen die Route mit Netz in den nötigen Zoomstufen ansehen. Die Grundkarte von OpenStreetMap gibt es nur mit Netz, ohne Netz zeigt die App die eigene Küstenlinie.</small></span></label>
     <div class="note small" id="m-tstats"></div>
     <button class="btn sm" id="btn-tclearcache" style="margin-top:6px">Gespeicherte Kartenkacheln löschen</button>
+    <details id="det-mappack" style="display:none"><summary>Kartenpakete (Offline-Grundkarte)</summary><div class="in">
+      <div class="note small">Land, Wasser, Orte und Straßen vollständig ohne Netz: einmal die Kartenpakete für dein Fahrtgebiet laden (Protomaps / OpenStreetMap, je Paket ein Gebiet). Die Karte nutzt ein installiertes Paket, das den ganzen Ausschnitt abdeckt; sonst zeigt die App die eigene Küstenlinie und die Grundkarte nur mit Netz.</div>
+      <div id="mp-urlbox"><label for="mp-url" style="display:block;margin-top:10px">Plattform-URL der Kartenpakete</label>
+      <input type="url" id="mp-url" placeholder="https://…/skipper-maps" autocomplete="off"></div>
+      <div class="grid2" style="margin-top:8px"><button class="btn sm" id="btn-mp-check" type="button" style="display:none">Kartenpakete prüfen</button></div>
+      <div id="mp-list"></div>
+      <progress id="mp-prog" max="100" value="0" style="display:none;width:100%;margin-top:8px"></progress>
+      <div class="note" id="mp-status" role="status" aria-live="polite" style="margin-top:8px"></div>
+    </div></details>
   </div>
   <div class="fgrid" style="margin-top:8px">
     <div class="full"><label for="p-start-q">Start</label><div class="hpick" data-sel="p-start"><input type="search" id="p-start-q" placeholder="Hafen suchen …" autocomplete="off" enterkeyhint="search"><div class="hsug" id="p-start-sug"></div></div><select id="p-start" hidden aria-hidden="true" tabindex="-1"></select></div>
@@ -801,6 +816,7 @@ var COAST={"version":"coast-1","z":10,"source":"GSHHG 2.3.7 full (NOAA NCEI, LGP
 var MISSING=[{"id":"it-asinara-fornelli","name":"Asinara – Fornelli (Bojenfeld, S-Spitze)","country":"IT","region":"Golfo dell'Asinara","type":"bojenfeld","area":"nord","reason":"Keine belegte Koordinate in der Recherche – nicht in Karte, Liste und Planer; nächste Recherche: Position beschaffen."},{"id":"it-mangiavolpe","name":"La Maddalena – Cala Mangiavolpe (Ecomar / Genesa)","country":"IT","region":"Palau/La Maddalena","type":"marina","area":"nord","reason":"Keine belegte Koordinate in der Recherche – nicht in Karte, Liste und Planer; nächste Recherche: Position beschaffen."},{"id":"it-camiciotto","name":"La Maddalena – Cala Camiciotto","country":"IT","region":"Palau/La Maddalena","type":"marina","area":"nord","reason":"Keine belegte Koordinate in der Recherche – nicht in Karte, Liste und Planer; nächste Recherche: Position beschaffen."},{"id":"it-marinadelponte","name":"La Maddalena – Marina del Ponte (Brücke Caprera)","country":"IT","region":"Palau/La Maddalena","type":"marina","area":"nord","reason":"Keine belegte Koordinate in der Recherche – nicht in Karte, Liste und Planer; nächste Recherche: Position beschaffen."},{"id":"it-stagnali","name":"Caprera – Cala Stagnali","country":"IT","region":"Palau/La Maddalena","type":"ankerbucht","area":"nord","reason":"Keine belegte Koordinate in der Recherche – nicht in Karte, Liste und Planer; nächste Recherche: Position beschaffen."},{"id":"it-cugnana-marina","name":"Marina di Cugnana","country":"IT","region":"Golfo di Cugnana","type":"marina","area":"nord","reason":"Keine belegte Koordinate in der Recherche – nicht in Karte, Liste und Planer; nächste Recherche: Position beschaffen."},{"id":"fr-tizzano","name":"Tizzano (Hafen + Calanque)","country":"FR","region":"Südwestküste","type":"hafen","area":"korsika","reason":"Keine belegte Koordinate in der Recherche – nicht in Karte, Liste und Planer; nächste Recherche: Position beschaffen."},{"id":"fr-lava","name":"Golfe de Lava (N Ajaccio) – SPERRGEBIET prüfen","country":"FR","region":"Golfe de Lava","type":"ankerbucht","area":"korsika","reason":"Keine belegte Koordinate in der Recherche – nicht in Karte, Liste und Planer; nächste Recherche: Position beschaffen."},{"id":"fr-pianottoli","name":"Pianottoli-Caldarello (Golfe de Figari)","country":"FR","region":"Südwestküste","type":"hafen","reason":"Keine Position belegbar (Neubelegung 02.11.2026)"},{"id":"fr-bastia-vieuxport","name":"Bastia Vieux Port","country":"FR","region":"Ostküste/Bastia","type":"hafen","reason":"Keine Position belegbar (Neubelegung 02.11.2026)"},{"id":"fr-galeria","name":"Galéria (Port + ZMEL)","country":"FR","region":"Westküste Nord","type":"bojenfeld","reason":"Keine Position belegbar (Neubelegung 02.11.2026)"},{"id":"fr-girolata","name":"Girolata (Bojenfeld/Port-abri)","country":"FR","region":"Golfe de Girolata/Scandola","type":"bojenfeld","reason":"Keine Position belegbar (Neubelegung 02.11.2026)"},{"id":"fr-sagone","name":"Sagone (Bojenfeld)","country":"FR","region":"Golfe de Sagone","type":"bojenfeld","reason":"Keine Position belegbar (Neubelegung 02.11.2026)"},{"id":"fr-pietrosella","name":"Pietrosella / Isolella (ZMEL, Golfe d'Ajaccio Süd)","country":"FR","region":"Golfe d'Ajaccio","type":"bojenfeld","reason":"Keine Position belegbar (Neubelegung 02.11.2026)"},{"id":"fr-portopollo","name":"Porto Pollo (Port J.-B. Tomi + ZMEL)","country":"FR","region":"Golfe du Valinco","type":"hafen","reason":"Keine Position belegbar (Neubelegung 02.11.2026)"},{"id":"it-santa-maria-navarrese","name":"Marina di Baunei – Santa Maria Navarrese","country":"IT","region":"Ogliastra","type":"marina","reason":"Keine Position belegbar (Neubelegung 02.11.2026)"},{"id":"it-porto-corallo","name":"Marina di Villaputzu – Porto Corallo","country":"IT","region":"Sarrabus / Costa Rei","type":"marina","reason":"Keine Position belegbar (Neubelegung 02.11.2026)"}];
 var I18N_DATA={};
 var HPOI={};
+var MAPSTYLE={"version":8,"name":"Skipper offline (Protomaps light, sunlight)","glyphs":"skfont://{fontstack}/{range}","sources":{"protomaps":{"type":"vector","url":"pmtiles://PACK","attribution":""}},"layers":[{"id":"background","type":"background","paint":{"background-color":"#9ccfe8"}},{"id":"earth","type":"fill","filter":["==","$type","Polygon"],"source":"protomaps","source-layer":"earth","paint":{"fill-color":"#f3edd7"}},{"id":"landcover","type":"fill","source":"protomaps","source-layer":"landcover","paint":{"fill-color":["match",["get","kind"],"grassland","rgba(210, 239, 207, 1)","barren","rgba(255, 243, 215, 1)","urban_area","rgba(230, 230, 230, 1)","farmland","rgba(216, 239, 210, 1)","glacier","rgba(255, 255, 255, 1)","scrub","rgba(234, 239, 210, 1)","rgba(196, 231, 210, 1)"],"fill-opacity":["interpolate",["linear"],["zoom"],5,1,7,0]}},{"id":"landuse_park","type":"fill","source":"protomaps","source-layer":"landuse","filter":["in","kind","national_park","park","cemetery","protected_area","nature_reserve","forest","golf_course","wood","scrub","grassland","grass","glacier","sand","military","naval_base","airfield"],"paint":{"fill-opacity":["interpolate",["linear"],["zoom"],6,0,11,1],"fill-color":["case",["in",["get","kind"],["literal",["national_park","park","cemetery","protected_area","nature_reserve","forest","golf_course"]]],"#bfd9a2",["==",["get","kind"],"wood"],"#b4d197",["in",["get","kind"],["literal",["scrub","grassland","grass"]]],"#c4d6a6",["==",["get","kind"],"glacier"],"#e7e7e7",["==",["get","kind"],"sand"],"#efe3b5",["in",["get","kind"],["literal",["military","naval_base","airfield"]]],"#c6dcdc","#f3edd7"]}},{"id":"landuse_urban_green","type":"fill","source":"protomaps","source-layer":"landuse","filter":["in","kind","allotments","village_green","playground"],"paint":{"fill-color":"#bfd9a2","fill-opacity":0.7}},{"id":"landuse_hospital","type":"fill","source":"protomaps","source-layer":"landuse","filter":["==","kind","hospital"],"paint":{"fill-color":"#efdcd6"}},{"id":"landuse_industrial","type":"fill","source":"protomaps","source-layer":"landuse","filter":["==","kind","industrial"],"paint":{"fill-color":"#dedbd0"}},{"id":"landuse_school","type":"fill","source":"protomaps","source-layer":"landuse","filter":["in","kind","school","university","college"],"paint":{"fill-color":"#eee3cf"}},{"id":"landuse_beach","type":"fill","source":"protomaps","source-layer":"landuse","filter":["in","kind","beach"],"paint":{"fill-color":"#efe3b5"}},{"id":"landuse_zoo","type":"fill","source":"protomaps","source-layer":"landuse","filter":["in","kind","zoo"],"paint":{"fill-color":"#c6dcdc"}},{"id":"landuse_aerodrome","type":"fill","source":"protomaps","source-layer":"landuse","filter":["in","kind","aerodrome"],"paint":{"fill-color":"#dadbdf"}},{"id":"roads_runway","type":"line","source":"protomaps","source-layer":"roads","filter":["==","kind_detail","runway"],"paint":{"line-color":"#e9e9ed","line-width":["interpolate",["exponential",1.6],["zoom"],10,0,12,4,18,30]}},{"id":"roads_taxiway","type":"line","source":"protomaps","source-layer":"roads","minzoom":13,"filter":["==","kind_detail","taxiway"],"paint":{"line-color":"#e9e9ed","line-width":["interpolate",["exponential",1.6],["zoom"],13,0,13.5,1,15,6]}},{"id":"landuse_runway","type":"fill","source":"protomaps","source-layer":"landuse","filter":["any",["in","kind","runway","taxiway"]],"paint":{"fill-color":"#e9e9ed"}},{"id":"water","type":"fill","filter":["==","$type","Polygon"],"source":"protomaps","source-layer":"water","paint":{"fill-color":"#9ccfe8"}},{"id":"water_stream","type":"line","source":"protomaps","source-layer":"water","minzoom":14,"filter":["in","kind","stream"],"paint":{"line-color":"#9ccfe8","line-width":0.5}},{"id":"water_river","type":"line","source":"protomaps","source-layer":"water","minzoom":9,"filter":["in","kind","river"],"paint":{"line-color":"#9ccfe8","line-width":["interpolate",["exponential",1.6],["zoom"],9,0,9.5,1,18,12]}},{"id":"landuse_pedestrian","type":"fill","source":"protomaps","source-layer":"landuse","filter":["in","kind","pedestrian","dam"],"paint":{"fill-color":"#ece6d0"}},{"id":"landuse_pier","type":"fill","source":"protomaps","source-layer":"landuse","filter":["==","kind","pier"],"paint":{"fill-color":"#cbbf9c"}},{"id":"roads_tunnels_other_casing","type":"line","source":"protomaps","source-layer":"roads","filter":["all",["has","is_tunnel"],["in","kind","other","path"]],"paint":{"line-color":"#e0e0e0","line-gap-width":["interpolate",["exponential",1.6],["zoom"],14,0,20,7]}},{"id":"roads_tunnels_minor_casing","type":"line","source":"protomaps","source-layer":"roads","filter":["all",["has","is_tunnel"],["==","kind","minor_road"]],"paint":{"line-color":"#e0e0e0","line-dasharray":[3,2],"line-gap-width":["interpolate",["exponential",1.6],["zoom"],11,0,12.5,0.5,15,2,18,11],"line-width":["interpolate",["exponential",1.6],["zoom"],12,0,12.5,1]}},{"id":"roads_tunnels_link_casing","type":"line","source":"protomaps","source-layer":"roads","filter":["all",["has","is_tunnel"],["has","is_link"]],"paint":{"line-color":"#e0e0e0","line-dasharray":[3,2],"line-gap-width":["interpolate",["exponential",1.6],["zoom"],13,0,13.5,1,18,11],"line-width":["interpolate",["exponential",1.6],["zoom"],12,0,12.5,1]}},{"id":"roads_tunnels_major_casing","type":"line","source":"protomaps","source-layer":"roads","filter":["all",["has","is_tunnel"],["!has","is_bridge"],["==","kind","major_road"]],"paint":{"line-color":"#e0e0e0","line-dasharray":[3,2],"line-gap-width":["interpolate",["exponential",1.6],["zoom"],7,0,7.5,0.5,18,13],"line-width":["interpolate",["exponential",1.6],["zoom"],9,0,9.5,1]}},{"id":"roads_tunnels_highway_casing","type":"line","source":"protomaps","source-layer":"roads","filter":["all",["has","is_tunnel"],["!has","is_bridge"],["==","kind","highway"],["!has","is_link"]],"paint":{"line-color":"#e0e0e0","line-dasharray":[6,0.5],"line-gap-width":["interpolate",["exponential",1.6],["zoom"],3,0,3.5,0.5,18,15],"line-width":["interpolate",["exponential",1.6],["zoom"],7,0,7.5,1,20,15]}},{"id":"roads_tunnels_other","type":"line","source":"protomaps","source-layer":"roads","filter":["all",["has","is_tunnel"],["in","kind","other","path"]],"paint":{"line-color":"#d5d5d5","line-dasharray":[4.5,0.5],"line-width":["interpolate",["exponential",1.6],["zoom"],14,0,20,7]}},{"id":"roads_tunnels_minor","type":"line","source":"protomaps","source-layer":"roads","filter":["all",["has","is_tunnel"],["==","kind","minor_road"]],"paint":{"line-color":"#d5d5d5","line-width":["interpolate",["exponential",1.6],["zoom"],11,0,12.5,0.5,15,2,18,11]}},{"id":"roads_tunnels_link","type":"line","source":"protomaps","source-layer":"roads","filter":["all",["has","is_tunnel"],["has","is_link"]],"paint":{"line-color":"#d5d5d5","line-width":["interpolate",["exponential",1.6],["zoom"],13,0,13.5,1,18,11]}},{"id":"roads_tunnels_major","type":"line","source":"protomaps","source-layer":"roads","filter":["all",["has","is_tunnel"],["==","kind","major_road"]],"paint":{"line-color":"#d5d5d5","line-width":["interpolate",["exponential",1.6],["zoom"],6,0,12,1.6,15,3,18,13]}},{"id":"roads_tunnels_highway","type":"line","source":"protomaps","source-layer":"roads","filter":["all",["has","is_tunnel"],["==",["get","kind"],"highway"],["!",["has","is_link"]]],"paint":{"line-color":"#d5d5d5","line-width":["interpolate",["exponential",1.6],["zoom"],3,0,6,1.1,12,1.6,15,5,18,15]}},{"id":"buildings","type":"fill","source":"protomaps","source-layer":"buildings","filter":["in","kind","building","building_part"],"paint":{"fill-color":"#d8cdae","fill-opacity":0.5}},{"id":"roads_pier","type":"line","source":"protomaps","source-layer":"roads","filter":["==","kind_detail","pier"],"paint":{"line-color":"#cbbf9c","line-width":["interpolate",["exponential",1.6],["zoom"],12,0,12.5,0.5,20,16]}},{"id":"roads_minor_service_casing","type":"line","source":"protomaps","source-layer":"roads","minzoom":13,"filter":["all",["!has","is_tunnel"],["!has","is_bridge"],["==","kind","minor_road"],["==","kind_detail","service"]],"paint":{"line-color":"#c7bd9b","line-gap-width":["interpolate",["exponential",1.6],["zoom"],13,0,18,8],"line-width":["interpolate",["exponential",1.6],["zoom"],13,0,13.5,0.8]}},{"id":"roads_minor_casing","type":"line","source":"protomaps","source-layer":"roads","filter":["all",["!has","is_tunnel"],["!has","is_bridge"],["==","kind","minor_road"],["!=","kind_detail","service"]],"paint":{"line-color":"#b9ad88","line-gap-width":["interpolate",["exponential",1.6],["zoom"],11,0,12.5,0.5,15,2,18,11],"line-width":["interpolate",["exponential",1.6],["zoom"],12,0,12.5,1]}},{"id":"roads_link_casing","type":"line","source":"protomaps","source-layer":"roads","minzoom":13,"filter":["has","is_link"],"paint":{"line-color":"#b9ad88","line-gap-width":["interpolate",["exponential",1.6],["zoom"],13,0,13.5,1,18,11],"line-width":["interpolate",["exponential",1.6],["zoom"],13,0,13.5,1.5]}},{"id":"roads_major_casing_late","type":"line","source":"protomaps","source-layer":"roads","minzoom":12,"filter":["all",["!has","is_tunnel"],["!has","is_bridge"],["==","kind","major_road"]],"paint":{"line-color":"#a8997a","line-gap-width":["interpolate",["exponential",1.6],["zoom"],6,0,12,1.6,15,3,18,13],"line-width":["interpolate",["exponential",1.6],["zoom"],9,0,9.5,1]}},{"id":"roads_highway_casing_late","type":"line","source":"protomaps","source-layer":"roads","minzoom":12,"filter":["all",["!has","is_tunnel"],["!has","is_bridge"],["==","kind","highway"],["!has","is_link"]],"paint":{"line-color":"#8f7f5c","line-gap-width":["interpolate",["exponential",1.6],["zoom"],3,0,3.5,0.5,18,15],"line-width":["interpolate",["exponential",1.6],["zoom"],7,0,7.5,1,20,15]}},{"id":"roads_other","type":"line","source":"protomaps","source-layer":"roads","filter":["all",["!has","is_tunnel"],["!has","is_bridge"],["in","kind","other","path"],["!=","kind_detail","pier"]],"paint":{"line-color":"#f7f2e0","line-width":["interpolate",["exponential",1.6],["zoom"],14,0.5,20,12]}},{"id":"roads_link","type":"line","source":"protomaps","source-layer":"roads","filter":["has","is_link"],"paint":{"line-color":"#fff3c4","line-width":["interpolate",["exponential",1.6],["zoom"],13,0,13.5,1,18,11]}},{"id":"roads_minor_service","type":"line","source":"protomaps","source-layer":"roads","filter":["all",["!has","is_tunnel"],["!has","is_bridge"],["==","kind","minor_road"],["==","kind_detail","service"]],"paint":{"line-color":"#ebebeb","line-width":["interpolate",["exponential",1.6],["zoom"],13,0,18,8]}},{"id":"roads_minor","type":"line","source":"protomaps","source-layer":"roads","filter":["all",["!has","is_tunnel"],["!has","is_bridge"],["==","kind","minor_road"],["!=","kind_detail","service"]],"paint":{"line-color":["interpolate",["exponential",1.6],["zoom"],11,"#ffffff",16,"#ffffff"],"line-width":["interpolate",["exponential",1.6],["zoom"],11,0,12.5,0.5,15,2,18,11]}},{"id":"roads_major_casing_early","type":"line","source":"protomaps","source-layer":"roads","maxzoom":12,"filter":["all",["!has","is_tunnel"],["!has","is_bridge"],["==","kind","major_road"]],"paint":{"line-color":"#a8997a","line-gap-width":["interpolate",["exponential",1.6],["zoom"],7,0,7.5,0.5,18,13],"line-width":["interpolate",["exponential",1.6],["zoom"],9,0,9.5,1]}},{"id":"roads_major","type":"line","source":"protomaps","source-layer":"roads","filter":["all",["!has","is_tunnel"],["!has","is_bridge"],["==","kind","major_road"]],"paint":{"line-color":"#fff3c4","line-width":["interpolate",["exponential",1.6],["zoom"],6,0,12,1.6,15,3,18,13]}},{"id":"roads_highway_casing_early","type":"line","source":"protomaps","source-layer":"roads","maxzoom":12,"filter":["all",["!has","is_tunnel"],["!has","is_bridge"],["==","kind","highway"],["!has","is_link"]],"paint":{"line-color":"#8f7f5c","line-gap-width":["interpolate",["exponential",1.6],["zoom"],3,0,3.5,0.5,18,15],"line-width":["interpolate",["exponential",1.6],["zoom"],7,0,7.5,1]}},{"id":"roads_highway","type":"line","source":"protomaps","source-layer":"roads","filter":["all",["!has","is_tunnel"],["!has","is_bridge"],["==","kind","highway"],["!has","is_link"]],"paint":{"line-color":"#ffd98a","line-width":["interpolate",["exponential",1.6],["zoom"],3,0,6,1.1,12,1.6,15,5,18,15]}},{"id":"roads_rail","type":"line","source":"protomaps","source-layer":"roads","filter":["==","kind","rail"],"paint":{"line-dasharray":[0.3,0.75],"line-opacity":0.5,"line-color":"#6b7478","line-width":["interpolate",["exponential",1.6],["zoom"],3,0,6,0.15,18,9]}},{"id":"boundaries_country","type":"line","source":"protomaps","source-layer":"boundaries","filter":["\u003c=","kind_detail",2],"paint":{"line-color":"#7d6b8a","line-width":0.7,"line-dasharray":["step",["zoom"],["literal",[2,0]],4,["literal",[2,1]]]}},{"id":"boundaries","type":"line","source":"protomaps","source-layer":"boundaries","filter":[">","kind_detail",2],"paint":{"line-color":"#7d6b8a","line-width":0.4,"line-dasharray":["step",["zoom"],["literal",[2,0]],4,["literal",[2,1]]]}},{"id":"roads_bridges_other_casing","type":"line","source":"protomaps","source-layer":"roads","minzoom":12,"filter":["all",["has","is_bridge"],["in","kind","other","path"]],"paint":{"line-color":"#e0e0e0","line-gap-width":["interpolate",["exponential",1.6],["zoom"],14,0,20,7]}},{"id":"roads_bridges_link_casing","type":"line","source":"protomaps","source-layer":"roads","minzoom":12,"filter":["all",["has","is_bridge"],["has","is_link"]],"paint":{"line-color":"#e0e0e0","line-gap-width":["interpolate",["exponential",1.6],["zoom"],13,0,13.5,1,18,11],"line-width":["interpolate",["exponential",1.6],["zoom"],12,0,12.5,1.5]}},{"id":"roads_bridges_minor_casing","type":"line","source":"protomaps","source-layer":"roads","minzoom":12,"filter":["all",["has","is_bridge"],["==","kind","minor_road"]],"paint":{"line-color":"#e0e0e0","line-gap-width":["interpolate",["exponential",1.6],["zoom"],11,0,12.5,0.5,15,2,18,11],"line-width":["interpolate",["exponential",1.6],["zoom"],13,0,13.5,0.8]}},{"id":"roads_bridges_major_casing","type":"line","source":"protomaps","source-layer":"roads","minzoom":12,"filter":["all",["has","is_bridge"],["==","kind","major_road"]],"paint":{"line-color":"#e0e0e0","line-gap-width":["interpolate",["exponential",1.6],["zoom"],7,0,7.5,0.5,18,10],"line-width":["interpolate",["exponential",1.6],["zoom"],9,0,9.5,1.5]}},{"id":"roads_bridges_other","type":"line","source":"protomaps","source-layer":"roads","minzoom":12,"filter":["all",["has","is_bridge"],["in","kind","other","path"]],"paint":{"line-color":"#ebebeb","line-dasharray":[2,1],"line-width":["interpolate",["exponential",1.6],["zoom"],14,0,20,7]}},{"id":"roads_bridges_minor","type":"line","source":"protomaps","source-layer":"roads","minzoom":12,"filter":["all",["has","is_bridge"],["==","kind","minor_road"]],"paint":{"line-color":"#ffffff","line-width":["interpolate",["exponential",1.6],["zoom"],11,0,12.5,0.5,15,2,18,11]}},{"id":"roads_bridges_link","type":"line","source":"protomaps","source-layer":"roads","minzoom":12,"filter":["all",["has","is_bridge"],["has","is_link"]],"paint":{"line-color":"#ffffff","line-width":["interpolate",["exponential",1.6],["zoom"],13,0,13.5,1,18,11]}},{"id":"roads_bridges_major","type":"line","source":"protomaps","source-layer":"roads","minzoom":12,"filter":["all",["has","is_bridge"],["==","kind","major_road"]],"paint":{"line-color":"#f5f5f5","line-width":["interpolate",["exponential",1.6],["zoom"],6,0,12,1.6,15,3,18,13]}},{"id":"roads_bridges_highway_casing","type":"line","source":"protomaps","source-layer":"roads","minzoom":12,"filter":["all",["has","is_bridge"],["==","kind","highway"],["!has","is_link"]],"paint":{"line-color":"#e0e0e0","line-gap-width":["interpolate",["exponential",1.6],["zoom"],3,0,3.5,0.5,18,15],"line-width":["interpolate",["exponential",1.6],["zoom"],7,0,7.5,1,20,15]}},{"id":"roads_bridges_highway","type":"line","source":"protomaps","source-layer":"roads","filter":["all",["has","is_bridge"],["==","kind","highway"],["!has","is_link"]],"paint":{"line-color":"#ffffff","line-width":["interpolate",["exponential",1.6],["zoom"],3,0,6,1.1,12,1.6,15,5,18,15]}},{"id":"address_label","type":"symbol","source":"protomaps","source-layer":"buildings","minzoom":18,"filter":["==","kind","address"],"layout":{"symbol-placement":"point","text-font":["Noto Sans Italic"],"text-field":["get","addr_housenumber"],"text-size":12},"paint":{"text-color":"#54493a","text-halo-color":"#ffffff","text-halo-width":2}},{"id":"water_waterway_label","type":"symbol","source":"protomaps","source-layer":"water","minzoom":13,"filter":["in","kind","river","stream"],"layout":{"symbol-placement":"line","text-font":["Noto Sans Italic"],"text-field":["coalesce",["get","name:de"],["get","pgf:name"],["get","name"]],"text-size":12,"text-letter-spacing":0.2},"paint":{"text-color":"#0b4f73","text-halo-color":"#9ccfe8","text-halo-width":2}},{"id":"roads_labels_minor","type":"symbol","source":"protomaps","source-layer":"roads","minzoom":15,"filter":["in","kind","minor_road","other","path"],"layout":{"symbol-sort-key":["get","min_zoom"],"symbol-placement":"line","text-font":["Noto Sans Regular"],"text-field":["coalesce",["get","name:de"],["get","pgf:name"],["get","name"]],"text-size":12},"paint":{"text-color":"#40382a","text-halo-color":"#ffffff","text-halo-width":2}},{"id":"water_label_ocean","type":"symbol","source":"protomaps","source-layer":"water","filter":["in","kind","sea","ocean","bay","strait","fjord"],"layout":{"text-font":["Noto Sans Italic"],"text-field":["coalesce",["get","name:de"],["get","pgf:name"],["get","name"]],"text-size":["interpolate",["linear"],["zoom"],3,10,10,12],"text-letter-spacing":0.1,"text-max-width":9,"text-transform":"uppercase"},"paint":{"text-color":"#0b4f73","text-halo-width":2,"text-halo-color":"#9ccfe8"}},{"id":"earth_label_islands","type":"symbol","source":"protomaps","source-layer":"earth","filter":["in","kind","island"],"layout":{"text-font":["Noto Sans Italic"],"text-field":["coalesce",["get","name:de"],["get","pgf:name"],["get","name"]],"text-size":10,"text-letter-spacing":0.1,"text-max-width":8},"paint":{"text-color":"#3a3328","text-halo-color":"#ffffff","text-halo-width":2}},{"id":"water_label_lakes","type":"symbol","source":"protomaps","source-layer":"water","filter":["in","kind","lake","water"],"layout":{"text-font":["Noto Sans Italic"],"text-field":["coalesce",["get","name:de"],["get","pgf:name"],["get","name"]],"text-size":["interpolate",["linear"],["zoom"],3,10,6,12,10,12],"text-letter-spacing":0.1,"text-max-width":9},"paint":{"text-color":"#0b4f73","text-halo-color":"#9ccfe8","text-halo-width":2}},{"id":"roads_labels_major","type":"symbol","source":"protomaps","source-layer":"roads","minzoom":11,"filter":["in","kind","highway","major_road"],"layout":{"symbol-sort-key":["get","min_zoom"],"symbol-placement":"line","text-font":["Noto Sans Regular"],"text-field":["coalesce",["get","name:de"],["get","pgf:name"],["get","name"]],"text-size":12},"paint":{"text-color":"#2c2619","text-halo-color":"#ffffff","text-halo-width":2}},{"id":"places_subplace","type":"symbol","source":"protomaps","source-layer":"places","filter":["in","kind","neighbourhood","macrohood"],"layout":{"symbol-sort-key":["case",["has","sort_key"],["get","sort_key"],["get","min_zoom"]],"text-field":["coalesce",["get","name:de"],["get","pgf:name"],["get","name"]],"text-font":["Noto Sans Regular"],"text-max-width":7,"text-letter-spacing":0.1,"text-padding":["interpolate",["linear"],["zoom"],5,2,8,4,12,18,15,20],"text-size":["interpolate",["exponential",1.2],["zoom"],11,8,14,14,18,24],"text-transform":"uppercase"},"paint":{"text-color":"#3a3328","text-halo-color":"#ffffff","text-halo-width":2}},{"id":"places_region","type":"symbol","source":"protomaps","source-layer":"places","filter":["==","kind","region"],"layout":{"symbol-sort-key":["get","sort_key"],"text-field":["coalesce",["get","name:de"],["get","pgf:name"],["get","name"]],"text-font":["Noto Sans Regular"],"text-size":["interpolate",["linear"],["zoom"],3,11,7,16],"text-radial-offset":0.2,"text-anchor":"center","text-transform":"uppercase"},"paint":{"text-color":"#4a4258","text-halo-color":"#ffffff","text-halo-width":2}},{"id":"places_locality","type":"symbol","source":"protomaps","source-layer":"places","filter":["==","kind","locality"],"layout":{"text-field":["coalesce",["get","name:de"],["get","pgf:name"],["get","name"]],"text-font":["case",["\u003c=",["get","min_zoom"],5],["literal",["Noto Sans Medium"]],["literal",["Noto Sans Regular"]]],"symbol-sort-key":["case",["has","sort_key"],["get","sort_key"],["get","min_zoom"]],"text-padding":["interpolate",["linear"],["zoom"],5,3,8,7,12,11],"text-size":["interpolate",["linear"],["zoom"],2,["case",["\u003c",["get","population_rank"],13],8,[">=",["get","population_rank"],13],13,0],4,["case",["\u003c",["get","population_rank"],13],10,[">=",["get","population_rank"],13],15,0],6,["case",["\u003c",["get","population_rank"],12],11,[">=",["get","population_rank"],12],17,0],8,["case",["\u003c",["get","population_rank"],11],11,[">=",["get","population_rank"],11],18,0],10,["case",["\u003c",["get","population_rank"],9],12,[">=",["get","population_rank"],9],20,0],15,["case",["\u003c",["get","population_rank"],8],12,[">=",["get","population_rank"],8],22,0]],"text-justify":"auto","text-variable-anchor":["step",["zoom"],["literal",["bottom","left","right","top"]],8,["literal",["center"]]],"text-radial-offset":0.3},"paint":{"text-color":"#16120b","text-halo-color":"#ffffff","text-halo-width":2}},{"id":"places_country","type":"symbol","source":"protomaps","source-layer":"places","filter":["==","kind","country"],"layout":{"symbol-sort-key":["case",["has","sort_key"],["get","sort_key"],["get","min_zoom"]],"text-field":["format",["coalesce",["get","name:de"],["get","name:en"]],{}],"text-font":["Noto Sans Medium"],"text-size":["interpolate",["linear"],["zoom"],2,["case",["\u003c",["get","population_rank"],10],8,[">=",["get","population_rank"],10],12,0],6,["case",["\u003c",["get","population_rank"],8],10,[">=",["get","population_rank"],8],18,0],8,["case",["\u003c",["get","population_rank"],7],11,[">=",["get","population_rank"],7],20,0]],"icon-padding":["interpolate",["linear"],["zoom"],0,2,14,2,16,20,17,2,22,2],"text-transform":"uppercase"},"paint":{"text-color":"#4a3a6a","text-halo-color":"#f3edd7","text-halo-width":2}}]};
 
 /* =====================================================================
    Package config + extension registry.
@@ -812,7 +828,7 @@ var HPOI={};
      R.crossTitles         titles of the open-water crossing gates      -> core/sea/gates.js
      R.expose              extra members of window.SKIPPER (tests)      -> core/sea/expose.js
    ===================================================================== */
-var REVIER={"id":"sardinien-korsika","title":"Skipper-Assistent Sardinien-Korsika","appName":"Skipper Sardinien-Korsika","type":"sea","licence":true,"storagePrefix":"skipperSard","snapPrefix":"skipper-sardinien","idb":{"db":"skipper-sardinien","tiles":"skipper-sardinien-tiles"},"legalUrl":"https://christophbauermeister.github.io/skipper-ostsee/legal/","langs":["de"],"defaultLang":"de","langMap":{},"countries":["IT","FR"],"countryLabel":{"IT":"Italien (Sardinien)","FR":"Frankreich (Korsika)"},"features":{"planner":true,"bridges":false},"defaultBoat":{"type":"mono","loa":10.5,"beam":3.3,"draft":1.55,"mast":19,"margin":0.3,"bridgeMargin":1,"short":"Dehler 35 CWS","profile":{"id":"owner-dehler35-cws","label":"Dehler 35 CWS (BJ 1994, Flachkiel)","type":"mono","loa":10.5,"beam":3.3,"draft":1.55,"mast":19,"margin":0.3,"bridgeMargin":1,"note":"Länge/Breite: sailboatdata (CWS). Tiefgang und Masthöhe (19,0 m inkl. Antenne und Windex): Angabe Eigner 19.10.2026.","mastOwner":true}},"const":{"datenstand":"02.11.2026","appVersion":"0.3.1","area":{"latMin":38.7,"latMax":43.1,"lonMin":7.9,"lonMax":10},"gates":{"sardkorsika":{"ids":["fr-bonifacio","fr-cavallo","fr-lavezzi-chiesa","fr-lavezzi-grecu","fr-lavezzi-lazarina","fr-lavezzi-ghiuncu","fr-piantarella","fr-paragnanu","fr-santamanza","fr-portovecchio","fr-pv-gulf-north","fr-pv-stagnolu","fr-santagiulia","fr-rondinara","fr-portonovo","fr-palombaggia"],"box":{"latMin":41.3,"latMax":41.7,"lonMin":8.85,"lonMax":9.6}}},"plan":{"defaultStart":"it-olbia-marina","defaultStartFallback":["it-puntaldia","it-porto-san-paolo","it-cagliari-marina-del-sole"]},"sk":{"anchorGust":{"yellow":20,"red":28,"open":15},"posidoniaLoaM":24,"mpaNearNm":0.5,"bonifacio":{"gust":18,"dirs":["W","NW","E","SE"],"area":{"latMin":41.15,"latMax":41.5,"lonMin":8.95,"lonMax":9.6}},"orosei":{"gust":18,"swellH":1.5,"windDirs":["N","NE","E","SE"],"swellDirs":["N","NE","E","SE"],"area":{"latMin":40,"latMax":41,"lonMin":9.45},"gulfLatMax":40.45},"west":{"gust":20,"swellH":2,"windDirs":["SW","W","NW"],"swellDirs":["W","NW"],"area":{"latMin":38.85,"latMax":41.3,"lonMin":7.9,"lonMax":8.85}},"teulada":{"area":{"latMin":38.75,"latMax":39.05,"lonMin":8.4,"lonMax":9.05},"pauseFrom":"06-01","pauseTo":"09-30","ucmTel":"0781 83071"},"capcorse":{"gust":20,"windDirs":["SW","W","NW"],"latMin":42.72},"lava":{"nearNm":3}}},"texts":{"steepSea":"kurze, steile See"},"css":["sk"],"wxBounds":{"lat0":38.5,"lat1":43.3,"lon0":7.7,"lon1":10.2},"mapCenter":{"lat":40.9,"lon":9,"z":6.9}};
+var REVIER={"id":"sardinien-korsika","title":"Skipper-Assistent Sardinien-Korsika","appName":"Skipper Sardinien-Korsika","type":"sea","licence":true,"storagePrefix":"skipperSard","snapPrefix":"skipper-sardinien","idb":{"db":"skipper-sardinien","tiles":"skipper-sardinien-tiles"},"mapPackBase":"https://github.com/ChristophBauermeister/skipper-ostsee/releases/download/maps-latest","mapPacks":[{"id":"sardinien-korsika","title":"Sardinien und Korsika","bbox":[7.8,38.7,10.2,43.2]}],"legalUrl":"https://christophbauermeister.github.io/skipper-ostsee/legal/","langs":["de"],"defaultLang":"de","langMap":{},"countries":["IT","FR"],"countryLabel":{"IT":"Italien (Sardinien)","FR":"Frankreich (Korsika)"},"features":{"planner":true,"bridges":false},"defaultBoat":{"type":"mono","loa":10.5,"beam":3.3,"draft":1.55,"mast":19,"margin":0.3,"bridgeMargin":1,"short":"Dehler 35 CWS","profile":{"id":"owner-dehler35-cws","label":"Dehler 35 CWS (BJ 1994, Flachkiel)","type":"mono","loa":10.5,"beam":3.3,"draft":1.55,"mast":19,"margin":0.3,"bridgeMargin":1,"note":"Länge/Breite: sailboatdata (CWS). Tiefgang und Masthöhe (19,0 m inkl. Antenne und Windex): Angabe Eigner 19.10.2026.","mastOwner":true}},"const":{"datenstand":"02.11.2026","appVersion":"0.4.0","area":{"latMin":38.7,"latMax":43.1,"lonMin":7.9,"lonMax":10},"gates":{"sardkorsika":{"ids":["fr-bonifacio","fr-cavallo","fr-lavezzi-chiesa","fr-lavezzi-grecu","fr-lavezzi-lazarina","fr-lavezzi-ghiuncu","fr-piantarella","fr-paragnanu","fr-santamanza","fr-portovecchio","fr-pv-gulf-north","fr-pv-stagnolu","fr-santagiulia","fr-rondinara","fr-portonovo","fr-palombaggia"],"box":{"latMin":41.3,"latMax":41.7,"lonMin":8.85,"lonMax":9.6}}},"plan":{"defaultStart":"it-olbia-marina","defaultStartFallback":["it-puntaldia","it-porto-san-paolo","it-cagliari-marina-del-sole"]},"sk":{"anchorGust":{"yellow":20,"red":28,"open":15},"posidoniaLoaM":24,"mpaNearNm":0.5,"bonifacio":{"gust":18,"dirs":["W","NW","E","SE"],"area":{"latMin":41.15,"latMax":41.5,"lonMin":8.95,"lonMax":9.6}},"orosei":{"gust":18,"swellH":1.5,"windDirs":["N","NE","E","SE"],"swellDirs":["N","NE","E","SE"],"area":{"latMin":40,"latMax":41,"lonMin":9.45},"gulfLatMax":40.45},"west":{"gust":20,"swellH":2,"windDirs":["SW","W","NW"],"swellDirs":["W","NW"],"area":{"latMin":38.85,"latMax":41.3,"lonMin":7.9,"lonMax":8.85}},"teulada":{"area":{"latMin":38.75,"latMax":39.05,"lonMin":8.4,"lonMax":9.05},"pauseFrom":"06-01","pauseTo":"09-30","ucmTel":"0781 83071"},"capcorse":{"gust":20,"windDirs":["SW","W","NW"],"latMin":42.72},"lava":{"nearNm":3}}},"texts":{"steepSea":"kurze, steile See"},"css":["sk"],"wxBounds":{"lat0":38.5,"lat1":43.3,"lon0":7.7,"lon1":10.2},"mapCenter":{"lat":40.9,"lon":9,"z":6.9}};
 /* packages without bridges (Sardinia-Corsica) set revier.json features.bridges=false: only affects explanatory texts */
 var HAS_BRIDGES=!(REVIER.features&&REVIER.features.bridges===false);
 /* default map view when no position/route is known (revier.json "mapCenter"; Baltic as before) */
@@ -1403,10 +1419,11 @@ function mapRender(){
   var r0=MAP.svg.getBoundingClientRect();if(r0.width<2||r0.height<2)return;
   var v=mapView();
   MAP.svg.setAttribute('viewBox',v.x+' '+v.y+' '+v.w+' '+v.h);
-  var net=navigator.onLine!==false;
-  $('m-coast').style.display=(MAP.online&&(net||CONST.map.baseOffline))?'none':'';
-  mapTiles(v);mapMarks(v);
-  $('m-attr').textContent=MAP.online?((net||CONST.map.baseOffline)?'© OpenStreetMap-Mitwirkende · Seezeichen © OpenSeaMap':'Küste: GSHHG, vereinfacht · Seezeichen © OpenSeaMap'):'Küste: GSHHG, vereinfacht · keine Seekarte';
+  var net=navigator.onLine!==false,gl=packSync(MAP,MAP.el,v);   // installed offline base map pack (mappack.js) replaces coastline + OSM tiles
+  $('m-coast').style.display=(gl||(MAP.online&&(net||CONST.map.baseOffline)))?'none':'';
+  MAP.svg.querySelector('.sea').style.display=gl?'none':'';
+  mapTiles(v,gl);mapMarks(v);
+  $('m-attr').textContent=gl?packAttr(MAP.online):MAP.online?((net||CONST.map.baseOffline)?'© OpenStreetMap-Mitwirkende · Seezeichen © OpenSeaMap':'Küste: GSHHG, vereinfacht · Seezeichen © OpenSeaMap'):'Küste: GSHHG, vereinfacht · keine Seekarte';
 }
 /* ---- viewed-tile store (SPEC §15.4): only tiles the skipper actually looked at are kept, never prefetched.
    OSM tile usage policy: offline use of tile.openstreetmap.org is not permitted; re-visits from a local cache
@@ -1451,10 +1468,11 @@ function renderTileStats(){
     if(nc.length)el.textContent+=' '+nc.join(', ')+' erlaubt kein Speichern – diese Ebene nur online.';
   });
 }
-function mapTiles(v){tilesFor(MAP,$('m-tiles'),$('m-seamark'),v,MAP.online);}
+function mapTiles(v,noBase){tilesFor(MAP,$('m-tiles'),$('m-seamark'),v,MAP.online,noBase);}
 function mapOnline(){return MAP.svg?MAP.online:load(sk('mapOnline'))==='1';}
-function tilesFor(MAP,g,gs,v,online){   // MAP = any map state {z,tz,tiles}
+function tilesFor(MAP,g,gs,v,online,noBase){   // MAP = any map state {z,tz,tiles}; noBase: the offline map pack is the base map, only seamarks are drawn
   if(!online){if(MAP.tz!==null){g.innerHTML='';gs.innerHTML='';MAP.tiles={};MAP.tz=null;}return;}
+  noBase=!!noBase;if(MAP.nb!==noBase){g.innerHTML='';gs.innerHTML='';MAP.tiles={};MAP.tz=null;MAP.nb=noBase;}
   var zi=Math.max(CONST.map.tileMin,Math.min(CONST.map.tileMax,Math.round(MAP.z)));
   if(zi!==MAP.tz){g.innerHTML='';gs.innerHTML='';MAP.tiles={};MAP.tz=zi;}
   var ts=256*Math.pow(2,MAPZ-zi),n=Math.pow(2,zi);
@@ -1463,7 +1481,7 @@ function tilesFor(MAP,g,gs,v,online){   // MAP = any map state {z,tz,tiles}
   for(var tx=x0;tx<=x1;tx++)for(var ty=y0;ty<=y1;ty++){
     var k=zi+'/'+tx+'/'+ty;if(MAP.tiles[k])continue;MAP.tiles[k]=1;
     var xx=((tx%n)+n)%n;
-    [[g,CONST.map.baseUrl,{offline:CONST.map.baseOffline,maxAgeD:CONST.map.baseMaxAgeD}],[gs,CONST.map.seamarkUrl,{offline:CONST.map.seamarkOffline}]].forEach(function(p){
+    [[g,CONST.map.baseUrl,{offline:CONST.map.baseOffline,maxAgeD:CONST.map.baseMaxAgeD}],[gs,CONST.map.seamarkUrl,{offline:CONST.map.seamarkOffline}]].slice(noBase?1:0).forEach(function(p){
       var im=document.createElementNS('http://www.w3.org/2000/svg','image');
       var u=p[1].replace('{z}',zi).replace('{x}',xx).replace('{y}',ty),tz=zi;
       TILES.src(u,p[2]).then(function(src){if(!src||MAP.tz!==tz||!im.isConnected){if(src&&src.indexOf('blob:')===0)URL.revokeObjectURL(src);return;}
@@ -1523,6 +1541,404 @@ function renderMap(){
   if(has)requestAnimationFrame(function(){mapFit(null);});
   else if(!MAP.didInitView){MAP.didInitView=true;var h=BY_ID[PL.start];if(h){var m=merc(h.lat,h.lon);MAP.cx=m.x;MAP.cy=m.y;MAP.z=CONST.map.pickZ;}mapRender();}
   if(typeof renderGpxImport==='function')renderGpxImport();   // imported GPX route (sea packages)
+}
+/* =====================================================================
+   OFFLINE MAP PACK STORAGE BACKENDS (SPEC_tiles.md section 3), used by mappack.js. Both backends offer the same Promise calls:
+     ok() | manifest(base) | load(id) -> {meta,mk(),key}|null | fontHave/fontPut/fontRead | fetchPack(id,e,url,prog,ctl) -> file name (verified, not yet referenced)
+     commit(id,meta) | drop(id,file) | remove(id) | clean(id,meta) | storageFree() | persist()
+   web    : OPFS, needs a CORS-enabled mirror (own platform URL): GitHub release assets answer without Access-Control-Allow-Origin
+   native : Capacitor Filesystem.downloadFile (native HTTP, follows the GitHub redirect, no CORS) + MapPack plugin (byte ranges, SHA-256);
+            Capacitor's local server ignores the Range offset for files, so a plain FetchSource on convertFileSrc() would return wrong bytes
+   ===================================================================== */
+/* ---- SHA-256, incremental (WebCrypto cannot hash a stream; the pack is hashed while it arrives) ---- */
+var SHA_K=[0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2];
+function Sha256(){this.h=new Int32Array([0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19]);this.b=new Uint8Array(64);this.n=0;this.len=0;this.w=new Int32Array(64);}
+Sha256.prototype.block=function(p,o){
+  var w=this.w,h=this.h,i,t1,t2;
+  for(i=0;i<16;i++,o+=4)w[i]=(p[o]<<24)|(p[o+1]<<16)|(p[o+2]<<8)|p[o+3];
+  for(i=16;i<64;i++){var a=w[i-15],b=w[i-2];w[i]=((((b>>>17)|(b<<15))^((b>>>19)|(b<<13))^(b>>>10))+w[i-7]+(((a>>>7)|(a<<25))^((a>>>18)|(a<<14))^(a>>>3))+w[i-16])|0;}
+  var A=h[0],B=h[1],C=h[2],D=h[3],E=h[4],F=h[5],G=h[6],H=h[7];
+  for(i=0;i<64;i++){
+    t1=(H+(((E>>>6)|(E<<26))^((E>>>11)|(E<<21))^((E>>>25)|(E<<7)))+((E&F)^(~E&G))+SHA_K[i]+w[i])|0;
+    t2=((((A>>>2)|(A<<30))^((A>>>13)|(A<<19))^((A>>>22)|(A<<10)))+((A&B)^(A&C)^(B&C)))|0;
+    H=G;G=F;F=E;E=(D+t1)|0;D=C;C=B;B=A;A=(t1+t2)|0;
+  }
+  h[0]=(h[0]+A)|0;h[1]=(h[1]+B)|0;h[2]=(h[2]+C)|0;h[3]=(h[3]+D)|0;h[4]=(h[4]+E)|0;h[5]=(h[5]+F)|0;h[6]=(h[6]+G)|0;h[7]=(h[7]+H)|0;
+};
+Sha256.prototype.update=function(u){
+  var i=0,l=u.length;this.len+=l;
+  if(this.n){while(i<l&&this.n<64)this.b[this.n++]=u[i++];if(this.n===64){this.block(this.b,0);this.n=0;}}
+  for(;i+64<=l;i+=64)this.block(u,i);
+  while(i<l)this.b[this.n++]=u[i++];
+  return this;
+};
+Sha256.prototype.hex=function(){
+  var bits=this.len*8,pad=new Uint8Array(((this.len+9+63)&~63)-this.len),k;
+  pad[0]=0x80;var hi=Math.floor(bits/4294967296),lo=bits>>>0;
+  for(k=0;k<4;k++){pad[pad.length-8+k]=(hi>>>(24-8*k))&255;pad[pad.length-4+k]=(lo>>>(24-8*k))&255;}
+  this.update(pad);
+  var s='';for(k=0;k<8;k++)s+=('00000000'+(this.h[k]>>>0).toString(16)).slice(-8);
+  return s;
+};
+
+function packFontKey(name,range){return 'f.'+name.replace(/ /g,'_')+'.'+range+'.pbf';}   // "Noto Sans Regular","0-255" -> f.Noto_Sans_Regular.0-255.pbf
+function packUrl(base,file){return base+'/'+String(file).split('/').map(encodeURIComponent).join('/');}
+function packErrText(e){
+  var n=(e&&e.name||'')+' '+(e&&e.message||'');
+  if(/Quota|ENOSPC|No space/i.test(n))return 'Nicht genug Speicher auf dem Gerät – Platz schaffen und erneut versuchen.';
+  if(e&&e.name==='AbortError')return 'Abgebrochen.';
+  return 'Fehler: '+String(e&&e.message||e);
+}
+function packFetchJson(u){return fetch(u,{cache:'no-store',credentials:'omit'}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();});}
+function packPartName(e){return e.file.replace(/\.pmtiles$/,'')+'-'+e.sha256.slice(0,8)+'.pmtiles';}
+
+/* ---- OPFS backend (web) ---- */
+var PACK_WORKER_SRC="var h,n=0;onmessage=function(e){var m=e.data;function ok(){postMessage({id:m.id,ok:1});}function er(x){postMessage({id:m.id,err:String(x&&x.name||x)});}"
+  +"try{if(m.op==='open'){navigator.storage.getDirectory().then(function(r){return r.getDirectoryHandle(m.dir);}).then(function(d){return d.getFileHandle(m.name,{create:true});}).then(function(f){return f.createSyncAccessHandle();}).then(function(a){h=a;h.truncate(0);n=0;ok();}).catch(er);}"
+  +"else if(m.op==='write'){h.write(new Uint8Array(m.buf),{at:n});n+=m.buf.byteLength;ok();}else if(m.op==='close'){h.flush();h.close();ok();}else if(m.op==='abort'){try{h.close();}catch(x){}ok();}}catch(x){er(x);}};";
+var POPFS={kind:'opfs',forceWorker:false,
+  ok:function(){try{return !!(window.isSecureContext&&location.protocol!=='file:'&&navigator.storage&&typeof navigator.storage.getDirectory==='function');}catch(e){return false;}},
+  dir:function(name){return navigator.storage.getDirectory().then(function(r){return r.getDirectoryHandle(name,{create:true});});},
+  pdir:function(id,nocreate){return nocreate?navigator.storage.getDirectory().then(function(r){return r.getDirectoryHandle('skmap-'+id);}):this.dir('skmap-'+id);},
+  fdir:function(){return this.dir('skmap-fonts');},
+  /* createWritable where it exists, otherwise a dedicated worker with a sync access handle (Safari) */
+  writer:function(dirName,dir,name){
+    var self=this;
+    return dir.getFileHandle(name,{create:true}).then(function(fh){
+      if(!self.forceWorker&&typeof fh.createWritable==='function')return fh.createWritable().then(function(w){
+        return {write:function(u8){return w.write(u8);},close:function(){return w.close();},abort:function(){return w.abort().catch(function(){});}};
+      });
+      return new Promise(function(res,rej){
+        var wk=new Worker(URL.createObjectURL(new Blob([PACK_WORKER_SRC],{type:'text/javascript'}))),seq=0,wait={};
+        function call(m,tr){return new Promise(function(a,b){m.id=++seq;wait[m.id]=[a,b];wk.postMessage(m,tr||[]);});}
+        wk.onmessage=function(e){var q=wait[e.data.id];delete wait[e.data.id];if(q){if(e.data.err)q[1](new Error(e.data.err));else q[0]();}};
+        wk.onerror=function(){Object.keys(wait).forEach(function(k){wait[k][1](new Error('Worker'));});};
+        call({op:'open',dir:dirName,name:name}).then(function(){
+          res({write:function(u8){var b=(u8.byteOffset===0&&u8.byteLength===u8.buffer.byteLength)?u8.buffer:u8.buffer.slice(u8.byteOffset,u8.byteOffset+u8.byteLength);return call({op:'write',buf:b},[b]);},
+            close:function(){return call({op:'close'}).then(function(){wk.terminate();});},
+            abort:function(){return call({op:'abort'}).catch(function(){}).then(function(){wk.terminate();});}});
+        },rej);
+      });
+    });
+  },
+  small:function(dirName,dir,name,u8){return this.writer(dirName,dir,name).then(function(w){return w.write(u8).then(function(){return w.close();},function(e){return w.abort().then(function(){throw e;});});});},
+  manifest:function(base){return packFetchJson(base+'/manifest.json');},
+  load:function(id){
+    return this.pdir(id,true).then(function(dir){
+      return dir.getFileHandle('meta.json').then(function(h){return h.getFile();}).then(function(f){return f.text();}).then(function(t){
+        var m=JSON.parse(t);
+        return dir.getFileHandle(m.file).then(function(h){return h.getFile();}).then(function(f){
+          if(f.size!==m.bytes)throw new Error('size');
+          return {meta:m,mk:function(){return new pmtiles.FileSource(f);},key:f.name};   // pmtiles.js is only loaded after the first pack is found: build the Source lazily
+        });
+      }).catch(function(){return null;});
+    },function(){return null;});
+  },
+  fontHave:function(f){return this.fdir().then(function(d){return d.getFileHandle(packFontKey(f.name,f.range));}).then(function(){return true;},function(){return false;});},
+  fontPut:function(f,url,ctl){
+    var self=this;
+    return fetch(url,{credentials:'omit',signal:ctl.signal}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.arrayBuffer();}).then(function(b){
+      return self.fdir().then(function(d){return self.small('skmap-fonts',d,packFontKey(f.name,f.range),new Uint8Array(b));});
+    });
+  },
+  fontRead:function(name,range){return this.fdir().then(function(d){return d.getFileHandle(packFontKey(name,range));}).then(function(h){return h.getFile();}).then(function(f){return f.arrayBuffer();}).catch(function(){return null;});},
+  fetchPack:function(id,e,url,prog,ctl){
+    var self=this,part=packPartName(e),sha=new Sha256(),w=null,dir=null;
+    return self.pdir(id).then(function(d){dir=d;return self.writer('skmap-'+id,dir,part);}).then(function(x){w=x;
+      return fetch(url,{credentials:'omit',signal:ctl.signal});}).then(function(r){
+      if(!r.ok)throw new Error('HTTP '+r.status);
+      var rd=r.body.getReader(),got=0;
+      return (function pump(){return rd.read().then(function(c){
+        if(c.done)return got;
+        var u=c.value;got+=u.length;sha.update(u);prog(u.length);
+        return w.write(u).then(pump);
+      });})();
+    }).then(function(got){
+      if(got!==e.bytes)throw new Error('Größe stimmt nicht ('+got+' statt '+e.bytes+' Bytes) – Download unvollständig.');
+      if(sha.hex()!==e.sha256)throw new Error('Prüfsumme (SHA-256) stimmt nicht – Datei verworfen.');
+      return w.close();
+    }).then(function(){w=null;return part;},function(err){
+      return Promise.resolve(w?w.abort():null).then(function(){return dir?dir.removeEntry(part).catch(function(){}):null;}).then(function(){throw err;});
+    });
+  },
+  commit:function(id,meta){var self=this;return self.pdir(id).then(function(d){return self.small('skmap-'+id,d,'meta.json',new TextEncoder().encode(JSON.stringify(meta)));});},
+  drop:function(id,file){return this.pdir(id).then(function(d){return d.removeEntry(file).catch(function(){});});},
+  remove:function(id){return navigator.storage.getDirectory().then(function(r){return r.removeEntry('skmap-'+id,{recursive:true});}).catch(function(){});},
+  clean:function(id,meta){   // everything not referenced by meta.json (interrupted download, replaced version) goes
+    return this.pdir(id,true).then(function(dir){
+      var it=dir.entries?dir.entries():null;if(!it)return;
+      return (function next(){return it.next().then(function(r){if(r.done)return;var n=r.value[0];if(n!=='meta.json'&&!(meta&&n===meta.file))return dir.removeEntry(n).catch(function(){}).then(next);return next();});})();
+    }).catch(function(){});
+  },
+  storageFree:function(){return navigator.storage.estimate?navigator.storage.estimate().then(function(q){return q&&q.quota&&q.usage!=null?q.quota-q.usage:null;}):Promise.resolve(null);},
+  persist:function(){try{if(navigator.storage.persist)navigator.storage.persist().catch(function(){});}catch(e){}}
+};
+
+/* ---- native backend (Capacitor Android): Filesystem.downloadFile + MapPack plugin ---- */
+function packB64(b64){var s=atob(b64),u=new Uint8Array(s.length);for(var i=0;i<s.length;i++)u[i]=s.charCodeAt(i);return u.buffer;}
+var PNAT={kind:'native',
+  P:function(){return (window.Capacitor&&window.Capacitor.Plugins)||{};},
+  ok:function(){var P=this.P();return !!(isNative()&&P.Filesystem&&P.MapPack);},
+  fs:function(){return this.P().Filesystem;},mp:function(){return this.P().MapPack;},
+  path:function(id,f){return 'skmap/'+id+(f?'/'+f:'');},
+  dl:function(url,path,onBytes){
+    var FS=this.fs(),h=null;
+    return FS.addListener('progress',function(p){if(p&&p.url===url&&onBytes)onBytes(p.bytes||0,p.contentLength||0);}).then(function(x){h=x;
+      return FS.downloadFile({url:url,path:path,directory:'DATA',progress:true,recursive:true});}).then(function(r){h.remove();return r;},function(e){if(h)h.remove();throw e;});
+  },
+  manifest:function(base){var self=this,p='skmap/manifest.json';
+    return self.dl(base+'/manifest.json',p).then(function(){return self.fs().readFile({path:p,directory:'DATA',encoding:'utf8'});}).then(function(r){return JSON.parse(r.data);});},
+  load:function(id){
+    var self=this;
+    return self.fs().readFile({path:self.path(id,'meta.json'),directory:'DATA',encoding:'utf8'}).then(function(r){
+      var m=JSON.parse(r.data),path=self.path(id,m.file);
+      return self.mp().stat({path:path}).then(function(st){
+        if(st.size!==m.bytes)throw new Error('size');
+        return {meta:m,key:m.file,mk:function(){return {getKey:function(){return m.file;},getBytes:function(off,len){return self.mp().readRange({path:path,offset:off,length:len}).then(function(r2){return {data:packB64(r2.b64)};});}};}};
+      });
+    }).catch(function(){return null;});
+  },
+  fontHave:function(f){return this.fs().stat({path:'skmap/fonts/'+packFontKey(f.name,f.range),directory:'DATA'}).then(function(){return true;},function(){return false;});},
+  fontPut:function(f,url,ctl){return this.dl(url,'skmap/fonts/'+packFontKey(f.name,f.range));},
+  fontRead:function(name,range){return this.fs().readFile({path:'skmap/fonts/'+packFontKey(name,range),directory:'DATA'}).then(function(r){return packB64(r.data);}).catch(function(){return null;});},
+  fetchPack:function(id,e,url,prog,ctl){
+    var self=this,part=packPartName(e),path=self.path(id,part),last=0;
+    return self.dl(url,path,function(bytes){if(bytes>last){prog(bytes-last);last=bytes;}}).then(function(){
+      if(ctl.aborted){var a=new Error('Abgebrochen');a.name='AbortError';throw a;}
+      return self.mp().stat({path:path});
+    }).then(function(st){
+      if(st.size!==e.bytes)throw new Error('Größe stimmt nicht ('+st.size+' statt '+e.bytes+' Bytes) – Download unvollständig.');
+      return self.mp().sha256({path:path});
+    }).then(function(r){
+      if(r.sha256!==e.sha256)throw new Error('Prüfsumme (SHA-256) stimmt nicht – Datei verworfen.');
+      return part;
+    }).catch(function(err){return self.drop(id,part).then(function(){throw err;});});
+  },
+  commit:function(id,meta){return this.fs().writeFile({path:this.path(id,'meta.json'),directory:'DATA',data:JSON.stringify(meta),encoding:'utf8',recursive:true});},
+  drop:function(id,file){return this.fs().deleteFile({path:this.path(id,file),directory:'DATA'}).catch(function(){});},
+  remove:function(id){return this.fs().rmdir({path:this.path(id),directory:'DATA',recursive:true}).catch(function(){});},
+  clean:function(id,meta){
+    var self=this;
+    return self.fs().readdir({path:self.path(id),directory:'DATA'}).then(function(r){
+      return Promise.all((r.files||[]).map(function(f){var n=f.name||f;return (n==='meta.json'||(meta&&n===meta.file))?null:self.drop(id,n);}));
+    }).catch(function(){});
+  },
+  storageFree:function(){return Promise.resolve(null);},
+  persist:function(){}
+};
+function packBackend(){return (typeof isNative==='function'&&isNative())?PNAT:POPFS;}
+/* =====================================================================
+   OFFLINE BASE MAP PACKS (SPEC_tiles.md) – Protomaps/OSM extracts per sea area, downloaded once. Storage backends: mappack-store.js.
+   MapLibre GL draws the pack as a non-interactive canvas UNDER the SVG map (map.js / refuge-map.js keep all input, markers and routes).
+   Several packs can be installed; the base map uses ONE installed pack that covers the whole view (otherwise: GSHHG coastline as before).
+   Without an installed pack nothing here loads or requests anything. vendor/pmtiles.js + vendor/maplibre-gl.* load only after a pack is installed.
+   ===================================================================== */
+var PACK={cfg:REVIER.mapPacks||[],inst:{},libP:null,libsOk:false,proto:null,man:null,busy:null,ctl:null,err:'',msg:'',broken:false};
+function packBase(){
+  var u=(load(sk('mapPackUrl'))||(isNative()?REVIER.mapPackBase:'')||'').trim();   // GitHub release assets have no CORS headers: the default is for the native app only
+  return u.replace(/\/+$/,'');
+}
+function packMB(b){return (Math.round(b/1e5)/10).toString().replace('.',',');}
+function packDate(d){var m=/^(\d{4})-(\d\d)-(\d\d)/.exec(d||'');return m?(m[3]+'.'+m[2]+'.'+m[1]):String(d||'');}
+function packCfg(id){return PACK.cfg.filter(function(p){return p.id===id;})[0];}
+function packAny(){return Object.keys(PACK.inst).length>0;}
+
+/* ---- MapLibre + pmtiles (loaded only when a pack is installed) ---- */
+function packScript(src){return new Promise(function(res,rej){var s=document.createElement('script');s.src=src;s.onload=res;s.onerror=function(){rej(new Error('Datei fehlt: '+src));};document.head.appendChild(s);});}
+function packLibs(){
+  if(PACK.libP)return PACK.libP;
+  PACK.libP=new Promise(function(res,rej){
+    if(window.maplibregl&&window.pmtiles)return res();
+    var l=document.createElement('link');l.rel='stylesheet';l.href='vendor/maplibre-gl.css';document.head.appendChild(l);
+    packScript('vendor/pmtiles.js').then(function(){return packScript('vendor/maplibre-gl.js');}).then(function(){if(!(window.maplibregl&&window.pmtiles))throw new Error('Bibliothek unvollständig');res();},rej);
+  }).then(function(){
+    PACK.proto=new pmtiles.Protocol();
+    maplibregl.addProtocol('pmtiles',PACK.proto.tile);
+    maplibregl.addProtocol('skfont',packFontProto);
+  }).catch(function(e){PACK.libP=null;throw e;});
+  return PACK.libP;
+}
+/* glyphs: skfont://<fontstack>/<range> from the stored fonts; missing font -> Regular, missing range -> empty (no text, no error) */
+function packFontProto(params){
+  var m=/^skfont:\/\/(.+)\/([^\/]+)$/.exec(params.url),empty={data:new ArrayBuffer(0)};
+  if(!m)return Promise.resolve(empty);
+  var range=decodeURIComponent(m[2]).replace(/\.pbf$/,''),names=decodeURIComponent(m[1]).split(',').map(function(x){return x.trim();}).concat(['Noto Sans Regular']),be=packBackend(),i=0;
+  return (function next(){
+    if(i>=names.length)return empty;
+    return be.fontRead(names[i++],range).then(function(b){return b?{data:b}:next();});
+  })();
+}
+
+/* ---- map integration (called from mapRender / zmRender) ---- */
+function packCovers(b,v){   // the WHOLE view must lie inside the pack, otherwise the blue background would show sea where there is land
+  var nw=unmerc(v.x,v.y),se=unmerc(v.x+v.w,v.y+v.h);
+  return nw.lat<=b[3]&&se.lat>=b[1]&&nw.lon>=b[0]&&se.lon<=b[2];
+}
+function packFor(v){   // smallest installed pack that covers the view
+  var best=null,ba=0;
+  Object.keys(PACK.inst).forEach(function(id){
+    var b=PACK.inst[id].meta.bbox;if(!packCovers(b,v))return;
+    var a=(b[2]-b[0])*(b[3]-b[1]);if(!best||a<ba){best=id;ba=a;}
+  });
+  return best;
+}
+function packMake(S,el,id){
+  try{
+    var div=document.createElement('div');div.className='tmap-gl';div.setAttribute('aria-hidden','true');el.insertBefore(div,el.firstChild);
+    var st=JSON.parse(JSON.stringify(MAPSTYLE)),c=unmerc(S.cx,S.cy);
+    st.sources.protomaps.url='pmtiles://'+PACK.inst[id].key;
+    S.glDiv=div;S.glPack=id;
+    S.gl=new maplibregl.Map({container:div,style:st,center:[c.lon,c.lat],zoom:S.z-1,interactive:false,attributionControl:false,fadeDuration:0,renderWorldCopies:false,pitchWithRotate:false});
+    S.gl.on('error',function(e){PACK.msg='Kartenpaket: '+String(e&&e.error&&e.error.message||e&&e.message||'Fehler');packUI();});
+    return true;
+  }catch(e){
+    PACK.broken=true;PACK.err='Kartenpaket vorhanden, aber nicht darstellbar ('+String(e&&e.message||e)+') – es wird die Küstenlinie gezeigt.';
+    packDrop(S);packUI();return false;
+  }
+}
+/* returns true when a pack draws the base map for this view; S = MAP or ZM */
+function packSync(S,el,v){
+  if(!PACK.libsOk||PACK.broken)return false;
+  var id=packFor(v);
+  if(!id){if(S.glDiv)S.glDiv.style.display='none';return false;}
+  if(S.gl&&S.glPack!==id)packDrop(S);   // view moved into another pack: new map with that pack's source
+  if(!S.gl&&!packMake(S,el,id))return false;
+  if(S.glDiv.style.display==='none'){S.glDiv.style.display='';S.gl.resize();}   // hidden containers collapse the canvas: resize synchronously, not at the next ResizeObserver tick
+  var c=unmerc(S.cx,S.cy);
+  S.gl.jumpTo({center:[c.lon,c.lat],zoom:S.z-1});   // MapLibre draws 512 px tiles: its zoom z corresponds to MAP.z = z + 1 (256 px world)
+  return true;
+}
+function packDrop(S){
+  if(S.gl){try{S.gl.remove();}catch(e){}}
+  if(S.glDiv&&S.glDiv.parentNode)S.glDiv.parentNode.removeChild(S.glDiv);
+  S.gl=null;S.glDiv=null;S.glPack=null;
+}
+function packRefreshMaps(){   // pack installed / replaced / deleted: rebuild both maps
+  [MAP].concat(typeof ZM!=='undefined'?[ZM]:[]).forEach(function(S){packDrop(S);S.tiles={};S.tz=null;});
+  ['m-tiles','m-seamark','z-tiles','z-seamark'].forEach(function(id){var g=$(id);if(g)g.innerHTML='';});
+  if(MAP.svg)mapRender();
+  if(typeof ZM!=='undefined'&&ZM.svg&&ZM.view==='map')zmRender();
+}
+function packAttr(on){return '© OpenStreetMap-Mitwirkende (ODbL) · Protomaps'+(on?' · Seezeichen © OpenSeaMap':'');}
+function packRegister(id){PACK.proto.tiles.set(PACK.inst[id].key,new pmtiles.PMTiles(PACK.inst[id].mk()));}
+function packActivate(){   // libs + installed packs -> packs drive the maps
+  if(!packAny())return Promise.resolve(false);
+  return packLibs().then(function(){
+    Object.keys(PACK.inst).forEach(function(id){if(!PACK.proto.tiles.get(PACK.inst[id].key))packRegister(id);});
+    PACK.libsOk=true;PACK.broken=false;PACK.err='';packRefreshMaps();return true;
+  }).catch(function(e){PACK.libsOk=false;PACK.err='Kartenpaket vorhanden, aber MapLibre nicht ladbar ('+String(e&&e.message||e)+') – es wird die Küstenlinie gezeigt.';return false;});
+}
+function packLoadAll(){
+  var be=packBackend();
+  if(!PACK.cfg.length||!be.ok())return Promise.resolve();
+  return Promise.all(PACK.cfg.map(function(p){return be.load(p.id).then(function(r){if(r)PACK.inst[p.id]=r;else delete PACK.inst[p.id];be.clean(p.id,r&&r.meta);});})).catch(function(e){PACK.err=packErrText(e);});
+}
+
+/* ---- manifest / download ---- */
+function packEntry(id){var e=PACK.man&&PACK.man.packs&&PACK.man.packs[id];return e&&e.file&&e.bytes>0&&/^[0-9a-f]{64}$/.test(e.sha256||'')?e:null;}
+function packUpd(id){var e=packEntry(id);return !!(e&&PACK.inst[id]&&PACK.inst[id].meta.sha256!==e.sha256);}
+function packCheck(){
+  if(PACK.busy)return;
+  PACK.msg='Prüfe Plattform …';packUI();
+  packBackend().manifest(packBase()).then(function(m){
+    if(!m||!m.packs)throw new Error('Manifest ungültig');
+    var fonts=(m.fonts&&m.fonts.files)||[];
+    PACK.man={packs:m.packs,fonts:fonts.filter(function(f){return f&&f.name&&f.range&&f.file;}),source:m.source||''};
+    var n=PACK.cfg.filter(function(p){return packEntry(p.id);}).length,u=PACK.cfg.filter(function(p){return packUpd(p.id);}).length;
+    PACK.msg=n?(u?'Update verfügbar für '+u+' Paket'+(u>1?'e':'')+'.':'Kartenpakete geprüft.'):'Plattform hat keine passenden Kartenpakete.';packUI();
+  }).catch(function(e){PACK.man=null;PACK.msg='Plattform nicht erreichbar: '+String(e&&e.message||e);packUI();});
+}
+function packDownload(id){
+  var be=packBackend(),e=packEntry(id),cfg=packCfg(id);if(PACK.busy||!e||!cfg)return;
+  var base=packBase(),old=PACK.inst[id],fonts=[],total=e.bytes,done=0,t0=0;
+  var ctl=PACK.ctl=(typeof AbortController!=='undefined'?new AbortController():{signal:undefined,abort:function(){}});
+  var origAbort=ctl.abort;ctl.abort=function(){ctl.aborted=true;origAbort.call(ctl);};   // native downloads cannot be interrupted: the flag is checked afterwards
+  PACK.busy=id;PACK.msg='';packUI();
+  function prog(n){done+=n;var now=Date.now();if(now-t0>200){t0=now;packProg(done,total);}}
+  Promise.all(PACK.man.fonts.map(function(f){return be.fontHave(f).then(function(h){return h?null:f;});})).then(function(l){
+    fonts=l.filter(Boolean);fonts.forEach(function(f){total+=f.bytes||0;});packProg(0,total);
+    return be.storageFree();
+  }).then(function(free){
+    if(free!=null&&free<total*1.05){var er=new Error('Quota');er.name='QuotaExceededError';throw er;}
+    return fonts.reduce(function(p,f){return p.then(function(){return be.fontPut(f,packUrl(base,f.file),ctl).then(function(){prog(f.bytes||0);});});},Promise.resolve());
+  }).then(function(){
+    return be.fetchPack(id,e,packUrl(base,e.file),prog,ctl);
+  }).then(function(file){
+    var meta={id:id,file:file,bytes:e.bytes,sha256:e.sha256,date:e.date,maxzoom:e.maxzoom,bbox:e.bbox||cfg.bbox,source:PACK.man.source,installed:new Date().toISOString()};
+    return be.commit(id,meta);
+  }).then(function(){
+    be.persist();
+    if(old&&PACK.proto)PACK.proto.tiles.delete(old.key);
+    return be.load(id);
+  }).then(function(r){
+    if(r)PACK.inst[id]=r;
+    PACK.busy=null;PACK.ctl=null;PACK.msg='Kartenpaket geladen.';packProgHide();
+    return be.clean(id,r&&r.meta).then(packActivate);
+  }).then(function(){packUI();}).catch(function(err){
+    var cancelled=(err&&err.name==='AbortError')||ctl.aborted===true;
+    PACK.busy=null;PACK.ctl=null;packProgHide();
+    PACK.msg=cancelled?'Download abgebrochen.':packErrText(err);
+    be.clean(id,old&&old.meta).then(function(){packUI();});
+  });
+}
+function packCancel(){if(PACK.ctl){PACK.ctl.abort();PACK.msg='Abbrechen …';}}
+function packDelete(id){
+  if(PACK.busy||!PACK.inst[id])return;
+  if(!window.confirm('Kartenpaket „'+packCfg(id).title+'“ vom Gerät löschen? Ohne Paket zeigt die App für dieses Gebiet wieder nur die Küstenlinie.'))return;
+  var key=PACK.inst[id].key;
+  packBackend().remove(id).then(function(){
+    if(PACK.proto)PACK.proto.tiles.delete(key);
+    delete PACK.inst[id];if(!packAny())PACK.libsOk=false;
+    PACK.msg='Kartenpaket gelöscht.';packRefreshMaps();packUI();
+  });
+}
+
+/* ---- settings block (Törn tab, "Seekarte") ---- */
+function packProg(done,total){var p=$('mp-prog');if(!p)return;p.style.display='';p.max=total;p.value=done;
+  var s=$('mp-status');if(s)s.textContent='Lädt Kartenpaket … '+Math.round(done/total*100)+' % ('+packMB(done)+' von '+packMB(total)+' MB)';}
+function packProgHide(){var p=$('mp-prog');if(p)p.style.display='none';}
+function packUI(){
+  var box=$('det-mappack');if(!box)return;
+  if(!PACK.cfg.length){box.style.display='none';return;}
+  box.style.display='';
+  var be=packBackend(),sup=be.ok(),base=packBase(),st=$('mp-status'),list=$('mp-list'),chk=$('btn-mp-check');
+  $('mp-urlbox').style.display=sup?'':'none';
+  if(!sup){st.textContent='Dieses Gerät unterstützt keine Kartenpakete.';list.innerHTML='';chk.style.display='none';return;}
+  chk.style.display=base?'':'none';chk.disabled=!!PACK.busy;
+  var h='';
+  PACK.cfg.forEach(function(p){
+    var i=PACK.inst[p.id],e=packEntry(p.id),t='',b='';
+    if(i)t='installiert: Stand '+packDate(i.meta.date)+', '+packMB(i.meta.bytes)+' MB – offline verfügbar'+(packUpd(p.id)?' · Update verfügbar (Stand '+packDate(e.date)+', '+packMB(e.bytes)+' MB)':'');
+    else t=e?'nicht installiert, ≈ '+packMB(e.bytes)+' MB':'nicht installiert';
+    if(PACK.busy===p.id&&PACK.ctl)b='<button class="btn sm mp-cancel" type="button">Abbrechen</button>';
+    else{
+      if(e&&(!i||packUpd(p.id)))b+='<button class="btn prim sm mp-go" type="button"'+(PACK.busy?' disabled':'')+'>'+(i?'Update laden':'Laden')+' (≈ '+packMB(e.bytes)+' MB)</button>';
+      if(i)b+='<button class="btn sm mp-del" type="button"'+(PACK.busy?' disabled':'')+'>Löschen</button>';
+    }
+    h+='<div class="mprow" data-mpid="'+esc(p.id)+'" style="margin-top:10px"><b translate="no">'+esc(p.title)+'</b><div class="note small">'+esc(t)+'</div>'+(b?'<div class="grid2" style="margin-top:6px">'+b+'</div>':'')+'</div>';
+  });
+  list.innerHTML=h;
+  if(!(PACK.busy&&PACK.ctl)){   // while loading, packProg owns the status line
+    var txt=base?'':'Kartenpakete gibt es in der Android-App oder über deine Plattform-URL.';
+    if(PACK.err)txt+=(txt?' ':'')+PACK.err;
+    if(PACK.msg)txt+=(txt?' ':'')+PACK.msg;
+    st.textContent=txt;
+  }
+}
+function packBind(){
+  if(!$('det-mappack'))return;
+  var url=$('mp-url');url.value=load(sk('mapPackUrl'))||'';
+  url.placeholder=isNative()&&REVIER.mapPackBase?REVIER.mapPackBase:'https://…/skipper-maps';
+  url.addEventListener('change',function(){store(sk('mapPackUrl'),url.value.trim());PACK.man=null;PACK.msg='';packUI();});
+  $('btn-mp-check').addEventListener('click',function(){if(navigator.onLine===false){PACK.msg='Kein Netz – Prüfen und Laden gehen nur online.';packUI();}else packCheck();});
+  $('mp-list').addEventListener('click',function(e){
+    var b=e.target.closest('button');if(!b)return;var row=b.closest('.mprow');if(!row)return;var id=row.dataset.mpid;
+    if(b.classList.contains('mp-go')){if(navigator.onLine===false){PACK.msg='Kein Netz.';packUI();}else packDownload(id);}
+    else if(b.classList.contains('mp-del'))packDelete(id);
+    else if(b.classList.contains('mp-cancel'))packCancel();
+  });
+  packUI();
+  packLoadAll().then(function(){packUI();return packActivate();}).then(packUI);
 }
 /* =====================================================================
    ERSTSTART (SPEC §23) – guided: boat, position, wind, first rating
@@ -4140,8 +4556,10 @@ function zmRender(){
   if(!ZM.svg)return;var r0=ZM.svg.getBoundingClientRect();if(r0.width<2||r0.height<2)return;
   var v=zmView(),on=mapOnline();
   ZM.svg.setAttribute('viewBox',v.x+' '+v.y+' '+v.w+' '+v.h);
-  $('z-coast').style.display=(on&&(navigator.onLine!==false||CONST.map.baseOffline))?'none':'';
-  tilesFor(ZM,$('z-tiles'),$('z-seamark'),v,on);
+  var gl=packSync(ZM,ZM.el,v);   // installed offline base map pack (mappack.js)
+  $('z-coast').style.display=(gl||(on&&(navigator.onLine!==false||CONST.map.baseOffline)))?'none':'';
+  ZM.svg.querySelector('.sea').style.display=gl?'none':'';
+  tilesFor(ZM,$('z-tiles'),$('z-seamark'),v,on,gl);
   var s=v.s,h='',rd=Math.max(4.5,Math.min(8,(ZM.z-4)*1.1))/s,hit=14/s,x0=v.x-hit,x1=v.x+v.w+hit,y0=v.y-hit,y1=v.y+v.h+hit,lab=ZM.z>=CONST.map.allLabelZ-0.5,L='';
   // worst on top: draw grey/green first, then yellow, then red
   var ord={n:0,g:1,y:2,r:3};
@@ -4156,7 +4574,7 @@ function zmRender(){
     if(S.dir){var a=(DIRS.indexOf(S.dir)*45)*Math.PI/180,len=34/s,sx=b.x+Math.sin(a)*len*1.5,sy=b.y-Math.cos(a)*len*1.5,ex=b.x+Math.sin(a)*len*0.55,ey=b.y-Math.cos(a)*len*0.55;
       h+='<line x1="'+sx+'" y1="'+sy+'" x2="'+ex+'" y2="'+ey+'" style="stroke:var(--wind);stroke-width:'+(3/s)+'px"/><circle cx="'+ex+'" cy="'+ey+'" r="'+(3.5/s)+'" style="fill:var(--wind)"/>';}}
   $('z-marks').innerHTML=h+L;
-  $('z-attr').textContent=on?'© OpenStreetMap-Mitwirkende · Seezeichen © OpenSeaMap':'Küste: GSHHG, vereinfacht · keine Seekarte';
+  $('z-attr').textContent=gl?packAttr(on):on?'© OpenStreetMap-Mitwirkende · Seezeichen © OpenSeaMap':'Küste: GSHHG, vereinfacht · keine Seekarte';
 }
 function zmSelect(id){
   ZM.sel=(ZM.sel===id)?null:id;
@@ -4545,6 +4963,7 @@ function initToern(){
   if(R.hooks.initToern)R.hooks.initToern();   // package: water-level button etc.
   $('btn-wxfill').addEventListener('click',function(){var r=wxFill();$('wxfillmsg').innerHTML=r.error?banner('y','Nicht übernommen',r.error):'<div class="note small">'+esc(r.text)+'</div>';if(r.ok)update();});
   $('btn-tclearcache').addEventListener('click',function(){MAP.online=false;$('m-online').checked=false;store(sk('mapOnline'),'0');TILES.clear().then(function(){MAP.tiles={};MAP.tz=null;$('m-tiles').innerHTML='';$('m-seamark').innerHTML='';mapRender();renderTileStats();});});$('btn-gpxsave').addEventListener('click',gpxSave);
+  packBind();   // offline base map pack (core/platform/mappack.js)
   renderToernForm();setWxMode(PL.wxMode);renderPlan();renderWxState();
   IDB.latest().then(function(sn){if(sn&&!WX){wxSet(sn);renderWxState();renderPlan();}}).catch(function(){});
 }
@@ -4625,7 +5044,7 @@ window.SKIPPER=Object.assign({roseSVG:roseSVG,BY_ID:BY_ID,harborCardHTML:functio
   isOutOfArea:isOutOfArea,euOffset:euOffset,utcToLocal:utcToLocal,sunTimes:sunTimes,seaAreaOf:seaAreaOf,countryOf:countryOf,boatNeeds:boatNeeds,
   rhumb:rhumb,courseToWind:courseToWind,effThresholds:effThresholds,filterList:filterList,DISCLAIMER:DISCLAIMER,
   NET:NET,WXGRID:WXGRID,netTree:netTree,netRoute:netRoute,treeOf:treeOf,inNet:inNet,wxAt:wxAt,wxSet:wxSet,wxFromOpenMeteo:wxFromOpenMeteo,wxUrls:wxUrls,wxValid:wxValid,
-  chunkLevel:chunkLevel,diagHTML:diagHTML,pickerSet:pickerSet,harbourMatches:harbourMatches,wxFill:wxFill,harbourTimeline:harbourTimeline,NOTES:NOTES,MAP:MAP,TILES:TILES,merc:merc,mapFit:mapFit,mapZoomAt:mapZoomAt,mapSelect:mapSelect,planGPX:planGPX,gpxFile:gpxFile,gpxParse:gpxParse,gpxSimplify:gpxSimplify,gpxDecode:gpxDecode,GPX_LIM:GPX_LIM,gpxImportText:gpxImportText,gpxiClear:gpxiClear,landCheck:landCheck,landStretches:landStretches,gpxOpenText:gpxOpenText,gpxOpenDetail:gpxOpenDetail,gpxShareBoot:gpxShareBoot,gpxShareCache:gpxShareCache,gpxiEval:gpxiEval,gpxiAdopt:gpxiAdopt,gpxiSanitize:gpxiSanitize,getGPXI:function(){return GPXI;},renderGpxImport:renderGpxImport,getWX:function(){return WX;},IDB:IDB,planTrip:planTrip,planCandidates:planCandidates,simLeg:simLeg,nightCheck:nightCheck,dayStartMs:dayStartMs,PL:PL,renderPlan:renderPlan,doImportText:doImportText,planSerialize:planSerialize,klimaFromArchive:klimaFromArchive,klimaSnapshot:klimaSnapshot,klimaRisk:klimaRisk,klimaSet:klimaSet,klimaGet:klimaGet,klimaUrl:klimaUrl,klimaYears:klimaYears,klimaPoints:klimaPoints,planKlima:planKlima,setWxMode:setWxMode,hullSpeed:hullSpeed,dieselSummary:dieselSummary,glShow:glShow,doPlan:doPlan,lageText:lageText,planText:planText,NOTESref:function(){return NOTES;},i18nKey:i18nKey,i18nText:i18nText,i18nSet:i18nSet,I18N:I18N,planAvoid:planAvoid,planReplace:planReplace,ZM:ZM,zmFit:zmFit,zmSelect:zmSelect,setZView:setZView,onbOpen:onbOpen,ONB:ONB,renderHdrAlert:renderHdrAlert,wxFill:wxFill,wxPreview:wxPreview,setPreset:setPreset,applyTheme:applyTheme},R.expose);
+  chunkLevel:chunkLevel,diagHTML:diagHTML,pickerSet:pickerSet,harbourMatches:harbourMatches,wxFill:wxFill,harbourTimeline:harbourTimeline,NOTES:NOTES,MAP:MAP,ZM:ZM,TILES:TILES,PACK:PACK,POPFS:POPFS,PNAT:PNAT,packBackend:packBackend,Sha256:Sha256,packCovers:packCovers,packLoadAll:packLoadAll,merc:merc,mapFit:mapFit,mapZoomAt:mapZoomAt,mapSelect:mapSelect,planGPX:planGPX,gpxFile:gpxFile,gpxParse:gpxParse,gpxSimplify:gpxSimplify,gpxDecode:gpxDecode,GPX_LIM:GPX_LIM,gpxImportText:gpxImportText,gpxiClear:gpxiClear,landCheck:landCheck,landStretches:landStretches,gpxOpenText:gpxOpenText,gpxOpenDetail:gpxOpenDetail,gpxShareBoot:gpxShareBoot,gpxShareCache:gpxShareCache,gpxiEval:gpxiEval,gpxiAdopt:gpxiAdopt,gpxiSanitize:gpxiSanitize,getGPXI:function(){return GPXI;},renderGpxImport:renderGpxImport,getWX:function(){return WX;},IDB:IDB,planTrip:planTrip,planCandidates:planCandidates,simLeg:simLeg,nightCheck:nightCheck,dayStartMs:dayStartMs,PL:PL,renderPlan:renderPlan,doImportText:doImportText,planSerialize:planSerialize,klimaFromArchive:klimaFromArchive,klimaSnapshot:klimaSnapshot,klimaRisk:klimaRisk,klimaSet:klimaSet,klimaGet:klimaGet,klimaUrl:klimaUrl,klimaYears:klimaYears,klimaPoints:klimaPoints,planKlima:planKlima,setWxMode:setWxMode,hullSpeed:hullSpeed,dieselSummary:dieselSummary,glShow:glShow,doPlan:doPlan,lageText:lageText,planText:planText,NOTESref:function(){return NOTES;},i18nKey:i18nKey,i18nText:i18nText,i18nSet:i18nSet,I18N:I18N,planAvoid:planAvoid,planReplace:planReplace,ZM:ZM,zmFit:zmFit,zmSelect:zmSelect,setZView:setZView,onbOpen:onbOpen,ONB:ONB,renderHdrAlert:renderHdrAlert,wxFill:wxFill,wxPreview:wxPreview,setPreset:setPreset,applyTheme:applyTheme},R.expose);
 }
 /* =====================================================================
    Sardinia-Corsica: anchorages (ankerbucht) and buoy fields (bojenfeld)  – SPEC_sardinien.md section 3.1/3.2
