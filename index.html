@@ -1929,7 +1929,7 @@ function packUI(){
   });
   list.innerHTML=h;
   if(!(PACK.busy&&PACK.ctl)){   // while loading, packProg owns the status line
-    var txt=base?'':'Kartenpakete gibt es in der Android-App oder über deine Plattform-URL.';
+    var txt=base?'':(typeof isIOS==='function'&&isIOS()?'Kartenpakete gibt es auf iPhone/iPad derzeit nur über eine Plattform-URL (Kartenspiegel). Ohne Paket zeigt die Karte die Grundkarte nur mit Netz.':'Kartenpakete gibt es in der Android-App oder über deine Plattform-URL.');
     if(PACK.err)txt+=(txt?' ':'')+PACK.err;
     if(PACK.msg)txt+=(txt?' ':'')+PACK.msg;
     st.textContent=txt;
