@@ -446,6 +446,7 @@ nav button .ic{font-size:1.2rem}
 .skx summary{cursor:pointer}
 /* no bridges in this region: hide the bridge safety margin field of the Boot tab */
 .fgrid>div:has(#b-bmargin){display:none}
+.spot{border-top:1px solid var(--line,#ccc);margin-top:10px;padding-top:8px}
 .lamp.r{background:var(--r);color:var(--rt)}
 .lamp.n{background:var(--n);color:var(--nt)}
 .rline{padding:7px 2px;border-bottom:1px solid var(--line);font-size:.95rem}
@@ -748,7 +749,7 @@ nav button .ic{font-size:1.2rem}
       <p>Küstenlinie: GSHHG 2.3.7 (NOAA NCEI, LGPL). Tiefen: GEBCO 2026 Grid (gemeinfrei). Beide nicht für die Navigation.</p>
       <p>Online-Seekarte: © OpenStreetMap-Mitwirkende (ODbL), Seezeichen © OpenSeaMap (CC BY-SA 2.0).</p>
       <p>Kartenpakete (Offline-Grundkarte): © OpenStreetMap-Mitwirkende (ODbL), Basiskarte Protomaps (Produced Work), Schrift Noto Sans (SIL Open Font License 1.1). Darstellung mit MapLibre GL JS (BSD-3-Clause) und pmtiles (BSD-3-Clause), Lizenztexte im Ordner <code>vendor/</code>.</p>
-      <p>Hafen-, Ankerplatz- und Funkdaten: Quellen und Quellenart je Eintrag (amtliche Akte, Betreiber, sea-seek, Nautica Assistance, CruisersWiki, Météo Consult u. a.); Regeln aus Ordinanze, Arrêtés und Schutzgebietsreglements. Werte, die nur von Navily stammen, sind nicht übernommen. Version 0.1: Oberfläche nur Deutsch.</p>
+      <p>Hafen-, Ankerplatz- und Funkdaten: Quellen und Quellenart je Eintrag (amtliche Akte, Betreiber, sea-seek, Nautica Assistance, CruisersWiki, Météo Consult u. a.); Regeln aus Ordinanze, Arrêtés und Schutzgebietsreglements. Werte, die nur von Navily stammen, sind nicht übernommen. Oberfläche nur Deutsch.</p>
       <p>Schrift: Atkinson Hyperlegible, Braille Institute (SIL Open Font License 1.1).</p>
     </div></details>
   </div>
@@ -883,7 +884,7 @@ var MAPSTYLE={"version":8,"name":"Skipper offline (Protomaps light, sunlight)","
      R.crossTitles         titles of the open-water crossing gates      -> core/sea/gates.js
      R.expose              extra members of window.SKIPPER (tests)      -> core/sea/expose.js
    ===================================================================== */
-var REVIER={"id":"sardinien-korsika","title":"Skipper-Assistent Sardinien-Korsika","appName":"Skipper Sardinien-Korsika","type":"sea","licence":true,"storagePrefix":"skipperSard","snapPrefix":"skipper-sardinien","idb":{"db":"skipper-sardinien","tiles":"skipper-sardinien-tiles"},"mapPackBase":"https://github.com/ChristophBauermeister/skipper-ostsee/releases/download/maps-latest","mapPacks":[{"id":"sardinien-korsika","title":"Sardinien und Korsika","bbox":[7.8,38.7,10.2,43.2]}],"legalUrl":"https://christophbauermeister.github.io/skipper-ostsee/legal/","langs":["de"],"defaultLang":"de","langMap":{},"countries":["IT","FR"],"countryLabel":{"IT":"Italien (Sardinien)","FR":"Frankreich (Korsika)"},"features":{"planner":true,"bridges":false},"defaultBoat":{"type":"mono","loa":10.5,"beam":3.3,"draft":1.55,"mast":19,"margin":0.3,"bridgeMargin":1,"short":"Dehler 35 CWS","profile":{"id":"owner-dehler35-cws","label":"Dehler 35 CWS (BJ 1994, Flachkiel)","type":"mono","loa":10.5,"beam":3.3,"draft":1.55,"mast":19,"margin":0.3,"bridgeMargin":1,"note":"Länge/Breite: sailboatdata (CWS). Tiefgang und Masthöhe (19,0 m inkl. Antenne und Windex): Angabe Eigner 19.10.2026.","mastOwner":true}},"const":{"datenstand":"02.11.2026","appVersion":"0.5.0","area":{"latMin":38.7,"latMax":43.1,"lonMin":7.9,"lonMax":10},"gates":{"sardkorsika":{"ids":["fr-bonifacio","fr-cavallo","fr-lavezzi-chiesa","fr-lavezzi-grecu","fr-lavezzi-lazarina","fr-lavezzi-ghiuncu","fr-piantarella","fr-paragnanu","fr-santamanza","fr-portovecchio","fr-pv-gulf-north","fr-pv-stagnolu","fr-santagiulia","fr-rondinara","fr-portonovo","fr-palombaggia"],"box":{"latMin":41.3,"latMax":41.7,"lonMin":8.85,"lonMax":9.6}}},"plan":{"defaultStart":"it-olbia-marina","defaultStartFallback":["it-puntaldia","it-porto-san-paolo","it-cagliari-marina-del-sole"]},"sk":{"anchorGust":{"yellow":20,"red":28,"open":15},"posidoniaLoaM":24,"mpaNearNm":0.5,"bonifacio":{"gust":18,"dirs":["W","NW","E","SE"],"area":{"latMin":41.15,"latMax":41.5,"lonMin":8.95,"lonMax":9.6}},"orosei":{"gust":18,"swellH":1.5,"windDirs":["N","NE","E","SE"],"swellDirs":["N","NE","E","SE"],"area":{"latMin":40,"latMax":41,"lonMin":9.45},"gulfLatMax":40.45},"west":{"gust":20,"swellH":2,"windDirs":["SW","W","NW"],"swellDirs":["W","NW"],"area":{"latMin":38.85,"latMax":41.3,"lonMin":7.9,"lonMax":8.85}},"teulada":{"area":{"latMin":38.75,"latMax":39.05,"lonMin":8.4,"lonMax":9.05},"pauseFrom":"06-01","pauseTo":"09-30","ucmTel":"0781 83071"},"capcorse":{"gust":20,"windDirs":["SW","W","NW"],"latMin":42.72},"lava":{"nearNm":3}}},"texts":{"steepSea":"kurze, steile See"},"css":["sk"],"wxBounds":{"lat0":38.5,"lat1":43.3,"lon0":7.7,"lon1":10.2},"mapCenter":{"lat":40.9,"lon":9,"z":6.9}};
+var REVIER={"id":"sardinien-korsika","title":"Skipper-Assistent Sardinien-Korsika","appName":"Skipper Sardinien-Korsika","type":"sea","licence":true,"storagePrefix":"skipperSard","snapPrefix":"skipper-sardinien","idb":{"db":"skipper-sardinien","tiles":"skipper-sardinien-tiles"},"mapPackBase":"https://github.com/ChristophBauermeister/skipper-ostsee/releases/download/maps-latest","mapPacks":[{"id":"sardinien-korsika","title":"Sardinien und Korsika","bbox":[7.8,38.7,10.2,43.2]}],"legalUrl":"https://christophbauermeister.github.io/skipper-ostsee/legal/","langs":["de"],"defaultLang":"de","langMap":{},"countries":["IT","FR"],"countryLabel":{"IT":"Italien (Sardinien)","FR":"Frankreich (Korsika)"},"features":{"planner":true,"bridges":false},"defaultBoat":{"type":"mono","loa":10.5,"beam":3.3,"draft":1.55,"mast":19,"margin":0.3,"bridgeMargin":1,"short":"Dehler 35 CWS","profile":{"id":"owner-dehler35-cws","label":"Dehler 35 CWS (BJ 1994, Flachkiel)","type":"mono","loa":10.5,"beam":3.3,"draft":1.55,"mast":19,"margin":0.3,"bridgeMargin":1,"note":"Länge/Breite: sailboatdata (CWS). Tiefgang und Masthöhe (19,0 m inkl. Antenne und Windex): Angabe Eigner 19.10.2026.","mastOwner":true}},"const":{"datenstand":"02.11.2026","appVersion":"0.6.0","area":{"latMin":38.7,"latMax":43.1,"lonMin":7.9,"lonMax":10},"gates":{"sardkorsika":{"ids":["fr-bonifacio","fr-cavallo","fr-lavezzi-chiesa","fr-lavezzi-grecu","fr-lavezzi-lazarina","fr-lavezzi-ghiuncu","fr-piantarella","fr-paragnanu","fr-santamanza","fr-portovecchio","fr-pv-gulf-north","fr-pv-stagnolu","fr-santagiulia","fr-rondinara","fr-portonovo","fr-palombaggia"],"box":{"latMin":41.3,"latMax":41.7,"lonMin":8.85,"lonMax":9.6}}},"plan":{"defaultStart":"it-olbia-marina","defaultStartFallback":["it-puntaldia","it-porto-san-paolo","it-cagliari-marina-del-sole"]},"sk":{"anchorGust":{"yellow":20,"red":28,"open":15},"posidoniaLoaM":24,"mpaNearNm":0.5,"bonifacio":{"gust":18,"dirs":["W","NW","E","SE"],"area":{"latMin":41.15,"latMax":41.5,"lonMin":8.95,"lonMax":9.6}},"orosei":{"gust":18,"swellH":1.5,"windDirs":["N","NE","E","SE"],"swellDirs":["N","NE","E","SE"],"area":{"latMin":40,"latMax":41,"lonMin":9.45},"gulfLatMax":40.45},"west":{"gust":20,"swellH":2,"windDirs":["SW","W","NW"],"swellDirs":["W","NW"],"area":{"latMin":38.85,"latMax":41.3,"lonMin":7.9,"lonMax":8.85}},"teulada":{"area":{"latMin":38.75,"latMax":39.05,"lonMin":8.4,"lonMax":9.05},"pauseFrom":"06-01","pauseTo":"09-30","ucmTel":"0781 83071"},"capcorse":{"gust":20,"windDirs":["SW","W","NW"],"latMin":42.72},"lava":{"nearNm":3}}},"texts":{"steepSea":"kurze, steile See"},"css":["sk"],"wxBounds":{"lat0":38.5,"lat1":43.3,"lon0":7.7,"lon1":10.2},"mapCenter":{"lat":40.9,"lon":9,"z":6.9}};
 /* packages without bridges (Sardinia-Corsica) set revier.json features.bridges=false: only affects explanatory texts */
 var HAS_BRIDGES=!(REVIER.features&&REVIER.features.bridges===false);
 /* default map view when no position/route is known (revier.json "mapCenter"; Baltic as before) */
@@ -6275,9 +6276,7 @@ function webLink(w){
 }
 function nightLine(h,s){
   if(!WX||typeof nightCheck!=='function')return '<div class="hmeta">Übernachten vor Anker: Wetter laden für die Nachtprüfung.</div>';
-  var sun=sunTimes(h.lat,h.lon,s.now),tm=sunTimes(h.lat,h.lon,s.now+24*3600000);
-  var t1=sun.sunsetMs&&sun.sunsetMs>s.now?sun.sunsetMs:s.now,t2=tm.sunriseMs||(t1+10*3600000);
-  var r=nightCheck(h,t1,t2,s);
+  var w=nightWindow(h,s.now),r=nightCheck(h,w.t1,w.t2,s);
   var lbl=r.level==='g'?'geschützt':r.level==='y'?'eingeschränkt':r.level==='r'?'nicht geeignet':'unklar';
   return '<div class="hmeta">Übernachten vor Anker (Sonnenuntergang bis Sonnenaufgang): <span class="chip c-'+r.level+'">'+SYM[r.level]+' '+lbl+'</span> '+esc(r.text||'')+'</div>';
 }
@@ -6476,6 +6475,100 @@ R.hooks.chunkGates=function(x,T,pos,add,s){
   if(s&&s.now!=null){var t=skTeulada(s.now,pos);if(t&&(t.level==='r'||(t.level==='y'&&t.active)))add(t.level,t.title+' – '+t.text,'gate-teulada');}
 };
 Object.assign(R.expose,{skGateItems:skGateItems,skTeulada:skTeulada,skLava:skLava,skPolyNm:skPolyNm,skWestGap:skWestGap,skNearestRefuge:skNearestRefuge,skInPause:skInPause});
+/* =====================================================================
+   Sardinia-Corsica: anchorage search for tonight and two extra list filters (Navily comparison, NAVILY-ABGLEICH.md)
+   nightSpots(): anchorages and buoy fields near the position, rated with the core nightCheck over tonight's forecast.
+   A place is left out when the boat does not fit, or when a location rule forbids anchoring (zone A, Posidonia ban, firing area).
+   Unknown protection never counts as sheltered, it is only counted. The result is a shortlist, not a clearance.
+   ===================================================================== */
+var SPOT={radii:[10,20,40],max:12,res:null};
+/* night window: ahead of sunrise this night, otherwise sunset (or now) until the next sunrise */
+function nightWindow(h,now){
+  var sun=sunTimes(h.lat,h.lon,now);
+  if(sun.sunriseMs&&now<sun.sunriseMs)return {t1:now,t2:sun.sunriseMs};
+  var t1=sun.sunsetMs&&sun.sunsetMs>now?sun.sunsetMs:now,nx=sunTimes(h.lat,h.lon,now+24*3600000);
+  return {t1:t1,t2:nx.sunriseMs||(t1+10*3600000)};
+}
+/* location rules at the place itself: red gates that do not depend on the weather */
+function spotRules(h,s,T){
+  var pos={lat:h.lat,lon:h.lon},st=Object.assign({},s,{pos:pos,target:null});
+  var g=gates(st,pos,T).gates.filter(function(x){return /^mpa-pos/.test(x.id)||x.id==='teulada'||x.id==='lava';});
+  function pick(l){return g.filter(function(x){return x.level===l;})[0]||null;}
+  return {red:pick('r'),yellow:pick('y')};
+}
+function nightSpots(raw,radius){
+  var s=normalize(raw),T=effThresholds(s);
+  if(!s.pos)return {error:'pos'};
+  if(!WX)return {error:'wx'};
+  var out={radius:radius,list:[],red:0,unknown:0,noFit:0,forbidden:0,now:s.now};
+  rank(s).forEach(function(it){
+    var h=it.h;
+    if(!isAnchor(h)||it.dist>radius)return;
+    if(!fitsBoat(it)){out.noFit++;return;}
+    var rule=spotRules(h,s,T);
+    if(rule.red||itemsOf(it).some(function(i){return i.cat==='posidonia'&&i.level==='r';})){out.forbidden++;return;}
+    var w=nightWindow(h,s.now),n=nightCheck(h,w.t1,w.t2,s);
+    if(n.level==='r'){out.red++;return;}
+    if(n.level!=='g'&&n.level!=='y'){out.unknown++;return;}
+    var late=itemsOf(it).some(function(i){return i.cat==='sun';}),season=itemsOf(it).some(function(i){return i.cat==='season';});
+    var firing=!!(rule.yellow&&rule.yellow.id==='teulada');
+    out.list.push({h:h,dist:it.dist,brg:it.brg,eta:it.eta,level:late||season||firing?'y':n.level,text:n.text,gMax:n.gMax,dMax:n.dMax,late:late,season:season,rule:rule.yellow?rule.yellow.title:null,proven:!!(h.verified&&h.verified.prot)});
+  });
+  var ord={g:0,y:1};
+  out.list.sort(function(a,b){return (ord[a.level]-ord[b.level])||((b.proven?1:0)-(a.proven?1:0))||(a.dist-b.dist);});
+  out.total=out.list.length;out.list=out.list.slice(0,SPOT.max);
+  return out;
+}
+function spotHTML(r){
+  if(r.error==='pos')return '<div class="note small">Position fehlt: im Lage-Tab eintragen.</div>';
+  if(r.error==='wx')return '<div class="note small">Wetter fehlt: im Lage-Tab „Wetter laden“.</div>';
+  var o='';
+  r.list.forEach(function(x){
+    var h=x.h,lb=x.level==='g'?'geschützt':'eingeschränkt';
+    o+='<div class="spot"><div class="hname">'+esc(h.name)+' <span class="fl">'+esc(h.country)+'</span></div>'
+      +'<span class="chip c-'+x.level+'">'+SYM[x.level]+' '+lb+'</span> <span class="badge '+(x.proven?'ver':'unv')+'">'+(x.proven?'✔ Schutz belegt':'Schutz ungeprüft')+'</span>'
+      +'<div class="hmeta">≈ '+nm1(x.dist)+' sm · rwK '+x.brg+'° · ≥ '+fmtEta(x.eta)+' · Grund '+esc(h.bottom||'unbekannt')+' · Tiefe '+esc(depthText(h))+'</div>'
+      +'<div class="hmeta">'+esc(x.text||'')+'</div>'
+      +(x.rule?'<div class="hmeta"><b>'+esc(x.rule)+'</b></div>':'')
+      +(x.late?'<div class="hmeta"><b>Ankunft erst nach Sonnenuntergang:</b> Bucht nicht bei Dunkelheit ansteuern.</div>':'')
+      +(x.season?'<div class="hmeta"><b>Außerhalb der Saison:</b> Bojen evtl. nicht ausgelegt.</div>':'')
+      +'<button class="btn sm" data-spot="'+esc(h.id)+'" style="margin-top:6px">Als Ziel</button></div>';
+  });
+  if(!r.list.length)o+='<div class="banner b-n"><div class="bt"><span class="sym">?</span>Kein passender Platz</div><div class="bd">Im Umkreis von '+r.radius+' sm ist laut Vorhersage und Daten keine Bucht geeignet. Hafen oder größeren Umkreis prüfen.</div></div>';
+  if(r.total>r.list.length)o+='<div class="note small">'+r.list.length+' von '+r.total+' Plätzen angezeigt.</div>';
+  var off=[];
+  if(r.red)off.push(r.red+' laut Vorhersage nicht geeignet');
+  if(r.unknown)off.push(r.unknown+' ohne Schutzdaten oder Vorhersage');
+  if(r.noFit)off.push(r.noFit+' passen nicht zum Boot');
+  if(r.forbidden)off.push(r.forbidden+' mit Ankerverbot oder Sperrgebiet');
+  if(off.length)o+='<div class="note small"><b>Nicht aufgeführt:</b> '+off.join(', ')+'.</div>';
+  return o+'<div class="note small">Stand '+hhmmLocal(r.now)+'. Geprüft werden Wind, Böen und Seegang der Nacht gegen die Schutzsektoren, Entfernung ist Luftlinie. Grund, Platz und Schwojkreis vor Ort prüfen, Seekarte und amtlichen Wetterbericht nutzen.</div>';
+}
+function spotInit(){
+  var rg=$('f-region');if(!rg)return;
+  var f=document.createElement('div');f.className='grid2';f.style.marginTop='8px';
+  f.innerHTML='<select id="f-kind" aria-label="Platzart filtern"><option value="">alle Platzarten</option><option value="hafen">Marinas und Häfen</option><option value="ankerbucht">Ankerbuchten</option><option value="bojenfeld">Bojenfelder</option></select>'
+    +'<select id="f-shelter" aria-label="Schutz bei Windrichtung filtern"><option value="">Schutz: alle</option>'+DIRS.map(function(d){return '<option value="'+d+'">geschützt bei '+d+'</option>';}).join('')+'</select>';
+  rg.parentNode.insertBefore(f,rg.nextSibling);
+  var c=document.createElement('div');c.className='card';c.id='sk-night';c.style.marginTop='10px';
+  c.innerHTML='<div class="t">Ankerplatz für heute Nacht</div><div class="grid2" style="margin-top:6px"><select id="sk-night-r" aria-label="Umkreis">'
+    +SPOT.radii.map(function(n){return '<option value="'+n+'"'+(n===20?' selected':'')+'>Umkreis '+n+' sm</option>';}).join('')+'</select><button class="btn sm" id="sk-night-go">Plätze prüfen</button></div><div id="sk-night-out" aria-live="polite"></div>';
+  f.parentNode.insertBefore(c,f.nextSibling);
+  $('f-kind').addEventListener('change',function(e){S.fl.kind=e.target.value;if(S.fl.kind==='ankerbucht'||S.fl.kind==='bojenfeld')S.fl.refuge=false;S.show=40;update();});
+  $('f-shelter').addEventListener('change',function(e){S.fl.shelter=e.target.value;S.show=40;update();});
+  $('sk-night-go').addEventListener('click',function(){$('sk-night-out').innerHTML=spotHTML(nightSpots(S,+$('sk-night-r').value));});
+  $('sk-night-out').addEventListener('click',function(e){var b=e.target.closest('[data-spot]');if(!b)return;setTargetHarbor(b.dataset.spot);update();b.textContent='✔ Ziel gesetzt';});
+}
+spotInit();
+/* the core has no hook for package filters yet (queue REGISTRY) */
+var coreFilterList=filterList;
+filterList=function(list,f,state){
+  var r=coreFilterList(list,f,state);f=f||{};
+  if(f.kind)r=r.filter(function(it){var t=it.h.type;return f.kind==='hafen'?(t==='hafen'||t==='marina'):t===f.kind;});
+  if(f.shelter)r=r.filter(function(it){return protOf(it.h,f.shelter)==='full';});
+  return r;
+};
+Object.assign(R.expose,{nightSpots:nightSpots,nightWindow:nightWindow,spotRules:spotRules,spotHTML:spotHTML});
 /* ---------- Emergency numbers IT / FR (SPEC_sardinien.md section 3.5) – everything read from RADIO (data/sardinien-korsika/radio.json); a missing MMSI is shown as "nicht belegt", never filled in ---------- */
 function emergencyNumbers(pos){
   var out=[],it=RADIO.filter(function(r){return r.country==='IT';})[0],fr=RADIO.filter(function(r){return r.country==='FR';})[0];
