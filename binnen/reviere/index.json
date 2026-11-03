@@ -8,10 +8,10 @@
    53.8,
    14.8
   ],
-  "bytes": 2787001,
+  "bytes": 2985564,
   "pois": 6019,
   "locks": 113,
-  "bridges": 1154,
+  "bridges": 2863,
   "nodes": 16346,
   "pegel": 221
  },
@@ -24,10 +24,10 @@
    54.6,
    14.5
   ],
-  "bytes": 1165887,
+  "bytes": 1261434,
   "pois": 4081,
   "locks": 35,
-  "bridges": 163,
+  "bridges": 993,
   "nodes": 6776,
   "pegel": 106
  },
@@ -40,10 +40,10 @@
    53.7,
    14.5
   ],
-  "bytes": 3700059,
+  "bytes": 4119300,
   "pois": 9148,
   "locks": 132,
-  "bridges": 1845,
+  "bridges": 5534,
   "nodes": 24012,
   "pegel": 281
  },
@@ -56,10 +56,10 @@
    53.9,
    10.6
   ],
-  "bytes": 1654640,
+  "bytes": 1960504,
   "pois": 4871,
   "locks": 78,
-  "bridges": 1197,
+  "bridges": 3915,
   "nodes": 13235,
   "pegel": 164
  },
@@ -72,10 +72,10 @@
    52.4,
    8.8
   ],
-  "bytes": 933437,
+  "bytes": 1026626,
   "pois": 2361,
   "locks": 40,
-  "bridges": 765,
+  "bridges": 1610,
   "nodes": 6274,
   "pegel": 60
  },
@@ -88,10 +88,10 @@
    50.9,
    8.4
   ],
-  "bytes": 788635,
+  "bytes": 805899,
   "pois": 2018,
   "locks": 42,
-  "bridges": 604,
+  "bridges": 760,
   "nodes": 4306,
   "pegel": 72
  },
@@ -104,10 +104,10 @@
    49.9,
    10.0
   ],
-  "bytes": 1100087,
+  "bytes": 1162025,
   "pois": 3691,
   "locks": 57,
-  "bridges": 1043,
+  "bridges": 1600,
   "nodes": 6196,
   "pegel": 50
  },
@@ -120,10 +120,10 @@
    50.6,
    13.9
   ],
-  "bytes": 1738552,
+  "bytes": 1941346,
   "pois": 4572,
   "locks": 137,
-  "bridges": 1629,
+  "bridges": 3390,
   "nodes": 13439,
   "pegel": 73
  },
@@ -136,10 +136,10 @@
    48.4,
    13.1
   ],
-  "bytes": 572000,
+  "bytes": 656223,
   "pois": 2518,
   "locks": 0,
-  "bridges": 0,
+  "bridges": 738,
   "nodes": 3267,
   "pegel": 2
  },
@@ -152,10 +152,10 @@
    55.1,
    11.4
   ],
-  "bytes": 1067133,
+  "bytes": 1193272,
   "pois": 4257,
   "locks": 22,
-  "bridges": 363,
+  "bridges": 1490,
   "nodes": 6220,
   "pegel": 113
  },
@@ -168,10 +168,10 @@
    52.1,
    10.4
   ],
-  "bytes": 298075,
+  "bytes": 371576,
   "pois": 825,
   "locks": 1,
-  "bridges": 0,
+  "bridges": 663,
   "nodes": 2961,
   "pegel": 22
  },
@@ -184,10 +184,10 @@
    51.6,
    15.1
   ],
-  "bytes": 746370,
+  "bytes": 892583,
   "pois": 1887,
   "locks": 7,
-  "bridges": 158,
+  "bridges": 1436,
   "nodes": 6232,
   "pegel": 15
  }
