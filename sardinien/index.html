@@ -626,6 +626,7 @@ nav button .ic{font-size:1.2rem}
     <button class="tog sm" data-fc="IT" aria-pressed="true">IT</button>
     <button class="tog sm" data-fc="FR" aria-pressed="true">FR</button>
   </div>
+  <button class="tog sm" id="f-fav" aria-pressed="false" style="margin-top:8px;width:100%">★ nur Merkliste</button>
   <select id="f-region" aria-label="Region filtern" style="margin-top:8px"><option value="">alle Regionen</option></select>
   <div class="grid2" style="margin-top:8px" role="group" aria-label="Ansicht">
     <button class="tog sm" data-zv="list" aria-pressed="true">☰ Liste</button>
@@ -818,6 +819,7 @@ nav button .ic{font-size:1.2rem}
     <div><label for="p-dep">Abfahrt</label><select id="p-dep"></select></div>
     <div class="full"><label>Über (optional, in dieser Reihenfolge)</label>
       <div class="hpick" data-sel="p-via1"><input type="search" id="p-via1-q" placeholder="1. Über-Hafen suchen …" autocomplete="off" aria-label="Über-Hafen 1"><div class="hsug" id="p-via1-sug"></div></div><select id="p-via1" hidden aria-hidden="true" tabindex="-1"></select><div class="hpick" data-sel="p-via2" style="margin-top:6px"><input type="search" id="p-via2-q" placeholder="2. Über-Hafen suchen …" autocomplete="off" aria-label="Über-Hafen 2"><div class="hsug" id="p-via2-sug"></div></div><select id="p-via2" hidden aria-hidden="true" tabindex="-1"></select><div class="hpick" data-sel="p-via3" style="margin-top:6px"><input type="search" id="p-via3-q" placeholder="3. Über-Hafen suchen …" autocomplete="off" aria-label="Über-Hafen 3"><div class="hsug" id="p-via3-sug"></div></div><select id="p-via3" hidden aria-hidden="true" tabindex="-1"></select>
+      <div id="p-viadays"></div>
       <div class="note small">Z. B. Rund Fünen: über Middelfart und Kerteminde.</div></div>
     <div class="full" id="p-exclwrap" style="display:none"><label>Gemiedene Häfen</label><div id="p-excl" class="exchips"></div><div class="note small">Antippen = wieder zulassen. Im Plan je Etappe „Hafen meiden“ oder „Anderen Hafen“.</div></div>
     <div><label for="p-target">Gesamtstrecke (sm, optional)</label><input type="text" inputmode="numeric" id="p-target" placeholder="z. B. 200"></div>
@@ -3095,6 +3097,10 @@ function onbAction(a){
 /* ---- SPEC §17.3: own notes per harbour (device only, part of the backup) ---- */
 var NOTES=(function(){try{return JSON.parse(load(sk('notes'))||'{}')||{};}catch(e){return {};}})();
 function saveNotes(){store(sk('notes'),JSON.stringify(NOTES));}
+/* favourites live in the notes, so they share device storage and backup */
+function favOn(id){var n=NOTES[id];return !!(n&&n.fav);}
+function favToggle(id){noteUpd(id,{fav:!favOn(id)});}
+function noteUpd(id,patch){var n=NOTES[id]||{};Object.assign(n,patch,{t:Date.now()});if(n.prot&&!Object.keys(n.prot).length)delete n.prot;if(!n.fav)delete n.fav;if(!n.text&&!n.visited&&!n.stars&&!n.prot&&!n.fav)delete NOTES[id];else NOTES[id]=n;saveNotes();}
 function noteHTML(h){
   var n=NOTES[h.id]||{},st='';
   for(var i=0;i<=5;i++)st+='<option value="'+i+'"'+((n.stars||0)===i?' selected':'')+'>'+(i?'★'.repeat(i):'–')+'</option>';
@@ -3108,7 +3114,8 @@ function noteHTML(h){
 }
 function bindNotes(){
   var tmr=null;
-  function upd(id,patch){var n=NOTES[id]||{};Object.assign(n,patch,{t:Date.now()});if(n.prot&&!Object.keys(n.prot).length)delete n.prot;if(!n.text&&!n.visited&&!n.stars&&!n.prot)delete NOTES[id];else NOTES[id]=n;saveNotes();}
+  var upd=noteUpd;
+  document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('[data-fav]');if(!b)return;favToggle(b.dataset.fav);update();});
   document.addEventListener('input',function(e){var el=e.target;if(el.dataset&&el.dataset.note){clearTimeout(tmr);var id=el.dataset.note,v=el.value;tmr=setTimeout(function(){upd(id,{text:v.slice(0,2000)});},300);}});
   document.addEventListener('change',function(e){var el=e.target;if(!el.dataset)return;
     if(el.dataset.myprot){var pp=el.dataset.myprot.split('|'),cur=Object.assign({},(NOTES[pp[0]]||{}).prot||{});if(el.value)cur[pp[1]]=el.value;else delete cur[pp[1]];upd(pp[0],{prot:cur});update();return;}
@@ -3528,7 +3535,7 @@ deepMerge(CONST,REVIER.const||{});
 /* ---- UI state (S): inputs of the Lage tab, filters, boat ---- */
 var S={pos:null,dir:null,windTrue:null,gust:null,seaDir:null,seaH:0,pegel:0,sicht:'gut',gewitter:false,longWind:null,kids:false,trend:false,
   course:'am Wind',courseMode:'auto',target:null,speed:CONST.speed,maxLegH:null,maxNightH:CONST.plan.maxNightH,motorMode:'nie',motorSpeed:CONST.plan.motorSpeed,daylight:true,season:'auto',limGust:null,limSea:null,boat:Object.assign({},DEFAULT_BOAT),now:null,
-  fl:{refuge:true,fits:false,open:false,countries:REVIER.countries.reduce(function(o,c){o[c]=true;return o;},{}),region:''},show:40,confirmed:false};
+  fl:{refuge:true,fits:false,open:false,fav:false,countries:REVIER.countries.reduce(function(o,c){o[c]=true;return o;},{}),region:''},show:40,confirmed:false};
 /* ---- target: rhumb line, course to wind (v1.4) ---- */
 var WIND_DEG={N:0,NE:45,E:90,SE:135,S:180,SW:225,W:270,NW:315};
 function rhumb(a,b){
@@ -3956,6 +3963,8 @@ function filterList(list,f,state){
     if(f.open&&!isOpenNow(it))return false;
     if(f.countries&&f.countries[h.country]===false)return false;
     if(f.region&&h.region!==f.region)return false;
+    if(f.fav&&!favOn(h.id))return false;
+    if(R.hooks.listFilter&&!R.hooks.listFilter(it,f,state))return false;
     return true;
   });
 }
@@ -4105,7 +4114,9 @@ var NET=(function(){
 })();
 function inNet(id){return !!NET.harbours[id];}
 /* single-source Dijkstra over the network, cost = length + penalty × shallow nm */
-function netTree(srcNode,maxCost){
+var NET_BLOCK=null;   // edge set closed for the current calculation, see withBlockedEdges
+function netTree(srcNode,maxCost,blocked){
+  blocked=blocked||NET_BLOCK;
   var n=NET.n,cost=new Float64Array(n),prev=new Int32Array(n),pe=new Int32Array(n),done=new Uint8Array(n);
   cost.fill(Infinity);prev.fill(-1);pe.fill(-1);cost[srcNode]=0;
   var hk=[],hv=[];
@@ -4116,13 +4127,23 @@ function netTree(srcNode,maxCost){
     var u=pop();if(done[u])continue;done[u]=1;
     if(maxCost&&cost[u]>maxCost)break;
     for(var j=NET.start[u];j<NET.start[u+1];j++){
-      var v=NET.adjN[j],e=NET.adjE[j],c=cost[u]+NET.L[e]+NET.pen*NET.SH[e];
+      var v=NET.adjN[j],e=NET.adjE[j];
+      if(blocked&&blocked[e])continue;
+      var c=cost[u]+NET.L[e]+NET.pen*NET.SH[e];
       if(c<cost[v]){cost[v]=c;prev[v]=u;pe[v]=e;push(v,c);}
     }
   }
   return {src:srcNode,cost:cost,prev:prev,pe:pe};
 }
 var TREE_CACHE={};
+/* runs fn() with the given edges closed (array of edge ids), for example a bridge too low for the mast. NET stays untouched and the
+   normal route trees are kept; only trees computed inside fn see the closure. */
+function withBlockedEdges(edges,fn){
+  var cache=TREE_CACHE,block=NET_BLOCK,set=Object.assign({},block||{});
+  (edges||[]).forEach(function(e){set[e]=true;});
+  NET_BLOCK=set;TREE_CACHE={};
+  try{return fn();}finally{NET_BLOCK=block;TREE_CACHE=cache;}
+}
 function treeOf(hid){var a=NET.harbours[hid];if(!a)return null;return TREE_CACHE[a[0]]||(TREE_CACHE[a[0]]=netTree(a[0]));}
 /* route harbour→harbour: points incl. harbour positions, segments with rhumb course */
 function netRoute(fromId,toId,tree){
@@ -4161,8 +4182,9 @@ function renderKlimaState(){
     (c?'<div class="note small" style="margin-top:4px">Bei '+esc(hb.name)+': '+esc(klimaLine(c))+(tt.length?' · tagsüber Ø '+Math.round(tt.reduce(function(a,b){return a+b;},0)/tt.length)+' °C':'')+'.</div>':'');
 }
 function renderDays(){
-  var mx=PL.wxMode==='klima'?CONST.plan.maxDaysKlima:7;if(PL.days>mx)PL.days=mx;
+  var mx=planMaxDays();if(PL.days>mx)PL.days=mx;
   var ds='';for(var i=2;i<=mx;i++)ds+='<option value="'+i+'"'+(i===PL.days?' selected':'')+'>'+i+'</option>';if($('p-days'))$('p-days').innerHTML=ds;
+  renderViaDays();
 }
 function setWxMode(m){
   PL.wxMode=m==='klima'?'klima':'vorhersage';savePL();
@@ -4282,13 +4304,15 @@ function nightCheck(h,t1,t2,s){
   }
   return {level:lvl,text:txt||(dmax?'stärkste Böe '+Math.round(gmax)+' kn aus '+dmax+': geschützt':'geschützt'),gMax:gmax,dMax:dmax};
 }
+function planMaxDays(){return PL.wxMode==='klima'?CONST.plan.maxDaysKlima:7;}
 function planTrip(opt,progress){
+  if(opt.blockedEdges&&opt.blockedEdges.length){var o2=Object.assign({},opt);delete o2.blockedEdges;return withBlockedEdges(opt.blockedEdges,function(){return planTrip(o2,progress);});}
   var P=CONST.plan,s=normalize(Object.assign({},S,{now:dayStartMs(opt.date,0,opt.depHour)}));
   s.speed=opt.speed||s.speed;s.motorMode=opt.motorMode||'nie';s.motorSpeed=opt.motorSpeed||null;
-  var D=Math.max(1,Math.min(7,opt.days|0)),maxH=opt.maxLegH,mode=opt.mode;
+  var D=Math.max(1,Math.min(planMaxDays(),opt.days|0)),maxH=opt.maxLegH,mode=opt.mode;
   if(!(maxH>0)){   // SPEC §18: no fixed cap = sail until sunset (− buffer); longest daylight span of the trip bounds the search
     if(!opt.daylight)maxH=P.noCapMaxH;
-    else{maxH=0;for(var dd=0;dd<Math.max(1,Math.min(7,opt.days|0));dd++){var hs=BY_ID[opt.start],sx=sunTimes(hs.lat,hs.lon,dayStartMs(opt.date,dd,12)),t0=dayStartMs(opt.date,dd,opt.depHour);
+    else{maxH=0;for(var dd=0;dd<D;dd++){var hs=BY_ID[opt.start],sx=sunTimes(hs.lat,hs.lon,dayStartMs(opt.date,dd,12)),t0=dayStartMs(opt.date,dd,opt.depHour);
       if(sx.sunsetMs)maxH=Math.max(maxH,(sx.sunsetMs-CONST.sunsetBufferMin*60000-Math.max(t0,sx.sunriseMs||t0))/3600000);}
       maxH=Math.max(1,Math.min(P.noCapMaxH,maxH||P.noCapMaxH));}
     opt=Object.assign({},opt,{maxLegHEff:maxH});
@@ -4314,6 +4338,12 @@ function planTrip(opt,progress){
   var chain=[];for(var vi=0;vi<V.length;vi++){var rest0=0;for(var vj=vi;vj<V.length-1;vj++)rest0+=dist(V[vj],V[vj+1]);rest0+=endId&&V.length?dist(V[V.length-1],endId):0;chain.push(rest0);}
   function toGo(h,vIdx){if(vIdx>=V.length)return distToEnd(h);return dist(h,V[vIdx])+chain[vIdx];}
   function viaStep(vIdx,h){return vIdx<V.length&&V[vIdx]===h?vIdx+1:vIdx;}
+  // harbours with a fixed day (crew change): on the evening of day f.d the boat lies there
+  var FIX=(opt.fixed||[]).filter(function(f){return f&&V.indexOf(f.id)>=0&&f.d>=0&&f.d<D;});
+  function fixOk(st,d){return FIX.every(function(f){
+    if(f.d<d)return true;
+    if(f.d===d)return st.h===f.id&&st.busy<=d;
+    return st.h===f.id||dist(st.h,f.id)<=reach(f.d-d,NN-st.nights)+0.01;});}
   // capacity of the remaining days (night legs count once each)
   // a night passage leaves in the evening and arrives the next morning: it uses two calendar days
   function reach(restDays,nightsLeft){
@@ -4432,6 +4462,7 @@ function planTrip(opt,progress){
         next.push({h:L.to,cost:st.cost+c,visited:st.visited+L.to+'|',days:st.days.concat(items),nights:st.nights+(L.night?1:0),total:st.total+L.route.dist,busy:L.arrDay>d?L.arrDay:-1,via:nv,arrT:L.sim.arr});
       });
     });
+    if(FIX.length)next=next.filter(function(x){return fixOk(x,d);});
     next.forEach(function(x){x.rank=rankOf(x,d);});
     next.sort(function(a,b){return a.rank-b.rank;});
     var per={},kept=[];
@@ -4441,6 +4472,7 @@ function planTrip(opt,progress){
     if(!beam.length)break;
   }
   var fin=beam.filter(function(st){return (!endId||st.h===endId)&&st.busy<=D-1&&st.via>=V.length;});
+  if(!fin.length&&FIX.length)return {error:'Kein Plan gefunden, der '+FIX.map(function(f){return BY_ID[f.id].name+' an Tag '+(f.d+1);}).join(', ')+' einhält.'};
   if(T)fin.forEach(function(st){st.final=st.cost+P.targetW*Math.abs(st.total-T);});else fin.forEach(function(st){st.final=st.cost;});
   fin.sort(function(a,b){return a.final-b.final;});
   if(!fin.length){   // SPEC §20: explain why
@@ -4551,6 +4583,7 @@ function harborCard(it,s,opts){
   body+='<div style="margin-top:5px">'+verBadges(h)+'</div>';
   body+=amenitiesHTML(h)+timelineHTML(h,s)+noteHTML(h);
   if(!(opts&&opts.noTarget))body+='<button class="btn sm" data-target="'+esc(h.id)+'" style="margin-top:8px">'+(s.target&&s.target.id===h.id?'✔ Ziel (löschen)':'Als Ziel')+'</button>';
+  body+=' <button class="btn sm" data-fav="'+esc(h.id)+'" aria-pressed="'+(favOn(h.id)?'true':'false')+'" style="margin-top:8px">'+(favOn(h.id)?'★ Gemerkt':'☆ Merken')+'</button>';
   body+='<details><summary>Hinweise und Quelle</summary><div class="in small"><p class="i18nnote">Originaltext der Datenquelle (nicht übersetzt).</p><p translate="no">'+esc(h.note||'')+'</p><p class="hmeta">Quelle: <span translate="no">'+esc(h.src||'–')+'</span></p></div></details></div>';
   return '<div class="hcard lv-'+lv+'">'+head+'<div class="hside">'+roseSVG(h,s)+'</div><div>'+reasons+'</div>'+body+'</div>';
 }
@@ -4585,6 +4618,7 @@ function renderZuflucht(res){
   $('f-refuge').setAttribute('aria-pressed',S.fl.refuge?'true':'false');
   $('f-fits').setAttribute('aria-pressed',S.fl.fits?'true':'false');
   $('f-open').setAttribute('aria-pressed',S.fl.open?'true':'false');
+  $('f-fav').setAttribute('aria-pressed',S.fl.fav?'true':'false');
   document.querySelectorAll('[data-fc]').forEach(function(b){b.setAttribute('aria-pressed',S.fl.countries[b.dataset.fc]!==false?'true':'false');});
   $('f-region').value=S.fl.region;
 }
@@ -5694,6 +5728,7 @@ function zmRender(){
   ZM.items.slice().sort(function(a,b){return ord[a.status.level]-ord[b.status.level];}).forEach(function(it){
     var hb=it.h,m=merc(hb.lat,hb.lon);if(m.x<x0||m.x>x1||m.y<y0||m.y>y1)return;var sel=ZM.sel===hb.id;
     h+='<g data-zh="'+esc(hb.id)+'"><circle class="zhit" cx="'+m.x+'" cy="'+m.y+'" r="'+hit+'"/><circle class="zd zl-'+it.status.level+(sel?' sel':'')+'" cx="'+m.x+'" cy="'+m.y+'" r="'+(sel?rd*1.45:rd)+'" style="stroke-width:'+((sel?3:1.5)/s)+'"/></g>';
+    if(favOn(hb.id))L+='<text class="mlab" x="'+m.x+'" y="'+(m.y-rd*1.5)+'" text-anchor="middle" style="font-size:'+(13/s)+'px;stroke-width:'+(3/s)+'px">★</text>';
     if(lab||sel)L+='<text class="mlab'+(sel?'':' small')+'" x="'+(m.x+rd*1.6)+'" y="'+(m.y+4/s)+'" style="font-size:'+((sel?12.5:10.5)/s)+'px;stroke-width:'+(3/s)+'px">'+esc(shortName(hb))+'</text>';
   });
   if(S.target){var t=merc(S.target.lat,S.target.lon);h+='<circle class="tgt" cx="'+t.x+'" cy="'+t.y+'" r="'+(12/s)+'" style="stroke-width:'+(3/s)+'px"/>';}
@@ -5833,14 +5868,14 @@ function defaultStart(){
   return BY_ID[CONST.plan.defaultStart]?CONST.plan.defaultStart:null;
 }
 function todayStr(ms){var p=localParts(ms||Date.now());return p.y+'-'+pad(p.m)+'-'+pad(p.d);}
-function savePL(){store(sk('toern'),JSON.stringify({mode:PL.mode,start:PL.start,target:PL.target,days:PL.days,depHour:PL.depHour,plat:PL.plat||'',targetNm:PL.targetNm||null,nights:PL.nights||0,afterNight:PL.afterNight||'11',wxMode:PL.wxMode||'vorhersage',date:PL.date||null,vias:(PL.vias||[]).filter(Boolean),exclude:(PL.exclude||[]).slice(0,CONST.plan.maxExclude)}));}
+function savePL(){store(sk('toern'),JSON.stringify({mode:PL.mode,start:PL.start,target:PL.target,days:PL.days,depHour:PL.depHour,plat:PL.plat||'',targetNm:PL.targetNm||null,nights:PL.nights||0,afterNight:PL.afterNight||'11',wxMode:PL.wxMode||'vorhersage',date:PL.date||null,vias:(PL.vias||[]).filter(Boolean),viaDay:PL.viaDay||{},exclude:(PL.exclude||[]).slice(0,CONST.plan.maxExclude)}));}
 function loadPL(){var raw=load(sk('toern'));if(!raw)return;try{var o=JSON.parse(raw);
   if(['rund','ziel','frei'].indexOf(o.mode)>=0)PL.mode=o.mode;if(o.start&&inNet(o.start))PL.start=o.start;if(o.target&&inNet(o.target))PL.target=o.target;
-  if(o.days>=2&&o.days<=7)PL.days=o.days;if(o.depHour>=6&&o.depHour<=12)PL.depHour=o.depHour;PL.plat=o.plat||'';
+  if(o.days>=2&&o.days<=CONST.plan.maxDaysKlima)PL.days=o.days;if(o.depHour>=6&&o.depHour<=12)PL.depHour=o.depHour;PL.plat=o.plat||'';
   if(o.targetNm>0)PL.targetNm=o.targetNm;if(o.nights>=0&&o.nights<=3)PL.nights=o.nights;
   if(o.afterNight)PL.afterNight=o.afterNight;if(o.wxMode==='klima')PL.wxMode='klima';if(o.date&&/^\d{4}-\d\d-\d\d$/.test(o.date))PL.savedDate=o.date;
   if(Array.isArray(o.exclude))PL.exclude=o.exclude.filter(function(v){return !!BY_ID[v];}).slice(0,CONST.plan.maxExclude);
-  if(Array.isArray(o.vias))PL.vias=o.vias.filter(function(v){return inNet(v);}).slice(0,3);}catch(e){}
+  if(Array.isArray(o.vias))PL.vias=o.vias.filter(function(v){return inNet(v);}).slice(0,3);if(o.viaDay&&typeof o.viaDay==='object')PL.viaDay=o.viaDay;}catch(e){}
   var pr=load(sk('plan'));if(pr){try{PL.plan=JSON.parse(pr);}catch(e){}}
 }
 function wxStateHTML(){
@@ -5859,9 +5894,19 @@ function renderWxState(){
   IDB.all().then(function(a){$('bkstate').textContent='Auf diesem Gerät gespeichert: '+a.length+' Wetterstände (max. '+CONST.wx.keep+')'+(PL.plan?', 1 Plan':'')+(GPXI?', 1 importierte Route':'')+'.';}).catch(function(){$('bkstate').textContent='Gerätespeicher (IndexedDB) nicht verfügbar – Export nutzen.';});
 }
 function wxMsg(t,lvl){$('wxmsg').innerHTML=t?'<div class="banner b-'+(lvl||'i')+'"><div class="bd">'+esc(t)+'</div></div>':'';}
+/* fixed day for an Über-Hafen (crew change): PL.viaDay = {harbour id: day number, 1 = first day} */
+function viaFixed(){return (PL.vias||[]).filter(function(v){return v&&PL.viaDay&&PL.viaDay[v]>0;}).map(function(v){return {id:v,d:PL.viaDay[v]-1};});}
+function renderViaDays(){
+  var w=$('p-viadays');if(!w)return;var v=(PL.vias||[]).filter(Boolean),h='';
+  v.forEach(function(id){var cur=(PL.viaDay||{})[id]||0,o='<option value="0">frei</option>';
+    for(var i=1;i<=PL.days;i++)o+='<option value="'+i+'"'+(i===cur?' selected':'')+'>Tag '+i+'</option>';
+    if(cur>PL.days)PL.viaDay[id]=0;
+    h+='<div class="grid2" style="margin-top:6px;align-items:center"><span class="small">'+esc(BY_ID[id]?shortName(BY_ID[id]):id)+'</span><select data-viaday="'+esc(id)+'" aria-label="Fester Tag für '+esc(BY_ID[id]?BY_ID[id].name:id)+'">'+o+'</select></div>';});
+  w.innerHTML=h?'<label style="margin-top:8px">Fester Tag (z. B. Crewwechsel)</label>'+h:'';
+}
 function planOpts(){
   return {mode:PL.mode,start:PL.start,target:PL.target,date:PL.date||todayStr(),days:PL.days,depHour:PL.depHour,maxLegH:S.maxLegH,daylight:S.daylight,speed:S.speed,
-    targetNm:PL.targetNm||null,nights:PL.nights||0,maxNightH:S.maxNightH,motorMode:S.motorMode,motorSpeed:S.motorSpeed,afterNightHour:PL.afterNight==='rest'?null:(+PL.afterNight||11),vias:(PL.vias||[]).filter(Boolean),exclude:(PL.exclude||[]).slice()};
+    targetNm:PL.targetNm||null,nights:PL.nights||0,maxNightH:S.maxNightH,motorMode:S.motorMode,motorSpeed:S.motorSpeed,afterNightHour:PL.afterNight==='rest'?null:(+PL.afterNight||11),vias:(PL.vias||[]).filter(Boolean),fixed:viaFixed(),exclude:(PL.exclude||[]).slice()};
 }
 /* SPEC §21: plan against the typical month; the real snapshot stays untouched */
 function planKlima(opt,K){
@@ -5914,7 +5959,7 @@ function planSerialize(r){
   function leg(L){return {to:L.to,dist:L.route.dist,shallowNm:L.route.shallowNm,minDepth:L.route.minDepth,depthUnknown:L.route.depthUnknown,snapA:L.route.snapA,snapB:L.route.snapB,
     pts:L.route.pts.map(function(p){return [Math.round(p.lat*1e5)/1e5,Math.round(p.lon*1e5)/1e5];}),segs:L.route.segs.map(function(s){return [Math.round(s.course),Math.round(s.dist*10)/10];}),
     sim:L.sim,bridges:L.bridges,bridgeLevel:L.bridgeLevel,night:!!L.night,arrDay:L.arrDay,klima:L.klima||null};}
-  return {opt:r.opt,createdAt:r.createdAt,wxAt:r.wxAt,wxSource:r.wxSource,maxNm:r.maxNm,maxNightNm:r.maxNightNm,totalNm:r.totalNm,targetNm:r.targetNm,nightsUsed:r.nightsUsed,capNm:r.capNm,vias:r.vias,klima:r.klima||null,
+  return {opt:r.opt,createdAt:r.createdAt,wxAt:r.wxAt,wxSource:r.wxSource,maxNm:r.maxNm,maxNightNm:r.maxNightNm,totalNm:r.totalNm,targetNm:r.targetNm,nightsUsed:r.nightsUsed,capNm:r.capNm,vias:r.vias,klima:r.klima||null,avoided:r.avoided||null,
     days:r.days.map(function(x){return {type:x.type,d:x.d,date:x.date,conf:x.conf,afterNight:!!x.afterNight,from:x.from||null,at:x.at||null,arr:x.arr||null,night:x.night,leg:x.type==='leg'?leg(x.leg):null};}),
     alts:r.alts.map(function(a){return {to:a.L.to,dist:a.L.route.dist,level:a.L.sim.level,hours:a.L.sim.hours,night:a.night.level};})};
 }
@@ -6005,7 +6050,7 @@ function renderExcl(){
 function setVias(v){
   v=v.filter(Boolean).slice(0,3);PL.vias=v;
   ['p-via1','p-via2','p-via3'].forEach(function(id,i){pickerSet(id,v[i]||'');});
-  PL.vias=v;savePL();
+  PL.vias=v;savePL();renderViaDays();
 }
 function planAvoid(id){
   PL.exclude=(PL.exclude||[]).filter(function(x){return x!==id;});PL.exclude.push(id);PL.exclude=PL.exclude.slice(-CONST.plan.maxExclude);
@@ -6049,7 +6094,7 @@ function initToern(){
   if(!PL.start)PL.start=defaultStart();
   harbourOptions($('p-start'),PL.start,false);harbourOptions($('p-ziel'),PL.target,true);
   PL.vias=PL.vias||[];['p-via1','p-via2','p-via3'].forEach(function(id,i){harbourOptions($(id),PL.vias[i]||'',true);
-    $(id).addEventListener('change',function(){PL.vias[i]=$(id).value||null;savePL();mapRender();});});
+    $(id).addEventListener('change',function(){PL.vias[i]=$(id).value||null;savePL();renderViaDays();mapRender();});});
   if(PL.start)$('p-start').value=PL.start;else PL.start=$('p-start').value;
   setTimeout(initPickers,0);
   PL.date=PL.savedDate&&PL.savedDate>todayStr()?PL.savedDate:todayStr();$('p-date').value=PL.date;
@@ -6061,7 +6106,8 @@ function initToern(){
   $('p-ziel').addEventListener('change',function(){PL.target=$('p-ziel').value||null;savePL();mapRender();});
   $('planmsg').addEventListener('click',function(e){var b=e.target.closest('[data-wi]');if(b)whatIf(b.dataset.wi);});
   $('p-date').addEventListener('change',function(){PL.date=$('p-date').value||todayStr();savePL();renderKlimaState();renderGpxImport();});
-  $('p-days').addEventListener('change',function(){PL.days=+$('p-days').value;savePL();});
+  $('p-days').addEventListener('change',function(){PL.days=+$('p-days').value;savePL();renderViaDays();});
+  $('p-viadays').addEventListener('change',function(e){var id=e.target.dataset.viaday;if(!id)return;PL.viaDay=PL.viaDay||{};PL.viaDay[id]=+e.target.value;savePL();});
   $('p-dep').addEventListener('change',function(){PL.depHour=+$('p-dep').value;savePL();renderGpxImport();});
   $('p-target').value=PL.targetNm?String(PL.targetNm):'';$('p-nights').value=String(PL.nights||0);
   $('p-afternight').value=PL.afterNight||'11';
@@ -6147,6 +6193,7 @@ function init(){
   $('f-refuge').addEventListener('click',function(){S.fl.refuge=!S.fl.refuge;S.show=40;update();});
   $('f-fits').addEventListener('click',function(){S.fl.fits=!S.fl.fits;S.show=40;update();});
   $('f-open').addEventListener('click',function(){S.fl.open=!S.fl.open;S.show=40;update();});
+  $('f-fav').addEventListener('click',function(){S.fl.fav=!S.fl.fav;if(S.fl.fav)S.fl.refuge=false;S.show=40;update();});   // a remembered place need not be a refuge
   document.querySelectorAll('[data-fc]').forEach(function(b){b.addEventListener('click',function(){S.fl.countries[b.dataset.fc]=S.fl.countries[b.dataset.fc]===false;S.show=40;update();});});
   $('f-region').addEventListener('change',function(){S.fl.region=$('f-region').value;S.show=40;update();});
   ['b-type','b-loa','b-beam','b-draft','b-margin','b-mast','b-bmargin','b-lwl','b-fuel','b-tank','b-speed','b-maxleg','b-maxnight','b-motor','b-motorspeed','b-season','b-name','b-call','b-mmsi','b-kids','b-daylight','b-limgust','b-limsea'].forEach(function(id){
@@ -6175,8 +6222,8 @@ window.SKIPPER=Object.assign({WL_NET:WL_NET,wlAssess:wlAssess,wlRaising:wlRaisin
   apparentWind:apparentWind,generalLevel:generalLevel,pegelLevel:pegelLevel,haversineNm:haversineNm,bearingDeg:bearingDeg,formatDM:formatDM,formatPos:formatPos,parseDM:parseDM,
   isOutOfArea:isOutOfArea,euOffset:euOffset,utcToLocal:utcToLocal,sunTimes:sunTimes,seaAreaOf:seaAreaOf,countryOf:countryOf,boatNeeds:boatNeeds,
   rhumb:rhumb,courseToWind:courseToWind,effThresholds:effThresholds,filterList:filterList,DISCLAIMER:DISCLAIMER,
-  NET:NET,WXGRID:WXGRID,netTree:netTree,netRoute:netRoute,treeOf:treeOf,inNet:inNet,wxAt:wxAt,wxSet:wxSet,wxFromOpenMeteo:wxFromOpenMeteo,wxUrls:wxUrls,wxValid:wxValid,
-  chunkLevel:chunkLevel,diagHTML:diagHTML,pickerSet:pickerSet,harbourMatches:harbourMatches,wxFill:wxFill,harbourTimeline:harbourTimeline,NOTES:NOTES,MAP:MAP,ZM:ZM,TILES:TILES,PACK:PACK,POPFS:POPFS,PNAT:PNAT,packBackend:packBackend,Sha256:Sha256,packCovers:packCovers,packLoadAll:packLoadAll,merc:merc,mapFit:mapFit,mapZoomAt:mapZoomAt,mapSelect:mapSelect,planGPX:planGPX,gpxFile:gpxFile,gpxParse:gpxParse,gpxSimplify:gpxSimplify,gpxDecode:gpxDecode,GPX_LIM:GPX_LIM,gpxImportText:gpxImportText,gpxiClear:gpxiClear,landCheck:landCheck,landStretches:landStretches,gpxOpenText:gpxOpenText,gpxOpenDetail:gpxOpenDetail,gpxShareBoot:gpxShareBoot,gpxShareCache:gpxShareCache,gpxiEval:gpxiEval,gpxiAdopt:gpxiAdopt,gpxiSanitize:gpxiSanitize,getGPXI:function(){return GPXI;},renderGpxImport:renderGpxImport,getWX:function(){return WX;},IDB:IDB,planTrip:planTrip,planCandidates:planCandidates,simLeg:simLeg,nightCheck:nightCheck,dayStartMs:dayStartMs,PL:PL,renderPlan:renderPlan,doImportText:doImportText,planSerialize:planSerialize,klimaFromArchive:klimaFromArchive,klimaSnapshot:klimaSnapshot,klimaRisk:klimaRisk,klimaSet:klimaSet,klimaGet:klimaGet,klimaUrl:klimaUrl,klimaYears:klimaYears,klimaPoints:klimaPoints,planKlima:planKlima,setWxMode:setWxMode,hullSpeed:hullSpeed,dieselSummary:dieselSummary,glShow:glShow,doPlan:doPlan,lageText:lageText,planText:planText,NOTESref:function(){return NOTES;},i18nKey:i18nKey,i18nText:i18nText,i18nSet:i18nSet,I18N:I18N,planAvoid:planAvoid,planReplace:planReplace,ZM:ZM,zmFit:zmFit,zmSelect:zmSelect,setZView:setZView,onbOpen:onbOpen,ONB:ONB,renderHdrAlert:renderHdrAlert,wxFill:wxFill,wxPreview:wxPreview,setPreset:setPreset,applyTheme:applyTheme},R.expose);
+  NET:NET,WXGRID:WXGRID,R:R,favOn:favOn,favToggle:favToggle,netTree:netTree,withBlockedEdges:withBlockedEdges,netRoute:netRoute,treeOf:treeOf,inNet:inNet,wxAt:wxAt,wxSet:wxSet,wxFromOpenMeteo:wxFromOpenMeteo,wxUrls:wxUrls,wxValid:wxValid,
+  chunkLevel:chunkLevel,diagHTML:diagHTML,pickerSet:pickerSet,harbourMatches:harbourMatches,wxFill:wxFill,harbourTimeline:harbourTimeline,NOTES:NOTES,MAP:MAP,ZM:ZM,TILES:TILES,PACK:PACK,POPFS:POPFS,PNAT:PNAT,packBackend:packBackend,Sha256:Sha256,packCovers:packCovers,packLoadAll:packLoadAll,merc:merc,mapFit:mapFit,mapZoomAt:mapZoomAt,mapSelect:mapSelect,planGPX:planGPX,gpxFile:gpxFile,gpxParse:gpxParse,gpxSimplify:gpxSimplify,gpxDecode:gpxDecode,GPX_LIM:GPX_LIM,gpxImportText:gpxImportText,gpxiClear:gpxiClear,landCheck:landCheck,landStretches:landStretches,gpxOpenText:gpxOpenText,gpxOpenDetail:gpxOpenDetail,gpxShareBoot:gpxShareBoot,gpxShareCache:gpxShareCache,gpxiEval:gpxiEval,gpxiAdopt:gpxiAdopt,gpxiSanitize:gpxiSanitize,getGPXI:function(){return GPXI;},renderGpxImport:renderGpxImport,getWX:function(){return WX;},IDB:IDB,planTrip:planTrip,renderViaDays:renderViaDays,planCandidates:planCandidates,simLeg:simLeg,nightCheck:nightCheck,dayStartMs:dayStartMs,PL:PL,renderPlan:renderPlan,doImportText:doImportText,planSerialize:planSerialize,klimaFromArchive:klimaFromArchive,klimaSnapshot:klimaSnapshot,klimaRisk:klimaRisk,klimaSet:klimaSet,klimaGet:klimaGet,klimaUrl:klimaUrl,klimaYears:klimaYears,klimaPoints:klimaPoints,planKlima:planKlima,setWxMode:setWxMode,hullSpeed:hullSpeed,dieselSummary:dieselSummary,glShow:glShow,doPlan:doPlan,lageText:lageText,planText:planText,NOTESref:function(){return NOTES;},i18nKey:i18nKey,i18nText:i18nText,i18nSet:i18nSet,I18N:I18N,planAvoid:planAvoid,planReplace:planReplace,ZM:ZM,zmFit:zmFit,zmSelect:zmSelect,setZView:setZView,onbOpen:onbOpen,ONB:ONB,renderHdrAlert:renderHdrAlert,wxFill:wxFill,wxPreview:wxPreview,setPreset:setPreset,applyTheme:applyTheme},R.expose);
 }
 /* =====================================================================
    Sardinia-Corsica: anchorages (ankerbucht) and buoy fields (bojenfeld)  – SPEC_sardinien.md section 3.1/3.2
