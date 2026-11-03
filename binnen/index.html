@@ -774,7 +774,7 @@ window.PK=(function(){
 /* =====================================================================
    OFFLINE MAP PACK STORAGE BACKENDS (SPEC_tiles.md section 3), used by mappack.js. Both backends offer the same Promise calls:
      ok() | manifest(base) | load(id) -> {meta,mk(),key}|null | fontHave/fontPut/fontRead | fetchPack(id,e,url,prog,ctl) -> file name (verified, not yet referenced)
-     commit(id,meta) | drop(id,file) | remove(id) | clean(id,meta) | storageFree() | persist()
+     commit(id,meta) | drop(id,file) | remove(id) | clean(id,meta) | sweep(id) | storageFree() | persist()
    web    : OPFS, needs a CORS-enabled mirror (own platform URL): GitHub release assets answer without Access-Control-Allow-Origin
    native : Capacitor Filesystem.downloadFile (native HTTP, follows the GitHub redirect, no CORS) + MapPack plugin (byte ranges, SHA-256);
             Capacitor's local server ignores the Range offset for files, so a plain FetchSource on convertFileSrc() would return wrong bytes
@@ -900,6 +900,16 @@ var POPFS={kind:'opfs',forceWorker:false,
       return (function next(){return it.next().then(function(r){if(r.done)return;var n=r.value[0];if(n!=='meta.json'&&!(meta&&n===meta.file))return dir.removeEntry(n).catch(function(){}).then(next);return next();});})();
     }).catch(function(){});
   },
+  /* interrupted first download (app closed mid-way): a dir that positively lists no meta.json holds only leftovers. A failed listing does nothing, so a read error never costs a pack */
+  sweep:function(id){
+    return this.pdir(id,true).then(function(dir){
+      var it=dir.keys?dir.keys():null,names=[];if(!it)return;
+      return (function next(){return it.next().then(function(r){if(!r.done){names.push(r.value);return next();}});})().then(function(){
+        if(names.indexOf('meta.json')>=0)return;
+        return Promise.all(names.map(function(n){return dir.removeEntry(n).catch(function(){});}));
+      });
+    }).catch(function(){});
+  },
   storageFree:function(){return navigator.storage.estimate?navigator.storage.estimate().then(function(q){return q&&q.quota&&q.usage!=null?q.quota-q.usage:null;}):Promise.resolve(null);},
   persist:function(){try{if(navigator.storage.persist)navigator.storage.persist().catch(function(){});}catch(e){}}
 };
@@ -953,6 +963,14 @@ var PNAT={kind:'native',
     var self=this;
     return self.fs().readdir({path:self.path(id),directory:'DATA'}).then(function(r){
       return Promise.all((r.files||[]).map(function(f){var n=f.name||f;return (n==='meta.json'||(meta&&n===meta.file))?null:self.drop(id,n);}));
+    }).catch(function(){});
+  },
+  sweep:function(id){   // see POPFS.sweep
+    var self=this;
+    return self.fs().readdir({path:self.path(id),directory:'DATA'}).then(function(r){
+      var names=(r.files||[]).map(function(f){return f.name||f;});
+      if(names.indexOf('meta.json')>=0)return;
+      return Promise.all(names.map(function(n){return self.drop(id,n);}));
     }).catch(function(){});
   },
   storageFree:function(){return Promise.resolve(null);},
@@ -1066,6 +1084,11 @@ function packLoadAll(){
   if(!PACK.cfg.length||!be.ok())return Promise.resolve();
   return Promise.all(PACK.cfg.map(function(p){return be.load(p.id).then(function(r){if(r){PACK.inst[p.id]=r;be.clean(p.id,r.meta);}else delete PACK.inst[p.id];});})).catch(function(e){PACK.err=packErrText(e);});
 }
+function packSweep(){   // leftovers of a first download the app did not survive; an installed pack is cleaned by packLoadAll
+  var be=packBackend();
+  if(PACK.busy||!PACK.cfg.length||!be.ok())return Promise.resolve();
+  return Promise.all(PACK.cfg.map(function(p){return PACK.inst[p.id]?null:be.sweep(p.id);}));
+}
 
 /* ---- manifest / download ---- */
 function packEntry(id){var e=PACK.man&&PACK.man.packs&&PACK.man.packs[id];return e&&e.file&&e.bytes>0&&/^[0-9a-f]{64}$/.test(e.sha256||'')?e:null;}
@@ -1171,7 +1194,7 @@ function packBind(){
     else if(b.classList.contains('mp-cancel'))packCancel();
   });
   packUI();
-  packLoadAll().then(function(){packUI();return packActivate();}).then(packUI);
+  packLoadAll().then(function(){packUI();return packActivate();}).then(function(){packUI();return packSweep();});
 }
 
   var W0=0,H0=0;
@@ -5771,8 +5794,8 @@ function bdEvents(){
   for(i=1;i<P.length;i++)along.push(along[i-1]+km({la:P[i-1][0],lo:P[i-1][1]},{la:P[i][0],lo:P[i][1]}));
   var la0=90,la1=-90,lo0=180,lo1=-180;P.forEach(function(q){la0=Math.min(la0,q[0]);la1=Math.max(la1,q[0]);lo0=Math.min(lo0,q[1]);lo1=Math.max(lo1,q[1]);});
   var at=pathAlong(P,along),out=[];
-  function add(type,name,la,lo,note){if(la==null||la<la0-.01||la>la1+.01||lo<lo0-.015||lo>lo1+.015)return;var a=at({la:la,lo:lo},0.15);if(a>=0)out.push({type:type,name:name,lat:la,lon:lo,atKm:a,note:note});}
-  (LOCKS||[]).forEach(function(l){add('lock',l.name,l.lat,l.lon,l.phone||null);});
+  function add(type,name,la,lo,note,rec){if(la==null||la<la0-.01||la>la1+.01||lo<lo0-.015||lo>lo1+.015)return;var a=at({la:la,lo:lo},0.15);if(a>=0)out.push({type:type,name:name,lat:la,lon:lo,atKm:a,note:note,rec:rec});}
+  (LOCKS||[]).forEach(function(l){add('lock',l.name,l.lat,l.lon,l.phone||null,l);});
   (BRIDGES||[]).forEach(function(b){add('bridge',b.n,b.la,b.lo,b.verclr!=null?b.verclr+' m':null);});
   (S.route&&S.route.stops||[]).forEach(function(s){add('harbour',s.n,s.la,s.lo,null);});
   if(BD_PAD){var T=window.SKIPPER_PADDEL.tour();if(T&&T.obst)T.obst.forEach(function(o){out.push({type:'waypoint',name:o.n||o.k,atKm:o.at,note:o.k||null});});}
@@ -5785,12 +5808,14 @@ function bdPointAt(P,d){var c=0,i;for(i=1;i<P.length;i++){var a=P[i-1],b=P[i],L=
 function bdHours(P){
   var c=$('t-out')&&$('t-out').querySelector('.card'),m=c&&/(\d+) h (\d+) min/.exec(c.textContent);
   if(!BD_PAD&&m)return +m[1]+m[2]/60;
-  return bdTotal(P)/(BD_PAD?prof().spd:(parseFloat(String(($('t-speed')||{}).value||'').replace(',','.'))||10));
+  return bdTotal(P)/(parseFloat(String(($('t-speed')||{}).value||'').replace(',','.'))||(BD_PAD?prof().spd:10));
 }
 /* The window rates what is driven in one go: Paddel one day stage, Binnen the route. A point forecast holds 30 sm around it, so at most 90 km and the forecast from the middle of that stretch. */
 function bdStage(P){
   var all=bdTotal(P),d=Math.min(all,90,BD_PAD?prof().day:90);
-  return {km:d,part:d<all-0.5,to:bdPointAt(P,d),mid:bdPointAt(P,d/2),hours:bdHours(P)*(d/(all||1))};
+  var h=bdHours(P)*(d/(all||1));
+  if(BD_PAD){var T=window.SKIPPER_PADDEL.tour();if(T&&T.obst)T.obst.forEach(function(o){if(o.at<=d)h+=0.5;});bdEvents().forEach(function(e){if(e.type==='lock'&&e.atKm<=d)h+=1/3;});}   /* as the shell counts a stage: 20 min per lock, 30 min per carry */
+  return {km:d,part:d<all-0.5,to:bdPointAt(P,d),mid:bdPointAt(P,d/2),hours:h};
 }
 function bdPlan(){
   var P=bdLine();if(!P||!S.route)return null;
@@ -5800,8 +5825,8 @@ function bdPlan(){
   return {text:txt,arriveAt:BD_PAD?null:dep.getTime()+bdHours(P)*3600000};
 }
 function bdPos(){
-  if(BD.fix&&BD.fix.lat!=null)return BD.fix;
-  var p=S.pos;return p?{lat:p.la,lon:p.lo,t:p.t,src:p.manual?'manual':'gps'}:null;
+  var p=S.pos,q=p?{lat:p.la,lon:p.lo,t:p.t,src:p.manual?'manual':'gps'}:null,f=BD.fix&&BD.fix.lat!=null?BD.fix:null;
+  return f&&q&&(q.t||0)>(f.t||0)?q:f||q;
 }
 
 /* ---- forecast: loadWx() of the shell keeps 12 h for its traffic light, the window needs 72 h and more values, so it has its own request and store ---- */
@@ -5820,7 +5845,7 @@ function bdWindowPaint(){
   var el=$('bd-window'),P=bdLine();
   if(!P||P.length<2){var k='Erst im Reiter Törn eine Route planen.';el.textContent=bdT(BD_PAD?BD_PADT[k]:k);if(BD.window&&BD.window.destroy)try{BD.window.destroy();}catch(e){}BD.window=null;return;}
   var G=bdStage(P),A=S.route&&S.route.from,B=S.route&&S.route.to,o={leg:{name:(A&&A.n||'Start')+' → '+(G.part?bdT('erste')+' '+Math.round(G.km)+' km':(B&&B.n||'Ziel')),from:{lat:P[0][0],lon:P[0][1]},to:{lat:G.to[0],lon:G.to[1]},hours:G.hours},
-    wx:BD.wx,profile:BD_PAD?(cautious()?'paddel-cautious':'paddel'):'binnen',appLight:bdLight(),warnings:[],boat:{},timeZone:'Europe/Berlin',uiLang:bdL(),lang:bdL()};
+    wx:BD.wx,profile:BD_PAD?(cautious()?'paddel-cautious':'paddel'):'binnen',appLight:bdLight(),boat:{},timeZone:'Europe/Berlin',uiLang:bdL(),lang:bdL()};
   if(BD.window&&BD.window.update){BD.window.update(o);return;}
   el.textContent='';BD.window=bdMount('bd-window',function(e){return SKIPPER_WINDOW.mount(e,o);});
 }
@@ -5828,8 +5853,10 @@ function bdWindowPaint(){
 /* ---- contact: the nearest locks and harbours, next along the route first ---- */
 function bdCand(){
   var ref=S.pos||home(),seen={},out=[];
-  function push(r,d){var id=r.id||r.name||r.n;if(!id||seen[id])return;seen[id]=1;out.push({r:r,d:d});}
-  bdEvents().filter(function(e){return e.type==='lock';}).forEach(function(e){var l=(LOCKS||[]).filter(function(x){return x.name===e.name;})[0];if(l)push(l,-1e6+e.atKm);});
+  function push(r,d){var id=r.id||(r.lat!=null?r.lat+','+r.lon:r.name||r.n);if(!id||seen[id])return;seen[id]=1;out.push({r:r,d:d});}   /* 70 locks share the name "Schleuse ohne Namen" */
+  var ev=bdEvents().filter(function(e){return e.type==='lock'&&e.rec;}),here=-1,best=1e9;
+  if(S.pos)ev.forEach(function(e){var d=km(S.pos,{la:e.lat,lo:e.lon});if(d<best){best=d;here=e.atKm;}});   // the nearest lock on the route tells where along it we are: those behind go to the plain distance sort
+  ev.forEach(function(e){if(e.atKm>=here)push(e.rec,-1e6+e.atKm);});
   (LOCKS||[]).forEach(function(l){if(l.lat!=null)push(l,km(ref,{la:l.lat,lo:l.lon}));});
   (POIS||[]).forEach(function(p){if(p.n&&(p.c==='hafen'||p.c==='anleger'||p.c==='rast'||p.tel||p.phone))push(p,km(ref,p));});
   out.sort(function(a,b){return a.d-b.d;});return out.slice(0,12).map(function(x){return x.r;});
@@ -5883,7 +5910,9 @@ function bdInit(){
 }
 function bdOpen(){
   $('bd-noroute').style.display=bdLine()?'none':'';
-  [BD.ctl,BD.share,BD.log,BD.lists].forEach(function(u){if(u&&u.refresh)try{u.refresh();}catch(e){}});
+  /* the underway module forgets its place on the route when given it again: only a new route may do that */
+  var rk=S.route||S.track||null,same=BD.routeKey===rk;BD.routeKey=rk;
+  [same?null:BD.ctl,BD.share,BD.log,BD.lists].forEach(function(u){if(u&&u.refresh)try{u.refresh();}catch(e){}});
   try{bdContactPaint();}catch(e){}
   var P=bdLine();bdWindowPaint();
   if(P&&P.length>1)bdWxLoad(P).then(bdWindowPaint);
