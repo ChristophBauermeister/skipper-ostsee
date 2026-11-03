@@ -963,7 +963,7 @@ function packActivate(){   // libs + installed packs -> packs drive the maps
 function packLoadAll(){
   var be=packBackend();
   if(!PACK.cfg.length||!be.ok())return Promise.resolve();
-  return Promise.all(PACK.cfg.map(function(p){return be.load(p.id).then(function(r){if(r)PACK.inst[p.id]=r;else delete PACK.inst[p.id];be.clean(p.id,r&&r.meta);});})).catch(function(e){PACK.err=packErrText(e);});
+  return Promise.all(PACK.cfg.map(function(p){return be.load(p.id).then(function(r){if(r){PACK.inst[p.id]=r;be.clean(p.id,r.meta);}else delete PACK.inst[p.id];});})).catch(function(e){PACK.err=packErrText(e);});
 }
 
 /* ---- manifest / download ---- */
