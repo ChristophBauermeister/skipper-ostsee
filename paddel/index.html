@@ -900,7 +900,7 @@ var POPFS={kind:'opfs',forceWorker:false,
       }).catch(function(){return null;});
     },function(){return null;});
   },
-  fontHave:function(f){return this.fdir().then(function(d){return d.getFileHandle(packFontKey(f.name,f.range));}).then(function(){return true;},function(){return false;});},
+  fontHave:function(f){return this.fdir().then(function(d){return d.getFileHandle(packFontKey(f.name,f.range));}).then(function(h){return h.getFile();}).then(function(x){return f.bytes?x.size===f.bytes:x.size>0;},function(){return false;});},   // a part left by a stopped app is no font
   fontPut:function(f,url,ctl){
     var self=this;
     return fetch(url,{credentials:'omit',signal:ctl.signal}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.arrayBuffer();}).then(function(b){
@@ -908,7 +908,7 @@ var POPFS={kind:'opfs',forceWorker:false,
       return self.fdir().then(function(d){return self.small('skmap-fonts',d,packFontKey(f.name,f.range),new Uint8Array(b));});
     });
   },
-  fontRead:function(name,range){return this.fdir().then(function(d){return d.getFileHandle(packFontKey(name,range));}).then(function(h){return h.getFile();}).then(function(f){return f.arrayBuffer();}).catch(function(){return null;});},
+  fontRead:function(name,range){return this.fdir().then(function(d){return d.getFileHandle(packFontKey(name,range));}).then(function(h){return h.getFile();}).then(function(f){return f.size?f.arrayBuffer():null;}).catch(function(){return null;});},
   fetchPack:function(id,e,url,prog,ctl){
     var self=this,part=packPartName(e),sha=new Sha256(),w=null,dir=null;
     return self.pdir(id).then(function(d){dir=d;return self.writer('skmap-'+id,dir,part);}).then(function(x){w=x;
@@ -965,7 +965,7 @@ var PNAT={kind:'native',
       });
     }).catch(function(){return null;});
   },
-  fontHave:function(f){return this.fs().stat({path:'skmap/fonts/'+packFontKey(f.name,f.range),directory:'DATA'}).then(function(){return true;},function(){return false;});},
+  fontHave:function(f){return this.fs().stat({path:'skmap/fonts/'+packFontKey(f.name,f.range),directory:'DATA'}).then(function(st){return f.bytes?st.size===f.bytes:st.size>0;},function(){return false;});},
   fontPut:function(f,url,ctl){var self=this,path='skmap/fonts/'+packFontKey(f.name,f.range);   // a short file counts as installed for good: fontHave only sees that it exists
     return self.dl(url,path).then(function(r){return f.bytes?self.fs().stat({path:path,directory:'DATA'}).then(function(st){
       if(st.size===f.bytes)return r;return self.fs().deleteFile({path:path,directory:'DATA'}).catch(function(){}).then(function(){throw new Error('Schrift unvollständig – Download unvollständig.');});}):r;});},
@@ -1143,7 +1143,7 @@ function packDownload(id){
   }).then(function(r){
     if(r)PACK.inst[id]=r;
     PACK.busy=null;PACK.ctl=null;PACK.msg='Kartenpaket geladen.';packProgHide();
-    return be.clean(id,r&&r.meta).then(packActivate);
+    return (r?be.clean(id,r.meta):Promise.resolve()).then(packActivate);
   }).then(function(){packUI();}).catch(function(err){
     var cancelled=(err&&err.name==='AbortError')||ctl.aborted===true;
     PACK.busy=null;PACK.ctl=null;packProgHide();
@@ -1263,7 +1263,7 @@ var SkTheme=(function(){
 })();
 
 /* "Update available" for the Android shells (queue #49c). Stand-alone, needs no other core file; the web apps update through their service worker.
-   SkUpdate.check({url:'https://…/version.json',current:'2.25.1',key:'skipperOst.upd',t:translate,mount:element});
+   SkUpdate.check({url:'https://…/version.json',current:'2.25.1',key:'app.upd',t:translate,mount:element});
    Without connection, with a broken file or an equal version nothing happens. The link leads to the release page with the APK; installing over the app keeps the data
    as long as the signature stays the same (#49a). A direct start of the installer needs REQUEST_INSTALL_PACKAGES in the shell and comes with the device test. */
 var SkUpdate=(function(){

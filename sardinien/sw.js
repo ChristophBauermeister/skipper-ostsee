@@ -1,12 +1,12 @@
 /* Offline cache for Skipper-Assistent Sardinien-Korsika. Cache-first, falls back to network; all errors are swallowed. */
-var CACHE='skipper-sardinien-v0.7.2-20261103-h4c0f7f98';
+var CACHE='skipper-sardinien-v0.7.3-20261103-h410ffc7e';
 var SHARE='skipper-sardinien-share';   // GPX received through the Web Share Target (kept apart from the app cache so updates do not delete it)
 var FAMILY='skipper-sardinien-v';  // only older versions of THIS app's cache are removed (the other app lives on the same origin)
 var FILES=['./','./index.html','./manifest.webmanifest','./icon.svg','./icon-192.png','./icon-512.png','./icon-180.png'];
 var VENDOR=['./vendor/pmtiles.js','./vendor/maplibre-gl.js','./vendor/maplibre-gl.css'];   // offline map pack libraries: cached when first used, carried over to a new version only if an older cache had them
 function carryVendor(c){
   return caches.keys().then(function(ks){return Promise.all(ks.filter(function(k){return k!==CACHE&&k.indexOf(FAMILY)===0;}).map(function(k){return caches.open(k).then(function(o){return o.match('./vendor/maplibre-gl.js');});}));})
-    .then(function(f){return f.some(Boolean)?c.addAll(VENDOR).catch(function(){}):null;});
+    .then(function(f){return f.some(Boolean)?c.addAll(VENDOR):null;});
 }
 self.addEventListener('install',function(e){
   e.waitUntil(caches.open(CACHE).then(function(c){return c.addAll(FILES).then(function(){return carryVendor(c);});}).then(function(){return self.skipWaiting();}));

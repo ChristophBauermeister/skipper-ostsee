@@ -37,10 +37,10 @@
   --bg:#000; --card:#120000; --ink:#ff6a5a; --mute:#d9483a; --line:#6a1212;
   --head:#000; --headink:#ff6a5a; --headmute:#c03a2d;
   --accent:#ff3b2a; --accent-ink:#ff6a5a; --btn:#1c0000; --on:#ff3b2a; --onink:#000;
-  --g:#1c0000; --gt:#ff8a7a; --gb:#ff6a5a; --y:#4a1400; --yt:#ffb3a0; --yb:#ff8a5a; --r:#d41a1a; --rt:#000; --rb:#ff3b2a; --n:#240808; --nt:#d98a80; --i:#1c0000; --it:#ff8a7a;
+  --g:#1c0000; --gt:#ff8a7a; --gb:#ff6a5a; --y:#4a1400; --yt:#ffb3a0; --yb:#ff8a5a; --r:#ff3b2a; --rt:#000; --rb:#ff3b2a; --n:#240808; --nt:#d98a80; --i:#1c0000; --it:#ff8a7a;
   --rose-full:#ff3b2a; --rose-bg:#2a0000; --rose-line:#8a2a22; --wind:#ffd0c8; --swell:#ff9a8a;
   --rose-ok:#b3261e; --rose-part:#5a0f0a; --rose-open:#2a0000; --rose-txt:#ffb4a8; --rose-wind:#ffd0c8; --rose-swell:#ff9a8a;
-  --warnbg:#240000; --warnink:#ff9a8a; --emerg:#d41a1a;
+  --warnbg:#240000; --warnink:#ff9a8a; --emerg:#ff3b2a;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{font-size:16px;-webkit-text-size-adjust:100%}
@@ -191,7 +191,13 @@ nav button .ic{font-size:1.3rem;line-height:1}
 nav button.on{color:var(--headink);border-color:var(--headink)}
 nav button.sos{background:var(--emerg);color:#fff;border-color:var(--emerg)}
 nav button.sos.on{border-color:#fff}
-:root[data-theme="night"] nav button.sos{background:#d41a1a;color:#000}
+:root[data-theme="night"] .posline.warn{color:#ffb3a0}
+/* browser default blue is unreadable on a dark background: phone numbers on the emergency tab are links. Plain element selector: .banner, .hcard and the like keep their own link colour */
+:root[data-theme="night"]{--link:var(--accent-ink)}
+a{color:var(--link,#0000ee)}
+@media (prefers-color-scheme:dark){:root:not([data-theme]){--link:var(--accent-ink)}}
+:root[data-theme="night"] .nbadge.lv-g{background:var(--gb)}:root[data-theme="night"] .nbadge.lv-y{background:var(--yb)}:root[data-theme="night"] .nbadge.lv-r{background:var(--rb)}
+:root[data-theme="night"] nav button.sos{background:#ff3b2a;color:#000}
 :root[data-theme="night"] nav button.sos.on{border-color:#ffb3a0}
 .hidden-svg{position:absolute;width:0;height:0;overflow:hidden}
 #printdoc{display:none}
@@ -1082,6 +1088,14 @@ var REGIONS=(function(){
   return Object.keys(m).map(function(k){var r=m[k];r.lat/=r.n;r.lon/=r.n;return r;}).sort(function(a,b){return a.country===b.country?(a.region<b.region?-1:1):(a.country<b.country?-1:1);});
 })();
 var REG_BY_KEY={};REGIONS.forEach(function(r){REG_BY_KEY[r.key]=r;});
+/* Translations of the parts of composed core warnings (status.js, gates.js, thresholds.js): every package gets them, whatever its dictionary holds.
+   Keys as built by i18nKey. Written by the Kern run, not reviewed by a native sailor. */
+var I18N_CORE={
+en:{"Update verfügbar": "Update available","Zum Download": "To the download","Später": "Later","Böen {n0} kn (wahr) ≥ {n1} kn": "True gusts {n0} kn ≥ {n1} kn","Böen {n0} kn (wahr), Schwelle {n1}–{n2} kn": "True gusts {n0} kn, threshold {n1}–{n2} kn","Böen {n0} kn (wahr) unter {n1} kn": "True gusts {n0} kn below {n1} kn","Böen {n0} kn ≥ {n1} kn": "Gusts {n0} kn ≥ {n1} kn","Seegang {n0} m ≥ {n1} m": "Sea state {n0} m ≥ {n1} m","Kinder: −{n0} kn": "Children: −{n0} kn","Vor-/Nachsaison: −{n0} kn": "Early/late season: −{n0} kn","Kinder + Vor-/Nachsaison: −{n0} kn": "Children + early/late season: −{n0} kn","Kinder/Vor-/Nachsaison: −{n0} kn": "Children/early/late season: −{n0} kn","eigene Grenze Böen {n0} kn": "own gust limit {n0} kn","eigene Grenze": "own limit","Nicht mehr auf offener See sein – nächsten geschützten Platz aus der Liste anlaufen": "Do not stay on open water – head for the nearest sheltered place on the list","Ausweichhafen vor Etappenbeginn festlegen, Crew briefen": "Choose an alternative harbour before the leg starts, brief the crew","Zusätzlich": "Also","Auslöser": "Trigger","Segelführung": "Sail plan","kurze, steile Ostseewelle": "short, steep Baltic sea","kurze, steile See": "short, steep sea","Nebel: Radar/AIS, Schallsignale, Verkehrstrennungsgebiete meiden": "Fog: radar/AIS, sound signals, keep clear of traffic separation schemes","Gewitter: Hafen vorher erreichen, Reff früh": "Thunderstorm: reach harbour first, reef early","Offene See, Großschifffahrt, unterwegs kein Zufluchtsort": "Open sea, commercial shipping, no refuge on the way","Offene See, unterwegs kein Zufluchtsort": "Open sea, no refuge on the way","Schwellen: Faustregel": "Thresholds: rule of thumb"},
+da:{"Update verfügbar": "Opdatering tilgængelig","Zum Download": "Til download","Später": "Senere","Böen {n0} kn (wahr) ≥ {n1} kn": "Sande vindstød {n0} kn ≥ {n1} kn","Böen {n0} kn (wahr), Schwelle {n1}–{n2} kn": "Sande vindstød {n0} kn, grænse {n1}–{n2} kn","Böen {n0} kn (wahr) unter {n1} kn": "Sande vindstød {n0} kn under {n1} kn","Böen {n0} kn ≥ {n1} kn": "Vindstød {n0} kn ≥ {n1} kn","Seegang {n0} m ≥ {n1} m": "Søgang {n0} m ≥ {n1} m","Kinder: −{n0} kn": "Børn: −{n0} kn","Vor-/Nachsaison: −{n0} kn": "For-/efterår: −{n0} kn","Kinder + Vor-/Nachsaison: −{n0} kn": "Børn + for-/efterår: −{n0} kn","Kinder/Vor-/Nachsaison: −{n0} kn": "Børn/for-/efterår: −{n0} kn","eigene Grenze Böen {n0} kn": "egen vindstødsgrænse {n0} kn","eigene Grenze": "egen grænse","Nicht mehr auf offener See sein – nächsten geschützten Platz aus der Liste anlaufen": "Bliv ikke på åbent vand – sejl til nærmeste beskyttede plads på listen","Ausweichhafen vor Etappenbeginn festlegen, Crew briefen": "Vælg en alternativ havn før etapen, orienter besætningen","Zusätzlich": "Desuden","Auslöser": "Årsag","Segelführung": "Sejlføring","kurze, steile Ostseewelle": "kort, stejl Østersø-bølge","kurze, steile See": "kort, stejl sø","Nebel: Radar/AIS, Schallsignale, Verkehrstrennungsgebiete meiden": "Tåge: radar/AIS, lydsignaler, undgå trafiksepareringsområder","Gewitter: Hafen vorher erreichen, Reff früh": "Tordenvejr: nå havn inden, rebning tidligt","Offene See, Großschifffahrt, unterwegs kein Zufluchtsort": "Åbent hav, stor skibsfart, intet tilflugtssted undervejs","Offene See, unterwegs kein Zufluchtsort": "Åbent hav, intet tilflugtssted undervejs","Schwellen: Faustregel": "Grænser: tommelfingerregel"},
+sv:{"Update verfügbar": "Uppdatering tillgänglig","Zum Download": "Till nedladdning","Später": "Senare","Böen {n0} kn (wahr) ≥ {n1} kn": "Sanna byar {n0} kn ≥ {n1} kn","Böen {n0} kn (wahr), Schwelle {n1}–{n2} kn": "Sanna byar {n0} kn, gräns {n1}–{n2} kn","Böen {n0} kn (wahr) unter {n1} kn": "Sanna byar {n0} kn under {n1} kn","Böen {n0} kn ≥ {n1} kn": "Byar {n0} kn ≥ {n1} kn","Seegang {n0} m ≥ {n1} m": "Sjögång {n0} m ≥ {n1} m","Kinder: −{n0} kn": "Barn: −{n0} kn","Vor-/Nachsaison: −{n0} kn": "För-/eftersäsong: −{n0} kn","Kinder + Vor-/Nachsaison: −{n0} kn": "Barn + för-/eftersäsong: −{n0} kn","Kinder/Vor-/Nachsaison: −{n0} kn": "Barn/för-/eftersäsong: −{n0} kn","eigene Grenze Böen {n0} kn": "egen bygräns {n0} kn","eigene Grenze": "egen gräns","Nicht mehr auf offener See sein – nächsten geschützten Platz aus der Liste anlaufen": "Stanna inte på öppet vatten – gå till närmaste skyddade plats på listan","Ausweichhafen vor Etappenbeginn festlegen, Crew briefen": "Välj en reservhamn före etappen, informera besättningen","Zusätzlich": "Dessutom","Auslöser": "Orsak","Segelführung": "Segelföring","kurze, steile Ostseewelle": "kort, brant Östersjövåg","kurze, steile See": "kort, brant sjö","Nebel: Radar/AIS, Schallsignale, Verkehrstrennungsgebiete meiden": "Dimma: radar/AIS, ljudsignaler, undvik trafikseparering","Gewitter: Hafen vorher erreichen, Reff früh": "Åska: nå hamn innan, reva tidigt","Offene See, Großschifffahrt, unterwegs kein Zufluchtsort": "Öppet hav, stor sjöfart, ingen nödhamn på vägen","Offene See, unterwegs kein Zufluchtsort": "Öppet hav, ingen nödhamn på vägen","Schwellen: Faustregel": "Gränser: tumregel"},
+pl:{"Update verfügbar": "Dostępna aktualizacja","Zum Download": "Do pobrania","Später": "Później","Böen {n0} kn (wahr) ≥ {n1} kn": "Porywy rzeczywiste {n0} kn ≥ {n1} kn","Böen {n0} kn (wahr), Schwelle {n1}–{n2} kn": "Porywy rzeczywiste {n0} kn, próg {n1}–{n2} kn","Böen {n0} kn (wahr) unter {n1} kn": "Porywy rzeczywiste {n0} kn poniżej {n1} kn","Böen {n0} kn ≥ {n1} kn": "Porywy {n0} kn ≥ {n1} kn","Seegang {n0} m ≥ {n1} m": "Stan morza {n0} m ≥ {n1} m","Kinder: −{n0} kn": "Dzieci: −{n0} kn","Vor-/Nachsaison: −{n0} kn": "Przed-/posezon: −{n0} kn","Kinder + Vor-/Nachsaison: −{n0} kn": "Dzieci + przed-/posezon: −{n0} kn","Kinder/Vor-/Nachsaison: −{n0} kn": "Dzieci/przed-/posezon: −{n0} kn","eigene Grenze Böen {n0} kn": "własny limit porywów {n0} kn","eigene Grenze": "własny limit","Nicht mehr auf offener See sein – nächsten geschützten Platz aus der Liste anlaufen": "Nie pozostawaj na otwartym morzu – płyń do najbliższego osłoniętego miejsca z listy","Ausweichhafen vor Etappenbeginn festlegen, Crew briefen": "Wybierz port zapasowy przed etapem, poinstruuj załogę","Zusätzlich": "Dodatkowo","Auslöser": "Przyczyna","Segelführung": "Ożaglowanie","kurze, steile Ostseewelle": "krótka, stroma fala bałtycka","kurze, steile See": "krótka, stroma fala","Nebel: Radar/AIS, Schallsignale, Verkehrstrennungsgebiete meiden": "Mgła: radar/AIS, sygnały dźwiękowe, unikaj systemów rozgraniczenia ruchu","Gewitter: Hafen vorher erreichen, Reff früh": "Burza: dotrzyj wcześniej do portu, refuj wcześnie","Offene See, Großschifffahrt, unterwegs kein Zufluchtsort": "Otwarte morze, duże statki, brak schronienia po drodze","Offene See, unterwegs kein Zufluchtsort": "Otwarte morze, brak schronienia po drodze","Schwellen: Faustregel": "Progi: reguła kciuka"}
+};
 /* =====================================================================
    I18N (SPEC §28) – the UI is written in German; text nodes and a few attributes are translated at render time.
    Key = text with harbour/bridge/region names -> {hN} and numbers -> {nN}; dictionary in data/i18n.json.
@@ -1094,10 +1108,11 @@ var I18N_WDDE=['Mo','Di','Mi','Do','Fr','Sa','So'];
 var I18N_WD={da:['ma','ti','on','to','fr','lø','sø'],sv:['mån','tis','ons','tor','fre','lör','sön'],pl:['pn','wt','śr','cz','pt','sb','nd'],en:['Mon','Tue','Wed','Thu','Fri','Sat','Sun']};
 var I18N_FLAG={de:'🇩🇪',da:'🇩🇰',sv:'🇸🇪',pl:'🇵🇱',en:'🇬🇧',it:'🇮🇹',fr:'🇫🇷'};
 function i18nAllowed(l){return !!I18N_LANGS[l]&&REVIER.langs.indexOf(l)>=0;}
-/* device language -> app language: revier.json "langMap" (e.g. nb -> da), unsupported languages fall back to English if the package has it */
-function i18nDevice(nav){var m=(REVIER.langMap||{})[nav]||nav;return i18nAllowed(m)?m:(i18nAllowed('en')?'en':REVIER.defaultLang);}
+/* device language -> app language: revier.json "langMap" (e.g. nb -> da). Unsupported languages use "langFallback", without it English if the
+   package has it. A package whose translation is not reviewed sets "langFallback" to its default language: it is then reached by hand only. */
+function i18nDevice(nav){var m=(REVIER.langMap||{})[nav]||nav;if(i18nAllowed(m))return m;var f=REVIER.langFallback;if(f&&i18nAllowed(f))return f;return i18nAllowed('en')?'en':REVIER.defaultLang;}
 var I18N_DIR={da:{},sv:{},pl:{},en:{}};   // directions stay international (N/NE/E…): single letters are also data codes (E = Einfahrt)
-var I18N={lang:'de',re:null,cache:{},orig:new WeakMap(),done:new WeakMap(),attr:new WeakMap(),obs:null,miss:{}};
+var I18N={lang:'de',re:null,cache:{},orig:new WeakMap(),done:new WeakMap(),attr:new WeakMap(),obs:null,miss:{},part:{}};
 function i18nNameRe(){
   if(I18N.re)return I18N.re;
   var set={};
@@ -1121,18 +1136,43 @@ function i18nKey(s){
   var r=0;k=k.replace(/\u0005/g,function(){return '{w'+(r++)+'}';});
   return {k:k,h:h,n:n,d:d,m:mo,w:wd};
 }
+/* translation of one exact string, null if there is none. Dictionary of the package first, then the core table (i18n-core.js) */
+function i18nLookup(s){
+  var K=i18nKey(s),D=(typeof I18N_DATA!=='undefined'&&I18N_DATA[I18N.lang])||{},C=(typeof I18N_CORE!=='undefined'&&I18N_CORE[I18N.lang])||{},t=D[K.k];
+  if(t==null)t=C[K.k];
+  if(t==null)return null;
+  var ok=true,DM=I18N_DIR[I18N.lang]||{};
+  var out=t.replace(/\{([hndmw])(\d+)\}/g,function(m,ty,ix,off){var a=ty==='h'?K.h:ty==='n'?K.n:ty==='m'?K.m:ty==='w'?K.w:K.d,v=a[+ix];if(v==null){ok=false;return m;}if(ty==='w'){var WL=I18N_WD[I18N.lang],wv=WL?WL[I18N_WDDE.indexOf(v)]:v;return off===0?wv.charAt(0).toUpperCase()+wv.slice(1):wv;}if(ty==='m'){var ML=I18N_MON[I18N.lang];return ML?ML[I18N_MONDE.indexOf(v)]:v;}return ty==='d'?(DM[v]||v):v;});
+  return ok?out:null;
+}
+/* Warnings are composed of parts ("Böen 30 kn ≥ 27 kn (Kinder: −3 kn). Nicht mehr …"), the combinations cannot all be in a dictionary.
+   Without a key for the whole text: the longest runs of parts that have one. A part without translation stays German, the rest is still read. */
+var I18N_CUT=/(^\(|\.\s+\(?|;\s+|:\s+|\s\(|\)\.?\s*\(?|,\s+|\s\+\s|\s–\s|\.$)/;
+function i18nParts(s){
+  var a=s.split(I18N_CUT),out='',i=0,hit=false;
+  if(a.length<3||a.length>61)return null;
+  while(i<a.length){
+    if(i%2){out+=a[i++];continue;}
+    var t=null,j;
+    for(j=Math.min(a.length-1,i+16);j>=i;j-=2){
+      var run=a.slice(i,j+1).join('');
+      if(!/[A-Za-zÄÖÜäöüß]/.test(run))continue;
+      t=i18nLookup(run);if(t==null&&a[j+1]&&a[j+1].charAt(0)==='.'){t=i18nLookup(run+'.');if(t!=null)t=t.replace(/\.$/,'');}
+      if(t!=null)break;
+    }
+    if(t!=null){out+=t;hit=true;i=j+1;}
+    else{if(/[A-Za-zÄÖÜäöüß]/.test(a[i]))I18N.part[i18nKey(a[i]).k]=1;out+=a[i];i++;}
+  }
+  return hit?out:null;
+}
 function i18nText(s){
   if(I18N.lang==='de'||s==null)return s;
   s=String(s);if(!/[A-Za-zÄÖÜäöüß]/.test(s))return s;
-  var lead=s.match(/^\s*/)[0],trail=s.match(/\s*$/)[0];
+  var lead=s.match(/^\s*/)[0],trail=s.match(/\s*$/)[0],core=s.trim();
   var ck=I18N.lang+'\u0002'+s;if(I18N.cache[ck]!=null)return I18N.cache[ck];
-  var K=i18nKey(s),D=(typeof I18N_DATA!=='undefined'&&I18N_DATA[I18N.lang])||{},t=D[K.k],out=s;
-  if(t!=null){
-    var ok=true;
-    var DM=I18N_DIR[I18N.lang]||{};
-    out=lead+t.replace(/\{([hndmw])(\d+)\}/g,function(m,ty,ix,off){var a=ty==='h'?K.h:ty==='n'?K.n:ty==='m'?K.m:ty==='w'?K.w:K.d,v=a[+ix];if(v==null){ok=false;return m;}if(ty==='w'){var WL=I18N_WD[I18N.lang],wv=WL?WL[I18N_WDDE.indexOf(v)]:v;return off===0?wv.charAt(0).toUpperCase()+wv.slice(1):wv;}if(ty==='m'){var ML=I18N_MON[I18N.lang];return ML?ML[I18N_MONDE.indexOf(v)]:v;}return ty==='d'?(DM[v]||v):v;})+trail;
-    if(!ok)out=s;
-  }else I18N.miss[K.k]=1;
+  var t=i18nLookup(core),out=s;
+  if(t==null){I18N.miss[i18nKey(s).k]=1;t=i18nParts(core);}
+  if(t!=null)out=lead+t+trail;
   if(Object.keys(I18N.cache).length>8000)I18N.cache={};
   I18N.cache[ck]=out;return out;
 }
@@ -1285,13 +1325,14 @@ var IDB={
       }catch(e){rej(e);}
     });
   },
-  tx:function(mode,fn){return this.open().then(function(db){return new Promise(function(res,rej){try{var t=db.transaction('wx',mode),st=t.objectStore('wx'),out=fn(st);t.oncomplete=function(){res(out&&out.result!==undefined?out.result:out);};t.onerror=function(){rej(t.error);};}catch(e){rej(e);}});});},
+  tx:function(mode,fn){return this.open().then(function(db){return new Promise(function(res,rej){try{var t=db.transaction('wx',mode),st=t.objectStore('wx'),out=fn(st);t.oncomplete=function(){res(out&&out.result!==undefined?out.result:out);};t.onerror=function(){rej(t.error);};t.onabort=function(){rej(t.error||new Error('abort'));};}catch(e){rej(e);}});});},
   put:function(s){var self=this;return self.tx('readwrite',function(st){st.put(s);}).then(function(){return self.prune();});},
   all:function(){return this.tx('readonly',function(st){return st.getAll();}).then(function(a){return (a||[]).sort(function(x,y){return x.fetchedAt<y.fetchedAt?-1:1;});});},
   prune:function(){var self=this;return self.all().then(function(a){var drop=a.slice(0,Math.max(0,a.length-CONST.wx.keep));if(!drop.length)return a.length;return self.tx('readwrite',function(st){drop.forEach(function(s){st.delete(s.fetchedAt);});}).then(function(){return a.length-drop.length;});});},
   latest:function(){return this.all().then(function(a){return a.length?a[a.length-1]:null;});}
 };
-function wxStore(snap){return IDB.put(snap).catch(function(){return null;});}
+function wxStore(snap){return IDB.put(snap).then(function(n){return n==null?true:n;},function(){return false;});}   // false: kept in memory only, gone at the next start offline
+var WX_NOSAVE='Wetter nicht gespeichert (Speicher voll?): Offline steht es nach einem Neustart nicht zur Verfügung.';
 /* =====================================================================
    WEATHER (SPEC §14.2) – Open-Meteo snapshot, only on request
    ===================================================================== */
@@ -1360,7 +1401,7 @@ function wxLoadOnline(){
   var u=wxUrls();wxMsg('Lade Wetter …','i');
   var fc=fetchJSON(u.forecast),ma=fetchJSON(u.marine).catch(function(){return null;});
   return Promise.all([fc,ma]).then(function(r){
-    var snap=wxFromOpenMeteo(r[0],r[1]);wxSet(snap);return wxStore(snap).then(function(){wxMsg(r[1]?'':'Wellendaten nicht geladen – Seegang gilt als unbekannt.',r[1]?null:'y');renderWxState();});
+    var snap=wxFromOpenMeteo(r[0],r[1]);wxSet(snap);return wxStore(snap).then(function(ok){wxMsg((r[1]?'':'Wellendaten nicht geladen – Seegang gilt als unbekannt. ')+(ok?'':WX_NOSAVE),r[1]&&ok?null:'y');renderWxState();});
   }).catch(function(e){
     if(PL.plat){wxMsg('Open-Meteo nicht erreichbar ('+e.message+') – versuche Plattform-Backup …','y');return wxLoadPlatform(true);}
     wxMsg('Wetter konnte nicht geladen werden ('+e.message+'). Letzter gespeicherter Stand bleibt aktiv.','r');
@@ -1371,7 +1412,7 @@ function wxLoadPlatform(fallback){
   return fetchJSON(PL.plat).then(function(o){
     if(!wxValid(o))throw new Error('kein gültiger Wetterstand');
     if(WX&&Date.parse(WX.fetchedAt)>Date.parse(o.fetchedAt)){wxMsg('Plattform-Backup ist älter als der gespeicherte Wetterstand, dieser bleibt aktiv.','y');return;}
-    o.source='plattform';wxSet(o);return wxStore(o).then(function(){wxMsg(fallback?'Wetter vom Plattform-Backup geladen.':'',fallback?'y':null);renderWxState();});
+    o.source='plattform';wxSet(o);return wxStore(o).then(function(ok){wxMsg((fallback?'Wetter vom Plattform-Backup geladen. ':'')+(ok?'':WX_NOSAVE),fallback||!ok?'y':null);renderWxState();});
   }).catch(function(e){wxMsg('Plattform-Backup nicht erreichbar ('+e.message+').','r');});
 }
 /* =====================================================================
@@ -1601,7 +1642,7 @@ function wlSegDistNm(lat,lon,a,b){
   var k=Math.cos(lat*Math.PI/180),ax=(a[1]-lon)*k*60,ay=(a[0]-lat)*60,bx=(b[1]-lon)*k*60,by=(b[0]-lat)*60,dx=bx-ax,dy=by-ay,l2=dx*dx+dy*dy,t=l2?Math.max(0,Math.min(1,-(ax*dx+ay*dy)/l2)):0,px=ax+t*dx,py=ay+t*dy;
   return Math.sqrt(px*px+py*py);
 }
-function wlInAreas(pos,polys,bufferNm){
+function wlInAreas(pos,polys,bufferNm,union){   // union: CAP knows no holes, a ring inside a ring must not take the warning off a position
   var inside=false,dist=Infinity,seen={},hit=[];
   (polys||[]).forEach(function(r){
     if(!r||r.length<3)return;
@@ -1612,13 +1653,13 @@ function wlInAreas(pos,polys,bufferNm){
   // CAP: the area is the union of its polygons, so overlapping rings all count. Only a ring lying wholly inside another is a hole (nesting depth odd).
   if(hit.length){
     var depth=hit.reduce(function(m,r){return Math.max(m,hit.filter(function(o){return o!==r&&r.every(function(p){return wlRingHas(o,p[0],p[1]);});}).length);},0);
-    inside=depth%2===0;
+    inside=union||depth%2===0;
   }
   return {inside:inside,distNm:inside?0:dist,hit:inside||dist<=bufferNm};
 }
 
 /* ---------- CAP 1.2 (parsing in the browser mirrors platform/wl_collector.py; the collector is the primary path) ---------- */
-var WL_AW_TYPE={1:'wind',2:'snow-ice',3:'thunderstorm',4:'fog',5:'high-temperature',6:'low-temperature',7:'coastal',8:'forest-fire',9:'avalanche',10:'rain',11:'flood',12:'rain'};   // MeteoAlarm awareness_type numbers (consistent with the Home Assistant example "8; forest-fire"; full list not verified at the primary source)
+var WL_AW_TYPE={1:'wind',2:'snow-ice',3:'thunderstorm',4:'fog',5:'high-temperature',6:'low-temperature',7:'coastal',8:'forest-fire',9:'avalanche',10:'rain',11:'flood',12:'rain',13:'rain'};   // MeteoAlarm awareness_type numbers (consistent with the Home Assistant example "8; forest-fire"; full list not verified at the primary source)
 var WL_AW_LEVEL={2:'yellow',3:'orange',4:'red'};   // "2; yellow; Moderate" · "3; orange; Severe" · "4; red; …" (Home Assistant MeteoAlarm); 1 = green = no warning
 function wlEventType(ev,cat){
   var s=String(ev||'').toLowerCase();
@@ -1721,7 +1762,8 @@ function wlWarnSignals(summary,pos,now,countries){
       if(!(summary.sources||[]).some(function(s){return s.country===c;}))G.push({id:'nosrc-'+c,text:'Für '+c+' ist keine amtliche Warnquelle eingebunden – Warnlage unbekannt.'});
     });
   }
-  if(!pos){if((summary.warnings||[]).length)G.push({id:'warn-pos',text:'Position fehlt – amtliche Warnungen können nicht zugeordnet werden.'});return {signals:S,gaps:G,ageH:ageH};}
+  if(summary.truncated)G.push({id:'warn-cut',text:'Warnstand unvollständig: Es sind mehr Warnungen gemeldet, als die App speichert. Warnlage unbekannt.'});
+  if(!pos){var act=(summary.warnings||[]).filter(function(w){return wlMs(w.expires)>now;}),reds=act.filter(function(w){return w.level==='red';}).length;if(act.length)G.push({id:'warn-pos',text:'Position fehlt – '+act.length+' gültige amtliche Warnung'+(act.length>1?'en':'')+(reds?', davon '+reds+' rot,':'')+' können nicht zugeordnet werden.'});return {signals:S,gaps:G,ageH:ageH};}
   (summary.warnings||[]).forEach(function(w){
     var ex=wlMs(w.expires);if(!(ex>now))return;
     var on=wlMs(w.onset);if(!isFinite(on))on=now;
@@ -1733,7 +1775,7 @@ function wlWarnSignals(summary,pos,now,countries){
       S.push(wlSig({id:'warn-'+w.id,kind:'official',level:'i',title:title+' – Gebiet nicht lokalisierbar',text:base+' Das Warngebiet liegt nicht als Fläche vor; ob es die Position betrifft, ist unbekannt.',src:w.sender||'',rule:'Quelle',observedAt:fa,validUntil:ex,origin:'platform',stale:stale}));
       return;
     }
-    hit=wlInAreas(pos,polys,W.bufferNm);
+    hit=wlInAreas(pos,polys,W.bufferNm,!w.holes);
     if(!hit.hit)return;
     if(on>now+W.lookAheadH*3600000)lv='i';
     var fut=on>now?' Beginn '+wlClock(on)+' Uhr.':'';
@@ -1831,7 +1873,7 @@ function wlCleanSummary(o){
   if(!o||o.type!=='skipper-wl'||o.version!==1||!isFinite(wlMs(o.fetchedAt))||!Array.isArray(o.warnings))return null;
   var out={type:'skipper-wl',version:1,fetchedAt:o.fetchedAt,pkg:wlStr(o.pkg,40),receivedAt:wlNum(o.receivedAt)?o.receivedAt:null,
     sources:(Array.isArray(o.sources)?o.sources:[]).filter(function(s){return s&&typeof s==='object';}).slice(0,40).map(function(s){return {id:wlStr(s.id,40),country:wlStr(s.country,3).toUpperCase(),ok:s.ok===true,fetchedAt:wlStr(s.fetchedAt,40),count:wlNum(s.count)?s.count:0,unlocated:wlNum(s.unlocated)?s.unlocated:0,note:wlStr(s.note,200)};}),
-    attribution:wlStr(o.attribution,400),warnings:[]};
+    attribution:wlStr(o.attribution,400),warnings:[],truncated:o.truncated===true||o.warnings.length>WL_LIM.warnings};
   o.warnings.slice(0,WL_LIM.warnings).forEach(function(w){
     if(!w||!isFinite(wlMs(w.expires)))return;
     var polys=null;
@@ -1976,7 +2018,7 @@ function wlFetchSummary(manual){
     if(!r.ok)throw new Error('HTTP '+r.status);
     return r.text();
   }).then(function(t){
-    if(t.length>WL_LIM.summaryBytes)throw new Error('Datei zu groß');
+    if(t.length>WL_LIM.summaryBytes){if(WLS.summary)WLS.summary.truncated=true;throw new Error('Datei zu groß');}   // the big picture is the one that gets lost: it counts as unknown at once
     var o=JSON.parse(t);o.receivedAt=Date.now();
     if(!wlSummarySet(o))throw new Error('kein gültiger Warnstand');
     WL_NET.msg='';WL_NET.err=null;
@@ -2764,14 +2806,15 @@ var POPFS={kind:'opfs',forceWorker:false,
       }).catch(function(){return null;});
     },function(){return null;});
   },
-  fontHave:function(f){return this.fdir().then(function(d){return d.getFileHandle(packFontKey(f.name,f.range));}).then(function(){return true;},function(){return false;});},
+  fontHave:function(f){return this.fdir().then(function(d){return d.getFileHandle(packFontKey(f.name,f.range));}).then(function(h){return h.getFile();}).then(function(x){return f.bytes?x.size===f.bytes:x.size>0;},function(){return false;});},   // a part left by a stopped app is no font
   fontPut:function(f,url,ctl){
     var self=this;
     return fetch(url,{credentials:'omit',signal:ctl.signal}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.arrayBuffer();}).then(function(b){
+      if(f.bytes&&b.byteLength!==f.bytes)throw new Error('Schrift unvollständig – Download unvollständig.');
       return self.fdir().then(function(d){return self.small('skmap-fonts',d,packFontKey(f.name,f.range),new Uint8Array(b));});
     });
   },
-  fontRead:function(name,range){return this.fdir().then(function(d){return d.getFileHandle(packFontKey(name,range));}).then(function(h){return h.getFile();}).then(function(f){return f.arrayBuffer();}).catch(function(){return null;});},
+  fontRead:function(name,range){return this.fdir().then(function(d){return d.getFileHandle(packFontKey(name,range));}).then(function(h){return h.getFile();}).then(function(f){return f.size?f.arrayBuffer():null;}).catch(function(){return null;});},
   fetchPack:function(id,e,url,prog,ctl){
     var self=this,part=packPartName(e),sha=new Sha256(),w=null,dir=null;
     return self.pdir(id).then(function(d){dir=d;return self.writer('skmap-'+id,dir,part);}).then(function(x){w=x;
@@ -2828,8 +2871,10 @@ var PNAT={kind:'native',
       });
     }).catch(function(){return null;});
   },
-  fontHave:function(f){return this.fs().stat({path:'skmap/fonts/'+packFontKey(f.name,f.range),directory:'DATA'}).then(function(){return true;},function(){return false;});},
-  fontPut:function(f,url,ctl){return this.dl(url,'skmap/fonts/'+packFontKey(f.name,f.range));},
+  fontHave:function(f){return this.fs().stat({path:'skmap/fonts/'+packFontKey(f.name,f.range),directory:'DATA'}).then(function(st){return f.bytes?st.size===f.bytes:st.size>0;},function(){return false;});},
+  fontPut:function(f,url,ctl){var self=this,path='skmap/fonts/'+packFontKey(f.name,f.range);   // a short file counts as installed for good: fontHave only sees that it exists
+    return self.dl(url,path).then(function(r){return f.bytes?self.fs().stat({path:path,directory:'DATA'}).then(function(st){
+      if(st.size===f.bytes)return r;return self.fs().deleteFile({path:path,directory:'DATA'}).catch(function(){}).then(function(){throw new Error('Schrift unvollständig – Download unvollständig.');});}):r;});},
   fontRead:function(name,range){return this.fs().readFile({path:'skmap/fonts/'+packFontKey(name,range),directory:'DATA'}).then(function(r){return packB64(r.data);}).catch(function(){return null;});},
   fetchPack:function(id,e,url,prog,ctl){
     var self=this,part=packPartName(e),path=self.path(id,part),last=0;
@@ -3003,7 +3048,7 @@ function packDownload(id){
   }).then(function(r){
     if(r)PACK.inst[id]=r;
     PACK.busy=null;PACK.ctl=null;PACK.msg='Kartenpaket geladen.';packProgHide();
-    return be.clean(id,r&&r.meta).then(packActivate);
+    return (r?be.clean(id,r.meta):Promise.resolve()).then(packActivate);
   }).then(function(){packUI();}).catch(function(err){
     var cancelled=(err&&err.name==='AbortError')||ctl.aborted===true;
     PACK.busy=null;PACK.ctl=null;packProgHide();
@@ -3320,13 +3365,13 @@ function gpxParse(text){
   wpts=wpts.slice(0,GPX_LIM.maxWpts);
   return {ok:true,name:name,version:version,legs:legs,wpts:wpts,stats:{points:total,legs:legs.length,wpts:wpts.length,thinned:thinned,ignored:ignored}};
 }
-function planValid(p){return !!p&&typeof p==='object'&&Array.isArray(p.days)&&!!p.opt&&typeof p.opt==='object'&&typeof p.opt.date==='string';}
+function planValid(p){return !!p&&typeof p==='object'&&Array.isArray(p.days)&&!!p.opt&&typeof p.opt==='object'&&typeof p.opt.date==='string'&&p.days.every(function(x){return !!x&&(x.type!=='leg'||(!!x.leg&&!!x.leg.sim&&Array.isArray(x.leg.pts)&&Array.isArray(x.leg.segs)));});}
 function doExport(){
   Promise.all([IDB.all().catch(function(){return WX?[WX]:[];}),(typeof wlExportAsync==='function'?wlExportAsync().catch(function(){return null;}):Promise.resolve(null))]).then(function(r2){
     var a=r2[0],wlData=r2[1];
     if(!a.length&&WX)a=[WX];
     var o={type:SNAP+'-backup',version:1,exportedAt:new Date().toISOString(),wx:a.slice(-CONST.wx.exportKeep),plan:PL.plan,gpxImport:(typeof GPXI!=='undefined'&&GPXI)||null,
-      notes:NOTES,wl:wlData,settings:{toern:{mode:PL.mode,start:PL.start,target:PL.target,days:PL.days,depHour:PL.depHour,plat:PL.plat||'',targetNm:PL.targetNm||null,nights:PL.nights||0},boat:S.boat,speed:S.speed,maxLegH:S.maxLegH,maxNightH:S.maxNightH,daylight:S.daylight}};
+      notes:NOTES,wl:wlData,settings:{toern:{mode:PL.mode,start:PL.start,target:PL.target,days:PL.days,depHour:PL.depHour,plat:PL.plat||'',targetNm:PL.targetNm||null,nights:PL.nights||0},boat:S.boat,speed:S.speed,maxLegH:S.maxLegH,maxNightH:S.maxNightH,daylight:S.daylight,limGust:S.limGust,limSea:S.limSea,kids:S.kids,season:S.season,motorMode:S.motorMode,motorSpeed:S.motorSpeed}};
     var blob=new Blob([JSON.stringify(o)],{type:'application/json'}),p=localParts(Date.now()),name=SNAP+'-backup-'+p.y+pad(p.m)+pad(p.d)+'-'+pad(p.hh)+pad(p.mm)+'.json';
     function dl(){
       var a2=document.createElement('a');a2.href=URL.createObjectURL(blob);a2.download=name;
@@ -3356,6 +3401,7 @@ function doImportText(txt){
   if(bs.boat&&typeof bs.boat==='object'){
     if(!load(sk('profile'))){
       S.boat=normBoat(bs.boat);if(num(bs.speed))S.speed=num(bs.speed);if(num(bs.maxLegH))S.maxLegH=num(bs.maxLegH);if(num(bs.maxNightH))S.maxNightH=num(bs.maxNightH);if(typeof bs.daylight==='boolean')S.daylight=bs.daylight;
+      ['limGust','limSea','kids','season','motorMode','motorSpeed'].forEach(function(k){if(bs[k]!==undefined)S[k]=bs[k];});   // own limits are safety settings too
       saveProfile();if(typeof bootToUI==='function')bootToUI();boatNote=' Bootsdaten übernommen, bitte im Boot-Tab prüfen.';
     }else if(JSON.stringify(normBoat(bs.boat))!==JSON.stringify(S.boat))boatNote=' Bootsdaten des Backups nicht übernommen: Die Daten im Boot-Tab gelten weiter, bitte prüfen.';
   }
@@ -3394,7 +3440,8 @@ function registerSW(){
       var el=$('offlinestate');
       if(el)el.textContent=ks.length?'Offline bereit (Cache angelegt).':'Offline-Cache wird eingerichtet … (noch nicht bestätigt)';
     }).catch(function(){
-      var el=$('offlinestate');if(el)el.textContent='Kein Offline-Cache (Service Worker nicht verfügbar). Seite bleibt geöffnet oder Datei lokal speichern.';
+      var el=$('offlinestate');if(el&&navigator.serviceWorker.controller&&!navigator.onLine){el.textContent='Offline: läuft aus dem Offline-Cache.';return;}
+      if(el)el.textContent='Kein Offline-Cache (Service Worker nicht verfügbar). Seite bleibt geöffnet oder Datei lokal speichern.';
     });
   }catch(e){}
 }
@@ -3481,7 +3528,7 @@ function dieselSummary(P){
   return '<div class="note small">'+txt+'. Schätzung; Gegenwind, Seegang und Strom erhöhen den Verbrauch.</div>';
 }
 var GLOSSARY=[
- ['ampel','Ampel','Grün = mit deinem Boot, deinen Grenzen und den eingegebenen Werten keine Einschränkung erkannt (z. B. 12 kn Wind, Böen 16 kn, 0,5 m Welle). Gelb = fahrbar mit Einschränkung: reffen, Etappe kürzen, Zuflucht als Plan B (z. B. Böen 22 kn oder auflandig in offener Bucht). Rot = nicht auslaufen bzw. geschützten Hafen anlaufen (z. B. Böen über deiner Grenze, Gewitter, Hafen offen zum Wind). Grau = Eingaben fehlen. Die Ampel ist eine Entscheidungshilfe, die Entscheidung trifft der Skipper.'],
+ ['ampel','Ampel','Grün = mit deinem Boot, deinen Grenzen und den eingegebenen Werten keine Einschränkung erkannt (z. B. 12 kn Wind, Böen 16 kn, 0,5 m Welle). Gelb = fahrbar mit Einschränkung: reffen, Etappe kürzen, Zuflucht als Plan B (z. B. Böen 22 kn oder auflandig in offener Bucht). Rot = nicht auslaufen bzw. geschützten Hafen anlaufen (z. B. Böen über deiner Grenze, Hafen offen zum Wind). Grau = Eingaben fehlen. Die Ampel ist eine Entscheidungshilfe, die Entscheidung trifft der Skipper.'],
  ['datenstufe','Datenstufen','„belegt“ = Zuflucht-Eignung aus Hafenhandbuch oder Revierführer. „Plan“ = aus dem Hafenplan abgeleitet. „Grenzfall/Notfall“ = nur eingeschränkt nutzbar. „eigene Erfahrung“ = von dir im Hafen eingetragen, gilt dann vor den Daten. Ohne Einstufung zählt ein Hafen nicht als Zuflucht.'],
  ['konfidenz','Konfidenz','Wie verlässlich die Wettervorhersage für diesen Tag ist. „hoch“ = Tag 1–3, „mittel“ = Tag 4–5, „nur Trend“ = ab Tag 6. Je niedriger, desto eher am Vorabend neu planen.'],
  ['gebco','GEBCO','General Bathymetric Chart of the Oceans: weltweites, frei verfügbares Tiefenmodell (Raster ca. 450 m). Grob und nicht für die Navigation. Die App nutzt es nur, um Flachwasser auf der Route zu erkennen – im Zweifel gilt die Seekarte.'],
@@ -3544,6 +3591,35 @@ function applyProfile(id){
   }
   bootToUI();saveProfile();update();
 }
+/* "Update available" for the Android shells (queue #49c). Stand-alone, needs no other core file; the web apps update through their service worker.
+   SkUpdate.check({url:'https://…/version.json',current:'2.25.1',key:'app.upd',t:translate,mount:element});
+   Without connection, with a broken file or an equal version nothing happens. The link leads to the release page with the APK; installing over the app keeps the data
+   as long as the signature stays the same (#49a). A direct start of the installer needs REQUEST_INSTALL_PACKAGES in the shell and comes with the device test. */
+var SkUpdate=(function(){
+  function native(){return !!(window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform());}
+  function newer(a,b){var x=String(a).split('.').map(Number),y=String(b).split('.').map(Number);for(var i=0;i<Math.max(x.length,y.length);i++){var p=x[i]||0,q=y[i]||0;if(p!==q)return p>q;}return false;}
+  function get(k){try{return localStorage.getItem(k);}catch(e){return null;}}
+  function put(k,v){try{localStorage.setItem(k,v);}catch(e){}}
+  function show(o,v){
+    var t=o.t||function(s){return s;},d=document.createElement('div');d.id='sk-update';d.setAttribute('role','status');
+    d.style.cssText='display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:8px 12px;border:2px solid currentColor;border-radius:10px;margin:8px;font-weight:700';
+    var s=document.createElement('span');s.style.flex='1 1 12em';s.textContent=t('Update verfügbar')+': '+v.version;
+    var a=document.createElement('a');a.href=/^https:\/\//.test(v.release||'')?v.release:'#';a.target='_blank';a.rel='noopener';a.textContent=t('Zum Download');a.style.cssText='padding:10px 12px;color:inherit';
+    var b=document.createElement('button');b.type='button';b.textContent=t('Später');b.style.cssText='min-height:44px;padding:0 12px;font:inherit;color:inherit;background:transparent;border:1px solid currentColor;border-radius:8px';
+    b.addEventListener('click',function(){put(o.key,v.version);d.remove();});
+    d.appendChild(s);d.appendChild(a);d.appendChild(b);(o.mount||document.body).prepend(d);
+  }
+  function check(o){
+    if(!native()||!o||!o.url||!o.current||typeof fetch!=='function')return Promise.resolve(false);
+    var c=typeof AbortController!=='undefined'?new AbortController():null,tm=c&&setTimeout(function(){c.abort();},8000);
+    return fetch(o.url,{cache:'no-store',credentials:'omit',signal:c&&c.signal}).then(function(r){return r.ok?r.json():null;}).then(function(v){
+      if(tm)clearTimeout(tm);
+      if(!v||!/^\d+(\.\d+)*$/.test(String(v.version))||!newer(v.version,o.current)||(o.key&&get(o.key)===v.version))return false;
+      show(o,v);return true;
+    }).catch(function(){return false;});
+  }
+  return {check:check,newer:newer};
+})();
 /* Sea-area labels and texts (German UI strings; i18n works on the rendered text). */
 var DISCLAIMER='Ersetzt weder Seekarte, Revierführer noch amtlichen Seewetterbericht. Entscheidung liegt beim Skipper.';
 var TYPE_LABEL={marina:'Marina',hafen:'Hafen',nothafen:'Nothafen'};
@@ -4043,6 +4119,8 @@ function evaluate(raw){
   if(res.pegel&&res.pegel.level==='i')res.info.push(infoItem('pegel','Niedrigwasser',res.pegel.text));
   var best=null;
   res.gates.concat(res.general?[res.general]:[]).forEach(function(c){if(!best||RANK[c.level]>RANK[best.level])best=c;});
+  // Thresholds, gates and harbours only hold inside the area: green must not survive a position outside it.
+  if(res.outOfArea&&best&&best.level==='g')best={id:'area',level:'y',title:'Außerhalb des Törngebiets',text:'Die Bewertung gilt nur für das Törngebiet und ist hier keine Freigabe.'};
   res.overall=best;
   if(s.pos){res.list=rank(s);res.rec=recommend(res.list);}
   res.target=targetInfo(s);
@@ -4371,6 +4449,21 @@ function nightCheck(h,t1,t2,s){
   return {level:lvl,text:txt||(dmax?'stärkste Böe '+Math.round(gmax)+' kn aus '+dmax+': geschützt':'geschützt'),gMax:gmax,dMax:dmax};
 }
 function planMaxDays(){return PL.wxMode==='klima'?CONST.plan.maxDaysKlima:7;}
+/* What the search does not rate, checked on the chosen legs (the search runs over thousands of routes, these checks are too slow for that):
+   package gates that hold along the line (Russian waters), hazard areas the line crosses, an end harbour too shallow or too small (target and vias
+   bypass the candidate filter), the entered Pegel on day 1, a departure already past. A leg rated here shows red, it is not replaced. */
+function legAudit(L,d,s){
+  var sim=Object.assign({},L.sim,{reasons:Object.assign({},L.sim.reasons)});
+  function add(l,t){sim.reasons[t]=l;sim.level=pworst(sim.level,l);}
+  try{
+    var peg=d===0&&typeof S!=='undefined'&&S.pegel||0,h=BY_ID[L.to];
+    routeAreaItems(L.route,neutralState(sim.dep)).forEach(function(it){if(it.level==='r'||it.through)add(it.level,it.text);});
+    harborStatus(h,Object.assign({},planBase(s),{now:sim.arr,pegel:peg})).items.forEach(function(i){if(i.level==='r'&&(i.cat==='depth'||i.cat==='dim'||i.cat==='bridge'))add('r',h.name+': '+i.text);});
+    if(peg&&R.hooks.routeBridges)R.hooks.routeBridges(L.route,s.boat,peg).forEach(function(b){if(b.level==='r')add('r','Brücke an der Etappe: '+b.name+' – '+b.text);});
+    if(d===0&&sim.dep<Date.now()-1800000)add('y','Abfahrt '+hhmmLocal(sim.dep)+' liegt in der Vergangenheit – Abfahrtszeit anpassen und neu planen');
+  }catch(e){add('n','Etappe nicht vollständig geprüft ('+e.message+') – Weg in der Seekarte prüfen');}
+  return Object.assign({},L,{sim:sim});
+}
 function planTrip(opt,progress){
   if(opt.blockedEdges&&opt.blockedEdges.length){var o2=Object.assign({},opt);delete o2.blockedEdges;return withBlockedEdges(opt.blockedEdges,function(){return planTrip(o2,progress);});}
   var P=CONST.plan,s=normalize(Object.assign({},S,{now:dayStartMs(opt.date,0,opt.depHour)}));
@@ -4552,11 +4645,11 @@ function planTrip(opt,progress){
   if(!fin.length)return {error:mode==='ziel'?'Kein Plan gefunden, der das Ziel in '+D+' Tagen erreicht (Netzdistanz, max. Etappe, Tageslicht, Nachtfahrten oder Wetter).':'Kein Plan gefunden, der in '+D+' Tagen zum Start zurückführt.'};
   var best=fin[0];
   // alternatives for day 1 (day legs)
-  var alts=legsFrom(opt.start,0,false).map(function(L){return {L:L,c:legCost(L,'|'+opt.start+'|')+P.night[night(L.to,0).level],night:night(L.to,0)};})
+  var alts=legsFrom(opt.start,0,false).map(function(L){return {L:L,c:legCost(L,'|'+opt.start+'|')+P.night[night(L.to,0,L.sim.arr).level],night:night(L.to,0,L.sim.arr)};})
     .filter(function(a){return !(best.days[0]&&best.days[0].type==='leg'&&best.days[0].leg.to===a.L.to);})
     .filter(function(a){return !endId||distToEnd(a.L.to)<=reach(D-1,NN);})
-    .sort(function(a,b){return a.c-b.c;}).slice(0,3);
-  return {opt:opt,days:best.days.map(function(x){x.date=dayStartMs(opt.date,x.d,12);x.conf=confOf(Math.floor((dayStartMs(opt.date,x.d,12)-WX.t0)/86400000));return x;}),
+    .sort(function(a,b){return a.c-b.c;}).slice(0,3).map(function(a){a.L=legAudit(a.L,0,s);return a;});
+  return {opt:opt,days:best.days.map(function(x){if(x.leg)x.leg=legAudit(x.leg,x.d,s);x.date=dayStartMs(opt.date,x.d,12);x.conf=confOf(Math.floor((dayStartMs(opt.date,x.d,12)-WX.t0)/86400000));return x;}),
     cost:best.final,alts:alts,wxAt:WX.fetchedAt,wxSource:WX.source,createdAt:new Date().toISOString(),maxNm:maxNm,maxNightNm:maxNNm,totalNm:best.total,targetNm:T,nightsUsed:best.nights,capNm:reach(D,NN),vias:V};
 }
 /* ---------- surroundings line in the harbour/anchorage card (OSM data per package: HPOI, optional) ----------
@@ -4978,9 +5071,9 @@ var MAYDAY=['{W} {W} {W}','Hier ist {name}, {name}, {name}, Rufzeichen {call}, M
 function renderMayday(){
   var b=S.boat;
   function ph(val,label){return val?'<b>'+esc(val)+'</b>':'<span class="ph">['+label+']</span>';}
-  var p=lastGps||S.pos;
+  var p=lastGps&&S.pos&&(S.pos.t||0)>(lastGps.t||0)?S.pos:lastGps||S.pos;   // the newer of the two: a later fix or plotter entry beats an old "Meine Position"
   var mp=$('maydaypos');
-  if(mp){var src=lastGps?'gps':p&&p.src,age=p&&p.t?(Date.now()-p.t)/60000:null,t='';
+  if(mp){var src=p===lastGps?'gps':p&&p.src,age=p&&p.t?(Date.now()-p.t)/60000:null,t='';
     if(!p)t='Keine Position – oben „Meine Position“ oder vom Plotter ablesen.';
     else if(src==='region')t='⚠ Nur Revier-Näherung, keine echte Position – „Meine Position“ tippen oder vom Plotter ablesen.';
     else{t='Position im Text: '+(src==='gps'?'GPS':'manuell')+(p.t?', Stand '+localClock(p.t)+' (vor '+(age<1?'< 1':Math.round(age))+' min)':'');
@@ -4988,8 +5081,8 @@ function renderMayday(){
     mp.textContent=t;}
   var nat=DISTRESS.filter(function(d){return d[0]===$('f-nature').value;})[0],det=$('f-art').value.trim();
   var artTxt=nat?nat[1]+' ('+nat[2]+')'+(det?' – '+det:''):det;
-  var ut=new Date(p&&p.t&&lastGps?p.t:Date.now()),utc=String(ut.getUTCHours()).padStart(2,'0')+String(ut.getUTCMinutes()).padStart(2,'0');
-  var rep={name:ph(b.name,'Schiffsname'),call:ph(b.call,'Rufzeichen'),mmsi:ph(b.mmsi,'MMSI'),pers:ph($('f-pers').value.trim(),'Anzahl'),art:ph(artTxt,'Art der Not'),utc:'<b>'+utc+'</b>',
+  var ut=new Date(p&&p.t?p.t:Date.now()),utc=String(ut.getUTCHours()).padStart(2,'0')+String(ut.getUTCMinutes()).padStart(2,'0');   // the time said on the radio belongs to the position
+  var rep={name:ph(b.name,'Schiffsname'),call:ph(b.call,'Rufzeichen'),mmsi:ph(b.mmsi,'MMSI'),pers:ph($('f-pers').value.trim(),'Anzahl'),art:ph(artTxt,'Art der Not'),utc:p&&!p.t?ph('','Uhrzeit der Position'):'<b>'+utc+'</b>',
     pos:p?'<b>'+esc(formatPos(p))+'</b>':'<span class="ph">[Position]</span>'};
   function fill(w){
     $(w==='MAYDAY'?'maydaytext':'panpantext').innerHTML=MAYDAY.map(function(l){
@@ -5117,15 +5210,18 @@ function lageText(res){
 function planText(P){
   var o=P.opt,L=[],md={rund:'Rundtörn',ziel:'Ziel',frei:'Frei'}[o.mode],nm=function(id){var h=BY_ID[id];return h?h.name.replace(/\s*\(.*\)$/,''):id;};
   var tot=0;P.days.forEach(function(x){if(x.type==='leg')tot+=x.leg.dist;});
+  function nightLine(x){var N=x.night;if(N&&(N.level==='r'||N.level==='y'||N.level==='n'))L.push('   Nacht: '+SYM[N.level]+' '+(N.text||LVL_TXT[N.level]));}   // the crew reads this text, a red night must reach it
   L.push(REVIER.appName+' – Törnplan ('+md+' ab '+nm(o.start)+(o.mode==='ziel'&&o.target?' nach '+nm(o.target):'')+')');
   L.push(o.days+' Tage ab '+o.date.split('-').reverse().join('.')+' · gesamt ≈ '+f1(tot)+' sm'+(P.klima?' · VORPLANUNG mit Klimamittel '+MONTHS[P.klima.month-1]+', kein aktuelles Wetter':' · Wetterstand '+dmyLocal(Date.parse(P.wxAt))+' '+hhmmLocal(Date.parse(P.wxAt))));
   P.days.forEach(function(x,i){
     var head='Tag '+(x.d+1)+' '+wdLocal(x.date)+' '+dmyLocal(x.date)+': ';
-    if(x.type==='stay'){L.push(head+'Hafentag '+nm(x.at));return;}
-    if(x.type==='arrive'){L.push(head+'Ankunft nach Nachtfahrt in '+nm(x.at)+' um '+hhmmLocal(x.arr));return;}
+    if(x.type==='stay'){L.push(head+'Hafentag '+nm(x.at));nightLine(x);return;}
+    if(x.type==='arrive'){L.push(head+'Ankunft nach Nachtfahrt in '+nm(x.at)+' um '+hhmmLocal(x.arr));nightLine(x);return;}
     var Lg=x.leg,sm=Lg.sim;
     L.push(head+nm(x.from)+' → '+nm(Lg.to)+', '+f1(Lg.dist)+' sm, ab '+hhmmLocal(sm.dep)+' an '+(Lg.arrDay>x.d?wdLocal(sm.arr)+' ':'')+hhmmLocal(sm.arr)+(Lg.night?' (Nachtfahrt)':'')+' · '+SYM[sm.level]+' '+LVL_TXT[sm.level]);
     L.push('   '+(Lg.klima?klimaLine(Lg.klima):wxLine(sm.wx))+' · Segelführung bis '+sm.reff);
+    Object.keys(sm.reasons||{}).forEach(function(t){var l=sm.reasons[t];if(l==='r'||l==='y'||l==='n')L.push('   '+SYM[l]+' '+t);});
+    nightLine(x);
   });
   L.push('Planungshilfe – Netz nicht für die Navigation, jede Etappe in der Seekarte prüfen.');
   return L.join('\n');
@@ -5553,17 +5649,17 @@ function gpxiDepth(samples){
   return {total:tot,shallow:shallow,unknown:unknown};
 }
 
-/* ---- evaluation ---- */
-function gpxiDep(k){return dayStartMs(PL.date||todayStr(),k,PL.depHour||9);}
-function gpxiSig(){return JSON.stringify([GPXI&&GPXI.at,WX&&WX.fetchedAt,WX?Math.floor(wxAgeH()):null,PL.date,PL.depHour,S.speed,S.motorMode,S.motorSpeed,S.boat,S.pegel,S.bms,S.kids,S.season,S.limGust,S.limSea]);}
-function gpxiLegEval(leg,k){
-  var route=gpxiRoute(leg),dep=gpxiDep(k),hints=[],sN=normalize(Object.assign({},S,{now:dep,pos:null,dir:null,windTrue:null,gust:null,seaH:0,seaDir:null,longWind:null,sicht:'gut',trend:false,gewitter:false}));
+/* neutral weather at a time, for what holds whatever the wind */
+function neutralState(dep){
+  var sN=normalize(Object.assign({},S,{now:dep,pos:null,dir:null,windTrue:null,gust:null,seaH:0,seaDir:null,longWind:null,sicht:'gut',trend:false,gewitter:false}));
   sN.motorMode=S.motorMode||'nie';sN.motorSpeed=S.motorSpeed||null;
-  function add(level,cat,text,extra){hints.push(Object.assign({level:level,cat:cat,text:text},extra||{}));}
-  route.gateIds=gpxiCrossings(route);
-  var smp=gpxiSamples(route),T0=effThresholds(sN);
+  return sN;
+}
+/* areas along a line: gates and hazard areas. Used by the GPX check and for the legs of a plan. */
+function routeAreaItems(route,sN){
   // 1 package and core gates at points along the line, neutral weather (areas, Sperrgebiete, Russland/GNSS, Düsen als Info …); same item once, worst level
-  var seen={};
+  var seen={},T0=effThresholds(sN),smp=gpxiSamples(route),out=[];
+  function add(level,cat,text,extra){out.push(Object.assign({level:level,cat:cat,text:text},extra||{}));}
   smp.forEach(function(sp){
     var g=gates(sN,{lat:sp.lat,lon:sp.lon},T0);
     g.gates.map(function(x){return {id:x.id,level:x.level,title:x.title,text:x.text};}).concat(g.info.map(function(x){return {id:x.id,level:'i',title:x.title,text:x.text};})).forEach(function(it){
@@ -5583,14 +5679,25 @@ function gpxiLegEval(leg,k){
     if(!z.geom||!z.geom.center||z.type==='befahrensverbot'||(z.type==='vtg'))return;
     if(Object.keys(seen).some(function(id){return z.id.slice(-id.length-1)==='-'+id;}))return;   // already rated by a package gate (Lava, Teulada)
     var c={lat:z.geom.center[0],lon:z.geom.center[1]},d=gpxiLineDist(c,route),rr=z.geom.radius_nm!=null?z.geom.radius_nm:z.geom.radius_m!=null?z.geom.radius_m/1852:null;
-    if(rr!=null&&d<=rr)hz.push({d:d,level:CONST.gpx.redTypes.indexOf(z.type)>=0?'r':'y',text:'Die Linie verläuft durch '+z.name+' (Radius ≈ '+nm1(rr)+' sm um die Mitte laut Daten). '+gpxiClip(z.warn)});
+    if(rr!=null&&d<=rr)hz.push({d:d,through:true,level:CONST.gpx.redTypes.indexOf(z.type)>=0?'r':'y',text:'Die Linie verläuft durch '+z.name+' (Radius ≈ '+nm1(rr)+' sm um die Mitte laut Daten). '+gpxiClip(z.warn)});
     else if(d<=CONST.gpx.hazardCloseNm)hz.push({d:d,level:'y',text:z.name+' – Linie ≈ '+nm1(d)+' sm vom Mittelpunkt, Gebietsgrenze nicht belegt. '+gpxiClip(z.warn)});
     else if(d<=CONST.hazardNearNm)hz.push({d:d,level:'i',text:z.name+' – Linie ≈ '+nm1(d)+' sm vom Mittelpunkt, Gebietsgrenze nicht belegt.'});
   });
   hz.sort(function(a,b){return (GPXI_RANK[b.level]-GPXI_RANK[a.level])||(a.d-b.d);});
   var nInfo=0,more=0;
-  hz.forEach(function(x){if(x.level==='i'){if(nInfo++>=CONST.gpx.maxHazInfo){more++;return;}}add(x.level,'hazard','Gefahrengebiet: '+x.text);});
+  hz.forEach(function(x){if(x.level==='i'){if(nInfo++>=CONST.gpx.maxHazInfo){more++;return;}}add(x.level,'hazard','Gefahrengebiet: '+x.text,{through:x.through});});
   if(more)add('i','hazard','… und '+more+' weitere Gefahrengebiete in bis zu '+CONST.hazardNearNm+' sm Abstand (Regeln-Tab).');
+  return out;
+}
+/* ---- evaluation ---- */
+function gpxiDep(k){return dayStartMs(PL.date||todayStr(),k,PL.depHour||9);}
+function gpxiSig(){return JSON.stringify([GPXI&&GPXI.at,WX&&WX.fetchedAt,WX?Math.floor(wxAgeH()):null,PL.date,PL.depHour,S.speed,S.motorMode,S.motorSpeed,S.boat,S.pegel,S.bms,S.kids,S.season,S.limGust,S.limSea]);}
+function gpxiLegEval(leg,k){
+  var route=gpxiRoute(leg),dep=gpxiDep(k),hints=[],sN=neutralState(dep);
+  function add(level,cat,text,extra){hints.push(Object.assign({level:level,cat:cat,text:text},extra||{}));}
+  route.gateIds=legGates(route).concat(gpxiCrossings(route)).filter(function(id,i,a){return a.indexOf(id)===i;});   // a line through the box counts like the same leg in the planner
+  var smp=gpxiSamples(route);
+  routeAreaItems(route,sN).forEach(function(it){add(it.level,it.cat,it.text);});
   // 3 bridges along the line (packages without bridges skip this)
   if(R.hooks.routeBridges){
     R.hooks.routeBridges(route,sN.boat,sN.pegel||0).forEach(function(b){
@@ -5635,6 +5742,9 @@ function gpxiLegEval(leg,k){
       sim=simLeg(route,dep,sN);
       Object.keys(sim.reasons).forEach(function(t){add(sim.reasons[t],'wx',t);});
       add('i','wx','Annahme: Etappe '+(k+1)+' startet am '+dmyLocal(dep)+' um '+hhmmLocal(dep)+' (Datum und Abfahrt aus dem Törn-Formular, jede Etappe einen Tag später), '+f1(route.dist)+' sm in ≈ '+fmtEta(sim.hours)+' bei '+nm1(sN.speed)+' kn. '+wxLine(sim.wx));
+      var endP=route.pts[route.pts.length-1],ss=sunTimes(endP.lat,endP.lon,sim.arr);
+      if(!(ss.sunriseMs&&ss.sunsetMs&&sim.arr>=ss.sunriseMs&&sim.arr<=ss.sunsetMs-CONST.sunsetBufferMin*60000))add('y','wx','Ankunft bei Dunkelheit ('+hhmmLocal(sim.arr)+') – Ansteuerung nachts');
+      if(k===0&&dep<Date.now()-1800000)add('i','wx','Abfahrt '+hhmmLocal(dep)+' liegt in der Vergangenheit – Abfahrtszeit anpassen.');
       lvl=pworst(lvl,sim.level);
     }catch(e){add('n','wx','Wetterprüfung nicht möglich ('+e.message+').');}
   }else add('n','wx','Kein Wetterstand geladen – Wind und Seegang entlang der Linie sind nicht bewertet (oben „Wetter laden“).');
@@ -6217,7 +6327,9 @@ function initToern(){
   $('btn-wxfill').addEventListener('click',function(){var r=wxFill();$('wxfillmsg').innerHTML=r.error?banner('y','Nicht übernommen',r.error):'<div class="note small">'+esc(r.text)+'</div>';if(r.ok)update();});
   $('btn-tclearcache').addEventListener('click',function(){MAP.online=false;$('m-online').checked=false;store(sk('mapOnline'),'0');TILES.clear().then(function(){MAP.tiles={};MAP.tz=null;$('m-tiles').innerHTML='';$('m-seamark').innerHTML='';mapRender();renderTileStats();});});$('btn-gpxsave').addEventListener('click',gpxSave);
   packBind();   // offline base map pack (core/platform/mappack.js)
-  renderToernForm();setWxMode(PL.wxMode);renderPlan();renderWxState();
+  renderToernForm();setWxMode(PL.wxMode);
+  try{renderPlan();}catch(e){PL.plan=null;store(sk('plan'),'');renderPlan();}   // a stored plan must never keep the app from starting
+  renderWxState();
   IDB.latest().then(function(sn){if(sn&&!WX){wxSet(sn);renderWxState();renderPlan();}}).catch(function(){});
 }
 function update(){
@@ -6246,7 +6358,7 @@ function init(){
   document.querySelectorAll('[data-pk]').forEach(function(b){b.addEventListener('click',function(){setPreset(b.dataset.pk,+b.dataset.pv);});});
   document.querySelectorAll('.stepper button').forEach(bindStepper);
   $('dirgrid').addEventListener('click',function(e){var b=e.target.closest('[data-dir]');if(b){S.dir=b.dataset.dir;update();}});
-  $('seadirgrid').addEventListener('click',function(e){var b=e.target.closest('[data-sdir]');if(b){S.seaDir=b.dataset.sdir||null;if(!S.seaDir)S.seaH=0;update();}});
+  $('seadirgrid').addEventListener('click',function(e){var b=e.target.closest('[data-sdir]');if(b){S.seaDir=b.dataset.sdir||null;update();}});
   $('longgrid').addEventListener('click',function(e){var b=e.target.closest('[data-ldir]');if(b){S.longWind=b.dataset.ldir||null;update();}});
   $('coursegrid').addEventListener('click',function(e){var b=e.target.closest('[data-course]');if(b){S.course=b.dataset.course;S.courseMode='manual';update();}});
   $('btn-cauto').addEventListener('click',function(){S.courseMode='auto';update();});
@@ -6289,7 +6401,12 @@ function init(){
   i18nInit();
   if(!had){if(load(sk('onb'))==='1')showScreen('scr-boot');else onbOpen(0);}
   setInterval(renderPosline,30000);
+  // ratings age: stale input, sunset and forecast must not stay green on a phone that stays open. Not while typing, an update would disturb the field.
+  function refresh(){var a=document.activeElement;if(document.visibilityState==='visible'&&!(a&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName)))update();}
+  setInterval(refresh,60000);document.addEventListener('visibilitychange',refresh);
   registerSW();iosSetup();
+  // Android shells: notice when a newer APK is out (queue #49); does nothing in the browser and offline. The site layout is that of tools/assemble-site.sh.
+  if(REVIER.legalUrl)SkUpdate.check({url:REVIER.legalUrl.replace(/legal\/?$/,'')+(REVIER.id==='ostsee'?'':REVIER.id==='sardinien-korsika'?'sardinien/':REVIER.id+'/')+'version.json',current:CONST.appVersion,key:sk('updSkip'),t:i18nText,mount:$('scr-lage')});
 }
 /* window.SKIPPER = test/debug API. Package modules add their members through R.expose (bridges, pegel, emergency numbers, berth costs, …). */
 function exposeAPI(){   // called by the build tail after all package modules have registered in R.expose
@@ -6302,7 +6419,7 @@ window.SKIPPER=Object.assign({WL_NET:WL_NET,wlAssess:wlAssess,wlRaising:wlRaisin
   isOutOfArea:isOutOfArea,euOffset:euOffset,utcToLocal:utcToLocal,sunTimes:sunTimes,seaAreaOf:seaAreaOf,countryOf:countryOf,boatNeeds:boatNeeds,
   rhumb:rhumb,courseToWind:courseToWind,effThresholds:effThresholds,filterList:filterList,DISCLAIMER:DISCLAIMER,
   NET:NET,WXGRID:WXGRID,R:R,legGates:legGates,crossSide:crossSide,step:step,iosShareFile:iosShareFile,favOn:favOn,favToggle:favToggle,netTree:netTree,withBlockedEdges:withBlockedEdges,netRoute:netRoute,treeOf:treeOf,inNet:inNet,wxAt:wxAt,wxSet:wxSet,wxFromOpenMeteo:wxFromOpenMeteo,wxUrls:wxUrls,wxValid:wxValid,
-  chunkLevel:chunkLevel,diagHTML:diagHTML,pickerSet:pickerSet,harbourMatches:harbourMatches,wxFill:wxFill,harbourTimeline:harbourTimeline,NOTES:NOTES,MAP:MAP,ZM:ZM,TILES:TILES,PACK:PACK,POPFS:POPFS,PNAT:PNAT,packBackend:packBackend,Sha256:Sha256,packCovers:packCovers,packLoadAll:packLoadAll,merc:merc,mapFit:mapFit,mapZoomAt:mapZoomAt,mapSelect:mapSelect,planGPX:planGPX,gpxFile:gpxFile,gpxParse:gpxParse,gpxSimplify:gpxSimplify,gpxDecode:gpxDecode,GPX_LIM:GPX_LIM,gpxImportText:gpxImportText,gpxiClear:gpxiClear,landCheck:landCheck,landStretches:landStretches,gpxOpenText:gpxOpenText,gpxOpenDetail:gpxOpenDetail,gpxShareBoot:gpxShareBoot,gpxShareCache:gpxShareCache,gpxiEval:gpxiEval,gpxiAdopt:gpxiAdopt,gpxiSanitize:gpxiSanitize,getGPXI:function(){return GPXI;},renderGpxImport:renderGpxImport,getWX:function(){return WX;},IDB:IDB,planTrip:planTrip,renderViaDays:renderViaDays,planCandidates:planCandidates,simLeg:simLeg,nightCheck:nightCheck,dayStartMs:dayStartMs,PL:PL,renderPlan:renderPlan,doImportText:doImportText,planSerialize:planSerialize,klimaFromArchive:klimaFromArchive,klimaSnapshot:klimaSnapshot,klimaRisk:klimaRisk,klimaSet:klimaSet,klimaGet:klimaGet,klimaUrl:klimaUrl,klimaYears:klimaYears,klimaPoints:klimaPoints,planKlima:planKlima,setWxMode:setWxMode,hullSpeed:hullSpeed,dieselSummary:dieselSummary,glShow:glShow,doPlan:doPlan,lageText:lageText,planText:planText,NOTESref:function(){return NOTES;},i18nKey:i18nKey,i18nText:i18nText,i18nSet:i18nSet,I18N:I18N,planAvoid:planAvoid,planReplace:planReplace,ZM:ZM,zmFit:zmFit,zmSelect:zmSelect,setZView:setZView,onbOpen:onbOpen,ONB:ONB,renderHdrAlert:renderHdrAlert,wxFill:wxFill,wxPreview:wxPreview,setPreset:setPreset,applyTheme:applyTheme},R.expose);
+  I18N:I18N,i18nText:i18nText,i18nSet:i18nSet,chunkLevel:chunkLevel,diagHTML:diagHTML,pickerSet:pickerSet,harbourMatches:harbourMatches,wxFill:wxFill,harbourTimeline:harbourTimeline,NOTES:NOTES,MAP:MAP,ZM:ZM,TILES:TILES,PACK:PACK,POPFS:POPFS,PNAT:PNAT,packBackend:packBackend,Sha256:Sha256,packCovers:packCovers,packLoadAll:packLoadAll,merc:merc,mapFit:mapFit,mapZoomAt:mapZoomAt,mapSelect:mapSelect,planGPX:planGPX,gpxFile:gpxFile,gpxParse:gpxParse,gpxSimplify:gpxSimplify,gpxDecode:gpxDecode,GPX_LIM:GPX_LIM,gpxImportText:gpxImportText,gpxiClear:gpxiClear,landCheck:landCheck,landStretches:landStretches,gpxOpenText:gpxOpenText,gpxOpenDetail:gpxOpenDetail,gpxShareBoot:gpxShareBoot,gpxShareCache:gpxShareCache,gpxiEval:gpxiEval,gpxiAdopt:gpxiAdopt,gpxiSanitize:gpxiSanitize,getGPXI:function(){return GPXI;},renderGpxImport:renderGpxImport,getWX:function(){return WX;},IDB:IDB,planTrip:planTrip,renderViaDays:renderViaDays,planCandidates:planCandidates,simLeg:simLeg,nightCheck:nightCheck,dayStartMs:dayStartMs,PL:PL,renderPlan:renderPlan,doImportText:doImportText,planSerialize:planSerialize,klimaFromArchive:klimaFromArchive,klimaSnapshot:klimaSnapshot,klimaRisk:klimaRisk,klimaSet:klimaSet,klimaGet:klimaGet,klimaUrl:klimaUrl,klimaYears:klimaYears,klimaPoints:klimaPoints,planKlima:planKlima,setWxMode:setWxMode,hullSpeed:hullSpeed,dieselSummary:dieselSummary,glShow:glShow,doPlan:doPlan,lageText:lageText,planText:planText,NOTESref:function(){return NOTES;},i18nKey:i18nKey,i18nText:i18nText,i18nSet:i18nSet,I18N:I18N,planAvoid:planAvoid,planReplace:planReplace,ZM:ZM,zmFit:zmFit,zmSelect:zmSelect,setZView:setZView,onbOpen:onbOpen,ONB:ONB,renderHdrAlert:renderHdrAlert,wxFill:wxFill,wxPreview:wxPreview,setPreset:setPreset,applyTheme:applyTheme},R.expose);
 }
 /* ---------- package data corrections (packages/ostsee/data/corrections.json), every value with a source ---------- */
 (function(){
