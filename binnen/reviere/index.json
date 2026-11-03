@@ -8,9 +8,9 @@
    53.8,
    14.8
   ],
-  "bytes": 2985564,
+  "bytes": 2998955,
   "pois": 6019,
-  "locks": 113,
+  "locks": 182,
   "bridges": 2863,
   "nodes": 16346,
   "pegel": 221
@@ -24,9 +24,9 @@
    54.6,
    14.5
   ],
-  "bytes": 1261434,
+  "bytes": 1265194,
   "pois": 4081,
-  "locks": 35,
+  "locks": 53,
   "bridges": 993,
   "nodes": 6776,
   "pegel": 106
@@ -40,9 +40,9 @@
    53.7,
    14.5
   ],
-  "bytes": 4119300,
+  "bytes": 4142004,
   "pois": 9148,
-  "locks": 132,
+  "locks": 240,
   "bridges": 5534,
   "nodes": 24012,
   "pegel": 281
@@ -56,9 +56,9 @@
    53.9,
    10.6
   ],
-  "bytes": 1962029,
+  "bytes": 1981564,
   "pois": 4871,
-  "locks": 78,
+  "locks": 167,
   "bridges": 3915,
   "nodes": 13235,
   "pegel": 164
@@ -72,9 +72,9 @@
    52.4,
    8.8
   ],
-  "bytes": 1029740,
+  "bytes": 1032837,
   "pois": 2361,
-  "locks": 40,
+  "locks": 57,
   "bridges": 1610,
   "nodes": 6274,
   "pegel": 60
@@ -88,9 +88,9 @@
    50.9,
    8.4
   ],
-  "bytes": 805899,
+  "bytes": 815971,
   "pois": 2018,
-  "locks": 42,
+  "locks": 61,
   "bridges": 760,
   "nodes": 4306,
   "pegel": 72
@@ -104,9 +104,9 @@
    49.9,
    10.0
   ],
-  "bytes": 1162025,
+  "bytes": 1165847,
   "pois": 3691,
-  "locks": 57,
+  "locks": 71,
   "bridges": 1600,
   "nodes": 6196,
   "pegel": 50
@@ -120,9 +120,9 @@
    50.6,
    13.9
   ],
-  "bytes": 1941346,
+  "bytes": 1950836,
   "pois": 4572,
-  "locks": 137,
+  "locks": 168,
   "bridges": 3390,
   "nodes": 13439,
   "pegel": 73
@@ -136,9 +136,9 @@
    48.4,
    13.1
   ],
-  "bytes": 656223,
+  "bytes": 656420,
   "pois": 2518,
-  "locks": 0,
+  "locks": 1,
   "bridges": 738,
   "nodes": 3267,
   "pegel": 2
@@ -152,9 +152,9 @@
    55.1,
    11.4
   ],
-  "bytes": 1195437,
+  "bytes": 1201361,
   "pois": 4257,
-  "locks": 22,
+  "locks": 51,
   "bridges": 1490,
   "nodes": 6220,
   "pegel": 113
@@ -168,9 +168,9 @@
    52.1,
    10.4
   ],
-  "bytes": 371576,
+  "bytes": 374625,
   "pois": 825,
-  "locks": 1,
+  "locks": 14,
   "bridges": 663,
   "nodes": 2961,
   "pegel": 22
@@ -184,9 +184,9 @@
    51.6,
    15.1
   ],
-  "bytes": 892583,
+  "bytes": 897237,
   "pois": 1887,
-  "locks": 7,
+  "locks": 32,
   "bridges": 1436,
   "nodes": 6232,
   "pegel": 15
