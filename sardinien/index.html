@@ -1072,6 +1072,14 @@ var REGIONS=(function(){
   return Object.keys(m).map(function(k){var r=m[k];r.lat/=r.n;r.lon/=r.n;return r;}).sort(function(a,b){return a.country===b.country?(a.region<b.region?-1:1):(a.country<b.country?-1:1);});
 })();
 var REG_BY_KEY={};REGIONS.forEach(function(r){REG_BY_KEY[r.key]=r;});
+/* Translations of the parts of composed core warnings (status.js, gates.js, thresholds.js): every package gets them, whatever its dictionary holds.
+   Keys as built by i18nKey. Written by the Kern run, not reviewed by a native sailor. */
+var I18N_CORE={
+en:{"Böen {n0} kn (wahr) ≥ {n1} kn": "True gusts {n0} kn ≥ {n1} kn","Böen {n0} kn (wahr), Schwelle {n1}–{n2} kn": "True gusts {n0} kn, threshold {n1}–{n2} kn","Böen {n0} kn (wahr) unter {n1} kn": "True gusts {n0} kn below {n1} kn","Böen {n0} kn ≥ {n1} kn": "Gusts {n0} kn ≥ {n1} kn","Seegang {n0} m ≥ {n1} m": "Sea state {n0} m ≥ {n1} m","Kinder: −{n0} kn": "Children: −{n0} kn","Vor-/Nachsaison: −{n0} kn": "Early/late season: −{n0} kn","Kinder + Vor-/Nachsaison: −{n0} kn": "Children + early/late season: −{n0} kn","Kinder/Vor-/Nachsaison: −{n0} kn": "Children/early/late season: −{n0} kn","eigene Grenze Böen {n0} kn": "own gust limit {n0} kn","eigene Grenze": "own limit","Nicht mehr auf offener See sein – nächsten geschützten Platz aus der Liste anlaufen": "Do not stay on open water – head for the nearest sheltered place on the list","Ausweichhafen vor Etappenbeginn festlegen, Crew briefen": "Choose an alternative harbour before the leg starts, brief the crew","Zusätzlich": "Also","Auslöser": "Trigger","Segelführung": "Sail plan","kurze, steile Ostseewelle": "short, steep Baltic sea","kurze, steile See": "short, steep sea","Nebel: Radar/AIS, Schallsignale, Verkehrstrennungsgebiete meiden": "Fog: radar/AIS, sound signals, keep clear of traffic separation schemes","Gewitter: Hafen vorher erreichen, Reff früh": "Thunderstorm: reach harbour first, reef early","Offene See, Großschifffahrt, unterwegs kein Zufluchtsort": "Open sea, commercial shipping, no refuge on the way","Offene See, unterwegs kein Zufluchtsort": "Open sea, no refuge on the way","Schwellen: Faustregel": "Thresholds: rule of thumb"},
+da:{"Böen {n0} kn (wahr) ≥ {n1} kn": "Sande vindstød {n0} kn ≥ {n1} kn","Böen {n0} kn (wahr), Schwelle {n1}–{n2} kn": "Sande vindstød {n0} kn, grænse {n1}–{n2} kn","Böen {n0} kn (wahr) unter {n1} kn": "Sande vindstød {n0} kn under {n1} kn","Böen {n0} kn ≥ {n1} kn": "Vindstød {n0} kn ≥ {n1} kn","Seegang {n0} m ≥ {n1} m": "Søgang {n0} m ≥ {n1} m","Kinder: −{n0} kn": "Børn: −{n0} kn","Vor-/Nachsaison: −{n0} kn": "For-/efterår: −{n0} kn","Kinder + Vor-/Nachsaison: −{n0} kn": "Børn + for-/efterår: −{n0} kn","Kinder/Vor-/Nachsaison: −{n0} kn": "Børn/for-/efterår: −{n0} kn","eigene Grenze Böen {n0} kn": "egen vindstødsgrænse {n0} kn","eigene Grenze": "egen grænse","Nicht mehr auf offener See sein – nächsten geschützten Platz aus der Liste anlaufen": "Bliv ikke på åbent vand – sejl til nærmeste beskyttede plads på listen","Ausweichhafen vor Etappenbeginn festlegen, Crew briefen": "Vælg en alternativ havn før etapen, orienter besætningen","Zusätzlich": "Desuden","Auslöser": "Årsag","Segelführung": "Sejlføring","kurze, steile Ostseewelle": "kort, stejl Østersø-bølge","kurze, steile See": "kort, stejl sø","Nebel: Radar/AIS, Schallsignale, Verkehrstrennungsgebiete meiden": "Tåge: radar/AIS, lydsignaler, undgå trafiksepareringsområder","Gewitter: Hafen vorher erreichen, Reff früh": "Tordenvejr: nå havn inden, rebning tidligt","Offene See, Großschifffahrt, unterwegs kein Zufluchtsort": "Åbent hav, stor skibsfart, intet tilflugtssted undervejs","Offene See, unterwegs kein Zufluchtsort": "Åbent hav, intet tilflugtssted undervejs","Schwellen: Faustregel": "Grænser: tommelfingerregel"},
+sv:{"Böen {n0} kn (wahr) ≥ {n1} kn": "Sanna byar {n0} kn ≥ {n1} kn","Böen {n0} kn (wahr), Schwelle {n1}–{n2} kn": "Sanna byar {n0} kn, gräns {n1}–{n2} kn","Böen {n0} kn (wahr) unter {n1} kn": "Sanna byar {n0} kn under {n1} kn","Böen {n0} kn ≥ {n1} kn": "Byar {n0} kn ≥ {n1} kn","Seegang {n0} m ≥ {n1} m": "Sjögång {n0} m ≥ {n1} m","Kinder: −{n0} kn": "Barn: −{n0} kn","Vor-/Nachsaison: −{n0} kn": "För-/eftersäsong: −{n0} kn","Kinder + Vor-/Nachsaison: −{n0} kn": "Barn + för-/eftersäsong: −{n0} kn","Kinder/Vor-/Nachsaison: −{n0} kn": "Barn/för-/eftersäsong: −{n0} kn","eigene Grenze Böen {n0} kn": "egen bygräns {n0} kn","eigene Grenze": "egen gräns","Nicht mehr auf offener See sein – nächsten geschützten Platz aus der Liste anlaufen": "Stanna inte på öppet vatten – gå till närmaste skyddade plats på listan","Ausweichhafen vor Etappenbeginn festlegen, Crew briefen": "Välj en reservhamn före etappen, informera besättningen","Zusätzlich": "Dessutom","Auslöser": "Orsak","Segelführung": "Segelföring","kurze, steile Ostseewelle": "kort, brant Östersjövåg","kurze, steile See": "kort, brant sjö","Nebel: Radar/AIS, Schallsignale, Verkehrstrennungsgebiete meiden": "Dimma: radar/AIS, ljudsignaler, undvik trafikseparering","Gewitter: Hafen vorher erreichen, Reff früh": "Åska: nå hamn innan, reva tidigt","Offene See, Großschifffahrt, unterwegs kein Zufluchtsort": "Öppet hav, stor sjöfart, ingen nödhamn på vägen","Offene See, unterwegs kein Zufluchtsort": "Öppet hav, ingen nödhamn på vägen","Schwellen: Faustregel": "Gränser: tumregel"},
+pl:{"Böen {n0} kn (wahr) ≥ {n1} kn": "Porywy rzeczywiste {n0} kn ≥ {n1} kn","Böen {n0} kn (wahr), Schwelle {n1}–{n2} kn": "Porywy rzeczywiste {n0} kn, próg {n1}–{n2} kn","Böen {n0} kn (wahr) unter {n1} kn": "Porywy rzeczywiste {n0} kn poniżej {n1} kn","Böen {n0} kn ≥ {n1} kn": "Porywy {n0} kn ≥ {n1} kn","Seegang {n0} m ≥ {n1} m": "Stan morza {n0} m ≥ {n1} m","Kinder: −{n0} kn": "Dzieci: −{n0} kn","Vor-/Nachsaison: −{n0} kn": "Przed-/posezon: −{n0} kn","Kinder + Vor-/Nachsaison: −{n0} kn": "Dzieci + przed-/posezon: −{n0} kn","Kinder/Vor-/Nachsaison: −{n0} kn": "Dzieci/przed-/posezon: −{n0} kn","eigene Grenze Böen {n0} kn": "własny limit porywów {n0} kn","eigene Grenze": "własny limit","Nicht mehr auf offener See sein – nächsten geschützten Platz aus der Liste anlaufen": "Nie pozostawaj na otwartym morzu – płyń do najbliższego osłoniętego miejsca z listy","Ausweichhafen vor Etappenbeginn festlegen, Crew briefen": "Wybierz port zapasowy przed etapem, poinstruuj załogę","Zusätzlich": "Dodatkowo","Auslöser": "Przyczyna","Segelführung": "Ożaglowanie","kurze, steile Ostseewelle": "krótka, stroma fala bałtycka","kurze, steile See": "krótka, stroma fala","Nebel: Radar/AIS, Schallsignale, Verkehrstrennungsgebiete meiden": "Mgła: radar/AIS, sygnały dźwiękowe, unikaj systemów rozgraniczenia ruchu","Gewitter: Hafen vorher erreichen, Reff früh": "Burza: dotrzyj wcześniej do portu, refuj wcześnie","Offene See, Großschifffahrt, unterwegs kein Zufluchtsort": "Otwarte morze, duże statki, brak schronienia po drodze","Offene See, unterwegs kein Zufluchtsort": "Otwarte morze, brak schronienia po drodze","Schwellen: Faustregel": "Progi: reguła kciuka"}
+};
 /* =====================================================================
    I18N (SPEC §28) – the UI is written in German; text nodes and a few attributes are translated at render time.
    Key = text with harbour/bridge/region names -> {hN} and numbers -> {nN}; dictionary in data/i18n.json.
@@ -1088,7 +1096,7 @@ function i18nAllowed(l){return !!I18N_LANGS[l]&&REVIER.langs.indexOf(l)>=0;}
    package has it. A package whose translation is not reviewed sets "langFallback" to its default language: it is then reached by hand only. */
 function i18nDevice(nav){var m=(REVIER.langMap||{})[nav]||nav;if(i18nAllowed(m))return m;var f=REVIER.langFallback;if(f&&i18nAllowed(f))return f;return i18nAllowed('en')?'en':REVIER.defaultLang;}
 var I18N_DIR={da:{},sv:{},pl:{},en:{}};   // directions stay international (N/NE/E…): single letters are also data codes (E = Einfahrt)
-var I18N={lang:'de',re:null,cache:{},orig:new WeakMap(),done:new WeakMap(),attr:new WeakMap(),obs:null,miss:{}};
+var I18N={lang:'de',re:null,cache:{},orig:new WeakMap(),done:new WeakMap(),attr:new WeakMap(),obs:null,miss:{},part:{}};
 function i18nNameRe(){
   if(I18N.re)return I18N.re;
   var set={};
@@ -1112,18 +1120,43 @@ function i18nKey(s){
   var r=0;k=k.replace(/\u0005/g,function(){return '{w'+(r++)+'}';});
   return {k:k,h:h,n:n,d:d,m:mo,w:wd};
 }
+/* translation of one exact string, null if there is none. Dictionary of the package first, then the core table (i18n-core.js) */
+function i18nLookup(s){
+  var K=i18nKey(s),D=(typeof I18N_DATA!=='undefined'&&I18N_DATA[I18N.lang])||{},C=(typeof I18N_CORE!=='undefined'&&I18N_CORE[I18N.lang])||{},t=D[K.k];
+  if(t==null)t=C[K.k];
+  if(t==null)return null;
+  var ok=true,DM=I18N_DIR[I18N.lang]||{};
+  var out=t.replace(/\{([hndmw])(\d+)\}/g,function(m,ty,ix,off){var a=ty==='h'?K.h:ty==='n'?K.n:ty==='m'?K.m:ty==='w'?K.w:K.d,v=a[+ix];if(v==null){ok=false;return m;}if(ty==='w'){var WL=I18N_WD[I18N.lang],wv=WL?WL[I18N_WDDE.indexOf(v)]:v;return off===0?wv.charAt(0).toUpperCase()+wv.slice(1):wv;}if(ty==='m'){var ML=I18N_MON[I18N.lang];return ML?ML[I18N_MONDE.indexOf(v)]:v;}return ty==='d'?(DM[v]||v):v;});
+  return ok?out:null;
+}
+/* Warnings are composed of parts ("Böen 30 kn ≥ 27 kn (Kinder: −3 kn). Nicht mehr …"), the combinations cannot all be in a dictionary.
+   Without a key for the whole text: the longest runs of parts that have one. A part without translation stays German, the rest is still read. */
+var I18N_CUT=/(^\(|\.\s+\(?|;\s+|:\s+|\s\(|\)\.?\s*\(?|,\s+|\s\+\s|\s–\s|\.$)/;
+function i18nParts(s){
+  var a=s.split(I18N_CUT),out='',i=0,hit=false;
+  if(a.length<3||a.length>61)return null;
+  while(i<a.length){
+    if(i%2){out+=a[i++];continue;}
+    var t=null,j;
+    for(j=Math.min(a.length-1,i+16);j>=i;j-=2){
+      var run=a.slice(i,j+1).join('');
+      if(!/[A-Za-zÄÖÜäöüß]/.test(run))continue;
+      t=i18nLookup(run);if(t==null&&a[j+1]&&a[j+1].charAt(0)==='.'){t=i18nLookup(run+'.');if(t!=null)t=t.replace(/\.$/,'');}
+      if(t!=null)break;
+    }
+    if(t!=null){out+=t;hit=true;i=j+1;}
+    else{if(/[A-Za-zÄÖÜäöüß]/.test(a[i]))I18N.part[i18nKey(a[i]).k]=1;out+=a[i];i++;}
+  }
+  return hit?out:null;
+}
 function i18nText(s){
   if(I18N.lang==='de'||s==null)return s;
   s=String(s);if(!/[A-Za-zÄÖÜäöüß]/.test(s))return s;
-  var lead=s.match(/^\s*/)[0],trail=s.match(/\s*$/)[0];
+  var lead=s.match(/^\s*/)[0],trail=s.match(/\s*$/)[0],core=s.trim();
   var ck=I18N.lang+'\u0002'+s;if(I18N.cache[ck]!=null)return I18N.cache[ck];
-  var K=i18nKey(s),D=(typeof I18N_DATA!=='undefined'&&I18N_DATA[I18N.lang])||{},t=D[K.k],out=s;
-  if(t!=null){
-    var ok=true;
-    var DM=I18N_DIR[I18N.lang]||{};
-    out=lead+t.replace(/\{([hndmw])(\d+)\}/g,function(m,ty,ix,off){var a=ty==='h'?K.h:ty==='n'?K.n:ty==='m'?K.m:ty==='w'?K.w:K.d,v=a[+ix];if(v==null){ok=false;return m;}if(ty==='w'){var WL=I18N_WD[I18N.lang],wv=WL?WL[I18N_WDDE.indexOf(v)]:v;return off===0?wv.charAt(0).toUpperCase()+wv.slice(1):wv;}if(ty==='m'){var ML=I18N_MON[I18N.lang];return ML?ML[I18N_MONDE.indexOf(v)]:v;}return ty==='d'?(DM[v]||v):v;})+trail;
-    if(!ok)out=s;
-  }else I18N.miss[K.k]=1;
+  var t=i18nLookup(core),out=s;
+  if(t==null){I18N.miss[i18nKey(s).k]=1;t=i18nParts(core);}
+  if(t!=null)out=lead+t+trail;
   if(Object.keys(I18N.cache).length>8000)I18N.cache={};
   I18N.cache[ck]=out;return out;
 }
@@ -6298,7 +6331,7 @@ window.SKIPPER=Object.assign({WL_NET:WL_NET,wlAssess:wlAssess,wlRaising:wlRaisin
   isOutOfArea:isOutOfArea,euOffset:euOffset,utcToLocal:utcToLocal,sunTimes:sunTimes,seaAreaOf:seaAreaOf,countryOf:countryOf,boatNeeds:boatNeeds,
   rhumb:rhumb,courseToWind:courseToWind,effThresholds:effThresholds,filterList:filterList,DISCLAIMER:DISCLAIMER,
   NET:NET,WXGRID:WXGRID,R:R,legGates:legGates,crossSide:crossSide,step:step,iosShareFile:iosShareFile,favOn:favOn,favToggle:favToggle,netTree:netTree,withBlockedEdges:withBlockedEdges,netRoute:netRoute,treeOf:treeOf,inNet:inNet,wxAt:wxAt,wxSet:wxSet,wxFromOpenMeteo:wxFromOpenMeteo,wxUrls:wxUrls,wxValid:wxValid,
-  chunkLevel:chunkLevel,diagHTML:diagHTML,pickerSet:pickerSet,harbourMatches:harbourMatches,wxFill:wxFill,harbourTimeline:harbourTimeline,NOTES:NOTES,MAP:MAP,ZM:ZM,TILES:TILES,PACK:PACK,POPFS:POPFS,PNAT:PNAT,packBackend:packBackend,Sha256:Sha256,packCovers:packCovers,packLoadAll:packLoadAll,merc:merc,mapFit:mapFit,mapZoomAt:mapZoomAt,mapSelect:mapSelect,planGPX:planGPX,gpxFile:gpxFile,gpxParse:gpxParse,gpxSimplify:gpxSimplify,gpxDecode:gpxDecode,GPX_LIM:GPX_LIM,gpxImportText:gpxImportText,gpxiClear:gpxiClear,landCheck:landCheck,landStretches:landStretches,gpxOpenText:gpxOpenText,gpxOpenDetail:gpxOpenDetail,gpxShareBoot:gpxShareBoot,gpxShareCache:gpxShareCache,gpxiEval:gpxiEval,gpxiAdopt:gpxiAdopt,gpxiSanitize:gpxiSanitize,getGPXI:function(){return GPXI;},renderGpxImport:renderGpxImport,getWX:function(){return WX;},IDB:IDB,planTrip:planTrip,renderViaDays:renderViaDays,planCandidates:planCandidates,simLeg:simLeg,nightCheck:nightCheck,dayStartMs:dayStartMs,PL:PL,renderPlan:renderPlan,doImportText:doImportText,planSerialize:planSerialize,klimaFromArchive:klimaFromArchive,klimaSnapshot:klimaSnapshot,klimaRisk:klimaRisk,klimaSet:klimaSet,klimaGet:klimaGet,klimaUrl:klimaUrl,klimaYears:klimaYears,klimaPoints:klimaPoints,planKlima:planKlima,setWxMode:setWxMode,hullSpeed:hullSpeed,dieselSummary:dieselSummary,glShow:glShow,doPlan:doPlan,lageText:lageText,planText:planText,NOTESref:function(){return NOTES;},i18nKey:i18nKey,i18nText:i18nText,i18nSet:i18nSet,I18N:I18N,planAvoid:planAvoid,planReplace:planReplace,ZM:ZM,zmFit:zmFit,zmSelect:zmSelect,setZView:setZView,onbOpen:onbOpen,ONB:ONB,renderHdrAlert:renderHdrAlert,wxFill:wxFill,wxPreview:wxPreview,setPreset:setPreset,applyTheme:applyTheme},R.expose);
+  I18N:I18N,i18nText:i18nText,i18nSet:i18nSet,chunkLevel:chunkLevel,diagHTML:diagHTML,pickerSet:pickerSet,harbourMatches:harbourMatches,wxFill:wxFill,harbourTimeline:harbourTimeline,NOTES:NOTES,MAP:MAP,ZM:ZM,TILES:TILES,PACK:PACK,POPFS:POPFS,PNAT:PNAT,packBackend:packBackend,Sha256:Sha256,packCovers:packCovers,packLoadAll:packLoadAll,merc:merc,mapFit:mapFit,mapZoomAt:mapZoomAt,mapSelect:mapSelect,planGPX:planGPX,gpxFile:gpxFile,gpxParse:gpxParse,gpxSimplify:gpxSimplify,gpxDecode:gpxDecode,GPX_LIM:GPX_LIM,gpxImportText:gpxImportText,gpxiClear:gpxiClear,landCheck:landCheck,landStretches:landStretches,gpxOpenText:gpxOpenText,gpxOpenDetail:gpxOpenDetail,gpxShareBoot:gpxShareBoot,gpxShareCache:gpxShareCache,gpxiEval:gpxiEval,gpxiAdopt:gpxiAdopt,gpxiSanitize:gpxiSanitize,getGPXI:function(){return GPXI;},renderGpxImport:renderGpxImport,getWX:function(){return WX;},IDB:IDB,planTrip:planTrip,renderViaDays:renderViaDays,planCandidates:planCandidates,simLeg:simLeg,nightCheck:nightCheck,dayStartMs:dayStartMs,PL:PL,renderPlan:renderPlan,doImportText:doImportText,planSerialize:planSerialize,klimaFromArchive:klimaFromArchive,klimaSnapshot:klimaSnapshot,klimaRisk:klimaRisk,klimaSet:klimaSet,klimaGet:klimaGet,klimaUrl:klimaUrl,klimaYears:klimaYears,klimaPoints:klimaPoints,planKlima:planKlima,setWxMode:setWxMode,hullSpeed:hullSpeed,dieselSummary:dieselSummary,glShow:glShow,doPlan:doPlan,lageText:lageText,planText:planText,NOTESref:function(){return NOTES;},i18nKey:i18nKey,i18nText:i18nText,i18nSet:i18nSet,I18N:I18N,planAvoid:planAvoid,planReplace:planReplace,ZM:ZM,zmFit:zmFit,zmSelect:zmSelect,setZView:setZView,onbOpen:onbOpen,ONB:ONB,renderHdrAlert:renderHdrAlert,wxFill:wxFill,wxPreview:wxPreview,setPreset:setPreset,applyTheme:applyTheme},R.expose);
 }
 /* ---------- contact additions (packages/sardinien-korsika/data/contacts.json): operator or official sources only, fills gaps, never overwrites ---------- */
 (function(){
