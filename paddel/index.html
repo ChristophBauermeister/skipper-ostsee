@@ -13,7 +13,23 @@
 <style>
 :root{--bg:#f2f6f7;--card:#fff;--ink:#132a33;--mute:#5b7480;--line:#d5e1e5;--head:#0d4f6c;--headink:#fff;--acc:#c43e00;--warn:#e0a400;--bad:#c0392b;--good:#1f8a70;--chip:#e7f0f2}
 :root{--on-prim:#fff;--field:#fff;--ok-bg:#e2f4ee;--ok-ink:#11634f;--warn-bg:#fff3cf;--warn-ink:#6e5200;--bad-bg:#fde4e1;--bad-ink:#8e2418;--info-bg:#e7f0f2;--hl:var(--head);--toast:#13233a;--toast-ink:#fff}
-/*__THEME_CSS__*/
+/* Day, sun and night for apps outside the core shell (Binnen, Paddel). Same colours as base.css.
+   Token names of those apps: --bg --card --ink --mute --line --head --headink --acc --warn --bad --good --chip.
+   New tokens for what they hard-code today: --on-prim (text on --head/--acc), --field (inputs, map buttons),
+   --ok-bg/--ok-ink, --warn-bg/--warn-ink, --bad-bg/--bad-ink, --info-bg (banners).
+   A map or chart with its own colours gets id="map" or class "sk-themed-map": at night a filter turns it red on black,
+   tiles, GL canvas and symbols alike, so no white survives on it. */
+:root{--on-prim:#fff;--field:#fff;--ok-bg:#e2f4ee;--ok-ink:#11634f;--warn-bg:#fff3cf;--warn-ink:#6e5200;--bad-bg:#fde4e1;--bad-ink:#8e2418;--info-bg:#e7f0f2}
+:root[data-theme="sun"]{--bg:#fff;--card:#fff;--ink:#000;--mute:#111;--line:#000;--head:#000;--headink:#fff;--acc:#006837;--warn:#ffd400;--bad:#b0001b;--good:#006837;--chip:#e6e6e6;
+  --on-prim:#fff;--field:#fff;--ok-bg:#fff;--ok-ink:#006837;--warn-bg:#ffd400;--warn-ink:#000;--bad-bg:#b0001b;--bad-ink:#fff;--info-bg:#fff}
+:root[data-theme="sun"] body{font-size:1.06rem}
+:root[data-theme="sun"] #map,:root[data-theme="sun"] .sk-themed-map{filter:contrast(1.25) saturate(1.2)}
+:root[data-theme="night"]{--bg:#000;--card:#120000;--ink:#ff6a5a;--mute:#d9483a;--line:#6a1212;--head:#000;--headink:#ff6a5a;--acc:#ff3b2a;--warn:#ff8a5a;--bad:#ff3b2a;--good:#ff8a7a;--chip:#240808;
+  --on-prim:#000;--field:#1c0000;--ok-bg:#1c0000;--ok-ink:#ff8a7a;--warn-bg:#4a1400;--warn-ink:#ffb3a0;--bad-bg:#ff3b2a;--bad-ink:#000;--info-bg:#1c0000}
+:root[data-theme="night"] #map,:root[data-theme="night"] .sk-themed-map{filter:url(#sk-night-map)}
+:root[data-theme="night"] input,:root[data-theme="night"] select,:root[data-theme="night"] textarea{color:var(--ink);background:var(--field);border-color:var(--line)}
+.sk-themebtn{min-height:44px;min-width:44px;font-size:1.1rem;border:1.5px solid currentColor;border-radius:10px;background:transparent;color:var(--headink);padding:0 8px;font-weight:700;cursor:pointer}
+
 :root[data-theme]{--toast:var(--ink);--toast-ink:var(--bg)}
 :root[data-theme="night"]{--hl:var(--acc)}
 :root[data-theme] nav button{color:var(--headink)}
@@ -99,9 +115,6 @@ details>summary{cursor:pointer;min-height:40px;line-height:40px}
 :root[data-theme] .unk{color:var(--warn-ink)}
 :root[data-theme] .card.stage .card{border-color:var(--line)}
 :root[data-theme] input,:root[data-theme] select{background:var(--field);color:var(--ink);border-color:var(--line)}
-:root[data-theme] nav button{color:var(--headink)}
-:root[data-theme] nav button.on{color:var(--headink);border-color:var(--headink)}
-:root[data-theme] nav button.sos{background:var(--bad);color:var(--bad-ink)}
 :root[data-theme] .btn.sec,:root[data-theme] .acts a,:root[data-theme] .acts button{background:var(--field);color:var(--ink);border-color:var(--ink)}
 :root[data-theme] .acts a.prim,:root[data-theme] .acts button.prim{background:var(--acc);border-color:var(--acc);color:var(--on-prim)}
 :root[data-theme] #toast{background:var(--ink);color:var(--bg)}
@@ -167,7 +180,7 @@ header{flex-wrap:nowrap}
     <div style="grid-column:1/-1"><label for="t-dep">Start der Tour</label><input id="t-dep" type="datetime-local"></div>
   </div>
   <button class="btn" id="t-go">Tour planen</button>
-  <button class="btn sec sm" id="t-gpx" type="button">GPX-Tour prüfen</button><input type="file" id="f-gpx" accept=".gpx,application/gpx+xml,application/xml,text/xml" hidden>
+  <button class="btn sec sm" id="gpx-go" type="button">GPX-Tour prüfen</button><input type="file" id="f-gpx" accept=".gpx,application/gpx+xml,application/xml,text/xml" hidden>
   <div class="note">Tour aus einem Planungsportal oder von Freunden: Die App prüft die Linie auf Wehre, Schleusen, Sperrungen und Übernachtung.</div>
   <button class="btn sec sm" id="t-gpxgo" type="button" style="display:none">GPX-Route prüfen</button><input type="file" id="t-gpx" accept=".gpx,application/gpx+xml" style="display:none">
   <div id="t-out"></div>
@@ -1211,35 +1224,74 @@ function packBind(){
   };
 })();
 
-/*__THEME_JS__*/
-/*__UPDATE_JS__*/
-/*__GPX__*/
-function init(){
-  readCharterLink();
-  if(window.SkTheme)SkTheme.init({key:'skipperBinnen.theme',mount:$('lang').parentNode,t:t});
-  $('ver').textContent=VERSION;renderSrcs();
-  renderCats();renderList();renderLocks();renderBoot();renderRules();initToern();mapInit();placeMap();liveRefresh();initRevier();if(window.PK){PK.bind();packHint();setTimeout(packHint,1500);$('mp-hint-go').onclick=function(){show('scr-schleuse');var d=$('det-mappack');d.open=true;d.scrollIntoView();};}
-  gpxInit();
-  if(window.SkUpdate)SkUpdate.check({url:'https://christophbauermeister.github.io/skipper-ostsee/binnen/version.json',current:VERSION,key:'skipperBinnen.upd',t:t,mount:document.querySelector('.app')});
-  posLine();
-  $('lang').value=LANG;$('lang').onchange=function(){LANG=this.value;store('skipperBinnen.lang',LANG);applyLang();};trDom();
-  document.querySelectorAll('nav button').forEach(function(b){b.onclick=function(){show(b.dataset.scr);};});
-  $('cats').onclick=function(e){var t=e.target.closest('[data-c]');if(!t)return;S.cats[t.dataset.c]=S.cats[t.dataset.c]?0:1;store('skipperBinnen.cats',JSON.stringify(S.cats));renderCats();renderList();};
-  $('q').oninput=function(){S.q=this.value.trim();renderList();renderQpos();};
-  $('zhere').onclick=function(){manualPos(M.cy,M.cx,'');};
-  $('btn-gps').onclick=function(){gps();};
-  $('lq').oninput=renderLocks;
-  document.addEventListener('click',function(e){var rq=e.target.closest('[data-req]');if(rq){e.preventDefault();openRequest(rq.dataset.req,rq.dataset.date);return;}});
-  document.addEventListener('click',function(e){var t=e.target.closest('[data-map]');if(t){var p=POIS.filter(function(x){return x.id===t.dataset.map;})[0];if(p){S.sel=p.id;M.cx=p.lo;M.cy=p.la;M.z=Math.max(M.z,14);if(wide()&&t.closest('#scr-nah')){showDetail('detail',p.id);mapRender();}else{show('scr-karte');showDetail('mdetail',p.id);}}return;}
-    var c=e.target.closest('#list .card');if(c&&!e.target.closest('a,button')&&wide()){var q=POIS.filter(function(x){return x.id===c.dataset.id;})[0];if(q){S.sel=q.id;M.cx=q.lo;M.cy=q.la;M.z=Math.max(M.z,14);}showDetail('detail',c.dataset.id);mapRender();}});
-  ['b-name','b-type','b-len','b-beam','b-draft','b-height','b-heightmax','b-weight','b-ps','b-lph','b-speed','b-fuel'].forEach(function(id){$(id).addEventListener('change',saveBoot);});
-  $('b-example').onclick=function(){var keep=S.boat.charter;S.boat={name:'GWOSERING',type:'Saga 27',len:8.15,beam:2.75,draft:0.85,height:2.4,heightmax:3.0,weight:2.65,ps:70,lph:3,speed:10,fuel:'diesel'};if(keep)S.boat.charter=keep;
-    store('skipperBinnen.boat',JSON.stringify(S.boat));renderBoot();renderLocks();if(!load('skipperBinnen.route'))$('t-speed').value='10';$('bootmsg').textContent=t('Beispielboot geladen – Werte kannst du anpassen.');};
-  $('btn-mypos').onclick=function(){gps(function(){var o=$('myposout');o.style.display='block';o.innerHTML='<div class="t">'+deg(S.pos.la,true)+'<br>'+deg(S.pos.lo,false)+'</div>'+(kmText(S.pos)?'<div class="t" style="margin-top:6px">'+esc(kmText(S.pos))+'</div>':'')+'<div class="note">'+S.pos.la.toFixed(5)+', '+S.pos.lo.toFixed(5)+' · '+new Date().toLocaleTimeString(LANG==='en'?'en-GB':LANG)+'</div>';});};
-  try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist().catch(function(){});}catch(e){}
-  if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)&&!(window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform()))navigator.serviceWorker.register('sw.js').catch(function(){});
-}
-window.SKIPPER_BINNEN={S:S,POIS:POIS,LOCKS:LOCKS,BRIDGES:BRIDGES,renderList:renderList,setPos:setPos,readCharterLink:readCharterLink,requestText:requestText,show:show,mapRender:mapRender,M:M};
+/* Day, sun and night for apps outside the core shell. Stand-alone: no other core file needed.
+   SkTheme.init({key:'skipperBinnen.theme', mount:element, t:translate, onChange:fn});
+   key = localStorage key, mount = where the switch goes (optional), t = text function (optional), onChange(mode) for what CSS cannot reach. */
+var SkTheme=(function(){
+  var MODES=['day','sun','night'],META={day:null,sun:'#000000',night:'#000000'},NAME={day:'Tag',sun:'Sonne',night:'Nacht'},ICON={day:'◐',sun:'☀',night:'☾'};
+  var o={},mode='day',btn=null,dayMeta=null;
+  function tr(s){return o.t?o.t(s):s;}
+  function read(){try{return localStorage.getItem(o.key);}catch(e){return null;}}
+  function write(v){try{localStorage.setItem(o.key,v);}catch(e){}}
+  function filter(){   // the red map filter of theme-kit.css: dark stays bright, light becomes black, nothing but red
+    if(document.getElementById('sk-night-filter'))return;
+    var d=document.createElement('div');d.id='sk-night-filter';d.setAttribute('aria-hidden','true');d.style.cssText='position:absolute;width:0;height:0;overflow:hidden';
+    d.innerHTML='<svg width="0" height="0"><filter id="sk-night-map" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="-.3 -.59 -.11 0 1  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0"/></filter></svg>';
+    document.body.appendChild(d);
+  }
+  function paint(){
+    if(!btn)return;
+    var next=MODES[(MODES.indexOf(mode)+1)%MODES.length];
+    btn.textContent=ICON[mode];btn.setAttribute('aria-label',tr('Anzeige')+': '+tr(NAME[mode])+', '+tr('weiter zu')+' '+tr(NAME[next]));btn.title=btn.getAttribute('aria-label');
+  }
+  function apply(m){
+    mode=MODES.indexOf(m)<0?'day':m;
+    var r=document.documentElement,meta=document.querySelector('meta[name=theme-color]');
+    if(mode==='day')r.removeAttribute('data-theme');else r.setAttribute('data-theme',mode);
+    if(meta){if(dayMeta==null)dayMeta=meta.getAttribute('content');meta.setAttribute('content',META[mode]||dayMeta);}
+    paint();
+    if(o.onChange)o.onChange(mode);
+  }
+  function set(m){apply(m);write(mode);}
+  function next(){set(MODES[(MODES.indexOf(mode)+1)%MODES.length]);}
+  function init(opt){
+    o=opt||{};filter();
+    if(o.mount){btn=document.createElement('button');btn.type='button';btn.id='sk-themebtn';btn.className='sk-themebtn';btn.addEventListener('click',next);o.mount.appendChild(btn);}
+    apply(read());
+  }
+  return {init:init,set:set,next:next,mode:function(){return mode;}};
+})();
+
+/* "Update available" for the Android shells (queue #49c). Stand-alone, needs no other core file; the web apps update through their service worker.
+   SkUpdate.check({url:'https://…/version.json',current:'2.25.1',key:'skipperOst.upd',t:translate,mount:element});
+   Without connection, with a broken file or an equal version nothing happens. The link leads to the release page with the APK; installing over the app keeps the data
+   as long as the signature stays the same (#49a). A direct start of the installer needs REQUEST_INSTALL_PACKAGES in the shell and comes with the device test. */
+var SkUpdate=(function(){
+  function native(){return !!(window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform());}
+  function newer(a,b){var x=String(a).split('.').map(Number),y=String(b).split('.').map(Number);for(var i=0;i<Math.max(x.length,y.length);i++){var p=x[i]||0,q=y[i]||0;if(p!==q)return p>q;}return false;}
+  function get(k){try{return localStorage.getItem(k);}catch(e){return null;}}
+  function put(k,v){try{localStorage.setItem(k,v);}catch(e){}}
+  function show(o,v){
+    var t=o.t||function(s){return s;},d=document.createElement('div');d.id='sk-update';d.setAttribute('role','status');
+    d.style.cssText='display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:8px 12px;border:2px solid currentColor;border-radius:10px;margin:8px;font-weight:700';
+    var s=document.createElement('span');s.style.flex='1 1 12em';s.textContent=t('Update verfügbar')+': '+v.version;
+    var a=document.createElement('a');a.href=/^https:\/\//.test(v.release||'')?v.release:'#';a.target='_blank';a.rel='noopener';a.textContent=t('Zum Download');a.style.cssText='padding:10px 12px;color:inherit';
+    var b=document.createElement('button');b.type='button';b.textContent=t('Später');b.style.cssText='min-height:44px;padding:0 12px;font:inherit;color:inherit;background:transparent;border:1px solid currentColor;border-radius:8px';
+    b.addEventListener('click',function(){put(o.key,v.version);d.remove();});
+    d.appendChild(s);d.appendChild(a);d.appendChild(b);(o.mount||document.body).prepend(d);
+  }
+  function check(o){
+    if(!native()||!o||!o.url||!o.current||typeof fetch!=='function')return Promise.resolve(false);
+    var c=typeof AbortController!=='undefined'?new AbortController():null,tm=c&&setTimeout(function(){c.abort();},8000);
+    return fetch(o.url,{cache:'no-store',credentials:'omit',signal:c&&c.signal}).then(function(r){return r.ok?r.json():null;}).then(function(v){
+      if(tm)clearTimeout(tm);
+      if(!v||!/^\d+(\.\d+)*$/.test(String(v.version))||!newer(v.version,o.current)||(o.key&&get(o.key)===v.version))return false;
+      show(o,v);return true;
+    }).catch(function(){return false;});
+  }
+  return {check:check,newer:newer};
+})();
+
 /* =====================================================================
    GPX IMPORT – pure parser (no app state, no libraries; reusable by every package incl. Binnen)
    <rte>/<rtept>, <trk>/<trkseg>/<trkpt>, <wpt>; GPX 1.0 and 1.1; namespaces tolerated (matched by localName).
@@ -1349,40 +1401,36 @@ function gpxParse(text){
   return {ok:true,name:name,version:version,legs:legs,wpts:wpts,stats:{points:total,legs:legs.length,wpts:wpts.length,thinned:thinned,ignored:ignored}};
 }
 
-/* "Update available" for the Android shells (queue #49c). Stand-alone, needs no other core file; the web apps update through their service worker.
-   SkUpdate.check({url:'https://…/version.json',current:'2.25.1',key:'skipperOst.upd',t:translate,mount:element});
-   Without connection, with a broken file or an equal version nothing happens. The link leads to the release page with the APK; installing over the app keeps the data
-   as long as the signature stays the same (#49a). A direct start of the installer needs REQUEST_INSTALL_PACKAGES in the shell and comes with the device test. */
-var SkUpdate=(function(){
-  function native(){return !!(window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform());}
-  function newer(a,b){var x=String(a).split('.').map(Number),y=String(b).split('.').map(Number);for(var i=0;i<Math.max(x.length,y.length);i++){var p=x[i]||0,q=y[i]||0;if(p!==q)return p>q;}return false;}
-  function get(k){try{return localStorage.getItem(k);}catch(e){return null;}}
-  function put(k,v){try{localStorage.setItem(k,v);}catch(e){}}
-  function show(o,v){
-    var t=o.t||function(s){return s;},d=document.createElement('div');d.id='sk-update';d.setAttribute('role','status');
-    d.style.cssText='display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:8px 12px;border:2px solid currentColor;border-radius:10px;margin:8px;font-weight:700';
-    var s=document.createElement('span');s.style.flex='1 1 12em';s.textContent=t('Update verfügbar')+': '+v.version;
-    var a=document.createElement('a');a.href=/^https:\/\//.test(v.release||'')?v.release:'#';a.target='_blank';a.rel='noopener';a.textContent=t('Zum Download');a.style.cssText='padding:10px 12px;color:inherit';
-    var b=document.createElement('button');b.type='button';b.textContent=t('Später');b.style.cssText='min-height:44px;padding:0 12px;font:inherit;color:inherit;background:transparent;border:1px solid currentColor;border-radius:8px';
-    b.addEventListener('click',function(){put(o.key,v.version);d.remove();});
-    d.appendChild(s);d.appendChild(a);d.appendChild(b);(o.mount||document.body).prepend(d);
-  }
-  function check(o){
-    if(!native()||!o||!o.url||!o.current||typeof fetch!=='function')return Promise.resolve(false);
-    var c=typeof AbortController!=='undefined'?new AbortController():null,tm=c&&setTimeout(function(){c.abort();},8000);
-    return fetch(o.url,{cache:'no-store',credentials:'omit',signal:c&&c.signal}).then(function(r){return r.ok?r.json():null;}).then(function(v){
-      if(tm)clearTimeout(tm);
-      if(!v||!/^\d+(\.\d+)*$/.test(String(v.version))||!newer(v.version,o.current)||(o.key&&get(o.key)===v.version))return false;
-      show(o,v);return true;
-    }).catch(function(){return false;});
-  }
-  return {check:check,newer:newer};
-})();
-
+function init(){
+  readCharterLink();
+  if(window.SkTheme)SkTheme.init({key:'skipperPaddel.theme',mount:$('lang').parentNode,t:t});
+  $('ver').textContent=VERSION;renderSrcs();
+  renderCats();renderList();renderLocks();renderBoot();renderRules();initToern();mapInit();placeMap();liveRefresh();initRevier();if(window.PK){PK.bind();packHint();setTimeout(packHint,1500);$('mp-hint-go').onclick=function(){show('scr-schleuse');var d=$('det-mappack');d.open=true;d.scrollIntoView();};}
+  gpxInit();
+  if(window.SkUpdate)SkUpdate.check({url:'https://christophbauermeister.github.io/skipper-ostsee/paddel/version.json',current:VERSION,key:'skipperPaddel.upd',t:t,mount:document.querySelector('.app')});
+  posLine();
+  $('lang').value=LANG;$('lang').onchange=function(){LANG=this.value;store('skipperBinnen.lang',LANG);applyLang();};trDom();
+  document.querySelectorAll('nav button').forEach(function(b){b.onclick=function(){show(b.dataset.scr);};});
+  $('cats').onclick=function(e){var t=e.target.closest('[data-c]');if(!t)return;S.cats[t.dataset.c]=S.cats[t.dataset.c]?0:1;store('skipperBinnen.cats',JSON.stringify(S.cats));renderCats();renderList();};
+  $('q').oninput=function(){S.q=this.value.trim();renderList();renderQpos();};
+  $('zhere').onclick=function(){manualPos(M.cy,M.cx,'');};
+  $('btn-gps').onclick=function(){gps();};
+  $('lq').oninput=renderLocks;
+  document.addEventListener('click',function(e){var rq=e.target.closest('[data-req]');if(rq){e.preventDefault();openRequest(rq.dataset.req,rq.dataset.date);return;}});
+  document.addEventListener('click',function(e){var t=e.target.closest('[data-map]');if(t){var p=POIS.filter(function(x){return x.id===t.dataset.map;})[0];if(p){S.sel=p.id;M.cx=p.lo;M.cy=p.la;M.z=Math.max(M.z,14);if(wide()&&t.closest('#scr-nah')){showDetail('detail',p.id);mapRender();}else{show('scr-karte');showDetail('mdetail',p.id);}}return;}
+    var c=e.target.closest('#list .card');if(c&&!e.target.closest('a,button')&&wide()){var q=POIS.filter(function(x){return x.id===c.dataset.id;})[0];if(q){S.sel=q.id;M.cx=q.lo;M.cy=q.la;M.z=Math.max(M.z,14);}showDetail('detail',c.dataset.id);mapRender();}});
+  ['b-name','b-type','b-len','b-beam','b-draft','b-height','b-heightmax','b-weight','b-ps','b-lph','b-speed','b-fuel'].forEach(function(id){$(id).addEventListener('change',saveBoot);});
+  $('b-example').onclick=function(){var keep=S.boat.charter;S.boat={name:'GWOSERING',type:'Saga 27',len:8.15,beam:2.75,draft:0.85,height:2.4,heightmax:3.0,weight:2.65,ps:70,lph:3,speed:10,fuel:'diesel'};if(keep)S.boat.charter=keep;
+    store('skipperBinnen.boat',JSON.stringify(S.boat));renderBoot();renderLocks();if(!load('skipperBinnen.route'))$('t-speed').value='10';$('bootmsg').textContent=t('Beispielboot geladen – Werte kannst du anpassen.');};
+  $('btn-mypos').onclick=function(){gps(function(){var o=$('myposout');o.style.display='block';o.innerHTML='<div class="t">'+deg(S.pos.la,true)+'<br>'+deg(S.pos.lo,false)+'</div>'+(kmText(S.pos)?'<div class="t" style="margin-top:6px">'+esc(kmText(S.pos))+'</div>':'')+'<div class="note">'+S.pos.la.toFixed(5)+', '+S.pos.lo.toFixed(5)+' · '+new Date().toLocaleTimeString(LANG==='en'?'en-GB':LANG)+'</div>';});};
+  try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist().catch(function(){});}catch(e){}
+  if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)&&!(window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform()))navigator.serviceWorker.register('sw.js').catch(function(){});
+}
+window.SKIPPER_BINNEN={S:S,POIS:POIS,LOCKS:LOCKS,BRIDGES:BRIDGES,renderList:renderList,setPos:setPos,readCharterLink:readCharterLink,requestText:requestText,show:show,mapRender:mapRender,M:M};
 /* ===== Skipper Paddel – overlay on the Skipper Binnen app (injected before init()). =====
    Function declarations here replace the Binnen ones (hoisted, later wins); wrappers use assignment so the Binnen
    version stays callable. Nothing in binnen/src/app.html is changed. */
-var PVERSION='0.5.0';VERSION=PVERSION;
+var PVERSION='0.5.1';VERSION=PVERSION;
 /* own storage namespace: Binnen and Paddel run on the same origin (GitHub Pages) */
 function load(k){try{return localStorage.getItem(String(k).replace(/^skipperBinnen\./,'skipperPaddel.'));}catch(e){return null;}}
 function store(k,v){try{localStorage.setItem(String(k).replace(/^skipperBinnen\./,'skipperPaddel.'),v);}catch(e){}}
@@ -1506,7 +1554,7 @@ function routeLine(){return S.route.line||S.route.path.map(function(n){return NE
 function fitRoute(){if(!S.route)return;var la0=90,la1=-90,lo0=180,lo1=-180;routeLine().forEach(function(q){la0=Math.min(la0,q[0]);la1=Math.max(la1,q[0]);lo0=Math.min(lo0,q[1]);lo1=Math.max(lo1,q[1]);});
   M.cy=(la0+la1)/2;M.cx=(lo0+lo1)/2;var el=$('map'),W=el.clientWidth||400,H=el.clientHeight||400;for(var z=15;z>=7;z--){M.z=z;if(mx(lo1)-mx(lo0)<W*0.85&&my(la0)-my(la1)<H*0.85)break;}mapRender();}
 /* without a pack there is no background map out of reception: say so before the tour, not on it */
-function packHint(){var h=$('mp-hint');if(h)h.style.display=window.PK&&Object.keys(PK.PACK.inst).length?'none':'';}
+function packHint(){var h=$('mp-hint');if(!h)return;$('mp-hint-t').textContent=t('Ohne Empfang keine Hintergrundkarte. Vor der Tour im WLAN ein Kartenpaket laden.');h.style.display=window.PK&&Object.keys(PK.PACK.inst).length?'none':'';}
 mapInitLegend=function(){
   $('legend').innerHTML=CATS.map(function(c){return '<span style="margin-right:10px"><span class="lg" style="background:'+c[3]+(c[0]==='hind'?';border-radius:1px;transform:rotate(45deg)':'')+'"></span>'+t(c[1])+'</span>';}).join('')+
     '<br><span class="lg" style="background:#1b7f3b;border-radius:2px"></span>'+t('Schleuse, Umtragen möglich')+' · <span class="lg" style="background:#c62828;border-radius:2px"></span>'+t('Schleuse, Umtragen nicht möglich')+' · <span class="lg" style="background:#222;border-radius:2px"></span>'+t('Schleuse, unbekannt')+' · <span class="lg" style="background:#ff8f00"></span>'+t('Übernachtung der Tour');
@@ -1720,7 +1768,7 @@ function gpxShareBoot(){
   caches.open('skipper-paddel-share').then(function(c){var k=new URL('shared-gpx',location.href).href;return c.match(k).then(function(r){if(!r)return;var n='';try{n=decodeURIComponent(r.headers.get('X-Name')||'');}catch(e){}return r.arrayBuffer().then(function(b){c.delete(k);gpxBytes(b,n);});});}).catch(function(){});
 }
 function bindGpx(){
-  $('t-gpx').onclick=function(){$('f-gpx').click();};
+  $('gpx-go').onclick=function(){$('f-gpx').click();};
   $('f-gpx').onchange=function(){var f=this.files&&this.files[0];this.value='';if(!f)return;var rd=new FileReader();rd.onload=function(){gpxBytes(rd.result,f.name);};rd.onerror=function(){gpxFail(t('Datei nicht lesbar.'));};rd.readAsArrayBuffer(f);};
   window.addEventListener('gpxOpen',function(e){gpxDetail(e&&e.detail);});
   try{var C=window.Capacitor;if(C&&C.isNativePlatform&&C.isNativePlatform()){var P=(C.Plugins&&C.Plugins.GpxOpen)||(C.registerPlugin&&C.registerPlugin('GpxOpen'));if(P&&P.addListener)P.addListener('gpxOpen',function(d){window.dispatchEvent(new CustomEvent('gpxOpen',{detail:d}));});}}catch(e){}
@@ -1735,18 +1783,16 @@ initToern=function(){baseInitToern();$('t-go').onclick=planRoute;var pf=prof();
   /* the heading is looked up by its text: since Binnen 0.10 the map pack box sits between it and the rules, and it had been overwritten here */
   var rh=[].filter.call(document.querySelectorAll('#scr-schleuse h2'),function(h){return h.textContent==='Regeln im Revier';})[0],ww=$('wxwarn');ww.parentNode.insertBefore($('rules'),ww.nextSibling);ww.parentNode.insertBefore(rh,$('rules'));rh.textContent='Regeln und Übernachten';
   /* offline maps belong to the map: below it, with a hint as long as no pack is installed */
-  var mp=$('det-mappack'),sk=$('mdetail'),hint=document.createElement('div');hint.id='mp-hint';hint.className='banner b-y';hint.textContent='Ohne Empfang keine Hintergrundkarte. Vor der Tour im WLAN ein Kartenpaket laden.';
-  var btn=document.createElement('button');btn.type='button';btn.className='btn sec sm';btn.id='mp-open';btn.textContent='Karten offline';hint.appendChild(btn);btn.onclick=function(){mp.open=true;mp.scrollIntoView({block:'start'});};
-  sk.parentNode.insertBefore(mp,sk);sk.parentNode.insertBefore(hint,mp);
+  var mp=$('det-mappack'),sk=$('mdetail');sk.parentNode.insertBefore(mp,sk);
   ['p-typ','p-spd','p-day','p-pers','p-boats','p-kg','p-lvl','p-wagen','p-kids'].forEach(function(id){var e=$(id);if(e)e.addEventListener('change',saveBoot);});
 })();
-/* runs after init(): day/sun/night (the choice itself is applied in the page head, before the first paint), GPX, update notice of the Android shell */
+/* runs after init(). Day/sun/night and the update notice start in Binnen's init(); the display choice is applied in the page head as well, before the first paint */
 function afterInit(){
-  if(!$('sk-themebtn'))SkTheme.init({key:'skipperPaddel.theme',mount:document.querySelector('header'),t:t});
   bindGpx();
-  SkUpdate.check({url:'https://christophbauermeister.github.io/skipper-ostsee/paddel/version.json',current:PVERSION,key:'skipperPaddel.upd',t:t,mount:document.querySelector('.app')});
+  $('mp-hint-go').onclick=function(){var d=$('det-mappack');d.open=true;d.scrollIntoView({block:'start'});};
 }
-var baseApplyLang=applyLang;applyLang=function(){baseApplyLang();if(window.SkTheme)SkTheme.set(SkTheme.mode());};
+/* Binnen's GPX check is for boats (bridges): Paddel has its own button and check */
+function gpxInit(){}
 window.SKIPPER_PADDEL={gpxRun:gpxRun,afterInit:afterInit,tour:function(){return TOUR;},closuresBetween:closuresBetween,flowOf:function(){return NET.flow;},S:S,POIS:POIS,prof:prof,planRoute:planRoute,cautious:cautious};
 
 init();
