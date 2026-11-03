@@ -185,6 +185,7 @@ table.tbl{width:100%;border-collapse:collapse;margin-top:8px;font-size:1rem}
 .kv b{text-align:right}
 ul.tight{padding-left:20px;line-height:1.55}
 ul.tight li{margin-bottom:6px}
+a,details{overflow-wrap:anywhere}   /* long source links must not widen the page, also inside closed details */
 nav{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;background:var(--head);padding:6px 6px calc(6px + env(safe-area-inset-bottom));border-top:2px solid var(--line);gap:6px}
 nav button{flex:1;min-height:56px;background:transparent;border:2px solid transparent;border-radius:10px;color:var(--headmute);font-weight:800;font-size:.85rem;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px}
 nav button .ic{font-size:1.3rem;line-height:1}
@@ -923,10 +924,10 @@ html:not([lang="en"]) .sk-en-note{display:none}
   <label class="switch"><input type="checkbox" id="kids"><span>Kinder an Bord<small>Schwellen −3 kn (Standard: aus)</small></span></label>
   <label class="switch"><input type="checkbox" id="trend"><span>Winddrehung / Front erwartet<small>Mindestens gelb</small></span></label>
 
-  <h2 id="wl-head"><span class="step">2b</span>Wetter-Sicherheit</h2>
+  <h2 id="wl-head"><span class="step">3</span>Wetter-Sicherheit</h2>
   <div id="wl-card"></div>
 
-  <h2><span class="step">3</span>Ziel (optional)</h2>
+  <h2><span class="step">4</span>Ziel (optional)</h2>
   <input type="search" id="tsearch" placeholder="Hafen suchen, z. B. Rønne" autocomplete="off" aria-label="Zielhafen suchen" class="regselect">
   <div id="tsug"></div>
   <details id="det-tmanual"><summary>Oder Ziel manuell (Grad + Dezimalminuten)</summary>
@@ -946,7 +947,7 @@ html:not([lang="en"]) .sk-en-note{display:none}
   <div class="note" id="tcur"></div>
   <button class="btn sm" id="btn-tclear" style="display:none;margin-top:6px">Ziel löschen</button>
 
-  <h2 id="h-bew"><span class="step">4</span>Bewertung</h2>
+  <h2 id="h-bew"><span class="step">5</span>Bewertung</h2>
   <div id="result"></div>
 </section>
 <!-- ============ ZUFLUCHT ============ -->
@@ -4129,13 +4130,15 @@ var SkLang=(function(){
       '<span class="them" lang="'+st.them+'">'+esc(a||'—')+'</span><span class="me" lang="'+st.me+'">'+esc(m)+'</span></button>'+
       '<button type="button" class="skl-star'+(on?' on':'')+'" data-act="fav" data-id="'+esc(p.id)+'" aria-pressed="'+on+'" aria-label="'+esc(tr(on?'Gemerkt':'Merken'))+'">'+(on?'★':'☆')+'</button></li>';
   }
+  /* note only when one of the two shown languages is not checked by a native speaker (data.review per language) */
+  function unchecked(l){var r=D.review&&D.review[l];return D.checked===false&&!(r&&/^(Quelle|geprüft)/.test(r));}
   function phrHTML(){
     var fav=getJ('fav',{}),v=vals(),list=phrList();
     var chips=[{id:'all',n:tr('Alle')},{id:'fav',n:'★ '+tr('Merkliste')}].concat(D.situations.map(function(s){return {id:s.id,n:(s.icon?s.icon+' ':'')+(txt(s,st.me)||txt(s,'de'))};}));
     return '<input type="search" class="skl-q" data-act="q" value="'+esc(st.q||'')+'" placeholder="'+esc(tr('Suchen …'))+'" aria-label="'+esc(tr('Suchen …'))+'">'+
       '<div class="skl-chips">'+chips.map(function(c){return '<button type="button" data-act="sit" data-sit="'+c.id+'" class="'+(st.sit===c.id?'on':'')+'" aria-pressed="'+(st.sit===c.id)+'">'+esc(c.n)+'</button>';}).join('')+'</div>'+
       (list.length?'<ul class="skl-list">'+list.map(function(p){return phrRow(p,fav,v);}).join('')+'</ul>':'<p class="skl-empty">'+esc(tr('Nichts gefunden.'))+'</p>')+
-      (D.checked===false?'<p class="skl-note">'+esc(tr('Übersetzungen maschinell erstellt, noch nicht von Muttersprachlern geprüft.'))+'</p>':'');
+      (unchecked(st.me)||unchecked(st.them)?'<p class="skl-note">'+esc(tr('Übersetzungen maschinell erstellt, noch nicht von Muttersprachlern geprüft.'))+'</p>':'');
   }
 
   /* show mode: a full-screen card for the person opposite */
@@ -9287,6 +9290,7 @@ function renderRegeln(){
   document.querySelector('.disc').textContent=DISCLAIMER;
 }
 function renderDatenstand(){
+  if(R.hooks.datenstand){$('datenstand').innerHTML=R.hooks.datenstand();return;}   // package: own wording, e.g. verified apart from sourced
   var n=DATA.length,pv=DATA.filter(function(h){return h.verified&&h.verified.prot;}).length;
   $('datenstand').innerHTML='Datenstand '+CONST.datenstand+' · <b>'+pv+' von '+n+' Häfen mit geprüften Schutzsektoren</b> · alles andere „ungeprüft“';
 }
@@ -10496,7 +10500,7 @@ function bordInit(){
   bordLang();
   BORD.share=bordMount('bd-share',function(el){return SKIPPER_SHARE.mount(el,{lang:L,t:bordTr(i18nText),key:sk('share'),getBoat:function(){return S.boat;},getPosition:function(){return lastGps||S.pos;},
     getPlan:function(){var P=PL.plan;if(!P)return null;var a=planLegs(P),l=a[a.length-1];return {text:planText(P),arriveAt:l?l.leg.sim.arr:null};},
-    emergency:function(p){return R.hooks.emergencyNumbers?R.hooks.emergencyNumbers(p):[];},onEmergency:function(){showScreen('scr-notfall');}});});
+    emergency:function(p){return R.hooks.emergencyNumbers?R.hooks.emergencyNumbers(p):[];},onEmergency:function(){showScreen('scr-notfall');},viewerUrl:REVIER.legalUrl?REVIER.legalUrl.replace(/legal\/?$/,'')+'features/share/viewer.html':undefined});});
   BORD.lists=bordMount('bd-lists',function(el){return SKIPPER_CHECKLISTS.mount(el,{lang:L,t:bordTr(i18nText),profile:'sea',key:sk('checklists'),filePrefix:SNAP+'-checklisten'});});
   BORD.contact=bordMount('bd-contact',function(el){return SKIPPER_CONTACT.mount(el,{record:bordHarbour(),boat:S.boat,t:bordTr(bordT),uiLang:L});});
   BORD.window=bordMount('bd-window',function(el){return SKIPPER_WINDOW.mount(el,bordWindowOpts());});

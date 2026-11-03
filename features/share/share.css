@@ -1,0 +1,41 @@
+/* Theme comes from the host's CSS variables (Ostsee/Sardinien: base.css, Binnen/Paddel: app.html); the fallbacks serve a host without them */
+.sks{color:var(--ink,#132a33);font-size:16px;line-height:1.45;max-width:640px;margin:0 auto}
+.sks *{box-sizing:border-box}
+.sks h2{font-size:1.2rem;margin:.2rem 0 .6rem}
+.sks h3{font-size:1rem;margin:0 0 .5rem}
+.sks p{margin:.3rem 0}
+.sks-card{background:var(--card,#fff);border:1px solid var(--line,#c9cbc2);border-radius:10px;padding:12px;margin:10px 0}
+.sks-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.sks-f{display:block}
+.sks-f>span:first-child{display:block;font-size:.85rem;color:var(--mute,#4a4e60);margin-bottom:2px}
+.sks input:not([type=checkbox]),.sks select,.sks textarea{width:100%;min-height:44px;padding:8px;font:inherit;color:var(--ink,#132a33);background:var(--btn,#fff);border:1px solid var(--line,#c9cbc2);border-radius:8px}
+.sks textarea{resize:vertical;min-height:88px}
+.sks-btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:8px 12px;font:inherit;font-weight:600;color:var(--ink,#132a33);background:var(--btn,#fff);border:1px solid var(--line,#c9cbc2);border-radius:8px;cursor:pointer;text-decoration:none}
+.sks-pri{background:var(--on,#12141f);color:var(--onink,#fff);border-color:var(--on,#12141f)}
+.sks-emg{background:var(--emerg,var(--bad,#c62828));color:#fff;border-color:transparent;width:100%;margin-top:8px}
+.sks-wide{width:100%}
+.sks-row{display:flex;flex-wrap:wrap;gap:8px}
+.sks-row>.sks-btn{flex:1 1 40%}
+.sks-inl{display:flex;gap:8px;align-items:center}
+.sks-inl input{flex:1;min-width:0}
+.sks-mt{margin-top:10px}
+.sks-note{font-size:.85rem;color:var(--mute,#4a4e60);margin-top:4px}
+.sks-note:empty{display:none}
+.sks-err{color:var(--r,var(--bad,#c62828));font-weight:600;margin-top:4px}
+.sks-err:empty{display:none}
+.sks-chk{display:flex;align-items:center;gap:8px;margin-top:10px;min-height:32px}
+.sks-chk input{width:22px;height:22px;flex:none}
+.sks-pos{font-size:1.15rem;font-weight:700;font-variant-numeric:tabular-nums}
+.sks-pre{white-space:pre-wrap;overflow-wrap:anywhere}
+.sks-status{border-radius:10px;padding:12px;margin:10px 0;border:2px solid transparent}
+.sks-status>b:first-child{display:block;font-size:1.1rem}
+.sks-g{background:var(--g,#0f7a4d);color:var(--gt,#fff);border-color:var(--gb,transparent)}
+.sks-y{background:var(--y,#ffc83d);color:var(--yt,#1a1400);border-color:var(--yb,transparent)}
+.sks-r{background:var(--r,#c62828);color:var(--rt,#fff);border-color:var(--rb,transparent)}
+.sks-n{background:var(--n,#5a5f70);color:var(--nt,#fff)}
+.sks-warn,.sks-alert{background:var(--warnbg,#fff3ec);color:var(--warnink,#6b2508)}
+.sks-warn{padding:10px;border-radius:8px;margin:10px 0;font-weight:600}
+.sks-danger{font-weight:700}
+.sks-limit{background:transparent}
+.sks [hidden]{display:none!important}
+:root[data-theme=night] .sks input,:root[data-theme=night] .sks select,:root[data-theme=night] .sks textarea{color-scheme:dark}
