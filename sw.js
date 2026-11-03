@@ -1,5 +1,5 @@
 /* Offline cache for Skipper-Assistent Ostsee. Cache-first, falls back to network; all errors are swallowed. */
-var CACHE='skipper-ostsee-v2.23.0-20261103';
+var CACHE='skipper-ostsee-v2.23.0-20261103-h851302f5';
 var SHARE='skipper-ostsee-share';   // GPX received through the Web Share Target (kept apart from the app cache so updates do not delete it)
 var FAMILY='skipper-ostsee-v';  // only older versions of THIS app's cache are removed (the other app lives on the same origin)
 var FILES=['./','./index.html','./manifest.webmanifest','./icon.svg','./icon-192.png','./icon-512.png','./icon-180.png'];
@@ -9,7 +9,7 @@ function carryVendor(c){
     .then(function(f){return f.some(Boolean)?c.addAll(VENDOR).catch(function(){}):null;});
 }
 self.addEventListener('install',function(e){
-  e.waitUntil(caches.open(CACHE).then(function(c){return c.addAll(FILES).then(function(){return carryVendor(c);});}).then(function(){return self.skipWaiting();}).catch(function(){}));
+  e.waitUntil(caches.open(CACHE).then(function(c){return c.addAll(FILES).then(function(){return carryVendor(c);});}).then(function(){return self.skipWaiting();}));
 });
 self.addEventListener('activate',function(e){
   e.waitUntil(caches.keys().then(function(ks){return Promise.all(ks.filter(function(k){return k!==CACHE&&k.indexOf(FAMILY)===0;}).map(function(k){return caches.delete(k);}));}).then(function(){return self.clients.claim();}).catch(function(){}));

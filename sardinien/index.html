@@ -366,7 +366,7 @@ dl.gloss dt{font-weight:800;margin-top:8px}dl.gloss dd{margin:2px 0 0}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 /* iPhone/iPad: Safari zooms into any form field under 16px on focus; hint banner for the home-screen install (ios.js) */
-@supports (-webkit-touch-callout:none){select,textarea,input:not([type=checkbox]):not([type=radio]):not([type=range]){font-size:max(16px,1em)}}
+@supports (-webkit-touch-callout:none){select,textarea,input:not([type=checkbox]):not([type=radio]):not([type=range]){font-size:max(16px,1em)!important}}
 .ioshint{position:fixed;left:8px;right:8px;bottom:calc(92px + env(safe-area-inset-bottom));z-index:65;background:#17324a;color:#fff;border-radius:12px;padding:12px 14px;box-shadow:0 4px 16px rgba(0,0,0,.35);font-size:.95rem;line-height:1.4}
 .ioshint .btn{display:block;margin:10px 0 0 auto;min-height:44px}
 /* Wolkenlotse / Wetter-Sicherheit – no green: yellow/red only for signals, grey/neutral for "unknown" and "nothing found" */
@@ -1332,7 +1332,7 @@ function wxFromOpenMeteo(fc,ma,fetchedAt){
   }
   return snap;
 }
-function wxValid(o){return o&&o.type===SNAP+'-wx'&&o.version===1&&Array.isArray(o.points)&&isFinite(o.t0)&&o.hours>0&&Array.isArray(o.ws);}
+function wxValid(o){return !!o&&o.type===SNAP+'-wx'&&o.version===1&&Array.isArray(o.points)&&isFinite(o.t0)&&o.hours>0&&Array.isArray(o.ws);}
 function wxSet(snap){WX=snap;WXP=null;}
 
 function wxLoadOnline(){
@@ -1349,6 +1349,7 @@ function wxLoadPlatform(fallback){
   if(!PL.plat){wxMsg('Keine Plattform-URL eingetragen (Backup-Bereich).','y');return Promise.resolve();}
   return fetchJSON(PL.plat).then(function(o){
     if(!wxValid(o))throw new Error('kein gültiger Wetterstand');
+    if(WX&&Date.parse(WX.fetchedAt)>Date.parse(o.fetchedAt)){wxMsg('Plattform-Backup ist älter als der gespeicherte Wetterstand, dieser bleibt aktiv.','y');return;}
     o.source='plattform';wxSet(o);return wxStore(o).then(function(){wxMsg(fallback?'Wetter vom Plattform-Backup geladen.':'',fallback?'y':null);renderWxState();});
   }).catch(function(e){wxMsg('Plattform-Backup nicht erreichbar ('+e.message+').','r');});
 }
@@ -1580,17 +1581,23 @@ function wlSegDistNm(lat,lon,a,b){
   return Math.sqrt(px*px+py*py);
 }
 function wlInAreas(pos,polys,bufferNm){
-  var inside=false,dist=Infinity;
+  var inside=false,dist=Infinity,seen={},hit=[];
   (polys||[]).forEach(function(r){
     if(!r||r.length<3)return;
-    if(wlRingHas(r,pos.lat,pos.lon))inside=!inside;
+    var key=JSON.stringify(r);if(seen[key])return;seen[key]=1;
+    if(wlRingHas(r,pos.lat,pos.lon))hit.push(r);
     for(var i=0,j=r.length-1;i<r.length;j=i++){var d=wlSegDistNm(pos.lat,pos.lon,r[j],r[i]);if(d<dist)dist=d;}
   });
+  // CAP: the area is the union of its polygons, so overlapping rings all count. Only a ring lying wholly inside another is a hole (nesting depth odd).
+  if(hit.length){
+    var depth=hit.reduce(function(m,r){return Math.max(m,hit.filter(function(o){return o!==r&&r.every(function(p){return wlRingHas(o,p[0],p[1]);});}).length);},0);
+    inside=depth%2===0;
+  }
   return {inside:inside,distNm:inside?0:dist,hit:inside||dist<=bufferNm};
 }
 
 /* ---------- CAP 1.2 (parsing in the browser mirrors platform/wl_collector.py; the collector is the primary path) ---------- */
-var WL_AW_TYPE={1:'wind',2:'snow-ice',3:'thunderstorm',4:'fog',5:'high-temperature',6:'low-temperature',7:'coastal',8:'forest-fire',9:'avalanche',10:'rain',11:'flood',12:'rain-flood'};   // MeteoAlarm awareness_type numbers (consistent with the Home Assistant example "8; forest-fire"; full list not verified at the primary source)
+var WL_AW_TYPE={1:'wind',2:'snow-ice',3:'thunderstorm',4:'fog',5:'high-temperature',6:'low-temperature',7:'coastal',8:'forest-fire',9:'avalanche',10:'rain',11:'flood',12:'rain'};   // MeteoAlarm awareness_type numbers (consistent with the Home Assistant example "8; forest-fire"; full list not verified at the primary source)
 var WL_AW_LEVEL={2:'yellow',3:'orange',4:'red'};   // "2; yellow; Moderate" · "3; orange; Severe" · "4; red; …" (Home Assistant MeteoAlarm); 1 = green = no warning
 function wlEventType(ev,cat){
   var s=String(ev||'').toLowerCase();
@@ -1802,14 +1809,15 @@ function wlStr(x,n){return typeof x==='string'?x.slice(0,n):'';}
 function wlCleanSummary(o){
   if(!o||o.type!=='skipper-wl'||o.version!==1||!isFinite(wlMs(o.fetchedAt))||!Array.isArray(o.warnings))return null;
   var out={type:'skipper-wl',version:1,fetchedAt:o.fetchedAt,pkg:wlStr(o.pkg,40),receivedAt:wlNum(o.receivedAt)?o.receivedAt:null,
-    sources:(Array.isArray(o.sources)?o.sources:[]).slice(0,40).map(function(s){return {id:wlStr(s.id,40),country:wlStr(s.country,3).toUpperCase(),ok:s.ok===true,fetchedAt:wlStr(s.fetchedAt,40),count:wlNum(s.count)?s.count:0,unlocated:wlNum(s.unlocated)?s.unlocated:0,note:wlStr(s.note,200)};}),
+    sources:(Array.isArray(o.sources)?o.sources:[]).filter(function(s){return s&&typeof s==='object';}).slice(0,40).map(function(s){return {id:wlStr(s.id,40),country:wlStr(s.country,3).toUpperCase(),ok:s.ok===true,fetchedAt:wlStr(s.fetchedAt,40),count:wlNum(s.count)?s.count:0,unlocated:wlNum(s.unlocated)?s.unlocated:0,note:wlStr(s.note,200)};}),
     attribution:wlStr(o.attribution,400),warnings:[]};
   o.warnings.slice(0,WL_LIM.warnings).forEach(function(w){
     if(!w||!isFinite(wlMs(w.expires)))return;
     var polys=null;
     if(Array.isArray(w.polys)){
       polys=w.polys.slice(0,WL_LIM.rings).map(function(r){return Array.isArray(r)?r.slice(0,WL_LIM.points).filter(function(p){return Array.isArray(p)&&wlNum(p[0])&&wlNum(p[1])&&Math.abs(p[0])<=90&&Math.abs(p[1])<=180;}):[];}).filter(function(r){return r.length>=3;});
-      if(!polys.length)polys=null;
+      // a cut area could miss the position: then the warning counts as not locatable, never as elsewhere
+      if(!polys.length||w.polys.length>WL_LIM.rings||w.polys.some(function(r){return Array.isArray(r)&&r.length>WL_LIM.points;}))polys=null;
     }
     out.warnings.push({id:wlStr(w.id,160),country:wlStr(w.country,3).toUpperCase(),sender:wlStr(w.sender,120),event:wlStr(w.event,120),type:wlStr(w.type,24),level:(w.level==='yellow'||w.level==='orange'||w.level==='red')?w.level:'yellow',
       severity:wlStr(w.severity,16),onset:isFinite(wlMs(w.onset))?w.onset:null,expires:w.expires,expiresInferred:w.expiresInferred===true,headline:wlStr(w.headline,300),instruction:wlStr(w.instruction,600),lang:wlStr(w.lang,8),areaDesc:wlStr(w.areaDesc,200),polys:polys});
@@ -1963,7 +1971,7 @@ function wlFetchSummary(manual){
 /* automatic refresh: at start and every 15 min while the app is open, only with a platform URL and network; never blocks anything */
 function wlAutoFetch(){
   if(!wlSummaryUrl()||(typeof navigator!=='undefined'&&navigator.onLine===false))return;
-  var last=WLS.summary&&WLS.summary.receivedAt;
+  var last=Math.max(WLS.summary&&WLS.summary.receivedAt||0,WL_NET.tried||0);   // a failed attempt waits as well, wlTick runs every 15 s
   if(last&&Date.now()-last<10*60000)return;
   wlFetchSummary(false);
 }
@@ -2151,7 +2159,7 @@ function wlRowsHTML(now,a){
   r+=wlRow(wlMark(bs.ok?bl:'n')[0],wlMark(bs.ok?bl:'n')[1],'Barometer',bs.ok?(bs.d3<0?'−':'+')+wlDec(Math.abs(bs.d3),1)+' hPa/3 h, Wert vor '+esc(wlAgeText(bs.ageMin*60000)):(bs.reason==='stale'?'veraltet (vor '+esc(wlAgeText(bs.ageMin*60000))+') – nachtragen':bs.reason==='empty'?'kein Wert eingetragen':'Trend nicht berechenbar'));
   var mo=a.model,ml=wlLevelOf(sg,'model');
   r+=wlRow(wlMark(mo&&mo.ok?ml:'n')[0],wlMark(mo&&mo.ok?ml:'n')[1],'Modell-Druck','<span class="badge unv">Modell</span> '+(mo&&mo.ok?(mo.minD3<0?'−':'+')+wlDec(Math.abs(mo.minD3),1)+' hPa/3 h (schwächster Verlauf bis +'+WLC.modelPressure.horizonH+' h)':'nicht verfügbar'));
-  var wl=wlLevelOf(sg,'warn-'),wg=a.gaps.some(function(x){return x.id==='warn'||/^(src|nosrc)-/.test(x.id)||x.id==='warn-pos';});
+  var wl=wlLevelOf(sg,'warn-'),wg=a.gaps.some(function(x){return x.id==='warn'||/^(src|nosrc|unloc)-/.test(x.id)||x.id==='warn-pos';});
   var ws=sg.filter(function(x){return x.id.indexOf('warn-')===0;});
   r+=wlRow(wlMark(wg&&!wl?'n':wl)[0],wlMark(wg&&!wl?'n':wl)[1],'Warnungen',WLS.summary?(ws.length?ws.length+' Warnung'+(ws.length>1?'en':'')+' an der Position':'keine an der Position gefunden')+' · Stand vor '+esc(wlAgeText(now-wlMs(WLS.summary.fetchedAt)))+(wg?' · <b>Lücken</b>':''):'Warnlage unbekannt');
   return '<div class="wl-srcs">'+r+'</div>';
@@ -2212,7 +2220,7 @@ function wlSecTimer(){
     e.textContent=wlDec(s,1);
   },200);
 }
-function wlTick(){
+function wlTick(){wlAutoFetch();
   var now=Date.now();wlFlashResolve(now);wlPrune(now);
   var a=wlAssess(now,wlInputs(now)),sg=wlSigOf(a);
   var ae=document.activeElement,typing=ae&&ae.tagName==='INPUT'&&$('wl-card')&&$('wl-card').contains(ae)&&ae.value;
@@ -2388,6 +2396,7 @@ function wlUiInit(){
   }
   setInterval(wlTick,15000);
   wlAutoFetch();
+  WL_NET.tried=WL_NET.tried||Date.now();   // the ticks start their own round from here
 }
 /* =====================================================================
    CLIMATE / VORPLANUNG (SPEC §21) – typical month from the Open-Meteo archive (ERA5),
@@ -2492,7 +2501,8 @@ function coastPath(){
   COAST.rings.forEach(function(r){var s='M'+r[0]+' '+r[1]+'l';for(var i=2;i<r.length;i+=2)s+=r[i]+' '+r[i+1]+' ';parts.push(s+'Z');});
   return (COAST_D=parts.join(''));
 }
-var DAYCOL=['#c4122f','#00804a','#2f6690','#d9480f','#6a3fb5','#0f7f86','#9a6b00'];
+// Day colours only tell days apart on the map: no traffic-light red, green, amber or orange, they would read as a verdict next to FAHRBAR.
+var DAYCOL=['#2f6690','#a8327e','#0f7f86','#6e5a48','#6a3fb5','#4a5568','#1f6fd6'];
 var MAP={el:null,svg:null,cx:0,cy:0,z:7,sel:null,online:false,tiles:{},tz:null,ptr:{},moved:0};
 function mapInit(){
   var el=$('tmap');if(!el||MAP.svg)return;
@@ -2930,7 +2940,7 @@ function packActivate(){   // libs + installed packs -> packs drive the maps
 function packLoadAll(){
   var be=packBackend();
   if(!PACK.cfg.length||!be.ok())return Promise.resolve();
-  return Promise.all(PACK.cfg.map(function(p){return be.load(p.id).then(function(r){if(r)PACK.inst[p.id]=r;else delete PACK.inst[p.id];be.clean(p.id,r&&r.meta);});})).catch(function(e){PACK.err=packErrText(e);});
+  return Promise.all(PACK.cfg.map(function(p){return be.load(p.id).then(function(r){if(r){PACK.inst[p.id]=r;be.clean(p.id,r.meta);}else delete PACK.inst[p.id];});})).catch(function(e){PACK.err=packErrText(e);});
 }
 
 /* ---- manifest / download ---- */
@@ -3165,9 +3175,12 @@ function gpxFile(){
 function gpxSave(){
   var f=gpxFile();if(!f)return;
   if(isNative()){nativeSave(f.name,f.text,'application/gpx+xml').catch(function(){});return;}
-  if(iosShareFile(f.name,f.text,'application/gpx+xml'))return;
-  var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([f.text],{type:'application/gpx+xml'}));a.download=f.name;
-  document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},1000);
+  function dl(){
+    var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([f.text],{type:'application/gpx+xml'}));a.download=f.name;
+    document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},1000);
+  }
+  if(iosShareFile(f.name,f.text,'application/gpx+xml',dl))return;
+  dl();
 }
 function gpxShare(){
   var f=gpxFile();if(!f)return;
@@ -3286,35 +3299,49 @@ function gpxParse(text){
   wpts=wpts.slice(0,GPX_LIM.maxWpts);
   return {ok:true,name:name,version:version,legs:legs,wpts:wpts,stats:{points:total,legs:legs.length,wpts:wpts.length,thinned:thinned,ignored:ignored}};
 }
+function planValid(p){return !!p&&typeof p==='object'&&Array.isArray(p.days)&&!!p.opt&&typeof p.opt==='object'&&typeof p.opt.date==='string';}
 function doExport(){
   Promise.all([IDB.all().catch(function(){return WX?[WX]:[];}),(typeof wlExportAsync==='function'?wlExportAsync().catch(function(){return null;}):Promise.resolve(null))]).then(function(r2){
     var a=r2[0],wlData=r2[1];
     if(!a.length&&WX)a=[WX];
     var o={type:SNAP+'-backup',version:1,exportedAt:new Date().toISOString(),wx:a.slice(-CONST.wx.exportKeep),plan:PL.plan,gpxImport:(typeof GPXI!=='undefined'&&GPXI)||null,
       notes:NOTES,wl:wlData,settings:{toern:{mode:PL.mode,start:PL.start,target:PL.target,days:PL.days,depHour:PL.depHour,plat:PL.plat||'',targetNm:PL.targetNm||null,nights:PL.nights||0},boat:S.boat,speed:S.speed,maxLegH:S.maxLegH,maxNightH:S.maxNightH,daylight:S.daylight}};
-    var blob=new Blob([JSON.stringify(o)],{type:'application/json'}),a2=document.createElement('a'),p=localParts(Date.now());
-    if(isNative()){nativeSave(SNAP+'-backup-'+p.y+pad(p.m)+pad(p.d)+'-'+pad(p.hh)+pad(p.mm)+'.json',JSON.stringify(o),'application/json').then(function(){wxMsg('Export geteilt.','g');}).catch(function(e){wxMsg('Export fehlgeschlagen: '+(e&&e.message||e),'r');});return;}
-    if(iosShareFile(SNAP+'-backup-'+p.y+pad(p.m)+pad(p.d)+'-'+pad(p.hh)+pad(p.mm)+'.json',JSON.stringify(o),'application/json')){wxMsg('Export: Teilen-Menü geöffnet („In Dateien sichern“).','g');return;}
-    a2.href=URL.createObjectURL(blob);a2.download=SNAP+'-backup-'+p.y+pad(p.m)+pad(p.d)+'-'+pad(p.hh)+pad(p.mm)+'.json';
-    document.body.appendChild(a2);a2.click();setTimeout(function(){URL.revokeObjectURL(a2.href);a2.remove();},1000);
-    wxMsg('Export: '+o.wx.length+' Wetterstand/-stände'+(o.plan?' und Plan':'')+(o.gpxImport?' und importierte Route':'')+'.','g');
+    var blob=new Blob([JSON.stringify(o)],{type:'application/json'}),p=localParts(Date.now()),name=SNAP+'-backup-'+p.y+pad(p.m)+pad(p.d)+'-'+pad(p.hh)+pad(p.mm)+'.json';
+    function dl(){
+      var a2=document.createElement('a');a2.href=URL.createObjectURL(blob);a2.download=name;
+      document.body.appendChild(a2);a2.click();setTimeout(function(){URL.revokeObjectURL(a2.href);a2.remove();},1000);
+      wxMsg('Export: '+o.wx.length+' Wetterstand/-stände'+(o.plan?' und Plan':'')+(o.gpxImport?' und importierte Route':'')+'.','g');
+    }
+    if(isNative()){nativeSave(name,JSON.stringify(o),'application/json').then(function(){wxMsg('Export geteilt.','g');}).catch(function(e){wxMsg('Export fehlgeschlagen: '+(e&&e.message||e),'r');});return;}
+    if(iosShareFile(name,JSON.stringify(o),'application/json',dl)){wxMsg('Export: Teilen-Menü geöffnet („In Dateien sichern“).','g');return;}
+    dl();
   });
 }
 function doImportText(txt){
   var o;try{o=JSON.parse(txt);}catch(e){wxMsg('Import: keine gültige JSON-Datei.','r');return Promise.resolve(false);}
   var list=[];
-  if(o&&o.type===SNAP+'-backup'&&o.version===1)list=(o.wx||[]).filter(wxValid);
+  if(o&&o.type===SNAP+'-backup'&&o.version===1)list=(Array.isArray(o.wx)?o.wx:[]).filter(wxValid);
   else if(wxValid(o))list=[o];
   else{wxMsg('Import: Datei ist kein '+REVIER.appName.replace(' ','-')+'-Backup.','r');return Promise.resolve(false);}
-  if(o.plan&&o.plan.days){PL.plan=o.plan;store(sk('plan'),JSON.stringify(o.plan));}
+  // everything that can fail first, so a damaged file changes nothing
+  var wlP;
+  try{wlP=(o.wl&&typeof wlImport==='function')?wlImport(o.wl):Promise.resolve(0);}catch(e){wxMsg('Import: Datei beschädigt, nichts übernommen ('+(e&&e.message||e)+').','r');return Promise.resolve(false);}   // Wetter-Sicherheit: lightning counter, barometer log, observations, last platform warning state, photo logbook
+  if(planValid(o.plan)){PL.plan=o.plan;store(sk('plan'),JSON.stringify(o.plan));}
   if(o.gpxImport&&typeof gpxiSanitize==='function'){var gi=gpxiSanitize(o.gpxImport);if(gi){GPXI=gi;GPXI_EV=null;gpxiSave();if(MAP.svg)mapRoute();}}   // imported GPX route (re-validated)
-  var wlP=(o.wl&&typeof wlImport==='function')?wlImport(o.wl):Promise.resolve(0);   // Wetter-Sicherheit: lightning counter, barometer log, observations, last platform warning state, photo logbook
   if(o.notes&&typeof o.notes==='object'){Object.keys(o.notes).forEach(function(k){var a=NOTES[k],b=o.notes[k];if(BY_ID[k]&&b&&(!a||(b.t||0)>(a.t||0)))NOTES[k]=b;});saveNotes();}
   if(o.settings&&o.settings.toern&&o.settings.toern.plat&&!PL.plat){PL.plat=o.settings.toern.plat;$('p-plat').value=PL.plat;savePL();}
-  if(list.length){var nw=list.slice().sort(function(a,b){return a.fetchedAt<b.fetchedAt?-1:1;});wxSet(nw[nw.length-1]);}
+  // boat data: taken over on a device without own profile (reinstall); an existing profile stays, the skipper gets told, depth verdicts hang on it
+  var bs=o.settings||{},boatNote='';
+  if(bs.boat&&typeof bs.boat==='object'){
+    if(!load(sk('profile'))){
+      S.boat=normBoat(bs.boat);if(num(bs.speed))S.speed=num(bs.speed);if(num(bs.maxLegH))S.maxLegH=num(bs.maxLegH);if(num(bs.maxNightH))S.maxNightH=num(bs.maxNightH);if(typeof bs.daylight==='boolean')S.daylight=bs.daylight;
+      saveProfile();if(typeof bootToUI==='function')bootToUI();boatNote=' Bootsdaten übernommen, bitte im Boot-Tab prüfen.';
+    }else if(JSON.stringify(normBoat(bs.boat))!==JSON.stringify(S.boat))boatNote=' Bootsdaten des Backups nicht übernommen: Die Daten im Boot-Tab gelten weiter, bitte prüfen.';
+  }
+  if(list.length){var nw=list.slice().sort(function(a,b){return a.fetchedAt<b.fetchedAt?-1:1;}),nl=nw[nw.length-1];if(!WX||!(Date.parse(WX.fetchedAt)>Date.parse(nl.fetchedAt)))wxSet(nl);}   // an old backup never replaces a newer forecast
   return Promise.all(list.map(function(sn){return wxStore(sn);}).concat([wlP])).then(function(){
     if(typeof update==='function')update();
-    wxMsg('Import: '+list.length+' Wetterstand/-stände'+(o.plan?' und Plan':'')+(o.gpxImport&&GPXI?' und importierte Route':'')+' übernommen.','g');renderWxState();renderPlan();return true;});
+    wxMsg('Import: '+list.length+' Wetterstand/-stände'+(o.plan?' und Plan':'')+(o.gpxImport&&GPXI?' und importierte Route':'')+' übernommen.'+boatNote,boatNote?'y':'g');renderWxState();renderPlan();return true;});
 }
 function offlineState(){
   var el=$('offlinestate'),proto=location.protocol;
@@ -3363,13 +3390,14 @@ function isIOS(){
 function isStandalone(){
   return navigator.standalone===true||(window.matchMedia&&matchMedia('(display-mode: standalone)').matches);
 }
-/* share a text file through the share sheet; false if the browser cannot share files (caller falls back to a download) */
-function iosShareFile(name,text,mime){
+/* share a text file through the share sheet; false if the browser cannot share files (caller falls back to a download).
+   The sheet can still fail after that: onFail runs then, except when the user closed it (AbortError). */
+function iosShareFile(name,text,mime,onFail){
   if(isNative()||!isIOS()||!navigator.canShare||!window.File)return false;
   try{
     var f=new File([text],name,{type:mime});
     if(!navigator.canShare({files:[f]}))return false;
-    navigator.share({files:[f],title:name}).catch(function(){});
+    navigator.share({files:[f],title:name}).catch(function(e){if(!(e&&e.name==='AbortError')&&onFail)onFail(e);});
     return true;
   }catch(e){return false;}
 }
@@ -3831,7 +3859,8 @@ function harborStatus(h,state){
     else add('n','Schutz bei Wind aus '+dir+' unbekannt','prot');
   }
   // 2 entrance
-  var ent=h.entranceOpen||[];
+  var ent=h.entranceOpen||[],gustLim=CONST.harborGust[h.type];
+  if(dir&&s.gust===null&&(gustLim||ent.indexOf(dir)>=0))add('n','Böen fehlen – Hafen nicht bewertet','input');
   if(dir&&ent.indexOf(dir)>=0&&s.gust!==null){
     var uv=(h.verified&&h.verified.entrance)?'':' (Sektor ungeprüft)';
     if(s.gust>=T.entrance.red)add('r','Ansteuerung bei auflandigem Wind gefährlich (Böen '+s.gust+' kn ≥ '+T.entrance.red+' kn)'+uv,'entrance');
@@ -3839,12 +3868,13 @@ function harborStatus(h,state){
   }
   // 3 sea state
   var open=(h.swellOpen||[]).concat(ent);
+  if(!s.seaDir&&s.seaH>=CONST.harborSea.yellow&&open.length)add('n','Seegang '+fm(s.seaH)+' m, Richtung fehlt – Einfahrt nicht bewertet','sea');
   if(s.seaDir&&s.seaH>0&&open.indexOf(s.seaDir)>=0){
     if(s.seaH>=CONST.harborSea.red)add('r','Seegang aus '+s.seaDir+' ('+fm(s.seaH)+' m) steht in Einfahrt/Hafen – gefährlich','sea');
     else if(s.seaH>=CONST.harborSea.yellow)add('y','Seegang aus '+s.seaDir+' ('+fm(s.seaH)+' m): Einfahrt/Liegeplatz unruhig','sea');
   }
   // 4 gusts by type
-  var lim=CONST.harborGust[h.type];
+  var lim=gustLim;
   if(lim&&s.gust!==null){
     if(s.gust>=lim[1])add('r','Böen '+s.gust+' kn ≥ '+lim[1]+' kn: für '+TYPE_LABEL[h.type]+' zu viel','gust');
     else if(s.gust>=lim[0])add('y','Böen '+s.gust+' kn ≥ '+lim[0]+' kn: für '+TYPE_LABEL[h.type]+' grenzwertig','gust');
@@ -3916,9 +3946,10 @@ function harborStatus(h,state){
 function sunItem(status,pos,h,eta,s,sun){
   if(!sun||sun.sunsetMs==null)return;
   var arr=s.now+eta*3600000;
-  if(arr>sun.sunsetMs-CONST.sunsetBufferMin*60000){
-    status.items.push({level:'y',text:'Ankunft nach Sonnenuntergang ('+sun.sunset+')',cat:'sun',noLevel:false});
-    status.reasons.push('Ankunft nach Sonnenuntergang ('+sun.sunset+')');
+  var txt=arr>sun.sunsetMs-CONST.sunsetBufferMin*60000?'Ankunft nach Sonnenuntergang ('+sun.sunset+')':(sun.sunriseMs!=null&&arr<sun.sunriseMs?'Ankunft vor Sonnenaufgang ('+sun.sunrise+')':null);
+  if(txt){
+    status.items.push({level:'y',text:txt,cat:'sun',noLevel:false});
+    status.reasons.push(txt);
     if(status.level==='g')status.level='y';
   }
 }
@@ -3976,6 +4007,7 @@ function evaluate(raw){
   if(!s.dir)res.missing.push('Windrichtung');
   if(s.windTrue===null)res.missing.push('Wind');
   if(s.gust===null)res.missing.push('Böen');
+  if(s.seaUnknown&&s.seaH===0)res.missing.push('Seegang');
   if(s.pos){
     res.outOfArea=isOutOfArea(s.pos);
     res.sun=sunTimes(s.pos.lat,s.pos.lon,s.now);
@@ -4246,12 +4278,19 @@ function chunkLevel(x,T,course,pos,s,gateIds){
 }
 function legGates(route){
   var a=route.pts[0],b=route.pts[route.pts.length-1],out=[];
-  Object.keys(CONST.gates).forEach(function(id){var x=crossSide(id,a),y=crossSide(id,b);if(x!==y&&(x==='island'||y==='island'))out.push(id);});
+  Object.keys(CONST.gates).forEach(function(id){var x=crossSide(id,a),y=crossSide(id,b);if((x!==y&&(x==='island'||y==='island'))||crossesBox(id,route))out.push(id);});
   return out;
 }
-/* side of a crossing: 'island' = inside the box (and, if islandLon is set, east of it: Bornholm), else 'main' */
-function crossSide(id,p){var G=CONST.gates[id],bx=G.box,inBox=p.lat>=bx.latMin&&p.lat<=bx.latMax&&p.lon>=bx.lonMin&&p.lon<=bx.lonMax;
-  if(G.islandLon!=null)return inBox&&p.lon>=G.islandLon?'island':'main';return inBox?'island':'main';}
+/* side of a crossing: 'island' = inside the box; with islandLon the island lies east of that longitude, in the latitudes of the box (the box itself ends in the open water, Bornholm's harbours are east of it) */
+function crossSide(id,p){var G=CONST.gates[id],bx=G.box;
+  if(G.islandLon!=null)return p.lat>=bx.latMin&&p.lat<=bx.latMax&&p.lon>=G.islandLon?'island':'main';
+  return p.lat>=bx.latMin&&p.lat<=bx.latMax&&p.lon>=bx.lonMin&&p.lon<=bx.lonMax?'island':'main';}
+/* a long leg through the box is the same open-water crossing, also between two mainland harbours (Sassnitz–Simrishamn) */
+function crossesBox(id,route){
+  if(!(route.dist>2*CONST.crossingNearNm))return false;
+  var b=CONST.gates[id].box;
+  return (route.segs||[]).some(function(g){for(var f=0;f<=1;f+=0.1){var la=g.a.lat+(g.b.lat-g.a.lat)*f,lo=g.a.lon+(g.b.lon-g.a.lon)*f;if(la>=b.latMin&&la<=b.latMax&&lo>=b.lonMin&&lo<=b.lonMax)return true;}return false;});
+}
 function simLeg(route,dep,s,maxH){
   var motorNm=0,flauteNm=0,mm=s.motorMode||'nie',ms=s.motorSpeed>0?s.motorSpeed:null;
   var gIds=route.gateIds||legGates(route),P=CONST.plan,T=effThresholds(Object.assign({},planBase(s),{now:dep})),t=dep,lvl='g',agg={},noWx=false,noSea=false,kreuzNm=0,reffIdx=0,courses={};
@@ -4290,14 +4329,20 @@ function simLeg(route,dep,s,maxH){
     wx:{wsMin:isFinite(w.wsMin)?w.wsMin:null,wsMax:isFinite(w.wsMax)?w.wsMax:null,gMax:isFinite(w.gMax)?w.gMax:null,whMax:w.whMax,wp:w.wpAt==null?null:w.wpAt,dirs:dirs.slice(0,2)}};
 }
 /* night (or harbour day) at harbour h between t1 and t2: worst harborStatus over the hours */
-var NIGHT_CATS={prot:1,entrance:1,sea:1,gust:1};
+var NIGHT_CATS={prot:1,entrance:1,sea:1,gust:1,input:1};
+/* a forecast without waves is no calm sea, for a harbour that is open to swell */
+function seaUnknownItem(h,x){
+  if(x.wh!=null||(WX&&WX.klima)||!((h.swellOpen||[]).length||(h.entranceOpen||[]).length))return null;
+  return {level:'n',text:'Seegang unbekannt',cat:'sea'};
+}
 function nightCheck(h,t1,t2,s){
   var base=planBase(s),lvl='g',txt=null,gmax=null,dmax=null;
   if(!WX)return {level:'n',text:'kein Wetter'};
   for(var t=t1;t<=t2;t+=3600000){
     var x=wxAt(h.lat,h.lon,t);if(!x||x.none)return {level:'n',text:'keine Vorhersage für die Nacht'};
     var st=harborStatus(h,legLevelState(base,x,'am Wind',{lat:h.lat,lon:h.lon},t));
-    var its=st.items.filter(function(i){return !i.noLevel&&NIGHT_CATS[i.cat];}),hl='g';
+    var its=st.items.filter(function(i){return !i.noLevel&&NIGHT_CATS[i.cat];}),hl='g',su=seaUnknownItem(h,x);
+    if(su)its.push(su);
     its.forEach(function(i){hl=pworst(hl,i.level);});
     if(gmax===null||x.wg>gmax){gmax=x.wg;dmax=x.wd==null?null:wxDir8(x.wd);}
     if((RANK2[hl]||0)>(RANK2[lvl]||0)){lvl=hl;txt=its.filter(function(i){return i.level===hl;}).map(function(i){return i.text;}).join('; ')+' ('+hhmmLocal(t)+')';}
@@ -4391,12 +4436,10 @@ function planTrip(opt,progress){
       if(ad>D-1)return;
       var br=R.hooks.routeBridges?R.hooks.routeBridges(r,s.boat,0):[],bl=bridgeLevel(br);
       if(bl==='r')return;
-      if(isNight){
-        var ss=sunTimes(hb.lat,hb.lon,sim.arr),ar=ss.sunriseMs,inDark=!(ss.sunriseMs&&ss.sunsetMs&&sim.arr>=ss.sunriseMs&&sim.arr<=ss.sunsetMs-CONST.sunsetBufferMin*60000);
-        sim=Object.assign({},sim,{reasons:Object.assign({},sim.reasons)});
-        sim.reasons['Nachtfahrt: Wachplan, Lichterführung, Rettungswesten mit Licht']='i';
-        if(inDark){sim.reasons['Ankunft bei Dunkelheit ('+hhmmLocal(sim.arr)+') – Ansteuerung nachts']='y';sim.level=pworst(sim.level,'y');}
-      }
+      var ss=sunTimes(hb.lat,hb.lon,sim.arr),inDark=!(ss.sunriseMs&&ss.sunsetMs&&sim.arr>=ss.sunriseMs&&sim.arr<=ss.sunsetMs-CONST.sunsetBufferMin*60000);
+      if(isNight||inDark)sim=Object.assign({},sim,{reasons:Object.assign({},sim.reasons)});
+      if(isNight)sim.reasons['Nachtfahrt: Wachplan, Lichterführung, Rettungswesten mit Licht']='i';
+      if(inDark){sim.reasons['Ankunft bei Dunkelheit ('+hhmmLocal(sim.arr)+') – Ansteuerung nachts']='y';sim.level=pworst(sim.level,'y');}
       out.push({to:b,route:r,sim:sim,bridges:br,bridgeLevel:bl,night:isNight,arrDay:ad});
     });
     legMemo[key]=out;return out;
@@ -4438,7 +4481,7 @@ function planTrip(opt,progress){
           var nv=viaStep(st.via,L.to);
           if(toGo(L.to,nv)>reach(Math.max(0,D-d-1),NN-st.nights)+0.01)return;
           if(endId&&d===D-1&&L.to!==endId)return;
-          var nN=night(L.to,d),c=legCost(L,st.visited)+P.night[nN.level];
+          var nN=night(L.to,d,L.sim.arr),c=legCost(L,st.visited)+P.night[nN.level];
           next.push({h:L.to,cost:st.cost+c,visited:st.visited+L.to+'|',days:st.days.concat([{type:'leg',d:d,from:st.h,leg:L,night:nN,cost:c,afterNight:true}]),nights:st.nights,total:st.total+L.route.dist,busy:-1,via:nv,arrT:0});
         });
         return;
@@ -4456,7 +4499,7 @@ function planTrip(opt,progress){
         var goOn=L.arrDay>d&&opt.afterNightHour!=null,restAfter=D-L.arrDay-(goOn?0:1),nl=nightsLeft-(L.night?1:0),nv=viaStep(st.via,L.to);
         if(toGo(L.to,nv)>reach(Math.max(0,restAfter),nl)+0.01)return;
         if(endId&&L.arrDay===D-1&&L.to!==endId&&!goOn)return;
-        var arrT=L.night?L.sim.arr:0,nN=night(L.to,L.arrDay,arrT),c=legCost(L,st.visited)+P.night[nN.level];
+        var arrT=L.sim.arr,nN=night(L.to,L.arrDay,arrT),c=legCost(L,st.visited)+P.night[nN.level];
         var items=[{type:'leg',d:d,from:st.h,leg:L,night:nN,cost:c}];
         if(L.arrDay>d)items.push({type:'arrive',d:L.arrDay,at:L.to,arr:L.sim.arr,night:nN,cost:0});
         next.push({h:L.to,cost:st.cost+c,visited:st.visited+L.to+'|',days:st.days.concat(items),nights:st.nights+(L.night?1:0),total:st.total+L.route.dist,busy:L.arrDay>d?L.arrDay:-1,via:nv,arrT:L.sim.arr});
@@ -4695,6 +4738,8 @@ function nextRefuge(res){var r=res.rec;if(!r)return null;var it=r.green||r.beleg
 function actionBox(res){
   var wlg=res.gates.filter(function(g){return g.id==='wl';})[0];
   if(!res.overall||res.missing.length)return '<div class="card"'+(wlg?' style="border-left:6px solid var(--'+wlg.level+')"':'')+'><div class="t">Was würde ich jetzt tun?</div>'+(wlg?'<div class="pl">'+esc('Wetter-Sicherheit meldet '+(wlg.level==='r'?'rot':'gelb')+': Schutz suchen, siehe Abschnitt Wetter-Sicherheit.')+'</div>':'')+'<div class="note">Erst Position, Wind, Richtung und Böen eingeben – dann steht hier eine konkrete Empfehlung. '+gl('ampel','Was bedeutet die Ampel?')+'</div></div>';
+  var ageI=inputAgeH();
+  if(ageI!=null&&ageI>CONST.input.maxAgeH)return '<div class="card"><div class="t">Was würde ich jetzt tun?</div><div class="note">Eingaben '+Math.floor(ageI)+' h alt – erst Wind, Böen und Seegang neu prüfen, dann steht hier eine Empfehlung.</div></div>';
   var lv=res.overall.level,nr=nextRefuge(res),reff=res.reff?res.reff.name:null,L=[];
   if(lv==='g'){L.push('Fahren wie geplant.');if(reff)L.push('Segelführung: '+reff+'.');if(nr)L.push('Plan B: '+nr.txt+'.');}
   else if(lv==='y'){L.push('Nur mit Einschränkung fahren: Etappe kurz halten, Crew briefen, Wetter beobachten.');if(reff)L.push('Segelführung: '+reff+'.');
@@ -4834,15 +4879,18 @@ function wxFill(now){
   if(!S.pos)return {error:'Erst Position wählen.'};
   if(!WX)return {error:'Kein Wetterstand gespeichert – im Törn-Tab „Wetter laden“.'};
   var age=wxAgeH(now);
-  if(age>CONST.wx.hardAgeH)return {error:'Wetterstand '+Math.round(age)+' h alt – zu alt zum Übernehmen. Im Törn-Tab neu laden oder Werte aus Seewetterbericht/UKW eingeben.'};
+  if(!(age<=CONST.wx.hardAgeH))return {error:'Wetterstand '+(isFinite(age)?Math.round(age)+' h alt':'ohne gültige Zeit')+' – zu alt zum Übernehmen. Im Törn-Tab neu laden oder Werte aus Seewetterbericht/UKW eingeben.'};
   var x=wxAt(S.pos.lat,S.pos.lon,now);
   if(!x||x.none)return {error:'Der Wetterstand deckt diese Zeit nicht ab – neu laden.'};
   S.dir=x.wd==null?S.dir:wxDir8(x.wd);S.windTrue=Math.round(x.ws);S.gust=Math.max(Math.round(x.wg),S.windTrue);
   if(x.wh!=null){S.seaH=Math.min(3,Math.round(x.wh*4)/4);S.seaDir=x.wdir==null?S.dir:wxDir8(x.wdir);}
-  S.sicht=x.vis!=null&&x.vis<CONST.plan.fogM?'nebel':(S.sicht==='nebel'?'gut':S.sicht);
-  S.gewitter=x.wc!=null&&CONST.plan.thunder.indexOf(x.wc)>=0;
+  S.seaUnknown=x.wh==null;
+  // a forecast may raise fog and thunderstorm, never clear them: what the skipper sees outranks a model value
+  var keptFog=S.sicht==='nebel'&&!(x.vis!=null&&x.vis<CONST.plan.fogM),keptTh=S.gewitter&&!(x.wc!=null&&CONST.plan.thunder.indexOf(x.wc)>=0);
+  if(x.vis!=null&&x.vis<CONST.plan.fogM)S.sicht='nebel';
+  if(x.wc!=null&&CONST.plan.thunder.indexOf(x.wc)>=0)S.gewitter=true;
   var pt=WX.points[x.p],d=haversineNm(S.pos,{lat:pt[0],lon:pt[1]});
-  return {ok:true,text:'Übernommen aus Open-Meteo, Stand '+dmyLocal(Date.parse(WX.fetchedAt))+' '+hhmmLocal(Date.parse(WX.fetchedAt))+', für '+hhmmLocal(now)+', Rasterpunkt ≈ '+nm1(d)+' sm entfernt'+(age>CONST.wx.maxAgeH?' – ⚠ Wetterstand '+Math.round(age)+' h alt':'')+(x.wh==null?' – Seegang unbekannt, bitte schätzen':'')+'. Vorhersage, keine Messung – mit Barometer und Augenschein abgleichen.'};
+  return {ok:true,text:'Übernommen aus Open-Meteo, Stand '+dmyLocal(Date.parse(WX.fetchedAt))+' '+hhmmLocal(Date.parse(WX.fetchedAt))+', für '+hhmmLocal(now)+', Rasterpunkt ≈ '+nm1(d)+' sm entfernt'+(age>CONST.wx.maxAgeH?' – ⚠ Wetterstand '+Math.round(age)+' h alt':'')+(x.wh==null?' – Seegang unbekannt, bitte schätzen':'')+(keptFog||keptTh?' – '+(keptFog&&keptTh?'Nebel und Gewitter':keptFog?'Nebel':'Gewitter')+' bleibt gesetzt, Vorhersage meldet es nicht: bitte selbst prüfen':'')+'. Vorhersage, keine Messung – mit Barometer und Augenschein abgleichen.'};
 }
 /* ---- inputs ---- */
 function buildInputs(){
@@ -4880,13 +4928,13 @@ var notice='';
 function setNotice(t){notice=t;var n=$('gustnotice');n.style.display=t?'block':'none';n.textContent=t;}
 function step(k,d){
   if(k==='windTrue'||k==='gust'){
-    if(S[k]===null){S[k]=(k==='windTrue')?10:Math.max(15,S.windTrue===null?0:S.windTrue);if(k==='gust'&&S.windTrue===null)S.windTrue=10;}
+    if(S[k]===null){S[k]=(k==='windTrue')?10:Math.max(15,S.windTrue===null?0:S.windTrue);}
     else S[k]=Math.min(80,Math.max(0,S[k]+d));
     if(S.windTrue!==null&&S.gust===null&&k==='windTrue'){S.gust=S.windTrue;setNotice('Böen auf Mittelwind gesetzt – bitte Böen eingeben.');}
     else if(S.windTrue!==null&&S.gust!==null&&S.gust<S.windTrue){
       S.gust=S.windTrue;setNotice('Böen können nicht unter dem Mittelwind liegen – auf '+S.windTrue+' kn angehoben.');
-    }else setNotice('');
-  }else if(k==='seaH'){S.seaH=Math.min(3,Math.max(0,Math.round((S.seaH+d)*4)/4));}
+    }else setNotice(S.windTrue===null&&k==='gust'?'Mittelwind fehlt noch – bitte eingeben.':'');
+  }else if(k==='seaH'){S.seaH=Math.min(3,Math.max(0,Math.round((S.seaH+d)*4)/4));S.seaUnknown=false;}
   else if(k==='pegel'){S.pegel=Math.min(200,Math.max(-200,S.pegel+d));}
   update();
 }
@@ -5051,7 +5099,7 @@ function planText(P){
   L.push(REVIER.appName+' – Törnplan ('+md+' ab '+nm(o.start)+(o.mode==='ziel'&&o.target?' nach '+nm(o.target):'')+')');
   L.push(o.days+' Tage ab '+o.date.split('-').reverse().join('.')+' · gesamt ≈ '+f1(tot)+' sm'+(P.klima?' · VORPLANUNG mit Klimamittel '+MONTHS[P.klima.month-1]+', kein aktuelles Wetter':' · Wetterstand '+dmyLocal(Date.parse(P.wxAt))+' '+hhmmLocal(Date.parse(P.wxAt))));
   P.days.forEach(function(x,i){
-    var head='Tag '+(i+1)+' '+wdLocal(x.date)+' '+dmyLocal(x.date)+': ';
+    var head='Tag '+(x.d+1)+' '+wdLocal(x.date)+' '+dmyLocal(x.date)+': ';
     if(x.type==='stay'){L.push(head+'Hafentag '+nm(x.at));return;}
     if(x.type==='arrive'){L.push(head+'Ankunft nach Nachtfahrt in '+nm(x.at)+' um '+hhmmLocal(x.arr));return;}
     var Lg=x.leg,sm=Lg.sim;
@@ -5334,6 +5382,7 @@ function gpxiPoints(){var a=[];if(GPXI){GPXI.legs.forEach(function(l){l.pts.forE
 /* ---- import / clear ---- */
 function gpxImportText(text,file){
   var r=gpxParse(text);
+  if(r.ok&&!r.legs.length)r={ok:false,error:'Die Datei enthält nur Wegpunkte, keine Route und keinen Track. Bitte als Route oder Track exportieren.'};
   if(!r.ok){gpxiMsg('Import abgebrochen: '+r.error+(GPXI?' Die bisherige Import-Route bleibt erhalten.':''),'r');return r;}
   gpxiFromParse(r,file);gpxiSave();
   var s=r.stats;
@@ -5485,7 +5534,7 @@ function gpxiDepth(samples){
 
 /* ---- evaluation ---- */
 function gpxiDep(k){return dayStartMs(PL.date||todayStr(),k,PL.depHour||9);}
-function gpxiSig(){return JSON.stringify([GPXI&&GPXI.at,WX&&WX.fetchedAt,PL.date,PL.depHour,S.speed,S.motorMode,S.motorSpeed,S.boat,S.pegel,S.bms,S.kids,S.season,S.limGust,S.limSea]);}
+function gpxiSig(){return JSON.stringify([GPXI&&GPXI.at,WX&&WX.fetchedAt,WX?Math.floor(wxAgeH()):null,PL.date,PL.depHour,S.speed,S.motorMode,S.motorSpeed,S.boat,S.pegel,S.bms,S.kids,S.season,S.limGust,S.limSea]);}
 function gpxiLegEval(leg,k){
   var route=gpxiRoute(leg),dep=gpxiDep(k),hints=[],sN=normalize(Object.assign({},S,{now:dep,pos:null,dir:null,windTrue:null,gust:null,seaH:0,seaDir:null,longWind:null,sicht:'gut',trend:false,gewitter:false}));
   sN.motorMode=S.motorMode||'nie';sN.motorSpeed=S.motorSpeed||null;
@@ -5497,7 +5546,12 @@ function gpxiLegEval(leg,k){
   smp.forEach(function(sp){
     var g=gates(sN,{lat:sp.lat,lon:sp.lon},T0);
     g.gates.map(function(x){return {id:x.id,level:x.level,title:x.title,text:x.text};}).concat(g.info.map(function(x){return {id:x.id,level:'i',title:x.title,text:x.text};})).forEach(function(it){
-      if(/^hz-/.test(it.id)||it.id==='saison')return;
+      if(it.id==='saison')return;
+      if(/^hz-/.test(it.id)){
+        var zz=HAZARDS.filter(function(z){return 'hz-'+z.id===it.id||z.id===it.id;})[0];
+        if(!zz||(zz.geom&&zz.geom.center&&zz.type!=='befahrensverbot')||zz.type==='vtg')return;   // those with a centre are rated by distance below
+        it={id:it.id,level:GPXI_RANK[it.level]>GPXI_RANK.n?it.level:'n',title:it.title,text:it.text+' Lage zur Linie nicht belegt, in der Seekarte prüfen.'};
+      }
       var o=seen[it.id];if(!o||GPXI_RANK[it.level]>GPXI_RANK[o.level])seen[it.id]=it;
     });
   });
@@ -5554,6 +5608,8 @@ function gpxiLegEval(leg,k){
   // 6 weather of the saved snapshot, per leg like the planner (departure = planner form date/time, leg n on day n)
   var sim=null,lvl='g';
   if(WX){
+    var wxAge=wxAgeH(Math.min(Date.now(),dep));
+    if(!(wxAge<=CONST.wx.hardAgeH))add('n','wx','Wetterstand '+(isFinite(wxAge)?Math.round(wxAge)+' h alt':'ohne gültige Zeit')+', älter als '+CONST.wx.hardAgeH+' h: Die Wetterprüfung unten ist keine aktuelle Bewertung – neu laden.');
     try{
       sim=simLeg(route,dep,sN);
       Object.keys(sim.reasons).forEach(function(t){add(sim.reasons[t],'wx',t);});
@@ -5763,16 +5819,18 @@ function harbourTimeline(h,s){
     var t=t0+k*CONST.timeline.stepH*3600000,x=wxAt(h.lat,h.lon,t);
     if(!x||x.none){cells.push({t:t,level:'none'});continue;}
     var st=harborStatus(h,legLevelState(base,x,'am Wind',{lat:h.lat,lon:h.lon},t)),lv='g',why=[];
-    st.items.forEach(function(i){if(!i.noLevel&&NIGHT_CATS[i.cat]){lv=pworst(lv,i.level);if(i.level!=='g')why.push(i.text);}});
+    var its=st.items.slice(),su=seaUnknownItem(h,x);if(su)its.push(su);
+    its.forEach(function(i){if(!i.noLevel&&NIGHT_CATS[i.cat]){lv=pworst(lv,i.level);if(i.level!=='g')why.push(i.text);}});
     cells.push({t:t,level:lv,why:why,wind:(x.wd==null?'':wxDir8(x.wd)+' ')+Math.round(x.ws)+'/'+Math.round(x.wg)+' kn'});
   }
   var r={cells:cells};
-  var known=cells.filter(function(c){return c.level!=='none';});
+  var known=cells.filter(function(c){return c.level!=='none';}),lastK=known[known.length-1],age=wxAgeH(now);
   if(known.length){
     var first=known[0],chg=null;
     for(var i=1;i<known.length;i++){if(known[i].level!==first.level){chg=known[i];break;}}
     r.summary=(first.level==='g'?'geschützt':first.level==='y'?'eingeschränkt':first.level==='r'?'nicht geeignet':'unklar')
-      +(chg?' bis '+wdLocal(chg.t)+' '+hhmmLocal(chg.t)+', dann '+(chg.level==='g'?'geschützt':chg.level==='y'?'eingeschränkt':chg.level==='r'?'nicht geeignet':'unklar')+' ('+chg.wind+')':' für den ganzen Zeitraum');
+      +(chg?' bis '+wdLocal(chg.t)+' '+hhmmLocal(chg.t)+', dann '+(chg.level==='g'?'geschützt':chg.level==='y'?'eingeschränkt':chg.level==='r'?'nicht geeignet':'unklar')+' ('+chg.wind+')':(known.length===cells.length?' für den ganzen Zeitraum':' bis '+wdLocal(lastK.t)+' '+hhmmLocal(lastK.t)+', danach keine Vorhersage'));
+    if(!(age<=CONST.wx.maxAgeH))r.summary+=' (⚠ Wetterstand '+(isFinite(age)?Math.round(age)+' h alt':'ohne Zeitangabe')+')';
   }
   if(Object.keys(TL_CACHE).length>800)TL_CACHE={};
   return (TL_CACHE[key]=r);
@@ -5876,7 +5934,7 @@ function loadPL(){var raw=load(sk('toern'));if(!raw)return;try{var o=JSON.parse(
   if(o.afterNight)PL.afterNight=o.afterNight;if(o.wxMode==='klima')PL.wxMode='klima';if(o.date&&/^\d{4}-\d\d-\d\d$/.test(o.date))PL.savedDate=o.date;
   if(Array.isArray(o.exclude))PL.exclude=o.exclude.filter(function(v){return !!BY_ID[v];}).slice(0,CONST.plan.maxExclude);
   if(Array.isArray(o.vias))PL.vias=o.vias.filter(function(v){return inNet(v);}).slice(0,3);if(o.viaDay&&typeof o.viaDay==='object')PL.viaDay=o.viaDay;}catch(e){}
-  var pr=load(sk('plan'));if(pr){try{PL.plan=JSON.parse(pr);}catch(e){}}
+  var pr=load(sk('plan'));if(pr){try{var pp=JSON.parse(pr);if(planValid(pp))PL.plan=pp;}catch(e){}}
 }
 function wxStateHTML(){
   if(!WX)return 'Kein Wetter geladen. Abruf nur auf Tippen – ohne Netz gilt der zuletzt gespeicherte Stand.';
@@ -5944,7 +6002,7 @@ function doPlan(){
   if(WX&&PL.date){var t0=dayStartMs(PL.date,0,PL.depHour);if(t0>WX.t0+(WX.hours-1)*3600000){$('planmsg').innerHTML=banner('y','Startdatum außerhalb der Vorhersage','Die Vorhersage reicht bis '+dmyLocal(WX.t0+(WX.hours-1)*3600000)+' – für eine Planung weiter voraus oben auf „Vorplanung (Klima)“ umschalten.');return;}}
   if(!WX){$('planmsg').innerHTML=banner('y','Kein Wetter','Erst oben „Wetter laden“ – der Planer rechnet nur mit gespeicherter Vorhersage.');return;}
   if(PL.mode==='ziel'&&!PL.target){$('planmsg').innerHTML=banner('y','Ziel fehlt','Zielhafen wählen.');return;}
-  if(wxAgeH()>CONST.wx.hardAgeH&&!confirm(i18nText('Wetterstand ist älter als '+CONST.wx.hardAgeH+' h. Trotzdem planen?')))return;
+  if(!(wxAgeH()<=CONST.wx.hardAgeH)&&!confirm(i18nText('Wetterstand ist älter als '+CONST.wx.hardAgeH+' h. Trotzdem planen?')))return;
   PL.busy=true;$('planmsg').innerHTML='<div class="note">Plane … (Wegpunkt-Netz × Vorhersage)</div>';
   setTimeout(function(){
     var r;try{r=planTrip(planOpts());}catch(e){r={error:'Fehler im Planer: '+e.message};}
@@ -5981,7 +6039,7 @@ function planDayHTML(x,i,P){
   var head=wdLocal(x.date)+' '+dmyLocal(x.date),h='';
   if(x.type==='arrive'){
     var hz=BY_ID[x.at];
-    h+='<div class="pday lv-'+(x.night.level==='r'?'r':'g')+'" data-d="'+x.d+'"><div class="pd">Tag '+(i+1)+', '+head+'</div><div class="pt">Ankunft nach Nachtfahrt in '+esc(hz?hz.name:x.at)+'</div>';
+    h+='<div class="pday lv-'+(x.night.level==='r'?'r':'g')+'" data-d="'+x.d+'"><div class="pd">Tag '+(x.d+1)+', '+head+'</div><div class="pt">Ankunft nach Nachtfahrt in '+esc(hz?hz.name:x.at)+'</div>';
     var cont=P.days.some(function(y){return y.type==='leg'&&y.d===x.d;});
     h+='<div class="note">an <b>'+hhmmLocal(x.arr)+'</b> · '+(cont?'Nachtwache schläft, Weiterfahrt am späten Vormittag (nächste Karte).':'danach ausschlafen, keine weitere Etappe an diesem Tag.')+'</div>';
     h+='<div class="pn lv-'+x.night.level+'">'+SYM[x.night.level]+' Liegen in '+esc(hz?hz.name:x.at)+': '+esc(x.night.text||'')+'</div></div>';
@@ -5989,13 +6047,13 @@ function planDayHTML(x,i,P){
   }
   if(x.type==='stay'){
     var ha=BY_ID[x.at];
-    h+='<div class="pday lv-'+(x.night.level==='r'?'r':'g')+'" data-d="'+x.d+'"><div class="pd">Tag '+(i+1)+', '+head+'</div><div class="pt">Hafentag in '+esc(ha?ha.name:x.at)+'</div>';
+    h+='<div class="pday lv-'+(x.night.level==='r'?'r':'g')+'" data-d="'+x.d+'"><div class="pd">Tag '+(x.d+1)+', '+head+'</div><div class="pt">Hafentag in '+esc(ha?ha.name:x.at)+'</div>';
     h+='<div class="note">'+gl('konfidenz','Konfidenz')+': <b>'+esc(x.conf)+'</b> · im Hafen bleiben (Wetter, Etappe nicht sinnvoll oder Ziel erreicht).</div>';
     h+='<div class="pn lv-'+x.night.level+'">'+SYM[x.night.level==='n'?'n':x.night.level]+' Hafen über 24 h: '+esc(x.night.text||'')+'</div></div>';
     return h;
   }
   var L=x.leg,hf=BY_ID[x.from],ht=BY_ID[L.to],s=L.sim,lv=s.level;
-  h+='<div class="pday lv-'+lv+'" data-d="'+x.d+'"><span class="pdot" style="background:'+DAYCOL[x.d%DAYCOL.length]+'"></span><div class="pd">Tag '+(i+1)+', '+head+'</div><div class="pt">'+esc(hf?hf.name:x.from)+' → '+esc(ht?ht.name:L.to)+'</div>';
+  h+='<div class="pday lv-'+lv+'" data-d="'+x.d+'"><span class="pdot" style="background:'+DAYCOL[x.d%DAYCOL.length]+'"></span><div class="pd">Tag '+(x.d+1)+', '+head+'</div><div class="pt">'+esc(hf?hf.name:x.from)+' → '+esc(ht?ht.name:L.to)+'</div>';
   h+='<div class="pchip b-'+lv+'">'+SYM[lv]+' '+LVL_TXT[lv]+'</div>'+(L.night?' <div class="pchip b-i">☾ Nachtfahrt</div>':'');
   h+='<div class="pl"><b>'+f1(L.dist)+' sm</b> · '+fmtEta(s.hours)+' · ab <b>'+hhmmLocal(s.dep)+'</b> an <b>'+(L.arrDay>x.d?wdLocal(s.arr)+' ':'')+hhmmLocal(s.arr)+'</b></div>';
   h+=L.klima?'<div class="pl">'+esc(klimaLine(L.klima))+'</div><div class="note small">Plan mit typischem Wind '+(s.wx.dirs.join('/')||'?')+' '+Math.round(s.wx.wsMax)+' kn, Böen '+Math.round(s.wx.gMax)+' kn · Seegang nicht bewertet</div>':'<div class="pl">'+esc(wxLine(s.wx))+'</div>';
@@ -6222,7 +6280,7 @@ window.SKIPPER=Object.assign({WL_NET:WL_NET,wlAssess:wlAssess,wlRaising:wlRaisin
   apparentWind:apparentWind,generalLevel:generalLevel,pegelLevel:pegelLevel,haversineNm:haversineNm,bearingDeg:bearingDeg,formatDM:formatDM,formatPos:formatPos,parseDM:parseDM,
   isOutOfArea:isOutOfArea,euOffset:euOffset,utcToLocal:utcToLocal,sunTimes:sunTimes,seaAreaOf:seaAreaOf,countryOf:countryOf,boatNeeds:boatNeeds,
   rhumb:rhumb,courseToWind:courseToWind,effThresholds:effThresholds,filterList:filterList,DISCLAIMER:DISCLAIMER,
-  NET:NET,WXGRID:WXGRID,R:R,favOn:favOn,favToggle:favToggle,netTree:netTree,withBlockedEdges:withBlockedEdges,netRoute:netRoute,treeOf:treeOf,inNet:inNet,wxAt:wxAt,wxSet:wxSet,wxFromOpenMeteo:wxFromOpenMeteo,wxUrls:wxUrls,wxValid:wxValid,
+  NET:NET,WXGRID:WXGRID,R:R,legGates:legGates,crossSide:crossSide,step:step,iosShareFile:iosShareFile,favOn:favOn,favToggle:favToggle,netTree:netTree,withBlockedEdges:withBlockedEdges,netRoute:netRoute,treeOf:treeOf,inNet:inNet,wxAt:wxAt,wxSet:wxSet,wxFromOpenMeteo:wxFromOpenMeteo,wxUrls:wxUrls,wxValid:wxValid,
   chunkLevel:chunkLevel,diagHTML:diagHTML,pickerSet:pickerSet,harbourMatches:harbourMatches,wxFill:wxFill,harbourTimeline:harbourTimeline,NOTES:NOTES,MAP:MAP,ZM:ZM,TILES:TILES,PACK:PACK,POPFS:POPFS,PNAT:PNAT,packBackend:packBackend,Sha256:Sha256,packCovers:packCovers,packLoadAll:packLoadAll,merc:merc,mapFit:mapFit,mapZoomAt:mapZoomAt,mapSelect:mapSelect,planGPX:planGPX,gpxFile:gpxFile,gpxParse:gpxParse,gpxSimplify:gpxSimplify,gpxDecode:gpxDecode,GPX_LIM:GPX_LIM,gpxImportText:gpxImportText,gpxiClear:gpxiClear,landCheck:landCheck,landStretches:landStretches,gpxOpenText:gpxOpenText,gpxOpenDetail:gpxOpenDetail,gpxShareBoot:gpxShareBoot,gpxShareCache:gpxShareCache,gpxiEval:gpxiEval,gpxiAdopt:gpxiAdopt,gpxiSanitize:gpxiSanitize,getGPXI:function(){return GPXI;},renderGpxImport:renderGpxImport,getWX:function(){return WX;},IDB:IDB,planTrip:planTrip,renderViaDays:renderViaDays,planCandidates:planCandidates,simLeg:simLeg,nightCheck:nightCheck,dayStartMs:dayStartMs,PL:PL,renderPlan:renderPlan,doImportText:doImportText,planSerialize:planSerialize,klimaFromArchive:klimaFromArchive,klimaSnapshot:klimaSnapshot,klimaRisk:klimaRisk,klimaSet:klimaSet,klimaGet:klimaGet,klimaUrl:klimaUrl,klimaYears:klimaYears,klimaPoints:klimaPoints,planKlima:planKlima,setWxMode:setWxMode,hullSpeed:hullSpeed,dieselSummary:dieselSummary,glShow:glShow,doPlan:doPlan,lageText:lageText,planText:planText,NOTESref:function(){return NOTES;},i18nKey:i18nKey,i18nText:i18nText,i18nSet:i18nSet,I18N:I18N,planAvoid:planAvoid,planReplace:planReplace,ZM:ZM,zmFit:zmFit,zmSelect:zmSelect,setZView:setZView,onbOpen:onbOpen,ONB:ONB,renderHdrAlert:renderHdrAlert,wxFill:wxFill,wxPreview:wxPreview,setPreset:setPreset,applyTheme:applyTheme},R.expose);
 }
 /* =====================================================================
