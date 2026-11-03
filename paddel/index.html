@@ -247,7 +247,9 @@ header{flex-wrap:nowrap}
 <section class="screen" id="scr-bord">
   <h2 data-bd="An Bord">An Bord</h2>
   <div class="note" id="bd-noroute" data-bd="Ohne Route laufen Ankerwache, Logbuch und Checklisten. Für Unterwegs-Modus und Wetterfenster zuerst im Reiter Törn eine Route planen.">Ohne Route laufen Ankerwache, Logbuch und Checklisten. Für Unterwegs-Modus und Wetterfenster zuerst im Reiter Törn eine Route planen.</div>
+  <div class="bd-quick"><button type="button" class="bd-b bd-prim" id="bd-photo" data-bd="Foto übersetzen">Foto übersetzen</button><button type="button" class="bd-b" id="bd-phrases" data-bd="Sätze zeigen">Sätze zeigen</button></div>
   <details class="card bd-c" id="bdc-underway" open><summary class="t" data-bd="Unterwegs und Ankerwache">Unterwegs und Ankerwache</summary><div id="bd-underway"></div></details>
+  <details class="card bd-c" id="bdc-lang"><summary class="t" data-bd="Sprache">Sprache</summary><p class="note" data-bd="Maschinenübersetzung, Gerichtsnamen können ungenau sein.">Maschinenübersetzung, Gerichtsnamen können ungenau sein.</p><div id="bd-lang"></div></details>
   <details class="card bd-c"><summary class="t" data-bd="Bestes Wetterfenster">Bestes Wetterfenster</summary><div id="bd-window"></div></details>
   <details class="card bd-c"><summary class="t" data-bd="Hafen oder Schleuse anfragen">Hafen oder Schleuse anfragen</summary><select id="bd-contact-pick" aria-label="Hafen oder Schleuse"></select><div id="bd-contact"></div></details>
   <details class="card bd-c"><summary class="t" data-bd="Törn teilen und Überfällig-Erinnerung">Törn teilen und Überfällig-Erinnerung</summary><div id="bd-share"></div></details>
@@ -1811,6 +1813,102 @@ init();
 afterInit();
 </script>
 <style>
+/* Bordsprache (lang-kit.js). Colours come from the host: core tokens (--card --ink --i --r …) or theme-kit tokens
+   (--card --ink --acc --field --bad-bg …); without either the fallbacks below apply. Day, sun and night follow the host. */
+.skl{--skl-bg:var(--card,#fff);--skl-ink:var(--ink,#12141f);--skl-mute:var(--mute,#4a4e60);--skl-line:var(--line,#c9cbc2);
+  --skl-acc:var(--acc,var(--i,#1f4e8c));--skl-onacc:var(--on-prim,var(--it,#fff));--skl-field:var(--field,var(--btn,#fff));
+  --skl-chip:var(--chip,var(--rose-bg,#e6e8ee));--skl-bad:var(--bad-bg,var(--r,#c62828));--skl-onbad:var(--bad-ink,var(--rt,#fff));
+  --skl-warnbg:var(--warn-bg,var(--warnbg,#fff3cf));--skl-warnink:var(--warn-ink,var(--warnink,#6b2508));
+  color:var(--skl-ink);font-size:1rem;line-height:1.35}
+.skl *{box-sizing:border-box}
+.skl button,.skl select,.skl input,.skl textarea{font:inherit;color:inherit}
+.skl button{cursor:pointer}
+.skl button:focus-visible,.skl select:focus-visible,.skl input:focus-visible,.skl textarea:focus-visible,.skl summary:focus-visible{outline:3px solid var(--skl-acc);outline-offset:2px}
+.skl select,.skl input,.skl textarea{font-size:16px;background:var(--skl-field);border:1.5px solid var(--skl-line);border-radius:10px;min-height:44px;padding:8px 10px;width:100%}
+.skl-langs{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:end;margin:0 0 10px}
+.skl-langs label{display:block;min-width:0}
+.skl-langs label span{display:block;font-size:.8rem;font-weight:700;color:var(--skl-mute);margin:0 0 3px;text-transform:uppercase;letter-spacing:.03em}
+.skl-swap{min-width:44px;min-height:44px;border-radius:10px;border:1.5px solid var(--skl-line);background:var(--skl-field);font-size:1.2rem;font-weight:700}
+.skl-tabs{display:flex;gap:4px;border-bottom:2px solid var(--skl-line);margin:0 0 12px}
+.skl-tabs button{flex:1;min-height:44px;border:0;background:none;font-weight:700;color:var(--skl-mute);border-bottom:3px solid transparent;margin-bottom:-2px;padding:6px 4px}
+.skl-tabs button.on{color:var(--skl-ink);border-bottom-color:var(--skl-acc)}
+.skl-q{margin:0 0 8px}
+.skl-chips{display:flex;gap:6px;overflow-x:auto;padding:2px 0 8px;scrollbar-width:thin}
+.skl-chips button{flex:none;min-height:40px;border-radius:20px;border:1.5px solid var(--skl-line);background:var(--skl-chip);padding:4px 12px;font-weight:600;white-space:nowrap}
+.skl-chips button.on{background:var(--skl-acc);color:var(--skl-onacc);border-color:var(--skl-acc)}
+.skl-list{list-style:none;margin:0;padding:0}
+.skl-list li{display:flex;gap:6px;align-items:stretch;border-bottom:1px solid var(--skl-line)}
+.skl-row{flex:1;display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:2px;background:none;border:0;padding:10px 4px;min-height:56px}
+.skl-row .them{font-size:1.12rem;font-weight:700}
+.skl-row .me{font-size:.92rem;color:var(--skl-mute)}
+.skl-row.urgent .them::before{content:"! ";color:var(--skl-bad)}
+.skl-star{flex:none;width:48px;border:0;background:none;font-size:1.4rem;color:var(--skl-mute)}
+.skl-star.on{color:var(--skl-acc)}
+.skl-empty,.skl-note,.skl-lead{color:var(--skl-mute);font-size:.9rem;margin:10px 0}
+.skl-warn{background:var(--skl-warnbg);color:var(--skl-warnink);border-radius:10px;padding:10px 12px;margin:8px 0;font-weight:600}
+.skl-msg{margin:8px 0;font-weight:600}
+.skl .link{background:none;border:0;text-decoration:underline;color:inherit;font-weight:700;padding:0 2px;min-height:0}
+.skl-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:48px;padding:8px 14px;border-radius:12px;border:1.5px solid var(--skl-acc);background:var(--skl-acc);color:var(--skl-onacc);font-weight:700;cursor:pointer}
+.skl-btn.sec{background:var(--skl-field);color:var(--skl-ink);border-color:var(--skl-line)}
+.skl-btn.wide{width:100%;margin:8px 0}
+.skl-btn[disabled]{opacity:.55;cursor:default}
+.skl-photo{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}
+.skl-text{resize:vertical;min-height:110px}
+.skl-seg{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:0 0 8px}
+.skl-seg button{min-height:52px;border-radius:12px;border:1.5px solid var(--skl-line);background:var(--skl-field);font-weight:700;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.skl-seg button small{font-weight:600;color:var(--skl-mute)}
+.skl-seg button.on{border-color:var(--skl-acc);box-shadow:inset 0 0 0 2px var(--skl-acc)}
+.skl-res{margin:10px 0;padding:0 0 0 1.4em}
+.skl-res li{margin:0 0 10px}
+.skl-res li span{display:block;color:var(--skl-mute);font-size:.92rem}
+.skl-res li b{display:block;font-size:1.1rem}
+.skl-numwarn{display:block;font-style:normal;font-weight:700;font-size:.9rem;margin-top:2px;color:var(--skl-warnink);background:var(--skl-warnbg);border-radius:8px;padding:4px 8px}
+.skl-bar{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.skl-bar button{flex:1 1 auto;min-height:48px;border-radius:12px;border:1.5px solid var(--skl-line);background:var(--skl-field);font-weight:700;padding:6px 10px}
+.skl-bar button[disabled]{opacity:.45}
+.skl-spin{display:inline-block;width:1em;height:1em;border:3px solid var(--skl-line);border-top-color:var(--skl-acc);border-radius:50%;animation:skl-spin 1s linear infinite;vertical-align:-2px;margin-right:6px}
+@keyframes skl-spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.skl-spin{animation:none}}
+.skl-packlist{list-style:none;margin:8px 0;padding:0}
+.skl-packlist li{display:flex;gap:10px;align-items:center;justify-content:space-between;border:1.5px solid var(--skl-line);border-radius:12px;padding:10px 12px;margin:0 0 8px;background:var(--skl-bg)}
+.skl-packlist li.ok{border-color:var(--skl-acc)}
+.skl-packlist li>div{min-width:0;flex:1}
+.skl-packlist b{display:block}
+.skl-packlist small{display:block;color:var(--skl-mute)}
+.skl-packlist small.st{font-weight:700;color:var(--skl-ink)}
+.skl-packlist progress{width:100%;height:10px;margin-top:6px}
+.skl-packlist button{flex:none;min-height:44px;border-radius:10px;border:1.5px solid var(--skl-acc);background:var(--skl-acc);color:var(--skl-onacc);font-weight:700;padding:6px 12px}
+.skl-packlist button.sec{background:var(--skl-field);color:var(--skl-ink);border-color:var(--skl-line)}
+.skl-packlist button[disabled]{opacity:.5}
+.skl-src form{display:flex;gap:6px;margin-top:6px}
+.skl-src button{min-height:44px;border-radius:10px;border:1.5px solid var(--skl-line);background:var(--skl-field);font-weight:700;padding:0 12px}
+.skl summary{cursor:pointer;font-weight:700;min-height:36px;display:flex;align-items:center}
+/* show mode */
+html.skl-lock,html.skl-lock body{overflow:hidden}
+.skl-show{position:fixed;inset:0;z-index:2147483000;background:var(--skl-bg);overflow:auto;-webkit-overflow-scrolling:touch}
+.skl-show[hidden]{display:none}
+.skl-show-in{min-height:100%;display:flex;flex-direction:column;justify-content:center;padding:max(16px,env(safe-area-inset-top)) 18px max(16px,env(safe-area-inset-bottom));max-width:900px;margin:0 auto}
+.skl-show-in.rot{transform:rotate(180deg)}
+.skl-big{font-size:clamp(1.9rem,7.5vw,3.4rem);font-weight:800;line-height:1.18;margin:0 0 .5em;overflow-wrap:anywhere}
+.skl-small{font-size:clamp(1.05rem,3.6vw,1.4rem);color:var(--skl-mute);margin:0 0 1em}
+.skl-kick{font-weight:700;color:var(--skl-mute);text-transform:uppercase;letter-spacing:.04em;margin:0 0 6px}
+.skl-emerg{background:var(--skl-bad);color:var(--skl-onbad);font-weight:800;border-radius:10px;padding:10px 12px;margin:0 0 10px}
+.skl-prompt{font-size:1.4rem;font-weight:800;margin:0 0 10px}
+.skl-ans{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.skl-ans button{min-height:64px;border-radius:12px;border:1.5px solid var(--skl-line);background:var(--skl-field);display:flex;flex-direction:column;align-items:flex-start;justify-content:center;text-align:left;padding:8px 10px}
+.skl-ans b{font-size:1.15rem}
+.skl-ans small{color:var(--skl-mute)}
+.skl-num{display:flex;gap:8px;align-items:flex-end;margin:12px 0 0}
+.skl-num label{flex:1}
+.skl-num label span{display:block;font-weight:700;margin:0 0 4px}
+.skl-num input{font-size:1.4rem}
+.skl-num button{min-height:48px;min-width:64px;border-radius:12px;border:1.5px solid var(--skl-acc);background:var(--skl-acc);color:var(--skl-onacc);font-weight:800}
+.skl-vars{margin:0 0 14px;border:1.5px solid var(--skl-line);border-radius:12px;padding:6px 10px}
+.skl-vars label{display:grid;grid-template-columns:1fr 7em;gap:8px;align-items:center;margin:6px 0}
+.skl-toast{position:fixed;left:50%;bottom:max(18px,env(safe-area-inset-bottom));transform:translateX(-50%) translateY(150%);background:var(--skl-ink);color:var(--skl-bg);padding:10px 16px;border-radius:12px;font-weight:700;z-index:2147483001;transition:transform .2s;max-width:92vw}
+.skl-toast.on{transform:translateX(-50%) translateY(0)}
+@media (min-width:760px){.skl-photo{max-width:520px}}
+
 /* Underway + anchor watch. Colours come from the host's tokens (core base.css or theme-kit.css), with own values as fallback.
    Without a host theme: data-uw-theme="day|sun|night" on .uw, or data-theme on <html> as in the apps. */
 .uw{--uw-bg:var(--card,#fff);--uw-ink:var(--ink,#12141f);--uw-mute:var(--mute,#4a4e60);--uw-line:var(--line,#c9cbc2);--uw-field:var(--field,var(--btn,#fff));--uw-chip:var(--chip,var(--bg,#f3f4f0));
@@ -2052,11 +2150,894 @@ afterInit();
 #scr-bord #bd-contact-pick{width:100%;min-height:44px;margin:6px 0;font:inherit;background:var(--field);color:var(--ink);border:1px solid var(--line);border-radius:8px}
 /* the shell has its own .lg (category dot): without this the legend of the weather window collapses */
 #scr-bord .skw .lg{width:auto;height:auto;border-radius:0;margin-right:0;vertical-align:baseline;filter:none}
+#scr-bord .bd-quick,#bd-quick-nah{display:flex;gap:8px;margin:8px 0;flex-wrap:wrap}
+.bd-b{min-height:44px;padding:0 14px;font:inherit;font-weight:600;background:var(--field);color:var(--ink);border:1px solid var(--line);border-radius:8px;cursor:pointer}
+.bd-b.bd-prim{background:var(--head);color:var(--headink);border-color:var(--head)}
+/* built-in packs: the kit has no way to add a language to them yet (REGISTRY), its link to the pack tab would end nowhere */
+.skl-bundled .skl-warn button[data-tab="packs"]{display:none}
 
 </style>
 <script>
 (function(){
 'use strict';
+var DATA_SPRACHE={"id":"bord","format":1,"version":"1.0.0","date":"2026-11-03","checked":false,"note":"Bordsprache: Sätze für Skipper. Deutsch ist die Quelle, alle anderen Sprachen von Claude übersetzt, nicht von Muttersprachlern geprüft. Prüfstand je Sprache in 'review'.","review":{"de":"Quelle","en":"ungeprüft","da":"ungeprüft","sv":"ungeprüft","nl":"ungeprüft","pl":"ungeprüft","cs":"ungeprüft","ru":"ungeprüft","uk":"ungeprüft","it":"ungeprüft","fr":"ungeprüft","hr":"ungeprüft","el":"ungeprüft"},"langs":["de","en","da","sv","nl","pl","cs","ru","uk","it","fr","hr","el"],"situations":[{"id":"basis","icon":"💬","t":{"de":"Grundlagen","en":"Basics","da":"Grundlæggende","sv":"Grunder","nl":"Basis","pl":"Podstawy","cs":"Základy","ru":"Основное","uk":"Основне","it":"Base","fr":"Essentiel","hr":"Osnovno","el":"Βασικά"}},{"id":"hafen","icon":"⚓","t":{"de":"Hafen & Liegeplatz","en":"Harbour & berth","da":"Havn & bådplads","sv":"Hamn & båtplats","nl":"Haven & ligplaats","pl":"Port i miejsce postojowe","cs":"Přístav a stání","ru":"Порт и стоянка","uk":"Порт і стоянка","it":"Porto e ormeggio","fr":"Port et place","hr":"Luka i vez","el":"Λιμάνι & θέση"}},{"id":"versorgung","icon":"⛽","t":{"de":"Versorgung","en":"Supplies","da":"Forsyning","sv":"Förnödenheter","nl":"Voorzieningen","pl":"Zaopatrzenie","cs":"Zásobování","ru":"Снабжение","uk":"Постачання","it":"Rifornimenti","fr":"Ravitaillement","hr":"Opskrba","el":"Ανεφοδιασμός"}},{"id":"schleuse","icon":"🚧","t":{"de":"Schleuse & Brücke","en":"Lock & bridge","da":"Sluse & bro","sv":"Sluss & bro","nl":"Sluis & brug","pl":"Śluza i most","cs":"Plavební komora a most","ru":"Шлюз и мост","uk":"Шлюз і міст","it":"Chiusa e ponte","fr":"Écluse et pont","hr":"Prevodnica i most","el":"Υδατοφράκτης & γέφυρα"}},{"id":"wetter","icon":"🌬","t":{"de":"Wetter & Revier","en":"Weather & waters","da":"Vejr & farvand","sv":"Väder & farvatten","nl":"Weer & vaarwater","pl":"Pogoda i akwen","cs":"Počasí a plavba","ru":"Погода и акватория","uk":"Погода й акваторія","it":"Meteo e navigazione","fr":"Météo et navigation","hr":"Vrijeme i plovidba","el":"Καιρός & πλοήγηση"}},{"id":"technik","icon":"🔧","t":{"de":"Technik & Werkstatt","en":"Repairs","da":"Teknik & værksted","sv":"Teknik & verkstad","nl":"Techniek & werkplaats","pl":"Technika i warsztat","cs":"Technika a servis","ru":"Техника и ремонт","uk":"Техніка й ремонт","it":"Tecnica e officina","fr":"Technique et atelier","hr":"Tehnika i servis","el":"Τεχνικά & συνεργείο"}},{"id":"notfall","icon":"🆘","t":{"de":"Gesundheit & Notfall","en":"Health & emergency","da":"Helbred & nødsituation","sv":"Hälsa & nödläge","nl":"Gezondheid & noodgeval","pl":"Zdrowie i nagłe wypadki","cs":"Zdraví a nouze","ru":"Здоровье и экстренные случаи","uk":"Здоров’я і надзвичайні ситуації","it":"Salute ed emergenza","fr":"Santé et urgence","hr":"Zdravlje i hitni slučaj","el":"Υγεία & έκτακτη ανάγκη"}},{"id":"behoerden","icon":"🛂","t":{"de":"Behörden & Papiere","en":"Authorities & papers","da":"Myndigheder & papirer","sv":"Myndigheter & papper","nl":"Autoriteiten & papieren","pl":"Urzędy i dokumenty","cs":"Úřady a doklady","ru":"Власти и документы","uk":"Органи влади й документи","it":"Autorità e documenti","fr":"Autorités et papiers","hr":"Vlasti i dokumenti","el":"Αρχές & έγγραφα"}},{"id":"charter","icon":"🔑","t":{"de":"Charter-Übergabe","en":"Charter handover","da":"Charteroverdragelse","sv":"Charteröverlämning","nl":"Charteroverdracht","pl":"Przekazanie czarteru","cs":"Předání charteru","ru":"Передача чартера","uk":"Передача чартеру","it":"Consegna charter","fr":"Remise du bateau","hr":"Primopredaja čartera","el":"Παράδοση ναύλωσης"}},{"id":"landgang","icon":"🛒","t":{"de":"Einkauf & Restaurant","en":"Shopping & restaurant","da":"Indkøb & restaurant","sv":"Handla & restaurang","nl":"Winkelen & restaurant","pl":"Zakupy i restauracja","cs":"Nákup a restaurace","ru":"Покупки и ресторан","uk":"Покупки й ресторан","it":"Spesa e ristorante","fr":"Courses et restaurant","hr":"Kupovina i restoran","el":"Ψώνια & εστιατόριο"}}],"phrases":[{"id":"b-hallo","s":"basis","t":{"de":"Guten Tag.","en":"Hello.","da":"Goddag.","sv":"God dag.","nl":"Goedendag.","pl":"Dzień dobry.","cs":"Dobrý den.","ru":"Здравствуйте.","uk":"Добрий день.","it":"Buongiorno.","fr":"Bonjour.","hr":"Dobar dan.","el":"Καλημέρα."}},{"id":"b-danke","s":"basis","t":{"de":"Danke.","en":"Thank you.","da":"Tak.","sv":"Tack.","nl":"Dank u.","pl":"Dziękuję.","cs":"Děkuji.","ru":"Спасибо.","uk":"Дякую.","it":"Grazie.","fr":"Merci.","hr":"Hvala.","el":"Ευχαριστώ."}},{"id":"b-entschuldigung","s":"basis","t":{"de":"Entschuldigung.","en":"Excuse me.","da":"Undskyld.","sv":"Ursäkta.","nl":"Pardon.","pl":"Przepraszam.","cs":"Promiňte.","ru":"Извините.","uk":"Вибачте.","it":"Mi scusi.","fr":"Excusez-moi.","hr":"Oprostite.","el":"Συγγνώμη."}},{"id":"b-verstehe","s":"basis","t":{"de":"Ich verstehe Sie nicht.","en":"I don't understand you.","da":"Jeg forstår dig ikke.","sv":"Jag förstår dig inte.","nl":"Ik begrijp u niet.","pl":"Nie rozumiem.","cs":"Nerozumím vám.","ru":"Я вас не понимаю.","uk":"Я вас не розумію.","it":"Non la capisco.","fr":"Je ne vous comprends pas.","hr":"Ne razumijem vas.","el":"Δεν σας καταλαβαίνω."}},{"id":"b-langsam","s":"basis","t":{"de":"Bitte sprechen Sie langsamer.","en":"Please speak more slowly.","da":"Tal venligst langsommere.","sv":"Var snäll och tala långsammare.","nl":"Spreek alstublieft langzamer.","pl":"Proszę mówić wolniej.","cs":"Mluvte prosím pomaleji.","ru":"Говорите, пожалуйста, медленнее.","uk":"Говоріть, будь ласка, повільніше.","it":"Parli più lentamente, per favore.","fr":"Parlez plus lentement, s'il vous plaît.","hr":"Molim vas, govorite sporije.","el":"Παρακαλώ μιλήστε πιο αργά."}},{"id":"b-englisch","s":"basis","t":{"de":"Sprechen Sie Englisch?","en":"Do you speak English?","da":"Taler du engelsk?","sv":"Talar du engelska?","nl":"Spreekt u Engels?","pl":"Czy mówi Pan/Pani po angielsku?","cs":"Mluvíte anglicky?","ru":"Вы говорите по-английски?","uk":"Ви говорите англійською?","it":"Parla inglese?","fr":"Parlez-vous anglais ?","hr":"Govorite li engleski?","el":"Μιλάτε αγγλικά;"}},{"id":"b-deutsch","s":"basis","t":{"de":"Sprechen Sie Deutsch?","en":"Do you speak German?","da":"Taler du tysk?","sv":"Talar du tyska?","nl":"Spreekt u Duits?","pl":"Czy mówi Pan/Pani po niemiecku?","cs":"Mluvíte německy?","ru":"Вы говорите по-немецки?","uk":"Ви говорите німецькою?","it":"Parla tedesco?","fr":"Parlez-vous allemand ?","hr":"Govorite li njemački?","el":"Μιλάτε γερμανικά;"}},{"id":"b-aufschreiben","s":"basis","t":{"de":"Können Sie das bitte aufschreiben?","en":"Could you write that down, please?","da":"Kan du skrive det ned?","sv":"Kan du skriva ner det?","nl":"Kunt u dat opschrijven?","pl":"Czy może Pan/Pani to zapisać?","cs":"Můžete mi to napsat?","ru":"Не могли бы вы это записать?","uk":"Чи не могли б ви це записати?","it":"Può scriverlo, per favore?","fr":"Pouvez-vous l'écrire, s'il vous plaît ?","hr":"Možete li to zapisati?","el":"Μπορείτε να το γράψετε;"}},{"id":"b-karte","s":"basis","t":{"de":"Bitte zeigen Sie es mir auf der Karte.","en":"Please show me on the chart.","da":"Vis mig det på kortet.","sv":"Visa mig på kortet.","nl":"Kunt u het mij op de kaart laten zien?","pl":"Proszę mi pokazać na mapie.","cs":"Ukažte mi to prosím na mapě.","ru":"Покажите, пожалуйста, на карте.","uk":"Покажіть, будь ласка, на карті.","it":"Me lo mostri sulla carta, per favore.","fr":"Montrez-le-moi sur la carte, s'il vous plaît.","hr":"Molim vas, pokažite mi na karti.","el":"Δείξτε μου στον χάρτη, παρακαλώ."}},{"id":"h-platz","s":"hafen","t":{"de":"Haben Sie einen freien Liegeplatz für eine Nacht?","en":"Do you have a free berth for one night?","da":"Har I en ledig plads til en nat?","sv":"Har ni en ledig båtplats för en natt?","nl":"Heeft u een vrije ligplaats voor één nacht?","pl":"Czy jest wolne miejsce na jedną noc?","cs":"Máte volné místo na jednu noc?","ru":"У вас есть свободное место на одну ночь?","uk":"У вас є вільне місце на одну ніч?","it":"Avete un posto libero per una notte?","fr":"Avez-vous une place libre pour une nuit ?","hr":"Imate li slobodan vez za jednu noć?","el":"Έχετε ελεύθερη θέση για μία νύχτα;"}},{"id":"h-masse","s":"hafen","t":{"de":"Unser Boot ist {loa} m lang, {beam} m breit und hat {draft} m Tiefgang.","en":"Our boat is {loa} m long, {beam} m wide and draws {draft} m.","da":"Vores båd er {loa} m lang, {beam} m bred og stikker {draft} m.","sv":"Vår båt är {loa} m lång, {beam} m bred och har {draft} m djupgående.","nl":"Onze boot is {loa} m lang, {beam} m breed en heeft {draft} m diepgang.","pl":"Nasza łódź ma {loa} m długości, {beam} m szerokości i {draft} m zanurzenia.","cs":"Naše loď je {loa} m dlouhá, {beam} m široká a má ponor {draft} m.","ru":"Наша лодка длиной {loa} м, шириной {beam} м, осадка {draft} м.","uk":"Наш човен завдовжки {loa} м, завширшки {beam} м, осадка {draft} м.","it":"La nostra barca è lunga {loa} m, larga {beam} m e ha un pescaggio di {draft} m.","fr":"Notre bateau mesure {loa} m de long, {beam} m de large et a un tirant d'eau de {draft} m.","hr":"Naš brod je dug {loa} m, širok {beam} m i ima gaz {draft} m.","el":"Το σκάφος μας έχει μήκος {loa} m, πλάτος {beam} m και βύθισμα {draft} m."}},{"id":"h-wo","s":"hafen","t":{"de":"Wo dürfen wir festmachen?","en":"Where may we moor?","da":"Hvor må vi fortøje?","sv":"Var får vi förtöja?","nl":"Waar mogen we aanmeren?","pl":"Gdzie możemy zacumować?","cs":"Kde můžeme uvázat loď?","ru":"Где нам можно пришвартоваться?","uk":"Де нам можна пришвартуватися?","it":"Dove possiamo ormeggiare?","fr":"Où pouvons-nous nous amarrer ?","hr":"Gdje se možemo vezati?","el":"Πού μπορούμε να δέσουμε;"}},{"id":"h-tiefe","s":"hafen","t":{"de":"Wie tief ist das Wasser am Liegeplatz?","en":"How deep is the water at the berth?","da":"Hvor dybt er vandet ved pladsen?","sv":"Hur djupt är det vid båtplatsen?","nl":"Hoe diep is het water bij de ligplaats?","pl":"Jaka jest głębokość przy miejscu postojowym?","cs":"Jak hluboká je voda u stání?","ru":"Какая глубина у причала?","uk":"Яка глибина біля причалу?","it":"Quanto è profonda l'acqua all'ormeggio?","fr":"Quelle est la profondeur à la place ?","hr":"Koliko je duboko more na vezu?","el":"Τι βάθος έχει στη θέση;"}},{"id":"h-paeckchen","s":"hafen","t":{"de":"Dürfen wir längsseits an einem anderen Boot festmachen?","en":"May we raft up alongside another boat?","da":"Må vi lægge os langs en anden båd?","sv":"Får vi lägga oss långsides en annan båt?","nl":"Mogen we langszij een andere boot aanmeren?","pl":"Czy możemy stanąć burtą do innej łodzi?","cs":"Můžeme se uvázat bokem k jiné lodi?","ru":"Можно встать лагом к другой лодке?","uk":"Чи можна стати лагом до іншого човна?","it":"Possiamo affiancarci a un'altra barca?","fr":"Pouvons-nous nous mettre à couple d'un autre bateau ?","hr":"Možemo li se vezati bočno uz drugi brod?","el":"Μπορούμε να δέσουμε δίπλα σε άλλο σκάφος;"}},{"id":"h-muring","s":"hafen","t":{"de":"Gibt es Muringleinen oder legen wir mit Anker an?","en":"Are there lazy lines, or do we moor with our anchor?","da":"Er der mooringliner, eller skal vi bruge anker?","sv":"Finns det mooringlinor, eller lägger vi till med ankare?","nl":"Zijn er mooringlijnen of meren we af met het anker?","pl":"Czy są muringi, czy cumujemy na kotwicy?","cs":"Jsou tu muringy, nebo kotvíme na vlastní kotvu?","ru":"Здесь есть муринги или швартуемся на якорь?","uk":"Тут є мурінги чи швартуємося на якір?","it":"Ci sono le trappe o ormeggiamo con l'ancora?","fr":"Y a-t-il des pendilles ou faut-il s'amarrer sur ancre ?","hr":"Ima li muringa ili se vežemo sidrom?","el":"Υπάρχουν μούρινγκ ή δένουμε με άγκυρα;"}},{"id":"h-leinen","s":"hafen","t":{"de":"Können Sie uns beim Anlegen mit den Leinen helfen?","en":"Could you help us with the lines when we come in?","da":"Kan du hjælpe os med fortøjningerne?","sv":"Kan du hjälpa oss med förtöjningarna?","nl":"Kunt u ons helpen met de lijnen bij het aanleggen?","pl":"Czy może Pan/Pani pomóc nam z cumami?","cs":"Můžete nám pomoct s lany při přistání?","ru":"Помогите нам, пожалуйста, со швартовами.","uk":"Допоможіть нам, будь ласка, зі швартовами.","it":"Può aiutarci con le cime all'ormeggio?","fr":"Pouvez-vous nous aider avec les amarres ?","hr":"Možete li nam pomoći s konopima pri pristajanju?","el":"Μπορείτε να μας βοηθήσετε με τα σχοινιά;"}},{"id":"h-preis","s":"hafen","t":{"de":"Wie viel kostet eine Nacht?","en":"How much is one night?","da":"Hvad koster en nat?","sv":"Vad kostar en natt?","nl":"Wat kost één nacht?","pl":"Ile kosztuje jedna noc?","cs":"Kolik stojí jedna noc?","ru":"Сколько стоит одна ночь?","uk":"Скільки коштує одна ніч?","it":"Quanto costa una notte?","fr":"Combien coûte une nuit ?","hr":"Koliko košta jedna noć?","el":"Πόσο κοστίζει μία νύχτα;"}},{"id":"h-bezahlen","s":"hafen","t":{"de":"Wo bezahlen wir das Hafengeld?","en":"Where do we pay the harbour fee?","da":"Hvor betaler vi havnepenge?","sv":"Var betalar vi hamnavgiften?","nl":"Waar betalen we het havengeld?","pl":"Gdzie płacimy opłatę portową?","cs":"Kde zaplatíme přístavní poplatek?","ru":"Где оплатить стоянку?","uk":"Де сплатити за стоянку?","it":"Dove paghiamo l'ormeggio?","fr":"Où payons-nous la taxe de port ?","hr":"Gdje plaćamo vez?","el":"Πού πληρώνουμε τα λιμενικά τέλη;"}},{"id":"h-buero","s":"hafen","t":{"de":"Wann ist das Hafenbüro geöffnet?","en":"When is the harbour office open?","da":"Hvornår har havnekontoret åbent?","sv":"När är hamnkontoret öppet?","nl":"Wanneer is het havenkantoor open?","pl":"Kiedy otwarte jest biuro portu?","cs":"Kdy je otevřená kancelář přístavu?","ru":"Когда открыт офис порта?","uk":"Коли працює офіс порту?","it":"Quando è aperto l'ufficio del porto?","fr":"Quand le bureau du port est-il ouvert ?","hr":"Kada je otvoren lučki ured?","el":"Πότε είναι ανοιχτό το γραφείο του λιμανιού;"}},{"id":"h-code","s":"hafen","t":{"de":"Wie lautet der Code für die Sanitäranlagen?","en":"What is the code for the washrooms?","da":"Hvad er koden til toiletter og bad?","sv":"Vad är koden till toaletter och dusch?","nl":"Wat is de code voor het sanitair?","pl":"Jaki jest kod do sanitariatów?","cs":"Jaký je kód k sociálnímu zařízení?","ru":"Какой код от душевых и туалетов?","uk":"Який код від душових і туалетів?","it":"Qual è il codice per i servizi?","fr":"Quel est le code des sanitaires ?","hr":"Koja je šifra za sanitarni čvor?","el":"Ποιος είναι ο κωδικός για τις τουαλέτες και τα ντους;"}},{"id":"h-auslaufen","s":"hafen","t":{"de":"Wir möchten morgen früh auslaufen.","en":"We'd like to leave early tomorrow morning.","da":"Vi vil gerne sejle tidligt i morgen.","sv":"Vi vill segla tidigt i morgon bitti.","nl":"We willen morgenvroeg vertrekken.","pl":"Chcemy wypłynąć jutro rano.","cs":"Chceme zítra brzy ráno vyplout.","ru":"Мы хотим выйти завтра рано утром.","uk":"Ми хочемо вийти завтра рано-вранці.","it":"Vorremmo partire domani mattina presto.","fr":"Nous voudrions partir demain tôt le matin.","hr":"Željeli bismo isploviti sutra rano ujutro.","el":"Θέλουμε να φύγουμε αύριο νωρίς το πρωί."}},{"id":"v-strom","s":"versorgung","t":{"de":"Wo bekommen wir Landstrom?","en":"Where can we get shore power?","da":"Hvor kan vi få landstrøm?","sv":"Var kan vi få landström?","nl":"Waar kunnen we walstroom krijgen?","pl":"Gdzie można podłączyć prąd z lądu?","cs":"Kde můžeme získat elektřinu z břehu?","ru":"Где можно подключиться к береговому электричеству?","uk":"Де можна підключитися до берегової електрики?","it":"Dove possiamo attaccarci alla corrente?","fr":"Où pouvons-nous avoir l'électricité à quai ?","hr":"Gdje možemo dobiti struju?","el":"Πού μπορούμε να πάρουμε ρεύμα;"}},{"id":"v-adapter","s":"versorgung","t":{"de":"Wir brauchen einen Adapter für den Stromanschluss.","en":"We need an adapter for the power socket.","da":"Vi har brug for en adapter til stikket.","sv":"Vi behöver en adapter till eluttaget.","nl":"We hebben een verloopstekker nodig voor de stroomaansluiting.","pl":"Potrzebujemy przejściówki do gniazdka.","cs":"Potřebujeme adaptér na elektrickou přípojku.","ru":"Нам нужен переходник для розетки.","uk":"Нам потрібен перехідник для розетки.","it":"Ci serve un adattatore per la presa.","fr":"Nous avons besoin d'un adaptateur pour la prise.","hr":"Treba nam adapter za priključak struje.","el":"Χρειαζόμαστε αντάπτορα για την πρίζα."}},{"id":"v-wasser","s":"versorgung","t":{"de":"Wo gibt es Trinkwasser?","en":"Where can we get drinking water?","da":"Hvor kan vi få drikkevand?","sv":"Var finns det dricksvatten?","nl":"Waar is drinkwater?","pl":"Gdzie jest woda pitna?","cs":"Kde je pitná voda?","ru":"Где можно набрать питьевую воду?","uk":"Де можна набрати питну воду?","it":"Dove c'è acqua potabile?","fr":"Où y a-t-il de l'eau potable ?","hr":"Gdje ima pitke vode?","el":"Πού υπάρχει πόσιμο νερό;"}},{"id":"v-tanke","s":"versorgung","t":{"de":"Wo ist die nächste Bootstankstelle?","en":"Where is the nearest fuel berth?","da":"Hvor er den nærmeste tankstation for både?","sv":"Var är närmaste båtmack?","nl":"Waar is het dichtstbijzijnde tankstation voor boten?","pl":"Gdzie jest najbliższa stacja paliw dla łodzi?","cs":"Kde je nejbližší čerpací stanice pro lodě?","ru":"Где ближайшая заправка для лодок?","uk":"Де найближча заправка для човнів?","it":"Dov'è il distributore per barche più vicino?","fr":"Où est la station de carburant pour bateaux la plus proche ?","hr":"Gdje je najbliža benzinska crpka za brodove?","el":"Πού είναι το πλησιέστερο πρατήριο καυσίμων για σκάφη;"}},{"id":"v-diesel","s":"versorgung","t":{"de":"Wir brauchen {n} Liter Diesel.","en":"We need {n} litres of diesel.","da":"Vi skal bruge {n} liter diesel.","sv":"Vi behöver {n} liter diesel.","nl":"We hebben {n} liter diesel nodig.","pl":"Potrzebujemy {n} l oleju napędowego.","cs":"Potřebujeme {n} l nafty.","ru":"Нам нужно {n} л дизельного топлива.","uk":"Нам потрібно {n} л дизельного палива.","it":"Ci servono {n} litri di gasolio.","fr":"Il nous faut {n} litres de gazole.","hr":"Trebamo {n} l dizela.","el":"Χρειαζόμαστε {n} λίτρα πετρέλαιο."}},{"id":"v-benzin","s":"versorgung","t":{"de":"Gibt es Benzin für den Außenborder?","en":"Is there petrol for the outboard?","da":"Har I benzin til påhængsmotoren?","sv":"Finns det bensin till utombordaren?","nl":"Is er benzine voor de buitenboordmotor?","pl":"Czy jest benzyna do silnika zaburtowego?","cs":"Máte benzín pro přívěsný motor?","ru":"Есть бензин для подвесного мотора?","uk":"Є бензин для підвісного мотора?","it":"C'è benzina per il fuoribordo?","fr":"Y a-t-il de l'essence pour le hors-bord ?","hr":"Ima li benzina za izvanbrodski motor?","el":"Υπάρχει βενζίνη για την εξωλέμβια;"}},{"id":"v-muell","s":"versorgung","t":{"de":"Wo können wir Müll entsorgen?","en":"Where can we leave our rubbish?","da":"Hvor kan vi smide affald?","sv":"Var kan vi slänga sopor?","nl":"Waar kunnen we afval kwijt?","pl":"Gdzie możemy wyrzucić śmieci?","cs":"Kde můžeme vyhodit odpadky?","ru":"Куда можно выбросить мусор?","uk":"Куди можна викинути сміття?","it":"Dove possiamo buttare la spazzatura?","fr":"Où pouvons-nous jeter nos déchets ?","hr":"Gdje možemo baciti smeće?","el":"Πού μπορούμε να πετάξουμε τα σκουπίδια;"}},{"id":"v-absaugung","s":"versorgung","t":{"de":"Wo ist die Fäkalienabsaugung?","en":"Where is the pump-out station?","da":"Hvor er tømmestationen til toilettanken?","sv":"Var finns septitömningen?","nl":"Waar is het vuilwaterinnamepunt?","pl":"Gdzie jest stacja odbioru nieczystości?","cs":"Kde je odsávání fekálií?","ru":"Где станция откачки фекальных вод?","uk":"Де станція відкачування фекальних вод?","it":"Dov'è la stazione di svuotamento delle acque nere?","fr":"Où est la station de pompage des eaux noires ?","hr":"Gdje je stanica za ispumpavanje fekalnih voda?","el":"Πού είναι ο σταθμός άντλησης λυμάτων;"}},{"id":"v-gas","s":"versorgung","t":{"de":"Wo kann ich eine Gasflasche tauschen?","en":"Where can I exchange a gas bottle?","da":"Hvor kan jeg bytte en gasflaske?","sv":"Var kan jag byta en gasolflaska?","nl":"Waar kan ik een gasfles omruilen?","pl":"Gdzie mogę wymienić butlę gazową?","cs":"Kde můžu vyměnit plynovou lahev?","ru":"Где можно поменять газовый баллон?","uk":"Де можна поміняти газовий балон?","it":"Dove posso cambiare una bombola del gas?","fr":"Où puis-je échanger une bouteille de gaz ?","hr":"Gdje mogu zamijeniti plinsku bocu?","el":"Πού μπορώ να αλλάξω φιάλη υγραερίου;"}},{"id":"v-supermarkt","s":"versorgung","t":{"de":"Wo ist der nächste Supermarkt?","en":"Where is the nearest supermarket?","da":"Hvor er det nærmeste supermarked?","sv":"Var är närmaste mataffär?","nl":"Waar is de dichtstbijzijnde supermarkt?","pl":"Gdzie jest najbliższy supermarket?","cs":"Kde je nejbližší supermarket?","ru":"Где ближайший супермаркет?","uk":"Де найближчий супермаркет?","it":"Dov'è il supermercato più vicino?","fr":"Où est le supermarché le plus proche ?","hr":"Gdje je najbliži supermarket?","el":"Πού είναι το πλησιέστερο σούπερ μάρκετ;"}},{"id":"v-waesche","s":"versorgung","t":{"de":"Gibt es hier eine Waschmaschine?","en":"Is there a washing machine here?","da":"Er der en vaskemaskine her?","sv":"Finns det en tvättmaskin här?","nl":"Is hier een wasmachine?","pl":"Czy jest tu pralka?","cs":"Je tu pračka?","ru":"Здесь есть стиральная машина?","uk":"Тут є пральна машина?","it":"C'è una lavatrice qui?","fr":"Y a-t-il une machine à laver ici ?","hr":"Ima li ovdje perilica rublja?","el":"Υπάρχει πλυντήριο εδώ;"}},{"id":"s-naechste","s":"schleuse","t":{"de":"Wann ist die nächste Schleusung?","en":"When is the next locking?","da":"Hvornår sluser I næste gang?","sv":"När är nästa slussning?","nl":"Wanneer is de volgende schutting?","pl":"Kiedy jest następne śluzowanie?","cs":"Kdy je další proplavení?","ru":"Когда следующее шлюзование?","uk":"Коли наступне шлюзування?","it":"Quando è il prossimo passaggio della chiusa?","fr":"À quelle heure est la prochaine éclusée ?","hr":"Kada je sljedeće prevođenje kroz prevodnicu?","el":"Πότε είναι η επόμενη διέλευση από τον υδατοφράκτη;"}},{"id":"s-bruecke","s":"schleuse","t":{"de":"Wann öffnet die Brücke?","en":"When does the bridge open?","da":"Hvornår åbner broen?","sv":"När öppnar bron?","nl":"Wanneer gaat de brug open?","pl":"Kiedy otwiera się most?","cs":"Kdy se otevírá most?","ru":"Когда разводят мост?","uk":"Коли розводять міст?","it":"Quando apre il ponte?","fr":"Quand le pont s'ouvre-t-il ?","hr":"Kada se otvara most?","el":"Πότε ανοίγει η γέφυρα;"}},{"id":"s-schleusen","s":"schleuse","t":{"de":"Wir möchten schleusen.","en":"We would like to go through the lock.","da":"Vi vil gerne sluses.","sv":"Vi vill slussa.","nl":"We willen schutten.","pl":"Chcemy przejść przez śluzę.","cs":"Chceme proplout komorou.","ru":"Мы хотим пройти шлюз.","uk":"Ми хочемо пройти шлюз.","it":"Vorremmo passare la chiusa.","fr":"Nous voudrions passer l'écluse.","hr":"Željeli bismo proći kroz prevodnicu.","el":"Θέλουμε να περάσουμε από τον υδατοφράκτη."}},{"id":"s-seite","s":"schleuse","t":{"de":"Auf welcher Seite sollen wir festmachen?","en":"Which side should we tie up on?","da":"Hvilken side skal vi fortøje i?","sv":"Vilken sida ska vi förtöja på?","nl":"Aan welke kant moeten we vastmaken?","pl":"Z której strony mamy się przycumować?","cs":"Na kterou stranu se máme uvázat?","ru":"С какой стороны нам швартоваться?","uk":"З якого боку нам швартуватися?","it":"Da che lato dobbiamo ormeggiare?","fr":"De quel côté devons-nous nous amarrer ?","hr":"Na koju stranu da se vežemo?","el":"Από ποια πλευρά να δέσουμε;"}},{"id":"s-warten","s":"schleuse","t":{"de":"Wie lange müssen wir warten?","en":"How long do we have to wait?","da":"Hvor længe skal vi vente?","sv":"Hur länge måste vi vänta?","nl":"Hoe lang moeten we wachten?","pl":"Jak długo musimy czekać?","cs":"Jak dlouho musíme čekat?","ru":"Сколько нам ждать?","uk":"Скільки нам чекати?","it":"Quanto dobbiamo aspettare?","fr":"Combien de temps devons-nous attendre ?","hr":"Koliko dugo moramo čekati?","el":"Πόση ώρα πρέπει να περιμένουμε;"}},{"id":"s-hoehe","s":"schleuse","t":{"de":"Wie hoch ist die Durchfahrtshöhe?","en":"What is the clearance under the bridge?","da":"Hvad er den frie højde?","sv":"Vilken är den fria höjden?","nl":"Wat is de doorvaarthoogte?","pl":"Jaka jest wysokość prześwitu?","cs":"Jaká je podjezdná výška?","ru":"Какая высота пролёта?","uk":"Яка висота прольоту?","it":"Qual è l'altezza libera sotto il ponte?","fr":"Quel est le tirant d'air sous le pont ?","hr":"Kolika je slobodna visina ispod mosta?","el":"Ποιο είναι το ελεύθερο ύψος κάτω από τη γέφυρα;"}},{"id":"s-mast","s":"schleuse","t":{"de":"Unser Mast ist {mast} m hoch über dem Wasser.","en":"Our mast is {mast} m above the water.","da":"Vores mast er {mast} m over vandet.","sv":"Vår mast är {mast} m över vattnet.","nl":"Onze mast is {mast} m boven water.","pl":"Nasz maszt ma {mast} m nad wodą.","cs":"Náš stěžeň je {mast} m nad vodou.","ru":"Наша мачта {mast} м над водой.","uk":"Наша щогла {mast} м над водою.","it":"Il nostro albero è alto {mast} m sull'acqua.","fr":"Notre mât est à {mast} m au-dessus de l'eau.","hr":"Naš jarbol je {mast} m iznad vode.","el":"Το κατάρτι μας είναι {mast} m πάνω από το νερό."}},{"id":"w-morgen","s":"wetter","t":{"de":"Wie wird das Wetter morgen?","en":"What will the weather be like tomorrow?","da":"Hvordan bliver vejret i morgen?","sv":"Hur blir vädret i morgon?","nl":"Hoe wordt het weer morgen?","pl":"Jaka będzie jutro pogoda?","cs":"Jaké bude zítra počasí?","ru":"Какая погода будет завтра?","uk":"Яка погода буде завтра?","it":"Che tempo farà domani?","fr":"Quel temps fera-t-il demain ?","hr":"Kakvo će vrijeme biti sutra?","el":"Τι καιρό θα κάνει αύριο;"}},{"id":"w-sturm","s":"wetter","t":{"de":"Gibt es eine Sturmwarnung?","en":"Is there a gale warning?","da":"Er der stormvarsel?","sv":"Finns det stormvarning?","nl":"Is er een stormwaarschuwing?","pl":"Czy jest ostrzeżenie sztormowe?","cs":"Je vyhlášena výstraha před bouří?","ru":"Есть штормовое предупреждение?","uk":"Є штормове попередження?","it":"C'è un avviso di burrasca?","fr":"Y a-t-il un avis de coup de vent ?","hr":"Ima li upozorenja na nevrijeme?","el":"Υπάρχει προειδοποίηση για θυελλώδεις ανέμους;"}},{"id":"w-einfahrt","s":"wetter","t":{"de":"Ist die Einfahrt bei diesem Wind sicher?","en":"Is the entrance safe in this wind?","da":"Er indsejlingen sikker i den her vind?","sv":"Är inloppet säkert i den här vinden?","nl":"Is de ingang veilig bij deze wind?","pl":"Czy wejście jest bezpieczne przy takim wietrze?","cs":"Je vjezd při tomto větru bezpečný?","ru":"Безопасен ли вход при таком ветре?","uk":"Чи безпечний вхід за такого вітру?","it":"L'ingresso è sicuro con questo vento?","fr":"L'entrée est-elle sûre avec ce vent ?","hr":"Je li ulaz siguran po ovom vjetru?","el":"Είναι ασφαλής η είσοδος με αυτόν τον άνεμο;"}},{"id":"w-untiefen","s":"wetter","t":{"de":"Gibt es hier Untiefen oder Hindernisse?","en":"Are there shallows or obstructions here?","da":"Er der grunde eller forhindringer her?","sv":"Finns det grund eller hinder här?","nl":"Zijn hier ondieptes of obstakels?","pl":"Czy są tu mielizny lub przeszkody?","cs":"Jsou tu mělčiny nebo překážky?","ru":"Здесь есть мели или препятствия?","uk":"Тут є мілини чи перешкоди?","it":"Ci sono secche o ostacoli qui?","fr":"Y a-t-il des hauts-fonds ou des obstacles ici ?","hr":"Ima li ovdje plićina ili prepreka?","el":"Υπάρχουν ξέρες ή εμπόδια εδώ;"}},{"id":"w-ankern","s":"wetter","t":{"de":"Wo können wir sicher ankern?","en":"Where can we anchor safely?","da":"Hvor kan vi ankre sikkert?","sv":"Var kan vi ankra säkert?","nl":"Waar kunnen we veilig ankeren?","pl":"Gdzie możemy bezpiecznie zakotwiczyć?","cs":"Kde můžeme bezpečně zakotvit?","ru":"Где можно безопасно встать на якорь?","uk":"Де можна безпечно стати на якір?","it":"Dove possiamo ancorare in sicurezza?","fr":"Où pouvons-nous mouiller en sécurité ?","hr":"Gdje možemo sigurno usidriti?","el":"Πού μπορούμε να αγκυροβολήσουμε με ασφάλεια;"}},{"id":"w-gesperrt","s":"wetter","t":{"de":"Ist dieses Gebiet gesperrt?","en":"Is this area closed?","da":"Er dette område spærret?","sv":"Är det här området avstängt?","nl":"Is dit gebied afgesloten?","pl":"Czy ten obszar jest zamknięty?","cs":"Je tato oblast uzavřená?","ru":"Этот район закрыт?","uk":"Цей район закритий?","it":"Quest'area è interdetta?","fr":"Cette zone est-elle interdite ?","hr":"Je li ovo područje zatvoreno?","el":"Είναι κλειστή αυτή η περιοχή;"}},{"id":"t-motor","s":"technik","t":{"de":"Unser Motor springt nicht an.","en":"Our engine won't start.","da":"Vores motor vil ikke starte.","sv":"Vår motor startar inte.","nl":"Onze motor start niet.","pl":"Nasz silnik nie chce zapalić.","cs":"Náš motor nechce naskočit.","ru":"Наш мотор не заводится.","uk":"Наш мотор не заводиться.","it":"Il nostro motore non parte.","fr":"Notre moteur ne démarre pas.","hr":"Naš motor ne pali.","el":"Η μηχανή μας δεν παίρνει μπρος."}},{"id":"t-werkstatt","s":"technik","t":{"de":"Gibt es hier eine Werkstatt oder einen Mechaniker?","en":"Is there a workshop or a mechanic here?","da":"Er der et værksted eller en mekaniker her?","sv":"Finns det en verkstad eller mekaniker här?","nl":"Is hier een werkplaats of een monteur?","pl":"Czy jest tu warsztat albo mechanik?","cs":"Je tu dílna nebo mechanik?","ru":"Здесь есть мастерская или механик?","uk":"Тут є майстерня чи механік?","it":"C'è un'officina o un meccanico qui?","fr":"Y a-t-il un atelier ou un mécanicien ici ?","hr":"Ima li ovdje servis ili mehaničar?","el":"Υπάρχει συνεργείο ή μηχανικός εδώ;"}},{"id":"t-teile","s":"technik","t":{"de":"Wo bekomme ich Ersatzteile?","en":"Where can I get spare parts?","da":"Hvor kan jeg få reservedele?","sv":"Var kan jag få tag på reservdelar?","nl":"Waar kan ik onderdelen krijgen?","pl":"Gdzie dostanę części zamienne?","cs":"Kde seženu náhradní díly?","ru":"Где можно купить запчасти?","uk":"Де можна купити запчастини?","it":"Dove trovo i pezzi di ricambio?","fr":"Où puis-je trouver des pièces de rechange ?","hr":"Gdje mogu nabaviti rezervne dijelove?","el":"Πού μπορώ να βρω ανταλλακτικά;"}},{"id":"t-kran","s":"technik","t":{"de":"Gibt es einen Kran oder eine Slipanlage?","en":"Is there a crane or a slipway?","da":"Er der en kran eller et slæbested?","sv":"Finns det en kran eller en sjösättningsramp?","nl":"Is er een kraan of een helling?","pl":"Czy jest dźwig albo slip?","cs":"Je tu jeřáb nebo skluz?","ru":"Здесь есть кран или слип?","uk":"Тут є кран чи сліп?","it":"C'è una gru o uno scivolo?","fr":"Y a-t-il une grue ou une cale de mise à l'eau ?","hr":"Ima li dizalica ili istezalište?","el":"Υπάρχει γερανός ή ράμπα καθέλκυσης;"}},{"id":"t-wasser","s":"technik","t":{"de":"Wir haben Wasser im Boot.","en":"We are taking on water.","da":"Vi har vand i båden.","sv":"Vi har vatten i båten.","nl":"We maken water.","pl":"Mamy wodę w łodzi.","cs":"Máme v lodi vodu.","ru":"У нас в лодке вода.","uk":"У нас у човні вода.","it":"Stiamo imbarcando acqua.","fr":"Nous avons une voie d'eau.","hr":"Imamo vode u brodu.","el":"Μπαίνουν νερά στο σκάφος."},"urgent":true},{"id":"t-batterie","s":"technik","t":{"de":"Die Batterie ist leer.","en":"The battery is flat.","da":"Batteriet er fladt.","sv":"Batteriet är urladdat.","nl":"De accu is leeg.","pl":"Akumulator jest rozładowany.","cs":"Baterie je vybitá.","ru":"Аккумулятор сел.","uk":"Акумулятор розрядився.","it":"La batteria è scarica.","fr":"La batterie est à plat.","hr":"Akumulator je prazan.","el":"Η μπαταρία άδειασε."}},{"id":"n-arzt","s":"notfall","t":{"de":"Bitte rufen Sie einen Arzt.","en":"Please call a doctor.","da":"Ring venligst efter en læge.","sv":"Ring efter en läkare, tack.","nl":"Bel alstublieft een arts.","pl":"Proszę wezwać lekarza.","cs":"Zavolejte prosím lékaře.","ru":"Пожалуйста, вызовите врача.","uk":"Будь ласка, викличте лікаря.","it":"Per favore, chiami un medico.","fr":"Appelez un médecin, s'il vous plaît.","hr":"Molim vas, pozovite liječnika.","el":"Παρακαλώ καλέστε γιατρό."},"urgent":true},{"id":"n-verletzt","s":"notfall","t":{"de":"Eine Person an Bord ist verletzt.","en":"Someone on board is injured.","da":"En person om bord er kommet til skade.","sv":"En person ombord är skadad.","nl":"Iemand aan boord is gewond.","pl":"Osoba na pokładzie jest ranna.","cs":"Osoba na palubě je zraněná.","ru":"Человек на борту ранен.","uk":"Людина на борту поранена.","it":"Una persona a bordo è ferita.","fr":"Une personne à bord est blessée.","hr":"Osoba na brodu je ozlijeđena.","el":"Ένα άτομο στο σκάφος είναι τραυματισμένο."},"urgent":true},{"id":"n-seenot","s":"notfall","t":{"de":"Bitte rufen Sie die Seenotrettung.","en":"Please call the sea rescue service.","da":"Ring venligst til søredningen.","sv":"Ring sjöräddningen, tack.","nl":"Bel alstublieft de kustwacht.","pl":"Proszę wezwać ratownictwo morskie.","cs":"Zavolejte prosím námořní záchrannou službu.","ru":"Пожалуйста, вызовите морских спасателей.","uk":"Будь ласка, викличте морських рятувальників.","it":"Per favore, chiami la Guardia Costiera.","fr":"Appelez les secours en mer, s'il vous plaît.","hr":"Molim vas, pozovite službu spašavanja na moru.","el":"Παρακαλώ καλέστε το Λιμενικό."},"urgent":true},{"id":"n-hilfe","s":"notfall","t":{"de":"Wir brauchen dringend Hilfe.","en":"We urgently need help.","da":"Vi har akut brug for hjælp.","sv":"Vi behöver hjälp omedelbart.","nl":"We hebben dringend hulp nodig.","pl":"Pilnie potrzebujemy pomocy.","cs":"Naléhavě potřebujeme pomoc.","ru":"Нам срочно нужна помощь.","uk":"Нам терміново потрібна допомога.","it":"Abbiamo urgente bisogno di aiuto.","fr":"Nous avons besoin d'aide d'urgence.","hr":"Hitno nam treba pomoć.","el":"Χρειαζόμαστε επειγόντως βοήθεια."},"urgent":true},{"id":"n-apotheke","s":"notfall","t":{"de":"Wo ist die nächste Apotheke?","en":"Where is the nearest pharmacy?","da":"Hvor er det nærmeste apotek?","sv":"Var är närmaste apotek?","nl":"Waar is de dichtstbijzijnde apotheek?","pl":"Gdzie jest najbliższa apteka?","cs":"Kde je nejbližší lékárna?","ru":"Где ближайшая аптека?","uk":"Де найближча аптека?","it":"Dov'è la farmacia più vicina?","fr":"Où est la pharmacie la plus proche ?","hr":"Gdje je najbliža ljekarna?","el":"Πού είναι το πλησιέστερο φαρμακείο;"}},{"id":"n-krankenhaus","s":"notfall","t":{"de":"Wo ist das nächste Krankenhaus?","en":"Where is the nearest hospital?","da":"Hvor er det nærmeste hospital?","sv":"Var är närmaste sjukhus?","nl":"Waar is het dichtstbijzijnde ziekenhuis?","pl":"Gdzie jest najbliższy szpital?","cs":"Kde je nejbližší nemocnice?","ru":"Где ближайшая больница?","uk":"Де найближча лікарня?","it":"Dov'è l'ospedale più vicino?","fr":"Où est l'hôpital le plus proche ?","hr":"Gdje je najbliža bolnica?","el":"Πού είναι το πλησιέστερο νοσοκομείο;"}},{"id":"n-schmerz","s":"notfall","t":{"de":"Ich habe hier Schmerzen.","en":"It hurts here.","da":"Det gør ondt her.","sv":"Det gör ont här.","nl":"Het doet hier pijn.","pl":"Boli mnie tutaj.","cs":"Bolí mě tady.","ru":"У меня болит здесь.","uk":"У мене болить тут.","it":"Mi fa male qui.","fr":"J'ai mal ici.","hr":"Boli me ovdje.","el":"Πονάω εδώ."}},{"id":"a-papiere","s":"behoerden","t":{"de":"Hier sind unsere Bootspapiere.","en":"Here are our boat's papers.","da":"Her er bådens papirer.","sv":"Här är båtens papper.","nl":"Hier zijn de papieren van de boot.","pl":"Oto dokumenty naszej łodzi.","cs":"Tady jsou doklady lodi.","ru":"Вот документы на нашу лодку.","uk":"Ось документи на наш човен.","it":"Ecco i documenti della barca.","fr":"Voici les papiers du bateau.","hr":"Ovo su dokumenti broda.","el":"Ορίστε τα έγγραφα του σκάφους."}},{"id":"a-crew","s":"behoerden","t":{"de":"Hier ist die Crewliste.","en":"Here is the crew list.","da":"Her er besætningslisten.","sv":"Här är besättningslistan.","nl":"Hier is de bemanningslijst.","pl":"Oto lista załogi.","cs":"Tady je seznam posádky.","ru":"Вот список экипажа.","uk":"Ось список екіпажу.","it":"Ecco la lista dell'equipaggio.","fr":"Voici la liste d'équipage.","hr":"Ovo je popis posade.","el":"Ορίστε η λίστα πληρώματος."}},{"id":"a-personen","s":"behoerden","t":{"de":"Wir sind {n} Personen an Bord.","en":"There are {n} people on board.","da":"Vi er {n} personer om bord.","sv":"Vi är {n} personer ombord.","nl":"We zijn met {n} personen aan boord.","pl":"Na pokładzie jest {n} osób.","cs":"Na palubě je {n} osob.","ru":"На борту {n} человек.","uk":"На борту {n} осіб.","it":"Siamo in {n} a bordo.","fr":"Nous sommes {n} personnes à bord.","hr":"Na brodu nas je {n}.","el":"Είμαστε {n} άτομα στο σκάφος."}},{"id":"a-einklarieren","s":"behoerden","t":{"de":"Wo müssen wir einklarieren?","en":"Where do we have to clear in?","da":"Hvor skal vi klarere ind?","sv":"Var ska vi klarera in?","nl":"Waar moeten we inklaren?","pl":"Gdzie musimy dokonać odprawy?","cs":"Kde musíme provést celní odbavení?","ru":"Где нам пройти оформление прихода?","uk":"Де нам пройти оформлення приходу?","it":"Dove dobbiamo fare le pratiche di ingresso?","fr":"Où devons-nous faire les formalités d'entrée ?","hr":"Gdje moramo prijaviti uplovljenje?","el":"Πού πρέπει να κάνουμε τις διατυπώσεις εισόδου;"}},{"id":"a-genehmigung","s":"behoerden","t":{"de":"Brauchen wir eine Genehmigung für dieses Gebiet?","en":"Do we need a permit for this area?","da":"Skal vi have tilladelse til dette område?","sv":"Behöver vi tillstånd för det här området?","nl":"Hebben we een vergunning nodig voor dit gebied?","pl":"Czy potrzebujemy zezwolenia na ten obszar?","cs":"Potřebujeme do této oblasti povolení?","ru":"Нужно ли разрешение для этого района?","uk":"Чи потрібен дозвіл для цього району?","it":"Serve un permesso per questa zona?","fr":"Faut-il une autorisation pour cette zone ?","hr":"Trebamo li dozvolu za ovo područje?","el":"Χρειαζόμαστε άδεια για αυτή την περιοχή;"}},{"id":"c-uebernehmen","s":"charter","t":{"de":"Wann können wir das Boot übernehmen?","en":"When can we take over the boat?","da":"Hvornår kan vi overtage båden?","sv":"När kan vi ta över båten?","nl":"Wanneer kunnen we de boot overnemen?","pl":"Kiedy możemy przejąć łódź?","cs":"Kdy můžeme převzít loď?","ru":"Когда мы можем принять лодку?","uk":"Коли ми можемо прийняти човен?","it":"Quando possiamo prendere la barca?","fr":"Quand pouvons-nous prendre le bateau ?","hr":"Kada možemo preuzeti brod?","el":"Πότε μπορούμε να παραλάβουμε το σκάφος;"}},{"id":"c-sicherheit","s":"charter","t":{"de":"Bitte zeigen Sie uns die Sicherheitsausrüstung.","en":"Please show us the safety equipment.","da":"Vis os venligst sikkerhedsudstyret.","sv":"Visa oss säkerhetsutrustningen, tack.","nl":"Kunt u ons de veiligheidsuitrusting laten zien?","pl":"Proszę pokazać nam wyposażenie bezpieczeństwa.","cs":"Ukažte nám prosím bezpečnostní výbavu.","ru":"Покажите нам, пожалуйста, спасательное оборудование.","uk":"Покажіть нам, будь ласка, рятувальне обладнання.","it":"Ci mostri le dotazioni di sicurezza, per favore.","fr":"Montrez-nous l'équipement de sécurité, s'il vous plaît.","hr":"Molim vas, pokažite nam sigurnosnu opremu.","el":"Δείξτε μας τον εξοπλισμό ασφαλείας, παρακαλώ."}},{"id":"c-westen","s":"charter","t":{"de":"Wo sind die Rettungswesten?","en":"Where are the life jackets?","da":"Hvor er redningsvestene?","sv":"Var finns flytvästarna?","nl":"Waar zijn de reddingsvesten?","pl":"Gdzie są kamizelki ratunkowe?","cs":"Kde jsou záchranné vesty?","ru":"Где спасательные жилеты?","uk":"Де рятувальні жилети?","it":"Dove sono i giubbotti di salvataggio?","fr":"Où sont les gilets de sauvetage ?","hr":"Gdje su prsluci za spašavanje?","el":"Πού είναι τα σωσίβια;"}},{"id":"c-tank","s":"charter","t":{"de":"Ist der Tank voll?","en":"Is the tank full?","da":"Er tanken fuld?","sv":"Är tanken full?","nl":"Is de tank vol?","pl":"Czy zbiornik jest pełny?","cs":"Je nádrž plná?","ru":"Бак полный?","uk":"Бак повний?","it":"Il serbatoio è pieno?","fr":"Le réservoir est-il plein ?","hr":"Je li spremnik pun?","el":"Είναι γεμάτο το ντεπόζιτο;"}},{"id":"c-schaden","s":"charter","t":{"de":"Dieser Schaden war schon vorher da.","en":"This damage was already there before.","da":"Den skade var der allerede.","sv":"Den här skadan fanns redan innan.","nl":"Deze schade was er al.","pl":"Ta szkoda była już wcześniej.","cs":"Toto poškození tu bylo už předtím.","ru":"Это повреждение было и раньше.","uk":"Це пошкодження було й раніше.","it":"Questo danno c'era già prima.","fr":"Ce dommage existait déjà.","hr":"Ovo oštećenje je već bilo prije.","el":"Αυτή η ζημιά υπήρχε ήδη."}},{"id":"c-rueckgabe","s":"charter","t":{"de":"Wann müssen wir das Boot zurückgeben?","en":"When do we have to return the boat?","da":"Hvornår skal vi aflevere båden?","sv":"När ska vi lämna tillbaka båten?","nl":"Wanneer moeten we de boot terugbrengen?","pl":"Kiedy musimy oddać łódź?","cs":"Kdy musíme loď vrátit?","ru":"Когда нам нужно вернуть лодку?","uk":"Коли нам потрібно повернути човен?","it":"Quando dobbiamo restituire la barca?","fr":"Quand devons-nous rendre le bateau ?","hr":"Kada moramo vratiti brod?","el":"Πότε πρέπει να επιστρέψουμε το σκάφος;"}},{"id":"l-tisch","s":"landgang","t":{"de":"Einen Tisch für {n} Personen, bitte.","en":"A table for {n}, please.","da":"Et bord til {n} personer, tak.","sv":"Ett bord för {n} personer, tack.","nl":"Een tafel voor {n} personen, alstublieft.","pl":"Stolik dla {n} osób, proszę.","cs":"Stůl pro {n} osob, prosím.","ru":"Столик на {n} человек, пожалуйста.","uk":"Столик на {n} осіб, будь ласка.","it":"Un tavolo per {n} persone, per favore.","fr":"Une table pour {n} personnes, s'il vous plaît.","hr":"Stol za {n} osoba, molim.","el":"Ένα τραπέζι για {n} άτομα, παρακαλώ."}},{"id":"l-rechnung","s":"landgang","t":{"de":"Die Rechnung, bitte.","en":"The bill, please.","da":"Regningen, tak.","sv":"Notan, tack.","nl":"De rekening, alstublieft.","pl":"Poproszę rachunek.","cs":"Účet, prosím.","ru":"Счёт, пожалуйста.","uk":"Рахунок, будь ласка.","it":"Il conto, per favore.","fr":"L'addition, s'il vous plaît.","hr":"Račun, molim.","el":"Τον λογαριασμό, παρακαλώ."}},{"id":"l-karte","s":"landgang","t":{"de":"Kann ich mit Karte bezahlen?","en":"Can I pay by card?","da":"Kan jeg betale med kort?","sv":"Kan jag betala med kort?","nl":"Kan ik met een kaart betalen?","pl":"Czy mogę zapłacić kartą?","cs":"Můžu platit kartou?","ru":"Можно оплатить картой?","uk":"Можна оплатити карткою?","it":"Posso pagare con la carta?","fr":"Puis-je payer par carte ?","hr":"Mogu li platiti karticom?","el":"Μπορώ να πληρώσω με κάρτα;"}},{"id":"l-baecker","s":"landgang","t":{"de":"Gibt es einen Bäcker in der Nähe?","en":"Is there a bakery nearby?","da":"Er der en bager i nærheden?","sv":"Finns det ett bageri i närheten?","nl":"Is er een bakker in de buurt?","pl":"Czy jest w pobliżu piekarnia?","cs":"Je tu poblíž pekárna?","ru":"Здесь рядом есть пекарня?","uk":"Тут поруч є пекарня?","it":"C'è un panificio qui vicino?","fr":"Y a-t-il une boulangerie près d'ici ?","hr":"Ima li pekarnica u blizini?","el":"Υπάρχει φούρνος εδώ κοντά;"}},{"id":"l-bus","s":"landgang","t":{"de":"Wo ist die nächste Bushaltestelle?","en":"Where is the nearest bus stop?","da":"Hvor er det nærmeste busstoppested?","sv":"Var är närmaste busshållplats?","nl":"Waar is de dichtstbijzijnde bushalte?","pl":"Gdzie jest najbliższy przystanek autobusowy?","cs":"Kde je nejbližší autobusová zastávka?","ru":"Где ближайшая автобусная остановка?","uk":"Де найближча автобусна зупинка?","it":"Dov'è la fermata dell'autobus più vicina?","fr":"Où est l'arrêt de bus le plus proche ?","hr":"Gdje je najbliža autobusna stanica?","el":"Πού είναι η πλησιέστερη στάση λεωφορείου;"}}],"answers":[{"id":"a-ja","t":{"de":"Ja.","en":"Yes.","da":"Ja.","sv":"Ja.","nl":"Ja.","pl":"Tak.","cs":"Ano.","ru":"Да.","uk":"Так.","it":"Sì.","fr":"Oui.","hr":"Da.","el":"Ναι."}},{"id":"a-nein","t":{"de":"Nein.","en":"No.","da":"Nej.","sv":"Nej.","nl":"Nee.","pl":"Nie.","cs":"Ne.","ru":"Нет.","uk":"Ні.","it":"No.","fr":"Non.","hr":"Ne.","el":"Όχι."}},{"id":"a-warten","t":{"de":"Bitte warten Sie einen Moment.","en":"Please wait a moment.","da":"Vent et øjeblik.","sv":"Vänta ett ögonblick.","nl":"Wacht u even.","pl":"Proszę chwilę poczekać.","cs":"Počkejte prosím chvíli.","ru":"Подождите минутку.","uk":"Зачекайте хвилинку.","it":"Aspetti un momento.","fr":"Attendez un instant.","hr":"Pričekajte trenutak.","el":"Περιμένετε μια στιγμή."}},{"id":"a-hier","t":{"de":"Hier.","en":"Here.","da":"Her.","sv":"Här.","nl":"Hier.","pl":"Tutaj.","cs":"Tady.","ru":"Здесь.","uk":"Тут.","it":"Qui.","fr":"Ici.","hr":"Ovdje.","el":"Εδώ."}},{"id":"a-dort","t":{"de":"Dort drüben.","en":"Over there.","da":"Derovre.","sv":"Där borta.","nl":"Daar.","pl":"Tam.","cs":"Tamhle.","ru":"Вон там.","uk":"Он там.","it":"Laggiù.","fr":"Là-bas.","hr":"Tamo.","el":"Εκεί πέρα."}},{"id":"a-jetzt","t":{"de":"Jetzt.","en":"Now.","da":"Nu.","sv":"Nu.","nl":"Nu.","pl":"Teraz.","cs":"Teď.","ru":"Сейчас.","uk":"Зараз.","it":"Adesso.","fr":"Maintenant.","hr":"Sada.","el":"Τώρα."}},{"id":"a-spaeter","t":{"de":"Später.","en":"Later.","da":"Senere.","sv":"Senare.","nl":"Later.","pl":"Później.","cs":"Později.","ru":"Позже.","uk":"Пізніше.","it":"Più tardi.","fr":"Plus tard.","hr":"Kasnije.","el":"Αργότερα."}},{"id":"a-heute","t":{"de":"Heute.","en":"Today.","da":"I dag.","sv":"I dag.","nl":"Vandaag.","pl":"Dzisiaj.","cs":"Dnes.","ru":"Сегодня.","uk":"Сьогодні.","it":"Oggi.","fr":"Aujourd'hui.","hr":"Danas.","el":"Σήμερα."}},{"id":"a-morgen","t":{"de":"Morgen.","en":"Tomorrow.","da":"I morgen.","sv":"I morgon.","nl":"Morgen.","pl":"Jutro.","cs":"Zítra.","ru":"Завтра.","uk":"Завтра.","it":"Domani.","fr":"Demain.","hr":"Sutra.","el":"Αύριο."}},{"id":"a-voll","t":{"de":"Kein Platz frei.","en":"No space available.","da":"Der er ingen ledig plads.","sv":"Det finns ingen ledig plats.","nl":"Er is geen plaats vrij.","pl":"Brak wolnych miejsc.","cs":"Není volné místo.","ru":"Свободных мест нет.","uk":"Вільних місць немає.","it":"Non c'è posto.","fr":"Il n'y a pas de place.","hr":"Nema slobodnog mjesta.","el":"Δεν υπάρχει ελεύθερη θέση."}},{"id":"a-zu","t":{"de":"Geschlossen.","en":"Closed.","da":"Lukket.","sv":"Stängt.","nl":"Gesloten.","pl":"Zamknięte.","cs":"Zavřeno.","ru":"Закрыто.","uk":"Зачинено.","it":"Chiuso.","fr":"Fermé.","hr":"Zatvoreno.","el":"Κλειστό."}},{"id":"a-frei","t":{"de":"Kostenlos.","en":"Free of charge.","da":"Gratis.","sv":"Gratis.","nl":"Gratis.","pl":"Bezpłatnie.","cs":"Zdarma.","ru":"Бесплатно.","uk":"Безкоштовно.","it":"Gratis.","fr":"Gratuit.","hr":"Besplatno.","el":"Δωρεάν."}},{"id":"a-weiss","t":{"de":"Ich weiß es nicht.","en":"I don't know.","da":"Det ved jeg ikke.","sv":"Jag vet inte.","nl":"Dat weet ik niet.","pl":"Nie wiem.","cs":"Nevím.","ru":"Я не знаю.","uk":"Я не знаю.","it":"Non lo so.","fr":"Je ne sais pas.","hr":"Ne znam.","el":"Δεν ξέρω."}},{"id":"a-funk","t":{"de":"Bitte rufen Sie über UKW-Funk.","en":"Please call on VHF radio.","da":"Kald venligst op på VHF.","sv":"Anropa på VHF, tack.","nl":"Roep alstublieft op via de marifoon.","pl":"Proszę wywołać przez radio UKF.","cs":"Volejte prosím vysílačkou VKV.","ru":"Вызовите, пожалуйста, по УКВ-радио.","uk":"Викличте, будь ласка, по УКХ-радіо.","it":"Chiami via radio VHF, per favore.","fr":"Appelez par VHF, s'il vous plaît.","hr":"Molim vas, pozovite preko VHF radija.","el":"Καλέστε από τον ασύρματο VHF, παρακαλώ."}}],"ui":{"answerPrompt":{"de":"Bitte tippen Sie Ihre Antwort an.","en":"Please tap your answer.","da":"Tryk venligst på dit svar.","sv":"Tryck på ditt svar.","nl":"Tik alstublieft uw antwoord aan.","pl":"Proszę dotknąć odpowiedzi.","cs":"Klepněte prosím na svou odpověď.","ru":"Пожалуйста, нажмите на ваш ответ.","uk":"Будь ласка, натисніть на вашу відповідь.","it":"Tocchi la sua risposta, per favore.","fr":"Touchez votre réponse, s'il vous plaît.","hr":"Molim vas, dodirnite svoj odgovor.","el":"Πατήστε την απάντησή σας, παρακαλώ."},"numberPrompt":{"de":"Oder geben Sie eine Zahl ein (Preis, Uhrzeit, Platznummer):","en":"Or type a number (price, time, berth number):","da":"Eller skriv et tal (pris, klokkeslæt, pladsnummer):","sv":"Eller skriv ett nummer (pris, klockslag, platsnummer):","nl":"Of typ een getal (prijs, tijd, ligplaatsnummer):","pl":"Albo proszę wpisać liczbę (cena, godzina, numer miejsca):","cs":"Nebo zadejte číslo (cena, čas, číslo místa):","ru":"Или введите число (цена, время, номер места):","uk":"Або введіть число (ціна, час, номер місця):","it":"Oppure scriva un numero (prezzo, ora, numero del posto):","fr":"Ou tapez un nombre (prix, heure, numéro de place) :","hr":"Ili upišite broj (cijena, vrijeme, broj veza):","el":"Ή πληκτρολογήστε έναν αριθμό (τιμή, ώρα, αριθμό θέσης):"}}};
+/* Bordsprache – offline language aid for the Skipper apps and the stand-alone app. Stand-alone: no other core file needed
+   (same pattern as core/platform/theme-kit.js). Three layers:
+     1. Phrasebook: curated sentences per situation, "show" mode for the person opposite, answers they can tap, speech.
+        Pure data, always offline, no download.
+     2. Photo & text: OCR (Tesseract) and machine translation (Bergamot / Firefox Translations models), both on the device.
+        Engines and models come as language packs, downloaded once, verified (SHA-256) and kept in IndexedDB.
+     3. Pack manager: what is installed is checked against the stored files, not against a flag.
+
+   SkLang.init({
+     mount: element,            where the module renders (required)
+     data: object,              phrase set (sprachen/data/phrases-*.json, required)
+     key: 'skipperOst.lang',    localStorage prefix and IndexedDB name
+     t: fn(german) -> text,     host translation of the UI (optional); unknown texts fall back to the built-in table, then German
+     ui: 'de' | 'me',           UI language; 'me' = follows the "I speak" choice (stand-alone app)
+     me: 'de', meLangs: [...],  default and selectable own languages (default: all of the phrase set)
+     them: ['da','sv',...],     partner languages of the area, listed first, first one = default; all others follow
+     packBase: url,             folder with lang-packs.json and the pack files ('' = photo/text off, set by hand in the pack tab)
+     fetchFile: fn(url, onBytes(n), signal) -> Promise<ArrayBuffer>   (optional, e.g. native download in the Android shell)
+     bundled: url,              folder inside the app with lang-packs.json and all pack files (stand-alone APK): nothing to
+                                download, nothing in IndexedDB, no pack tab, photo and text work from the first start
+     tab: 'ocr',                tab shown on first start (default 'phr')
+     photoNote: text | {de:…}   shown on the photo and pack tabs while no pack source is set (web version: photo only in the app)
+     vars: {loa,beam,draft,mast}  boat values for the placeholders (optional)
+     emergency: text | {de:…,ru:…}  line shown with urgent phrases, per UI language (default: VHF 16 and 112)
+   }) -> api {setMe, setThem, tab, state, packs:{status, install, remove}}
+   No network request happens unless the user opens the pack tab or starts a download. */
+var SkLang=(function(){
+  'use strict';
+  /* ---------- languages ---------- */
+  var L={de:{ocr:'deu',tts:'de-DE'},en:{ocr:'eng',tts:'en-GB'},da:{ocr:'dan',tts:'da-DK'},sv:{ocr:'swe',tts:'sv-SE'},nl:{ocr:'nld',tts:'nl-NL'},
+    pl:{ocr:'pol',tts:'pl-PL'},cs:{ocr:'ces',tts:'cs-CZ'},ru:{ocr:'rus',tts:'ru-RU'},uk:{ocr:'ukr',tts:'uk-UA'},it:{ocr:'ita',tts:'it-IT'},
+    fr:{ocr:'fra',tts:'fr-FR'},hr:{ocr:'hrv',tts:'hr-HR'},el:{ocr:'ell',tts:'el-GR'}};
+  var NAME_DE={de:'Deutsch',en:'Englisch',da:'Dänisch',sv:'Schwedisch',nl:'Niederländisch',pl:'Polnisch',cs:'Tschechisch',ru:'Russisch',
+    uk:'Ukrainisch',it:'Italienisch',fr:'Französisch',hr:'Kroatisch',el:'Griechisch'};
+  var PIVOT='en';
+  var VARS={n:'Zahl',loa:'Länge (m)',beam:'Breite (m)',draft:'Tiefgang (m)',mast:'Masthöhe über Wasser (m)'};
+  /* built-in UI table (German = key): all 13 languages, so a host without its own entries still shows the kit in its language */
+  var UI={
+    en:{'Weitere Sprachen':'More languages','Ich spreche':'I speak','Gegenüber':'Other person','Sprachen tauschen':'Swap languages','Sätze':'Phrases','Foto & Text':'Photo & text','Pakete':'Packs',
+      'Suchen …':'Search …','Alle':'All','Merkliste':'Saved','Nichts gefunden.':'Nothing found.','Merken':'Save','Gemerkt':'Saved',
+      'Vorlesen':'Read aloud','Drehen':'Turn round','Antworten':'Answers','Schließen':'Close','Zurück':'Back','Antwort':'Answer',
+      'Werte einsetzen':'Fill in values','Keine Stimme für diese Sprache auf dem Gerät.':'No voice for this language on this device.',
+      'Übersetzungen maschinell erstellt, noch nicht von Muttersprachlern geprüft.':'Translations are machine-made and not yet checked by native speakers.',
+      'Lesen':'Read','Schreiben':'Write','Foto aufnehmen':'Take photo','Bild wählen':'Choose image','Übersetzen':'Translate',
+      'Text eingeben oder Foto aufnehmen …':'Type text or take a photo …','Text im Bild erkennen …':'Reading text in the image …',
+      'Übersetzung läuft …':'Translating …','Kein Text im Bild erkannt.':'No text found in the image.','Kopieren':'Copy','Kopiert.':'Copied.',
+      'Groß zeigen':'Show large','Maschinelle Übersetzung, auf dem Gerät erstellt. Nicht für Sicherheits- oder Rechtsentscheidungen verwenden.':'Machine translation made on this device. Do not use it for safety or legal decisions.',
+      'Dafür fehlt ein Sprachpaket:':'A language pack is missing for this:','Zu den Paketen':'Go to packs',
+      'Sprachpakete':'Language packs','Texterkennung und Übersetzung laufen nach dem Laden ohne Internet auf diesem Gerät.':'After loading, text recognition and translation run on this device without internet.',
+      'Laden':'Load','Löschen':'Delete','Geladen':'Loaded','Unvollständig':'Incomplete','Nicht geladen':'Not loaded','Abbrechen':'Cancel',
+      'Paketquelle':'Pack source','Speichern':'Save','Keine Paketquelle eingestellt.':'No pack source set.',
+      'Paketliste nicht erreichbar.':'Pack list not reachable.','Speicher geschützt':'Storage protected',
+      'Der Browser darf die Pakete bei Speichermangel löschen.':'The browser may delete the packs when storage runs low.',
+      'Frei':'Free','Prüfsumme falsch, Datei verworfen.':'Checksum wrong, file discarded.','Nicht genug Speicher frei.':'Not enough free storage.',
+      'Download abgebrochen.':'Download cancelled.','Paket geladen.':'Pack loaded.','Paket gelöscht.':'Pack deleted.','Texterkennung':'Text recognition',
+      'Übersetzung':'Translation','über Englisch':'via English','Programm (einmalig)':'Engine (once)','Zahl':'Number','Länge (m)':'Length (m)','Breite (m)':'Beam (m)',
+      'Tiefgang (m)':'Draft (m)','Masthöhe über Wasser (m)':'Air draft (m)','Nur offline gespeicherte Pakete werden benutzt.':'Only packs stored offline are used.',
+      'Zahlen weichen ab, bitte im Original prüfen.':'Numbers differ, please check the original.','Text unsicher erkannt. Bitte prüfen oder neu fotografieren.':'Text recognised with low confidence. Please check it or take a new photo.','Für diese Sprache gibt es kein Paket.':'There is no pack for this language.','Fehler':'Error','Seenot: UKW-Kanal 16 · Notruf 112':'Distress: VHF channel 16 · emergency 112'},
+    da:{'Weitere Sprachen':'Flere sprog','Ich spreche':'Jeg taler','Gegenüber':'Modpart','Sprachen tauschen':'Byt sprog','Sätze':'Sætninger','Foto & Text':'Foto & tekst','Pakete':'Pakker','Suchen …':'Søg …','Alle':'Alle','Merkliste':'Gemte','Nichts gefunden.':'Intet fundet.','Merken':'Gem','Gemerkt':'Gemt','Vorlesen':'Læs op','Drehen':'Vend','Antworten':'Svar','Schließen':'Luk','Zurück':'Tilbage','Antwort':'Svar','Werte einsetzen':'Indsæt værdier','Keine Stimme für diese Sprache auf dem Gerät.':'Ingen stemme til dette sprog på enheden.','Übersetzungen maschinell erstellt, noch nicht von Muttersprachlern geprüft.':'Oversættelserne er maskinlavede og endnu ikke kontrolleret af modersmålstalere.','Lesen':'Læs','Schreiben':'Skriv','Foto aufnehmen':'Tag foto','Bild wählen':'Vælg billede','Übersetzen':'Oversæt','Text eingeben oder Foto aufnehmen …':'Skriv tekst eller tag et foto …','Text im Bild erkennen …':'Læser tekst i billedet …','Übersetzung läuft …':'Oversætter …','Kein Text im Bild erkannt.':'Ingen tekst fundet i billedet.','Kopieren':'Kopiér','Kopiert.':'Kopieret.','Groß zeigen':'Vis stort','Maschinelle Übersetzung, auf dem Gerät erstellt. Nicht für Sicherheits- oder Rechtsentscheidungen verwenden.':'Maskinoversættelse lavet på enheden. Brug den ikke til sikkerheds- eller juridiske beslutninger.','Dafür fehlt ein Sprachpaket:':'Der mangler en sprogpakke:','Zu den Paketen':'Til pakkerne','Sprachpakete':'Sprogpakker','Texterkennung und Übersetzung laufen nach dem Laden ohne Internet auf diesem Gerät.':'Når pakkerne er hentet, kører tekstgenkendelse og oversættelse på enheden uden internet.','Laden':'Hent','Löschen':'Slet','Geladen':'Hentet','Unvollständig':'Ufuldstændig','Nicht geladen':'Ikke hentet','Abbrechen':'Annuller','Paketquelle':'Pakkekilde','Speichern':'Gem','Keine Paketquelle eingestellt.':'Ingen pakkekilde angivet.','Paketliste nicht erreichbar.':'Pakkelisten kan ikke nås.','Speicher geschützt':'Lager beskyttet','Der Browser darf die Pakete bei Speichermangel löschen.':'Browseren kan slette pakkerne, hvis der mangler plads.','Frei':'Ledigt','Prüfsumme falsch, Datei verworfen.':'Forkert kontrolsum, filen er kasseret.','Nicht genug Speicher frei.':'Ikke nok ledig plads.','Download abgebrochen.':'Download annulleret.','Paket geladen.':'Pakken er hentet.','Paket gelöscht.':'Pakken er slettet.','Texterkennung':'Tekstgenkendelse','Übersetzung':'Oversættelse','über Englisch':'via engelsk','Programm (einmalig)':'Program (én gang)','Zahl':'Tal','Länge (m)':'Længde (m)','Breite (m)':'Bredde (m)','Tiefgang (m)':'Dybgang (m)','Masthöhe über Wasser (m)':'Masthøjde over vandet (m)','Nur offline gespeicherte Pakete werden benutzt.':'Kun pakker gemt på enheden bruges.','Für diese Sprache gibt es kein Paket.':'Der findes ingen pakke til dette sprog.','Fehler':'Fejl','Seenot: UKW-Kanal 16 · Notruf 112':'Nød til søs: VHF-kanal 16 · alarm 112'},
+    sv:{'Weitere Sprachen':'Fler språk','Ich spreche':'Jag talar','Gegenüber':'Motpart','Sprachen tauschen':'Byt språk','Sätze':'Fraser','Foto & Text':'Foto & text','Pakete':'Paket','Suchen …':'Sök …','Alle':'Alla','Merkliste':'Sparade','Nichts gefunden.':'Inget hittades.','Merken':'Spara','Gemerkt':'Sparad','Vorlesen':'Läs upp','Drehen':'Vänd','Antworten':'Svar','Schließen':'Stäng','Zurück':'Tillbaka','Antwort':'Svar','Werte einsetzen':'Fyll i värden','Keine Stimme für diese Sprache auf dem Gerät.':'Ingen röst för det här språket på enheten.','Übersetzungen maschinell erstellt, noch nicht von Muttersprachlern geprüft.':'Översättningarna är maskingjorda och ännu inte granskade av modersmålstalare.','Lesen':'Läs','Schreiben':'Skriv','Foto aufnehmen':'Ta foto','Bild wählen':'Välj bild','Übersetzen':'Översätt','Text eingeben oder Foto aufnehmen …':'Skriv text eller ta ett foto …','Text im Bild erkennen …':'Läser text i bilden …','Übersetzung läuft …':'Översätter …','Kein Text im Bild erkannt.':'Ingen text hittades i bilden.','Kopieren':'Kopiera','Kopiert.':'Kopierat.','Groß zeigen':'Visa stort','Maschinelle Übersetzung, auf dem Gerät erstellt. Nicht für Sicherheits- oder Rechtsentscheidungen verwenden.':'Maskinöversättning gjord på enheten. Använd den inte för säkerhets- eller rättsliga beslut.','Dafür fehlt ein Sprachpaket:':'Ett språkpaket saknas:','Zu den Paketen':'Till paketen','Sprachpakete':'Språkpaket','Texterkennung und Übersetzung laufen nach dem Laden ohne Internet auf diesem Gerät.':'När paketen är hämtade körs textigenkänning och översättning på enheten utan internet.','Laden':'Hämta','Löschen':'Radera','Geladen':'Hämtat','Unvollständig':'Ofullständigt','Nicht geladen':'Inte hämtat','Abbrechen':'Avbryt','Paketquelle':'Paketkälla','Speichern':'Spara','Keine Paketquelle eingestellt.':'Ingen paketkälla angiven.','Paketliste nicht erreichbar.':'Paketlistan kan inte nås.','Speicher geschützt':'Lagring skyddad','Der Browser darf die Pakete bei Speichermangel löschen.':'Webbläsaren får radera paketen om lagringen tar slut.','Frei':'Ledigt','Prüfsumme falsch, Datei verworfen.':'Fel kontrollsumma, filen kastades.','Nicht genug Speicher frei.':'Inte tillräckligt med ledigt utrymme.','Download abgebrochen.':'Nedladdningen avbröts.','Paket geladen.':'Paketet är hämtat.','Paket gelöscht.':'Paketet är raderat.','Texterkennung':'Textigenkänning','Übersetzung':'Översättning','über Englisch':'via engelska','Programm (einmalig)':'Program (en gång)','Zahl':'Nummer','Länge (m)':'Längd (m)','Breite (m)':'Bredd (m)','Tiefgang (m)':'Djupgående (m)','Masthöhe über Wasser (m)':'Masthöjd över vattnet (m)','Nur offline gespeicherte Pakete werden benutzt.':'Endast paket sparade på enheten används.','Für diese Sprache gibt es kein Paket.':'Det finns inget paket för det här språket.','Fehler':'Fel','Seenot: UKW-Kanal 16 · Notruf 112':'Nöd till sjöss: VHF-kanal 16 · larm 112'},
+    nl:{'Weitere Sprachen':'Meer talen','Ich spreche':'Ik spreek','Gegenüber':'Gesprekspartner','Sprachen tauschen':'Talen wisselen','Sätze':'Zinnen','Foto & Text':'Foto & tekst','Pakete':'Pakketten','Suchen …':'Zoeken …','Alle':'Alle','Merkliste':'Bewaard','Nichts gefunden.':'Niets gevonden.','Merken':'Bewaren','Gemerkt':'Bewaard','Vorlesen':'Voorlezen','Drehen':'Draaien','Antworten':'Antwoorden','Schließen':'Sluiten','Zurück':'Terug','Antwort':'Antwoord','Werte einsetzen':'Waarden invullen','Keine Stimme für diese Sprache auf dem Gerät.':'Geen stem voor deze taal op het apparaat.','Übersetzungen maschinell erstellt, noch nicht von Muttersprachlern geprüft.':'Vertalingen zijn machinaal gemaakt en nog niet gecontroleerd door moedertaalsprekers.','Lesen':'Lezen','Schreiben':'Schrijven','Foto aufnehmen':'Foto maken','Bild wählen':'Afbeelding kiezen','Übersetzen':'Vertalen','Text eingeben oder Foto aufnehmen …':'Typ tekst of maak een foto …','Text im Bild erkennen …':'Tekst in afbeelding herkennen …','Übersetzung läuft …':'Bezig met vertalen …','Kein Text im Bild erkannt.':'Geen tekst in de afbeelding gevonden.','Kopieren':'Kopiëren','Kopiert.':'Gekopieerd.','Groß zeigen':'Groot tonen','Maschinelle Übersetzung, auf dem Gerät erstellt. Nicht für Sicherheits- oder Rechtsentscheidungen verwenden.':'Machinevertaling, gemaakt op het apparaat. Niet gebruiken voor veiligheids- of juridische beslissingen.','Dafür fehlt ein Sprachpaket:':'Hiervoor ontbreekt een taalpakket:','Zu den Paketen':'Naar de pakketten','Sprachpakete':'Taalpakketten','Texterkennung und Übersetzung laufen nach dem Laden ohne Internet auf diesem Gerät.':'Na het laden werken tekstherkenning en vertaling zonder internet op dit apparaat.','Laden':'Laden','Löschen':'Verwijderen','Geladen':'Geladen','Unvollständig':'Onvolledig','Nicht geladen':'Niet geladen','Abbrechen':'Annuleren','Paketquelle':'Pakketbron','Speichern':'Opslaan','Keine Paketquelle eingestellt.':'Geen pakketbron ingesteld.','Paketliste nicht erreichbar.':'Pakketlijst niet bereikbaar.','Speicher geschützt':'Opslag beschermd','Der Browser darf die Pakete bei Speichermangel löschen.':'De browser mag de pakketten verwijderen als er te weinig ruimte is.','Frei':'Vrij','Prüfsumme falsch, Datei verworfen.':'Controlesom onjuist, bestand verworpen.','Nicht genug Speicher frei.':'Niet genoeg vrije ruimte.','Download abgebrochen.':'Download geannuleerd.','Paket geladen.':'Pakket geladen.','Paket gelöscht.':'Pakket verwijderd.','Texterkennung':'Tekstherkenning','Übersetzung':'Vertaling','über Englisch':'via Engels','Programm (einmalig)':'Programma (eenmalig)','Zahl':'Getal','Länge (m)':'Lengte (m)','Breite (m)':'Breedte (m)','Tiefgang (m)':'Diepgang (m)','Masthöhe über Wasser (m)':'Masthoogte boven water (m)','Nur offline gespeicherte Pakete werden benutzt.':'Alleen pakketten op het apparaat worden gebruikt.','Für diese Sprache gibt es kein Paket.':'Er is geen pakket voor deze taal.','Fehler':'Fout','Seenot: UKW-Kanal 16 · Notruf 112':'Nood op zee: marifoonkanaal 16 · alarm 112'},
+    pl:{'Weitere Sprachen':'Więcej języków','Ich spreche':'Mówię','Gegenüber':'Rozmówca','Sprachen tauschen':'Zamień języki','Sätze':'Zwroty','Foto & Text':'Zdjęcie i tekst','Pakete':'Pakiety','Suchen …':'Szukaj …','Alle':'Wszystkie','Merkliste':'Zapisane','Nichts gefunden.':'Nic nie znaleziono.','Merken':'Zapisz','Gemerkt':'Zapisano','Vorlesen':'Odczytaj','Drehen':'Obróć','Antworten':'Odpowiedzi','Schließen':'Zamknij','Zurück':'Wstecz','Antwort':'Odpowiedź','Werte einsetzen':'Wstaw wartości','Keine Stimme für diese Sprache auf dem Gerät.':'Brak głosu dla tego języka na urządzeniu.','Übersetzungen maschinell erstellt, noch nicht von Muttersprachlern geprüft.':'Tłumaczenia wykonane maszynowo, jeszcze niesprawdzone przez rodzimych użytkowników.','Lesen':'Czytaj','Schreiben':'Pisz','Foto aufnehmen':'Zrób zdjęcie','Bild wählen':'Wybierz obraz','Übersetzen':'Przetłumacz','Text eingeben oder Foto aufnehmen …':'Wpisz tekst lub zrób zdjęcie …','Text im Bild erkennen …':'Rozpoznawanie tekstu na zdjęciu …','Übersetzung läuft …':'Tłumaczenie …','Kein Text im Bild erkannt.':'Nie znaleziono tekstu na zdjęciu.','Kopieren':'Kopiuj','Kopiert.':'Skopiowano.','Groß zeigen':'Pokaż duże','Maschinelle Übersetzung, auf dem Gerät erstellt. Nicht für Sicherheits- oder Rechtsentscheidungen verwenden.':'Tłumaczenie maszynowe wykonane na urządzeniu. Nie używaj go do decyzji dotyczących bezpieczeństwa ani spraw prawnych.','Dafür fehlt ein Sprachpaket:':'Brakuje pakietu językowego:','Zu den Paketen':'Do pakietów','Sprachpakete':'Pakiety językowe','Texterkennung und Übersetzung laufen nach dem Laden ohne Internet auf diesem Gerät.':'Po pobraniu rozpoznawanie tekstu i tłumaczenie działają na tym urządzeniu bez internetu.','Laden':'Pobierz','Löschen':'Usuń','Geladen':'Pobrano','Unvollständig':'Niekompletny','Nicht geladen':'Nie pobrano','Abbrechen':'Anuluj','Paketquelle':'Źródło pakietów','Speichern':'Zapisz','Keine Paketquelle eingestellt.':'Nie ustawiono źródła pakietów.','Paketliste nicht erreichbar.':'Lista pakietów jest niedostępna.','Speicher geschützt':'Pamięć chroniona','Der Browser darf die Pakete bei Speichermangel löschen.':'Przeglądarka może usunąć pakiety, gdy zabraknie miejsca.','Frei':'Wolne','Prüfsumme falsch, Datei verworfen.':'Błędna suma kontrolna, plik odrzucony.','Nicht genug Speicher frei.':'Za mało wolnego miejsca.','Download abgebrochen.':'Pobieranie anulowane.','Paket geladen.':'Pakiet pobrany.','Paket gelöscht.':'Pakiet usunięty.','Texterkennung':'Rozpoznawanie tekstu','Übersetzung':'Tłumaczenie','über Englisch':'przez angielski','Programm (einmalig)':'Program (jednorazowo)','Zahl':'Liczba','Länge (m)':'Długość (m)','Breite (m)':'Szerokość (m)','Tiefgang (m)':'Zanurzenie (m)','Masthöhe über Wasser (m)':'Wysokość masztu nad wodą (m)','Nur offline gespeicherte Pakete werden benutzt.':'Używane są tylko pakiety zapisane na urządzeniu.','Für diese Sprache gibt es kein Paket.':'Dla tego języka nie ma pakietu.','Fehler':'Błąd','Seenot: UKW-Kanal 16 · Notruf 112':'Niebezpieczeństwo na morzu: kanał UKF 16 · numer alarmowy 112'},
+    cs:{'Weitere Sprachen':'Další jazyky','Ich spreche':'Mluvím','Gegenüber':'Protějšek','Sprachen tauschen':'Prohodit jazyky','Sätze':'Fráze','Foto & Text':'Foto a text','Pakete':'Balíčky','Suchen …':'Hledat …','Alle':'Vše','Merkliste':'Uložené','Nichts gefunden.':'Nic nenalezeno.','Merken':'Uložit','Gemerkt':'Uloženo','Vorlesen':'Přečíst','Drehen':'Otočit','Antworten':'Odpovědi','Schließen':'Zavřít','Zurück':'Zpět','Antwort':'Odpověď','Werte einsetzen':'Doplnit hodnoty','Keine Stimme für diese Sprache auf dem Gerät.':'Pro tento jazyk není v zařízení hlas.','Übersetzungen maschinell erstellt, noch nicht von Muttersprachlern geprüft.':'Překlady jsou strojové a dosud je nezkontrolovali rodilí mluvčí.','Lesen':'Číst','Schreiben':'Psát','Foto aufnehmen':'Vyfotit','Bild wählen':'Vybrat obrázek','Übersetzen':'Přeložit','Text eingeben oder Foto aufnehmen …':'Napište text nebo vyfoťte …','Text im Bild erkennen …':'Rozpoznávám text na obrázku …','Übersetzung läuft …':'Překládám …','Kein Text im Bild erkannt.':'Na obrázku nebyl nalezen žádný text.','Kopieren':'Kopírovat','Kopiert.':'Zkopírováno.','Groß zeigen':'Zobrazit velké','Maschinelle Übersetzung, auf dem Gerät erstellt. Nicht für Sicherheits- oder Rechtsentscheidungen verwenden.':'Strojový překlad vytvořený v zařízení. Nepoužívejte ho pro rozhodnutí o bezpečnosti ani právní rozhodnutí.','Dafür fehlt ein Sprachpaket:':'Chybí jazykový balíček:','Zu den Paketen':'K balíčkům','Sprachpakete':'Jazykové balíčky','Texterkennung und Übersetzung laufen nach dem Laden ohne Internet auf diesem Gerät.':'Po stažení běží rozpoznávání textu a překlad v tomto zařízení bez internetu.','Laden':'Stáhnout','Löschen':'Smazat','Geladen':'Staženo','Unvollständig':'Neúplný','Nicht geladen':'Nestaženo','Abbrechen':'Zrušit','Paketquelle':'Zdroj balíčků','Speichern':'Uložit','Keine Paketquelle eingestellt.':'Není nastaven zdroj balíčků.','Paketliste nicht erreichbar.':'Seznam balíčků není dostupný.','Speicher geschützt':'Úložiště chráněno','Der Browser darf die Pakete bei Speichermangel löschen.':'Prohlížeč smí balíčky smazat, když dojde místo.','Frei':'Volné','Prüfsumme falsch, Datei verworfen.':'Chybný kontrolní součet, soubor zahozen.','Nicht genug Speicher frei.':'Nedostatek volného místa.','Download abgebrochen.':'Stahování zrušeno.','Paket geladen.':'Balíček stažen.','Paket gelöscht.':'Balíček smazán.','Texterkennung':'Rozpoznávání textu','Übersetzung':'Překlad','über Englisch':'přes angličtinu','Programm (einmalig)':'Program (jednorázově)','Zahl':'Číslo','Länge (m)':'Délka (m)','Breite (m)':'Šířka (m)','Tiefgang (m)':'Ponor (m)','Masthöhe über Wasser (m)':'Výška stěžně nad vodou (m)','Nur offline gespeicherte Pakete werden benutzt.':'Používají se jen balíčky uložené v zařízení.','Für diese Sprache gibt es kein Paket.':'Pro tento jazyk neexistuje balíček.','Fehler':'Chyba','Seenot: UKW-Kanal 16 · Notruf 112':'Tíseň na moři: kanál VKV 16 · tísňové volání 112'},
+    it:{'Weitere Sprachen':'Altre lingue','Ich spreche':'Parlo','Gegenüber':'Interlocutore','Sprachen tauschen':'Scambia lingue','Sätze':'Frasi','Foto & Text':'Foto e testo','Pakete':'Pacchetti','Suchen …':'Cerca …','Alle':'Tutte','Merkliste':'Salvate','Nichts gefunden.':'Nessun risultato.','Merken':'Salva','Gemerkt':'Salvata','Vorlesen':'Leggi ad alta voce','Drehen':'Ruota','Antworten':'Risposte','Schließen':'Chiudi','Zurück':'Indietro','Antwort':'Risposta','Werte einsetzen':'Inserisci valori','Keine Stimme für diese Sprache auf dem Gerät.':'Nessuna voce per questa lingua sul dispositivo.','Übersetzungen maschinell erstellt, noch nicht von Muttersprachlern geprüft.':'Traduzioni automatiche, non ancora verificate da madrelingua.','Lesen':'Leggi','Schreiben':'Scrivi','Foto aufnehmen':'Scatta foto','Bild wählen':'Scegli immagine','Übersetzen':'Traduci','Text eingeben oder Foto aufnehmen …':'Scrivi un testo o scatta una foto …','Text im Bild erkennen …':'Riconoscimento del testo …','Übersetzung läuft …':'Traduzione in corso …','Kein Text im Bild erkannt.':'Nessun testo trovato nell\'immagine.','Kopieren':'Copia','Kopiert.':'Copiato.','Groß zeigen':'Mostra in grande','Maschinelle Übersetzung, auf dem Gerät erstellt. Nicht für Sicherheits- oder Rechtsentscheidungen verwenden.':'Traduzione automatica fatta sul dispositivo. Non usarla per decisioni di sicurezza o legali.','Dafür fehlt ein Sprachpaket:':'Manca un pacchetto lingua:','Zu den Paketen':'Ai pacchetti','Sprachpakete':'Pacchetti lingua','Texterkennung und Übersetzung laufen nach dem Laden ohne Internet auf diesem Gerät.':'Dopo il download, riconoscimento del testo e traduzione funzionano sul dispositivo senza internet.','Laden':'Scarica','Löschen':'Elimina','Geladen':'Scaricato','Unvollständig':'Incompleto','Nicht geladen':'Non scaricato','Abbrechen':'Annulla','Paketquelle':'Fonte dei pacchetti','Speichern':'Salva','Keine Paketquelle eingestellt.':'Nessuna fonte dei pacchetti impostata.','Paketliste nicht erreichbar.':'Elenco dei pacchetti non raggiungibile.','Speicher geschützt':'Memoria protetta','Der Browser darf die Pakete bei Speichermangel löschen.':'Il browser può eliminare i pacchetti se manca spazio.','Frei':'Libero','Prüfsumme falsch, Datei verworfen.':'Checksum errato, file scartato.','Nicht genug Speicher frei.':'Spazio libero insufficiente.','Download abgebrochen.':'Download annullato.','Paket geladen.':'Pacchetto scaricato.','Paket gelöscht.':'Pacchetto eliminato.','Texterkennung':'Riconoscimento del testo','Übersetzung':'Traduzione','über Englisch':'tramite inglese','Programm (einmalig)':'Programma (una volta)','Zahl':'Numero','Länge (m)':'Lunghezza (m)','Breite (m)':'Larghezza (m)','Tiefgang (m)':'Pescaggio (m)','Masthöhe über Wasser (m)':'Altezza dell\'albero sull\'acqua (m)','Nur offline gespeicherte Pakete werden benutzt.':'Si usano solo i pacchetti salvati sul dispositivo.','Für diese Sprache gibt es kein Paket.':'Non esiste un pacchetto per questa lingua.','Fehler':'Errore','Seenot: UKW-Kanal 16 · Notruf 112':'Emergenza in mare: VHF canale 16 · emergenza 112'},
+    fr:{'Weitere Sprachen':'Autres langues','Ich spreche':'Je parle','Gegenüber':'Interlocuteur','Sprachen tauschen':'Inverser les langues','Sätze':'Phrases','Foto & Text':'Photo et texte','Pakete':'Paquets','Suchen …':'Rechercher …','Alle':'Toutes','Merkliste':'Enregistrées','Nichts gefunden.':'Aucun résultat.','Merken':'Enregistrer','Gemerkt':'Enregistrée','Vorlesen':'Lire à voix haute','Drehen':'Retourner','Antworten':'Réponses','Schließen':'Fermer','Zurück':'Retour','Antwort':'Réponse','Werte einsetzen':'Saisir les valeurs','Keine Stimme für diese Sprache auf dem Gerät.':'Aucune voix pour cette langue sur l\'appareil.','Übersetzungen maschinell erstellt, noch nicht von Muttersprachlern geprüft.':'Traductions automatiques, pas encore vérifiées par des locuteurs natifs.','Lesen':'Lire','Schreiben':'Écrire','Foto aufnehmen':'Prendre une photo','Bild wählen':'Choisir une image','Übersetzen':'Traduire','Text eingeben oder Foto aufnehmen …':'Saisissez un texte ou prenez une photo …','Text im Bild erkennen …':'Reconnaissance du texte …','Übersetzung läuft …':'Traduction en cours …','Kein Text im Bild erkannt.':'Aucun texte trouvé dans l\'image.','Kopieren':'Copier','Kopiert.':'Copié.','Groß zeigen':'Afficher en grand','Maschinelle Übersetzung, auf dem Gerät erstellt. Nicht für Sicherheits- oder Rechtsentscheidungen verwenden.':'Traduction automatique faite sur l\'appareil. Ne l\'utilisez pas pour des décisions de sécurité ou juridiques.','Dafür fehlt ein Sprachpaket:':'Il manque un pack de langue :','Zu den Paketen':'Vers les paquets','Sprachpakete':'Packs de langue','Texterkennung und Übersetzung laufen nach dem Laden ohne Internet auf diesem Gerät.':'Après le téléchargement, la reconnaissance de texte et la traduction fonctionnent sur cet appareil sans internet.','Laden':'Télécharger','Löschen':'Supprimer','Geladen':'Téléchargé','Unvollständig':'Incomplet','Nicht geladen':'Non téléchargé','Abbrechen':'Annuler','Paketquelle':'Source des paquets','Speichern':'Enregistrer','Keine Paketquelle eingestellt.':'Aucune source de paquets définie.','Paketliste nicht erreichbar.':'Liste des paquets inaccessible.','Speicher geschützt':'Stockage protégé','Der Browser darf die Pakete bei Speichermangel löschen.':'Le navigateur peut supprimer les paquets en cas de manque d\'espace.','Frei':'Libre','Prüfsumme falsch, Datei verworfen.':'Somme de contrôle incorrecte, fichier rejeté.','Nicht genug Speicher frei.':'Pas assez d\'espace libre.','Download abgebrochen.':'Téléchargement annulé.','Paket geladen.':'Paquet téléchargé.','Paket gelöscht.':'Paquet supprimé.','Texterkennung':'Reconnaissance de texte','Übersetzung':'Traduction','über Englisch':'via l\'anglais','Programm (einmalig)':'Programme (une fois)','Zahl':'Nombre','Länge (m)':'Longueur (m)','Breite (m)':'Largeur (m)','Tiefgang (m)':'Tirant d\'eau (m)','Masthöhe über Wasser (m)':'Hauteur du mât au-dessus de l\'eau (m)','Nur offline gespeicherte Pakete werden benutzt.':'Seuls les paquets enregistrés sur l\'appareil sont utilisés.','Für diese Sprache gibt es kein Paket.':'Il n\'existe pas de paquet pour cette langue.','Fehler':'Erreur','Seenot: UKW-Kanal 16 · Notruf 112':'Détresse en mer : VHF canal 16 · urgence 112'},
+    hr:{'Weitere Sprachen':'Ostali jezici','Ich spreche':'Govorim','Gegenüber':'Sugovornik','Sprachen tauschen':'Zamijeni jezike','Sätze':'Rečenice','Foto & Text':'Fotografija i tekst','Pakete':'Paketi','Suchen …':'Traži …','Alle':'Sve','Merkliste':'Spremljeno','Nichts gefunden.':'Ništa nije pronađeno.','Merken':'Spremi','Gemerkt':'Spremljeno','Vorlesen':'Pročitaj naglas','Drehen':'Okreni','Antworten':'Odgovori','Schließen':'Zatvori','Zurück':'Natrag','Antwort':'Odgovor','Werte einsetzen':'Unesi vrijednosti','Keine Stimme für diese Sprache auf dem Gerät.':'Na uređaju nema glasa za ovaj jezik.','Übersetzungen maschinell erstellt, noch nicht von Muttersprachlern geprüft.':'Prijevodi su strojni i još ih nisu provjerili izvorni govornici.','Lesen':'Čitaj','Schreiben':'Piši','Foto aufnehmen':'Snimi fotografiju','Bild wählen':'Odaberi sliku','Übersetzen':'Prevedi','Text eingeben oder Foto aufnehmen …':'Upišite tekst ili snimite fotografiju …','Text im Bild erkennen …':'Prepoznavanje teksta na slici …','Übersetzung läuft …':'Prevođenje …','Kein Text im Bild erkannt.':'Na slici nije pronađen tekst.','Kopieren':'Kopiraj','Kopiert.':'Kopirano.','Groß zeigen':'Prikaži veliko','Maschinelle Übersetzung, auf dem Gerät erstellt. Nicht für Sicherheits- oder Rechtsentscheidungen verwenden.':'Strojni prijevod napravljen na uređaju. Ne koristite ga za sigurnosne ni pravne odluke.','Dafür fehlt ein Sprachpaket:':'Nedostaje jezični paket:','Zu den Paketen':'Na pakete','Sprachpakete':'Jezični paketi','Texterkennung und Übersetzung laufen nach dem Laden ohne Internet auf diesem Gerät.':'Nakon preuzimanja prepoznavanje teksta i prijevod rade na ovom uređaju bez interneta.','Laden':'Preuzmi','Löschen':'Izbriši','Geladen':'Preuzeto','Unvollständig':'Nepotpuno','Nicht geladen':'Nije preuzeto','Abbrechen':'Odustani','Paketquelle':'Izvor paketa','Speichern':'Spremi','Keine Paketquelle eingestellt.':'Izvor paketa nije postavljen.','Paketliste nicht erreichbar.':'Popis paketa nije dostupan.','Speicher geschützt':'Pohrana zaštićena','Der Browser darf die Pakete bei Speichermangel löschen.':'Preglednik smije izbrisati pakete ako ponestane prostora.','Frei':'Slobodno','Prüfsumme falsch, Datei verworfen.':'Pogrešan kontrolni zbroj, datoteka odbačena.','Nicht genug Speicher frei.':'Nema dovoljno slobodnog prostora.','Download abgebrochen.':'Preuzimanje prekinuto.','Paket geladen.':'Paket preuzet.','Paket gelöscht.':'Paket izbrisan.','Texterkennung':'Prepoznavanje teksta','Übersetzung':'Prijevod','über Englisch':'preko engleskog','Programm (einmalig)':'Program (jednokratno)','Zahl':'Broj','Länge (m)':'Duljina (m)','Breite (m)':'Širina (m)','Tiefgang (m)':'Gaz (m)','Masthöhe über Wasser (m)':'Visina jarbola iznad vode (m)','Nur offline gespeicherte Pakete werden benutzt.':'Koriste se samo paketi spremljeni na uređaju.','Für diese Sprache gibt es kein Paket.':'Za ovaj jezik nema paketa.','Fehler':'Pogreška','Seenot: UKW-Kanal 16 · Notruf 112':'Opasnost na moru: VHF kanal 16 · hitni poziv 112'},
+    el:{'Weitere Sprachen':'Περισσότερες γλώσσες','Ich spreche':'Μιλάω','Gegenüber':'Συνομιλητής','Sprachen tauschen':'Εναλλαγή γλωσσών','Sätze':'Φράσεις','Foto & Text':'Φωτογραφία & κείμενο','Pakete':'Πακέτα','Suchen …':'Αναζήτηση …','Alle':'Όλες','Merkliste':'Αποθηκευμένες','Nichts gefunden.':'Δεν βρέθηκε τίποτα.','Merken':'Αποθήκευση','Gemerkt':'Αποθηκεύτηκε','Vorlesen':'Ανάγνωση','Drehen':'Περιστροφή','Antworten':'Απαντήσεις','Schließen':'Κλείσιμο','Zurück':'Πίσω','Antwort':'Απάντηση','Werte einsetzen':'Συμπλήρωση τιμών','Keine Stimme für diese Sprache auf dem Gerät.':'Δεν υπάρχει φωνή για αυτή τη γλώσσα στη συσκευή.','Übersetzungen maschinell erstellt, noch nicht von Muttersprachlern geprüft.':'Οι μεταφράσεις είναι αυτόματες και δεν έχουν ελεγχθεί ακόμη από φυσικούς ομιλητές.','Lesen':'Ανάγνωση','Schreiben':'Γραφή','Foto aufnehmen':'Λήψη φωτογραφίας','Bild wählen':'Επιλογή εικόνας','Übersetzen':'Μετάφραση','Text eingeben oder Foto aufnehmen …':'Πληκτρολογήστε κείμενο ή τραβήξτε φωτογραφία …','Text im Bild erkennen …':'Αναγνώριση κειμένου …','Übersetzung läuft …':'Μετάφραση σε εξέλιξη …','Kein Text im Bild erkannt.':'Δεν βρέθηκε κείμενο στην εικόνα.','Kopieren':'Αντιγραφή','Kopiert.':'Αντιγράφηκε.','Groß zeigen':'Μεγάλη προβολή','Maschinelle Übersetzung, auf dem Gerät erstellt. Nicht für Sicherheits- oder Rechtsentscheidungen verwenden.':'Αυτόματη μετάφραση στη συσκευή. Μην τη χρησιμοποιείτε για αποφάσεις ασφαλείας ή νομικές αποφάσεις.','Dafür fehlt ein Sprachpaket:':'Λείπει πακέτο γλώσσας:','Zu den Paketen':'Στα πακέτα','Sprachpakete':'Πακέτα γλωσσών','Texterkennung und Übersetzung laufen nach dem Laden ohne Internet auf diesem Gerät.':'Μετά τη λήψη, η αναγνώριση κειμένου και η μετάφραση λειτουργούν στη συσκευή χωρίς internet.','Laden':'Λήψη','Löschen':'Διαγραφή','Geladen':'Έγινε λήψη','Unvollständig':'Ελλιπές','Nicht geladen':'Δεν έγινε λήψη','Abbrechen':'Ακύρωση','Paketquelle':'Πηγή πακέτων','Speichern':'Αποθήκευση','Keine Paketquelle eingestellt.':'Δεν έχει οριστεί πηγή πακέτων.','Paketliste nicht erreichbar.':'Η λίστα πακέτων δεν είναι διαθέσιμη.','Speicher geschützt':'Ο χώρος αποθήκευσης προστατεύεται','Der Browser darf die Pakete bei Speichermangel löschen.':'Ο περιηγητής μπορεί να διαγράψει τα πακέτα αν δεν υπάρχει χώρος.','Frei':'Ελεύθερο','Prüfsumme falsch, Datei verworfen.':'Λάθος άθροισμα ελέγχου, το αρχείο απορρίφθηκε.','Nicht genug Speicher frei.':'Δεν υπάρχει αρκετός ελεύθερος χώρος.','Download abgebrochen.':'Η λήψη ακυρώθηκε.','Paket geladen.':'Η λήψη του πακέτου ολοκληρώθηκε.','Paket gelöscht.':'Το πακέτο διαγράφηκε.','Texterkennung':'Αναγνώριση κειμένου','Übersetzung':'Μετάφραση','über Englisch':'μέσω αγγλικών','Programm (einmalig)':'Πρόγραμμα (μία φορά)','Zahl':'Αριθμός','Länge (m)':'Μήκος (m)','Breite (m)':'Πλάτος (m)','Tiefgang (m)':'Βύθισμα (m)','Masthöhe über Wasser (m)':'Ύψος καταρτιού πάνω από το νερό (m)','Nur offline gespeicherte Pakete werden benutzt.':'Χρησιμοποιούνται μόνο πακέτα αποθηκευμένα στη συσκευή.','Für diese Sprache gibt es kein Paket.':'Δεν υπάρχει πακέτο για αυτή τη γλώσσα.','Fehler':'Σφάλμα','Seenot: UKW-Kanal 16 · Notruf 112':'Κίνδυνος στη θάλασσα: VHF κανάλι 16 · έκτακτη ανάγκη 112'},
+    ru:{'Weitere Sprachen':'Другие языки','Ich spreche':'Я говорю','Gegenüber':'Собеседник','Sprachen tauschen':'Поменять языки','Sätze':'Фразы','Foto & Text':'Фото и текст','Pakete':'Пакеты',
+      'Suchen …':'Поиск …','Alle':'Все','Merkliste':'Избранное','Nichts gefunden.':'Ничего не найдено.','Merken':'В избранное','Gemerkt':'В избранном',
+      'Vorlesen':'Озвучить','Drehen':'Повернуть','Antworten':'Ответы','Schließen':'Закрыть','Zurück':'Назад','Antwort':'Ответ',
+      'Werte einsetzen':'Подставить значения','Keine Stimme für diese Sprache auf dem Gerät.':'На устройстве нет голоса для этого языка.',
+      'Übersetzungen maschinell erstellt, noch nicht von Muttersprachlern geprüft.':'Переводы сделаны машиной и ещё не проверены носителями языка.',
+      'Lesen':'Читать','Schreiben':'Писать','Foto aufnehmen':'Сфотографировать','Bild wählen':'Выбрать фото','Übersetzen':'Перевести',
+      'Text eingeben oder Foto aufnehmen …':'Введите текст или сделайте фото …','Text im Bild erkennen …':'Распознаю текст на фото …',
+      'Übersetzung läuft …':'Перевожу …','Kein Text im Bild erkannt.':'Текст на фото не найден.','Kopieren':'Копировать','Kopiert.':'Скопировано.',
+      'Groß zeigen':'Показать крупно','Maschinelle Übersetzung, auf dem Gerät erstellt. Nicht für Sicherheits- oder Rechtsentscheidungen verwenden.':'Машинный перевод на устройстве. Не используйте для решений, от которых зависит безопасность или правовое положение.',
+      'Dafür fehlt ein Sprachpaket:':'Для этого не хватает языкового пакета:','Zu den Paketen':'К пакетам',
+      'Sprachpakete':'Языковые пакеты','Texterkennung und Übersetzung laufen nach dem Laden ohne Internet auf diesem Gerät.':'После загрузки распознавание и перевод работают на этом устройстве без интернета.',
+      'Laden':'Загрузить','Löschen':'Удалить','Geladen':'Загружен','Unvollständig':'Неполный','Nicht geladen':'Не загружен','Abbrechen':'Отмена',
+      'Paketquelle':'Источник пакетов','Speichern':'Сохранить','Keine Paketquelle eingestellt.':'Источник пакетов не задан.',
+      'Paketliste nicht erreichbar.':'Список пакетов недоступен.','Speicher geschützt':'Память защищена',
+      'Der Browser darf die Pakete bei Speichermangel löschen.':'Браузер может удалить пакеты при нехватке памяти.',
+      'Frei':'Свободно','Prüfsumme falsch, Datei verworfen.':'Контрольная сумма неверна, файл отброшен.','Nicht genug Speicher frei.':'Недостаточно свободной памяти.',
+      'Download abgebrochen.':'Загрузка отменена.','Paket geladen.':'Пакет загружен.','Paket gelöscht.':'Пакет удалён.','Texterkennung':'Распознавание текста',
+      'Übersetzung':'Перевод','über Englisch':'через английский','Programm (einmalig)':'Программа (один раз)','Zahl':'Число','Länge (m)':'Длина (м)','Breite (m)':'Ширина (м)',
+      'Tiefgang (m)':'Осадка (м)','Masthöhe über Wasser (m)':'Высота мачты над водой (м)','Nur offline gespeicherte Pakete werden benutzt.':'Используются только пакеты, сохранённые на устройстве.',
+      'Zahlen weichen ab, bitte im Original prüfen.':'Числа расходятся, проверьте оригинал.','Text unsicher erkannt. Bitte prüfen oder neu fotografieren.':'Текст распознан неуверенно. Проверьте его или сделайте новое фото.','Für diese Sprache gibt es kein Paket.':'Для этого языка пакета нет.','Fehler':'Ошибка','Seenot: UKW-Kanal 16 · Notruf 112':'Бедствие на море: УКВ канал 16 · экстренный вызов 112'},
+    uk:{'Weitere Sprachen':'Інші мови','Ich spreche':'Я розмовляю','Gegenüber':'Співрозмовник','Sprachen tauschen':'Поміняти мови','Sätze':'Фрази','Foto & Text':'Фото і текст','Pakete':'Пакети',
+      'Suchen …':'Пошук …','Alle':'Усі','Merkliste':'Обране','Nichts gefunden.':'Нічого не знайдено.','Merken':'В обране','Gemerkt':'В обраному',
+      'Vorlesen':'Озвучити','Drehen':'Повернути','Antworten':'Відповіді','Schließen':'Закрити','Zurück':'Назад','Antwort':'Відповідь',
+      'Werte einsetzen':'Підставити значення','Keine Stimme für diese Sprache auf dem Gerät.':'На пристрої немає голосу для цієї мови.',
+      'Übersetzungen maschinell erstellt, noch nicht von Muttersprachlern geprüft.':'Переклади зроблені машиною і ще не перевірені носіями мови.',
+      'Lesen':'Читати','Schreiben':'Писати','Foto aufnehmen':'Сфотографувати','Bild wählen':'Вибрати фото','Übersetzen':'Перекласти',
+      'Text eingeben oder Foto aufnehmen …':'Введіть текст або зробіть фото …','Text im Bild erkennen …':'Розпізнаю текст на фото …',
+      'Übersetzung läuft …':'Перекладаю …','Kein Text im Bild erkannt.':'Текст на фото не знайдено.','Kopieren':'Копіювати','Kopiert.':'Скопійовано.',
+      'Groß zeigen':'Показати великим','Maschinelle Übersetzung, auf dem Gerät erstellt. Nicht für Sicherheits- oder Rechtsentscheidungen verwenden.':'Машинний переклад на пристрої. Не використовуйте для рішень, від яких залежить безпека або правове становище.',
+      'Dafür fehlt ein Sprachpaket:':'Для цього бракує мовного пакета:','Zu den Paketen':'До пакетів',
+      'Sprachpakete':'Мовні пакети','Texterkennung und Übersetzung laufen nach dem Laden ohne Internet auf diesem Gerät.':'Після завантаження розпізнавання і переклад працюють на цьому пристрої без інтернету.',
+      'Laden':'Завантажити','Löschen':'Видалити','Geladen':'Завантажено','Unvollständig':'Неповний','Nicht geladen':'Не завантажено','Abbrechen':'Скасувати',
+      'Paketquelle':'Джерело пакетів','Speichern':'Зберегти','Keine Paketquelle eingestellt.':'Джерело пакетів не задано.',
+      'Paketliste nicht erreichbar.':'Список пакетів недоступний.','Speicher geschützt':'Пам’ять захищена',
+      'Der Browser darf die Pakete bei Speichermangel löschen.':'Браузер може видалити пакети, якщо бракує пам’яті.',
+      'Frei':'Вільно','Prüfsumme falsch, Datei verworfen.':'Контрольна сума неправильна, файл відкинуто.','Nicht genug Speicher frei.':'Недостатньо вільної пам’яті.',
+      'Download abgebrochen.':'Завантаження скасовано.','Paket geladen.':'Пакет завантажено.','Paket gelöscht.':'Пакет видалено.','Texterkennung':'Розпізнавання тексту',
+      'Übersetzung':'Переклад','über Englisch':'через англійську','Programm (einmalig)':'Програма (один раз)','Zahl':'Число','Länge (m)':'Довжина (м)','Breite (m)':'Ширина (м)',
+      'Tiefgang (m)':'Осадка (м)','Masthöhe über Wasser (m)':'Висота щогли над водою (м)','Nur offline gespeicherte Pakete werden benutzt.':'Використовуються лише пакети, збережені на пристрої.',
+      'Zahlen weichen ab, bitte im Original prüfen.':'Числа не збігаються, перевірте оригінал.','Text unsicher erkannt. Bitte prüfen oder neu fotografieren.':'Текст розпізнано невпевнено. Перевірте його або зробіть нове фото.','Für diese Sprache gibt es kein Paket.':'Для цієї мови пакета немає.','Fehler':'Помилка','Seenot: UKW-Kanal 16 · Notruf 112':'Лихо на морі: УКХ канал 16 · екстрений виклик 112'}
+  };
+
+  var o={},D=null,st={},root=null,ov=null,toastEl=null,manifest=null,manErr='',busy=null,ctl=null,prog=null,installed={},haveFiles={},msg='',estimate=null,persisted=null;
+  var E={tess:null,ocr:null,ocrLang:'',ocrProg:null,mt:null,mtCall:null,mtLoaded:{},urls:{}};
+
+  /* ---------- helpers ---------- */
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function uiLang(){return o.ui==='me'?st.me:(o.ui||st.me);}
+  function tr(s){
+    if(o.t){var x=o.t(s);if(x&&x!==s)return x;}
+    var d=UI[uiLang()];if(d&&d[s])return d[s];
+    if(uiLang()!=='de'&&UI.en[s]&&!o.t)return UI.en[s];
+    return s;
+  }
+  function get(k){try{return localStorage.getItem(o.key+'.'+k);}catch(e){return null;}}
+  function put(k,v){try{localStorage.setItem(o.key+'.'+k,v);}catch(e){}}
+  function getJ(k,d){try{var v=JSON.parse(get(k));return v==null?d:v;}catch(e){return d;}}
+  function locale(l){return (L[l]&&L[l].tts)||l;}
+  function lname(code,inLang){
+    try{var n=new Intl.DisplayNames([locale(inLang)],{type:'language'}).of(code);if(n&&n!==code)return n.charAt(0).toLocaleUpperCase(locale(inLang))+n.slice(1);}catch(e){}
+    return NAME_DE[code]||code;
+  }
+  function both(code){var a=lname(code,code),b=lname(code,uiLang());return a===b?a:a+' · '+b;}
+  function mb(b){return (Math.round(b/1e5)/10).toLocaleString(locale(uiLang()))+' MB';}
+  function toast(t){
+    if(!toastEl){toastEl=document.createElement('div');toastEl.className='skl skl-toast';toastEl.setAttribute('role','status');document.body.appendChild(toastEl);}
+    toastEl.textContent=t;toastEl.classList.add('on');clearTimeout(toast.h);toast.h=setTimeout(function(){toastEl.classList.remove('on');},2600);
+  }
+  function txt(item,lang){return item&&item.t?(item.t[lang]||''):'';}
+  function vals(){var v=getJ('vals',{}),b=o.vars||{};Object.keys(b).forEach(function(k){if(v[k]==null&&b[k]!=null)v[k]=b[k];});return v;}
+  function fmt(v,lang){var n=Number(v);return isFinite(n)?n.toLocaleString(locale(lang),{maximumFractionDigits:2}):String(v);}
+  function fill(s,lang,v){return String(s).replace(/\{(\w+)\}/g,function(m,k){return v[k]==null||v[k]===''?'…':fmt(v[k],lang);});}
+  function holes(s){var out=[];String(s).replace(/\{(\w+)\}/g,function(m,k){if(out.indexOf(k)<0)out.push(k);});return out;}
+
+  /* ---------- speech ---------- */
+  /* Android WebView has no speechSynthesis: the APK shell brings the plugin "Speech" on top of the phone's own text-to-speech */
+  function nativeTts(){var C=window.Capacitor;return C&&C.nativePromise&&C.getPlatform&&C.getPlatform()==='android'&&(C.PluginHeaders||[]).some(function(p){return p.name==='Speech';})?C:null;}
+  function voice(lang){
+    if(!('speechSynthesis' in window))return null;
+    var vs=speechSynthesis.getVoices()||[],p=lang.toLowerCase();
+    return vs.filter(function(v){return String(v.lang).replace('_','-').toLowerCase().indexOf(p)===0;})[0]||null;
+  }
+  function canSpeak(lang){
+    if(nativeTts())return true;      // the answer comes when speaking: voices are installed on the phone and can change any time
+    if(!('speechSynthesis' in window))return false;
+    var vs=speechSynthesis.getVoices()||[];
+    return !vs.length||!!voice(lang);   // voice list not loaded yet: let the system try
+  }
+  function speak(text,lang){
+    var C=nativeTts();
+    if(C){C.nativePromise('Speech','speak',{text:text,lang:locale(lang),rate:.9}).catch(function(){toast(tr('Keine Stimme für diese Sprache auf dem Gerät.'));});return;}
+    if(!canSpeak(lang)){toast(tr('Keine Stimme für diese Sprache auf dem Gerät.'));return;}
+    try{speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(text);u.lang=locale(lang);var v=voice(lang);if(v)u.voice=v;u.rate=.9;speechSynthesis.speak(u);}catch(e){}
+  }
+
+  /* ---------- layout ---------- */
+  /* own language: its own name (people find it at once); the other side: the name in the UI language */
+  function langOpts(list,sel,own){return list.map(function(c){return '<option value="'+c+'"'+(c===sel?' selected':'')+'>'+esc(own?lname(c,c):lname(c,uiLang()))+'</option>';}).join('');}
+  /* languages of the other person: the host's list first (languages of the area), then every other language of the set */
+  function themList(){var pref=(o.them||[]).filter(function(c){return D.langs.indexOf(c)>=0;});
+    return pref.concat(D.langs.filter(function(c){return pref.indexOf(c)<0;})).filter(function(c){return c!==st.me;});}
+  function tabs(){return o.bundled?['ocr','phr']:['phr','ocr','packs'];}
+  function photoNote(){
+    if(!o.photoNote||base())return '';
+    var n=typeof o.photoNote==='string'?o.photoNote:(o.photoNote[uiLang()]||o.photoNote.en||o.photoNote.de||'');
+    return n?'<p class="skl-warn skl-apponly" role="note">'+esc(n)+'</p>':'';
+  }
+  function render(){
+    if(!root)return;
+    var tl=themList();if(tl.indexOf(st.them)<0)st.them=tl[0];
+    root.innerHTML='<div class="skl-langs">'+
+      '<label><span>'+esc(tr('Ich spreche'))+'</span><select data-act="me">'+langOpts(o.meLangs||D.langs,st.me,true)+'</select></label>'+
+      '<button type="button" class="skl-swap" data-act="swap" aria-label="'+esc(tr('Sprachen tauschen'))+'" title="'+esc(tr('Sprachen tauschen'))+'">⇄</button>'+
+      '<label><span>'+esc(tr('Gegenüber'))+'</span><select data-act="them">'+langOpts(tl,st.them,false)+'</select></label></div>'+
+      '<div class="skl-tabs" role="tablist">'+tabs().map(function(t){
+        var n={phr:'Sätze',ocr:'Foto & Text',packs:'Pakete'}[t];
+        return '<button type="button" role="tab" data-act="tab" data-tab="'+t+'" aria-selected="'+(st.tab===t)+'"'+(st.tab===t?' class="on"':'')+'>'+esc(tr(n))+'</button>';}).join('')+'</div>'+
+      '<div class="skl-body"></div>';
+    body();
+  }
+  function body(){
+    var b=root&&root.querySelector('.skl-body');if(!b)return;
+    if(st.tab==='phr')b.innerHTML=phrHTML();
+    else if(st.tab==='ocr')b.innerHTML=ocrHTML();
+    else{b.innerHTML=packsHTML();packsRefresh();}
+  }
+
+  /* ---------- 1. phrasebook ---------- */
+  function phrList(){
+    var q=(st.q||'').trim().toLocaleLowerCase(),fav=getJ('fav',{});
+    return D.phrases.filter(function(p){
+      if(st.sit==='fav'){if(!fav[p.id])return false;}
+      else if(st.sit!=='all'&&p.s!==st.sit)return false;
+      if(!q)return true;
+      return (txt(p,st.me)+' '+txt(p,st.them)).toLocaleLowerCase().indexOf(q)>=0;
+    });
+  }
+  function phrRow(p,fav,v){
+    var a=fill(txt(p,st.them),st.them,v),m=fill(txt(p,st.me),st.me,v),on=!!fav[p.id];
+    return '<li><button type="button" class="skl-row'+(p.urgent?' urgent':'')+'" data-act="show" data-id="'+esc(p.id)+'">'+
+      '<span class="them" lang="'+st.them+'">'+esc(a||'—')+'</span><span class="me" lang="'+st.me+'">'+esc(m)+'</span></button>'+
+      '<button type="button" class="skl-star'+(on?' on':'')+'" data-act="fav" data-id="'+esc(p.id)+'" aria-pressed="'+on+'" aria-label="'+esc(tr(on?'Gemerkt':'Merken'))+'">'+(on?'★':'☆')+'</button></li>';
+  }
+  /* note only when one of the two shown languages is not checked by a native speaker (data.review per language) */
+  function unchecked(l){var r=D.review&&D.review[l];return D.checked===false&&!(r&&/^(Quelle|geprüft)/.test(r));}
+  function phrHTML(){
+    var fav=getJ('fav',{}),v=vals(),list=phrList();
+    var chips=[{id:'all',n:tr('Alle')},{id:'fav',n:'★ '+tr('Merkliste')}].concat(D.situations.map(function(s){return {id:s.id,n:(s.icon?s.icon+' ':'')+(txt(s,st.me)||txt(s,'de'))};}));
+    return '<input type="search" class="skl-q" data-act="q" value="'+esc(st.q||'')+'" placeholder="'+esc(tr('Suchen …'))+'" aria-label="'+esc(tr('Suchen …'))+'">'+
+      '<div class="skl-chips">'+chips.map(function(c){return '<button type="button" data-act="sit" data-sit="'+c.id+'" class="'+(st.sit===c.id?'on':'')+'" aria-pressed="'+(st.sit===c.id)+'">'+esc(c.n)+'</button>';}).join('')+'</div>'+
+      (list.length?'<ul class="skl-list">'+list.map(function(p){return phrRow(p,fav,v);}).join('')+'</ul>':'<p class="skl-empty">'+esc(tr('Nichts gefunden.'))+'</p>')+
+      (unchecked(st.me)||unchecked(st.them)?'<p class="skl-note">'+esc(tr('Übersetzungen maschinell erstellt, noch nicht von Muttersprachlern geprüft.'))+'</p>':'');
+  }
+
+  /* show mode: a full-screen card for the person opposite */
+  var SH={item:null,text:null,src:null,rot:false,view:'say',reply:null};
+  function showPhrase(id){var p=D.phrases.filter(function(x){return x.id===id;})[0];if(p){SH.item=p;SH.text=null;open();}}
+  function showText(them,me,themLang,meLang){SH.item=null;SH.text={them:them,me:me,tl:themLang||st.them,ml:meLang||st.me};open();}
+  function open(){
+    SH.view='say';SH.reply=null;SH.rot=false;
+    if(!ov){ov=document.createElement('div');ov.className='skl skl-show';ov.setAttribute('role','dialog');ov.setAttribute('aria-modal','true');
+      ov.addEventListener('click',onClick);ov.addEventListener('input',onInput);document.addEventListener('keydown',function(e){if(e.key==='Escape'&&ov&&!ov.hidden)close();});document.body.appendChild(ov);}
+    ov.hidden=false;document.documentElement.classList.add('skl-lock');drawShow();
+    var c=ov.querySelector('[data-act="close"]');if(c)c.focus();
+  }
+  function close(){if(ov){ov.hidden=true;ov.innerHTML='';}document.documentElement.classList.remove('skl-lock');try{var C=nativeTts();if(C)C.nativePromise('Speech','stop',{}).catch(function(){});else speechSynthesis.cancel();}catch(e){}}
+  function drawShow(){
+    var v=vals(),tl=SH.text?SH.text.tl:st.them,ml=SH.text?SH.text.ml:st.me;
+    var them=SH.text?SH.text.them:fill(txt(SH.item,tl),tl,v),me=SH.text?SH.text.me:fill(txt(SH.item,ml),ml,v);
+    var urgent=SH.item&&SH.item.urgent,h=SH.item?holes(txt(SH.item,'de')):[],fav=getJ('fav',{});
+    var bar='<div class="skl-bar">'+
+      '<button type="button" data-act="say" data-lang="'+tl+'"'+(canSpeak(tl)?'':' disabled')+'>🔊 '+esc(tr('Vorlesen'))+'</button>'+
+      '<button type="button" data-act="rot" aria-pressed="'+SH.rot+'">↻ '+esc(tr('Drehen'))+'</button>'+
+      (D.answers&&D.answers.length?'<button type="button" data-act="answers">💬 '+esc(tr('Antworten'))+'</button>':'')+
+      (SH.item?'<button type="button" data-act="fav" data-id="'+esc(SH.item.id)+'" aria-pressed="'+!!fav[SH.item.id]+'">'+(fav[SH.item.id]?'★':'☆')+' '+esc(tr(fav[SH.item.id]?'Gemerkt':'Merken'))+'</button>':'')+
+      '<button type="button" data-act="close">✕ '+esc(tr('Schließen'))+'</button></div>';
+    var emT=o.emergency&&typeof o.emergency==='object'?(o.emergency[uiLang()]||o.emergency.de):o.emergency;
+    var em=urgent?'<p class="skl-emerg">'+esc(emT||tr('Seenot: UKW-Kanal 16 · Notruf 112'))+'</p>':'';
+    var inner;
+    if(SH.view==='answers'){
+      var prompt=(D.ui&&D.ui.answerPrompt&&D.ui.answerPrompt[tl])||'',numP=(D.ui&&D.ui.numberPrompt&&D.ui.numberPrompt[tl])||'';
+      inner='<p class="skl-prompt" lang="'+tl+'">'+esc(prompt)+'</p><div class="skl-ans">'+D.answers.map(function(a){
+          return '<button type="button" data-act="reply" data-id="'+esc(a.id)+'"><b lang="'+tl+'">'+esc(txt(a,tl))+'</b><small lang="'+ml+'">'+esc(txt(a,ml))+'</small></button>';}).join('')+'</div>'+
+        '<form class="skl-num" data-act="numform"><label><span lang="'+tl+'">'+esc(numP)+'</span><input type="text" inputmode="decimal" autocomplete="off" data-act="numin" aria-label="'+esc(numP||tr('Zahl'))+'"></label><button type="submit">OK</button></form>'+
+        '<div class="skl-bar"><button type="button" data-act="back">← '+esc(tr('Zurück'))+'</button><button type="button" data-act="close">✕ '+esc(tr('Schließen'))+'</button></div>';
+    }else if(SH.view==='reply'){
+      inner='<p class="skl-kick">'+esc(tr('Antwort'))+'</p><p class="skl-big" lang="'+ml+'">'+esc(SH.reply.me)+'</p><p class="skl-small" lang="'+tl+'">'+esc(SH.reply.them)+'</p>'+
+        '<div class="skl-bar"><button type="button" data-act="say" data-lang="'+ml+'" data-text="'+esc(SH.reply.me)+'"'+(canSpeak(ml)?'':' disabled')+'>🔊 '+esc(tr('Vorlesen'))+'</button>'+
+        '<button type="button" data-act="answers">💬 '+esc(tr('Antworten'))+'</button><button type="button" data-act="back">← '+esc(tr('Zurück'))+'</button><button type="button" data-act="close">✕ '+esc(tr('Schließen'))+'</button></div>';
+    }else{
+      var form=h.length?'<details class="skl-vars"'+(h.some(function(k){return v[k]==null||v[k]==='';})?' open':'')+'><summary>'+esc(tr('Werte einsetzen'))+'</summary>'+h.map(function(k){
+          return '<label><span>'+esc(tr(VARS[k]||k))+'</span><input type="text" inputmode="decimal" data-act="var" data-k="'+esc(k)+'" value="'+esc(v[k]==null?'':String(v[k]).replace('.',','))+'"></label>';}).join('')+'</details>':'';
+      inner=form+'<p class="skl-big" lang="'+tl+'">'+esc(them)+'</p><p class="skl-small" lang="'+ml+'">'+esc(me)+'</p>'+em+bar;
+    }
+    ov.innerHTML='<div class="skl-show-in'+(SH.rot?' rot':'')+'">'+inner+'</div>';
+  }
+  function setVar(k,val){var v=getJ('vals',{}),n=String(val).trim().replace(',','.');v[k]=n===''?'':(isFinite(Number(n))?Number(n):n);put('vals',JSON.stringify(v));}
+
+  /* ---------- storage: IndexedDB ---------- */
+  var dbP=null;
+  function db(){
+    if(dbP)return dbP;
+    dbP=new Promise(function(res,rej){
+      if(!window.indexedDB)return rej(new Error('IndexedDB fehlt'));
+      var r=indexedDB.open(o.idb||(o.key+'-sprachpakete'),1);
+      r.onupgradeneeded=function(){var d=r.result;if(!d.objectStoreNames.contains('files'))d.createObjectStore('files');if(!d.objectStoreNames.contains('meta'))d.createObjectStore('meta');};
+      r.onsuccess=function(){res(r.result);};r.onerror=function(){rej(r.error);};
+    });
+    dbP.catch(function(){dbP=null;});
+    return dbP;
+  }
+  function idbReq(store,mode,fn){return db().then(function(d){return new Promise(function(res,rej){var tx=d.transaction(store,mode),r=fn(tx.objectStore(store));tx.oncomplete=function(){res(r&&r.result);};tx.onerror=tx.onabort=function(){rej(tx.error||new Error('IndexedDB'));};});});}
+  function fileGet(n){if(o.bundled)return bundledFile(n);return idbReq('files','readonly',function(s){return s.get(n);});}
+  function filePut(n,b){return idbReq('files','readwrite',function(s){return s.put(b,n);});}
+  function fileDel(n){return idbReq('files','readwrite',function(s){return s.delete(n);});}
+  function fileKeys(){if(o.bundled)return bundleMan().then(bundledNames);return idbReq('files','readonly',function(s){return s.getAllKeys();});}
+  function metaGet(k){return idbReq('meta','readonly',function(s){return s.get(k);});}
+  function metaPut(k,v){return idbReq('meta','readwrite',function(s){return s.put(v,k);});}
+
+  /* ---------- packs built into the app (o.bundled): plain files next to index.html, read on demand ---------- */
+  var bundleP=null;
+  function bundleBase(){return String(o.bundled).replace(/\/+$/,'');}
+  function bundleMan(){
+    if(bundleP)return bundleP;
+    bundleP=fetch(bundleBase()+'/lang-packs.json').then(function(r){if(!r.ok)throw new Error('MISSING:lang-packs.json');return r.json();}).then(function(m){manifest=m;return m;});
+    bundleP.catch(function(){bundleP=null;});
+    return bundleP;
+  }
+  function bundledNames(m){
+    var n={};D.langs.forEach(function(c){(needFiles(c,m)||[]).forEach(function(x){n[x.name]=1;});});
+    return Object.keys(n);
+  }
+  function bundledFile(n){
+    return bundleMan().then(function(m){
+      return fetch(bundleBase()+'/'+encodeURIComponent(n)).then(function(r){if(!r.ok)throw new Error('MISSING:'+n);return r.arrayBuffer();}).then(function(b){
+        /* the size must match the manifest, an asset that was altered on the way into the APK must not reach an engine */
+        var x=null;D.langs.some(function(c){return (needFiles(c,m)||[]).some(function(y){if(y.name===n){x=y;return true;}});});
+        if(x&&x.bytes&&b.byteLength!==x.bytes)throw new Error('MISSING:'+n);
+        return b;
+      });
+    });
+  }
+
+  /* ---------- 3. packs ---------- */
+  function base(){return String(get('packUrl')||o.packBase||'').trim().replace(/\/+$/,'');}
+  /* main list: my language, the current partner, the area's languages and whatever is installed; the rest folded away */
+  function packLangs(){
+    var s=[];function add(c){if(c&&D.langs.indexOf(c)>=0&&s.indexOf(c)<0)s.push(c);}
+    add(st.me);add(st.them);(o.them||[]).forEach(add);Object.keys(installed).forEach(function(c){if(installed[c])add(c);});
+    return {main:s,more:D.langs.filter(function(c){return s.indexOf(c)<0;})};
+  }
+  function ocrCoreVariant(){
+    try{return WebAssembly.validate(new Uint8Array([0,97,115,109,1,0,0,0,1,5,1,96,0,1,123,3,2,1,0,10,10,1,8,0,65,0,253,15,253,98,11]))?'simd':'plain';}catch(e){return 'plain';}
+  }
+  /* files a language needs: engines once, OCR data, model to and from the pivot */
+  function needFiles(lang,man){
+    man=man||manifest;if(!man)return null;
+    var f=[],e=man.engine||{};
+    function add(x){if(x&&x.name&&!f.some(function(y){return y.name===x.name;}))f.push(x);}
+    var oc=man.ocr&&man.ocr[L[lang].ocr];
+    var mts=lang===PIVOT?[]:[man.mt&&man.mt[lang+PIVOT],man.mt&&man.mt[PIVOT+lang]];
+    if(!oc&&!mts.some(Boolean))return null;
+    if(oc){var eo=e.ocr||{};add(eo.lib);add(eo.worker);add(eo.core&&eo.core[ocrCoreVariant()]);add(oc);}
+    mts.forEach(function(m){if(!m)return;var em=e.mt||{};add(em.worker);add(em.glue);add(em.wasm);add(m.model);add(m.lex);(m.vocab||[]).forEach(add);});
+    return f;
+  }
+  function packsRefresh(){
+    var b=base();
+    Promise.resolve().then(function(){
+      if(navigator.storage&&navigator.storage.estimate)return navigator.storage.estimate().then(function(x){estimate=x;});
+    }).catch(function(){}).then(function(){
+      if(navigator.storage&&navigator.storage.persisted)return navigator.storage.persisted().then(function(p){persisted=p;});
+    }).catch(function(){}).then(function(){
+      return metaGet('manifest').then(function(m){if(m&&!manifest)manifest=m;}).catch(function(){});
+    }).then(function(){
+      if(!b){manErr=tr('Keine Paketquelle eingestellt.');return;}
+      return fetchJSON(b+'/lang-packs.json').then(function(m){
+        if(!m||m.format!==1)throw new Error('Format');
+        manifest=m;manErr='';return metaPut('manifest',m).catch(function(){});
+      }).catch(function(e){manErr=tr('Paketliste nicht erreichbar.')+(manifest?' '+tr('Nur offline gespeicherte Pakete werden benutzt.'):'');});
+    }).then(checkInstalled).then(function(){if(st.tab==='packs')drawPacks();});
+  }
+  function engineNames(){
+    var n={},e=manifest&&manifest.engine||{};
+    [e.mt&&e.mt.worker,e.mt&&e.mt.glue,e.mt&&e.mt.wasm,e.ocr&&e.ocr.lib,e.ocr&&e.ocr.worker].concat(e.ocr&&e.ocr.core?[e.ocr.core.simd,e.ocr.core.plain]:[]).forEach(function(x){if(x&&x.name)n[x.name]=1;});
+    return n;
+  }
+  function checkInstalled(){
+    return fileKeys().then(function(keys){
+      var have={};(keys||[]).forEach(function(k){have[k]=1;});
+      installed={};haveFiles=have;
+      var eng=engineNames();
+      D.langs.forEach(function(c){var f=needFiles(c);if(!f)return;
+        var all=f.every(function(x){return have[x.name];}),own=f.filter(function(x){return !eng[x.name]&&have[x.name];}).length;   // shared engines alone are not a partial pack
+        installed[c]=all?'ok':(own?'part':'');});
+      return installed;
+    }).catch(function(){installed={};return installed;});
+  }
+  function packsHTML(){return '<div class="skl-packs"></div>';}
+  function drawPacks(){
+    var el=root&&root.querySelector('.skl-packs');if(!el)return;
+    var pl=packLangs(),row=function(c){
+      var f=needFiles(c),s=installed[c],size=f?f.reduce(function(a,x){return a+(haveFiles[x.name]?0:(x.bytes||0));},0):0;   // only what still has to be downloaded
+      var parts=[];if(manifest&&manifest.ocr&&manifest.ocr[L[c].ocr])parts.push(tr('Texterkennung'));if(c!==PIVOT&&manifest&&manifest.mt&&manifest.mt[c+PIVOT])parts.push(tr('Übersetzung')+' ('+tr('über Englisch')+')');
+      var state=!f?tr('Für diese Sprache gibt es kein Paket.'):s==='ok'?'✓ '+tr('Geladen'):s==='part'?tr('Unvollständig'):tr('Nicht geladen');
+      var btn=!f?'':busy===c?'<button type="button" data-act="cancel">'+esc(tr('Abbrechen'))+'</button>':
+        s==='ok'?'<button type="button" class="sec" data-act="del" data-lang="'+c+'"'+(busy?' disabled':'')+'>'+esc(tr('Löschen'))+'</button>':
+        '<button type="button" data-act="get" data-lang="'+c+'"'+(busy||!base()?' disabled':'')+'>'+esc(tr('Laden'))+(size?' · '+mb(size):'')+'</button>';
+      return '<li class="'+(s==='ok'?'ok':'')+'"><div><b>'+esc(both(c))+'</b><small>'+esc(parts.join(' · '))+'</small><small class="st">'+esc(state)+'</small>'+
+        (busy===c&&prog?'<progress max="'+prog.total+'" value="'+prog.done+'"></progress>':'')+'</div>'+btn+'</li>';
+    };
+    var rows=manifest?'<ul class="skl-packlist">'+pl.main.map(row).join('')+'</ul>'+
+      (pl.more.length?'<details class="skl-more"'+(pl.more.indexOf(busy)>=0?' open':'')+'><summary>'+esc(tr('Weitere Sprachen'))+' ('+pl.more.length+')</summary><ul class="skl-packlist">'+pl.more.map(row).join('')+'</ul></details>':''):'';
+    var free=estimate&&estimate.quota?tr('Frei')+': '+mb(Math.max(0,estimate.quota-(estimate.usage||0))):'';
+    el.innerHTML=photoNote()+'<p class="skl-lead">'+esc(tr('Texterkennung und Übersetzung laufen nach dem Laden ohne Internet auf diesem Gerät.'))+'</p>'+
+      (manErr?'<p class="skl-warn">'+esc(manErr)+'</p>':'')+(msg?'<p class="skl-msg" role="status">'+esc(msg)+'</p>':'')+
+      rows+
+      '<p class="skl-note">'+esc(free)+(persisted===true?' · '+tr('Speicher geschützt'):persisted===false?' · '+tr('Der Browser darf die Pakete bei Speichermangel löschen.'):'')+'</p>'+
+      '<details class="skl-src"><summary>'+esc(tr('Paketquelle'))+'</summary><form data-act="srcform"><input type="url" data-act="src" value="'+esc(base())+'" placeholder="https://…/sprachpakete"><button type="submit">'+esc(tr('Speichern'))+'</button></form></details>';
+  }
+  function fetchJSON(u){
+    if(o.fetchFile)return o.fetchFile(u,function(){},undefined).then(function(b){return JSON.parse(new TextDecoder().decode(b));});
+    return fetch(u,{credentials:'omit',cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();});
+  }
+  function download(u,onBytes,signal){
+    if(o.fetchFile)return o.fetchFile(u,onBytes,signal);
+    return fetch(u,{credentials:'omit',signal:signal}).then(function(r){
+      if(!r.ok)throw new Error('HTTP '+r.status+' '+u);
+      if(!r.body||!r.body.getReader)return r.arrayBuffer().then(function(b){onBytes(b.byteLength);return b;});
+      var rd=r.body.getReader(),parts=[],n=0;
+      return (function pump(){return rd.read().then(function(x){
+        if(x.done){var out=new Uint8Array(n),p=0;parts.forEach(function(c){out.set(c,p);p+=c.length;});return out.buffer;}
+        parts.push(x.value);n+=x.value.length;onBytes(x.value.length);return pump();});})();
+    });
+  }
+  function sha256(buf){
+    if(!(window.crypto&&crypto.subtle))return Promise.resolve(null);
+    return crypto.subtle.digest('SHA-256',buf).then(function(h){return Array.prototype.map.call(new Uint8Array(h),function(x){return ('0'+x.toString(16)).slice(-2);}).join('');});
+  }
+  function install(lang){
+    if(busy)return Promise.resolve(false);
+    var f=needFiles(lang),b=base();if(!f||!b)return Promise.resolve(false);
+    busy=lang;msg='';
+    ctl=typeof AbortController!=='undefined'?new AbortController():{signal:undefined,abort:function(){}};
+    var my=ctl;
+    return fileKeys().then(function(keys){
+      var have={};(keys||[]).forEach(function(k){have[k]=1;});
+      var todo=f.filter(function(x){return !have[x.name];});
+      prog={done:0,total:todo.reduce(function(a,x){return a+(x.bytes||0);},0)||1};
+      if(estimate&&estimate.quota&&estimate.quota-(estimate.usage||0)<prog.total*1.1)throw new Error('QUOTA');
+      drawPacks();
+      var t0=0;
+      return todo.reduce(function(p,x){return p.then(function(){
+        if(my.aborted)throw new Error('ABORT');
+        return download(b+'/'+encodeURIComponent(x.name),function(n){prog.done+=n;var now=Date.now();if(now-t0>250){t0=now;var pr=root&&root.querySelector('.skl-packs progress');if(pr)pr.value=prog.done;}},my.signal).then(function(buf){
+          if(x.bytes&&buf.byteLength!==x.bytes)throw new Error('SHA');
+          return sha256(buf).then(function(h){if(h&&x.sha256&&h!==x.sha256)throw new Error('SHA');return filePut(x.name,buf);});
+        });
+      });},Promise.resolve());
+    }).then(function(){
+      return metaGet('langs').then(function(m){m=m||{};m[lang]={date:manifest&&manifest.date,files:f.map(function(x){return x.name;})};return metaPut('langs',m);});
+    }).then(function(){
+      if(navigator.storage&&navigator.storage.persist)return navigator.storage.persist().then(function(p){persisted=p;}).catch(function(){});
+    }).then(function(){busy=null;ctl=null;prog=null;msg=tr('Paket geladen.');return true;}).catch(function(e){
+      var m=String(e&&e.message||e);busy=null;ctl=null;prog=null;
+      msg=(e&&e.name==='AbortError')||m==='ABORT'?tr('Download abgebrochen.'):m==='SHA'?tr('Prüfsumme falsch, Datei verworfen.'):m==='QUOTA'||(e&&e.name==='QuotaExceededError')?tr('Nicht genug Speicher frei.'):tr('Fehler')+': '+m;
+      return false;
+    }).then(function(ok){return checkInstalled().then(function(){if(st.tab==='packs')packsRefresh();return ok;});});
+  }
+  function remove(lang){
+    if(busy)return Promise.resolve(false);
+    return metaGet('langs').then(function(m){
+      m=m||{};var mine=(m[lang]&&m[lang].files)||(needFiles(lang)||[]).map(function(x){return x.name;});delete m[lang];
+      var keep={};Object.keys(m).forEach(function(k){(m[k].files||[]).forEach(function(n){keep[n]=1;});});
+      return Promise.all(mine.filter(function(n){return !keep[n];}).map(fileDel)).then(function(){return metaPut('langs',m);});
+    }).then(function(){engineReset();msg=tr('Paket gelöscht.');return checkInstalled();}).then(function(){if(st.tab==='packs')drawPacks();return true;});
+  }
+
+  /* ---------- 2. engines (only from stored packs) ---------- */
+  function blobUrl(name,type){
+    if(E.urls[name])return Promise.resolve(E.urls[name]);
+    return fileGet(name).then(function(b){if(!b)throw new Error('MISSING:'+name);return (E.urls[name]=URL.createObjectURL(new Blob([b],{type:type})));});
+  }
+  function engineReset(){
+    try{if(E.ocr)E.ocr.terminate();}catch(e){}
+    try{if(E.mt)E.mt.terminate();}catch(e){}
+    E.ocr=null;E.ocrLang='';E.mt=null;E.mtCall=null;E.mtLoaded={};
+    Object.keys(E.urls).forEach(function(k){try{URL.revokeObjectURL(E.urls[k]);}catch(e){}});E.urls={};E.tess=null;
+  }
+  function man(){if(manifest)return Promise.resolve(manifest);if(o.bundled)return bundleMan();return metaGet('manifest').then(function(m){if(!m)throw new Error('MISSING:lang-packs.json');manifest=m;return m;});}
+  function engName(x,what){if(!x||!x.name)throw new Error('MISSING:'+what);return x.name;}
+  function tesseract(){
+    if(E.tess)return E.tess;
+    E.tess=man().then(function(m){return blobUrl(engName(m.engine.ocr&&m.engine.ocr.lib,'ocr-lib'),'text/javascript');}).then(function(u){
+      if(window.Tesseract)return;
+      return new Promise(function(res,rej){var s=document.createElement('script');s.src=u;s.onload=res;s.onerror=function(){rej(new Error('Tesseract'));};document.head.appendChild(s);});
+    });
+    E.tess.catch(function(){E.tess=null;});
+    return E.tess;
+  }
+  function ocrWorker(lang,onP){
+    var code=L[lang].ocr;E.ocrProg=onP;
+    if(E.ocr&&E.ocrLang===code)return Promise.resolve(E.ocr);
+    return man().then(function(m){
+      var oc=m.ocr&&m.ocr[code];if(!oc)throw new Error('MISSING:ocr-'+code);
+      return Promise.all([tesseract(),fileGet(oc.name),blobUrl(engName(m.engine.ocr.worker,'ocr-worker'),'text/javascript'),blobUrl(engName(m.engine.ocr.core&&m.engine.ocr.core[ocrCoreVariant()],'ocr-core'),'text/javascript')]);
+    }).then(function(r){
+      if(!r[1])throw new Error('MISSING:ocr-'+code);
+      var old=E.ocr;E.ocr=null;if(old)old.terminate();
+      /* tesseract.js 7.0.0 bug: initialize() names the language after l.data instead of l.code when data is passed directly.
+         The language object is copied once per job (loadLanguage, then initialize), so 'data' hands out the bytes on the
+         first copy and the code on the second. Pinned version, covered by sprachen/tests/ocr.test.js. */
+      var bytes=new Uint8Array(r[1]),copies=0,lang={code:code};
+      Object.defineProperty(lang,'data',{enumerable:true,get:function(){return copies++===0?bytes:code;}});
+      return window.Tesseract.createWorker([lang],1,{workerPath:r[2],corePath:r[3]+'#core.wasm.js',workerBlobURL:false,cacheMethod:'none',
+        logger:function(x){if(E.ocrProg&&x&&x.status==='recognizing text')E.ocrProg(x.progress);}});
+    }).then(function(w){E.ocr=w;E.ocrLang=code;return w;});
+  }
+  /* Photo to clean page for Tesseract: size, page outline with perspective correction, a quarter or half turn when the first reading
+     is poor, polarity, uneven light, skew. Pure canvas, about 0.5 s for a phone photo; EXIF rotation comes from the image decoder.
+     Perspective needs a page that stands out from its surroundings; text on a wall without an edge only gets the skew correction. */
+  function loadImage(file){
+    return window.createImageBitmap?createImageBitmap(file):new Promise(function(res,rej){var i=new Image();i.onload=function(){res(i);};i.onerror=rej;i.src=URL.createObjectURL(file);});
+  }
+  function percentile(hist,total,q){var n=0,lim=total*q;for(var i=0;i<256;i++){n+=hist[i];if(n>=lim)return i;}return 255;}
+  /* text dark on light: the light level of each block is the paper; dividing by it removes shadows and gradients */
+  function flatten(g,w,h){
+    var B=Math.max(16,Math.round(Math.max(w,h)/32)),cols=Math.ceil(w/B),rows=Math.ceil(h/B),bg=new Float32Array(cols*rows);
+    for(var r=0;r<rows;r++)for(var c=0;c<cols;c++){
+      var hist=new Uint32Array(256),n=0,x1=Math.min(w,(c+1)*B),y1=Math.min(h,(r+1)*B);
+      for(var y=r*B;y<y1;y+=2)for(var x=c*B;x<x1;x+=2){hist[g[y*w+x]]++;n++;}
+      bg[r*cols+c]=Math.max(32,percentile(hist,n,.9));
+    }
+    /* smooth over the neighbours so block edges never show */
+    var sm=new Float32Array(cols*rows);
+    for(r=0;r<rows;r++)for(c=0;c<cols;c++){var t=0,m=0;for(var dr=-1;dr<=1;dr++)for(var dc=-1;dc<=1;dc++){var rr=r+dr,cc=c+dc;if(rr<0||cc<0||rr>=rows||cc>=cols)continue;t+=bg[rr*cols+cc];m++;}sm[r*cols+c]=t/m;}
+    /* far darker than the paper = table, not page: blank it, its grain only confuses the layout analysis */
+    var sorted=Array.prototype.slice.call(sm).sort(function(p,q){return p-q;}),paper=sorted[Math.floor(sorted.length*.9)],desk=paper*.55;
+    for(y=0;y<h;y++){
+      var fy=Math.min(rows-1.001,Math.max(0,y/B-.5)),r0=fy|0,ky=fy-r0;
+      for(x=0;x<w;x++){
+        var fx=Math.min(cols-1.001,Math.max(0,x/B-.5)),c0=fx|0,kx=fx-c0,i0=r0*cols+c0;
+        var b=(sm[i0]*(1-kx)+sm[i0+1]*kx)*(1-ky)+(sm[i0+cols]*(1-kx)+sm[i0+cols+1]*kx)*ky,v=b<desk?255:g[y*w+x]*255/b;
+        g[y*w+x]=v>255?255:v;
+      }
+    }
+  }
+  /* skew in degrees: the angle at which dark pixels fall into the sharpest horizontal bands */
+  function skewAngle(g,w,h){
+    var S=Math.max(1,Math.round(Math.max(w,h)/700)),pts=[],y,x;
+    for(y=0;y<h;y+=S)for(x=0;x<w;x+=S)if(g[y*w+x]<128)pts.push(x,y);
+    var n=pts.length/2;if(n<200||n>200000)return 0;
+    function score(a){
+      var t=Math.tan(a*Math.PI/180),bins=new Int32Array(h+Math.ceil(Math.abs(t)*w)+2),off=t<0?Math.ceil(-t*w):0,sum=0;
+      for(var i=0;i<pts.length;i+=2)bins[Math.round(pts[i+1]+pts[i]*t+off)>>1]++;
+      for(i=1;i<bins.length;i++){var d=bins[i]-bins[i-1];sum+=d*d;}
+      return sum;
+    }
+    function best(from,to,step){var ba=from,bs=-1;for(var a=from;a<=to+1e-6;a+=step){var v=score(a);if(v>bs){bs=v;ba=a;}}return ba;}
+    var a=best(-12,12,1);a=best(a-1,a+1,.25);
+    return Math.abs(a)<.3?0:a;
+  }
+  function canvasOf(img,w,h){var c=document.createElement('canvas');c.width=w;c.height=h;var x=c.getContext('2d',{willReadFrequently:true});x.imageSmoothingQuality='high';x.drawImage(img,0,0,w,h);return c;}
+  function loadCanvas(file){
+    return loadImage(file).then(function(img){
+      var k=Math.min(2,2400/Math.max(img.width,img.height)),c=canvasOf(img,Math.max(1,Math.round(img.width*k)),Math.max(1,Math.round(img.height*k)));
+      if(img.close)img.close();return c;
+    });
+  }
+  /* The four corners of the page: the largest bright area that is not the whole frame. Returns null unless the area really is a
+     four-cornered sheet, a wrong outline would cut text away. Corners in the size of the canvas: top left, top right, bottom right, bottom left. */
+  function findPage(c){
+    var W=c.width,H=c.height,k=Math.min(1,480/Math.max(W,H)),w=Math.max(1,Math.round(W*k)),h=Math.max(1,Math.round(H*k));
+    var s=canvasOf(c,w,h),p=s.getContext('2d').getImageData(0,0,w,h).data,n=w*h,g=new Uint8Array(n),hist=new Uint32Array(256),i;
+    for(i=0;i<n;i++){g[i]=p[i*4]*.299+p[i*4+1]*.587+p[i*4+2]*.114;hist[g[i]]++;}
+    /* Otsu: the level that best splits sheet and surroundings */
+    var sum=0,sb=0,wb=0,best=-1,T=128;for(i=0;i<256;i++)sum+=i*hist[i];
+    for(i=0;i<256;i++){wb+=hist[i];if(!wb)continue;var wf=n-wb;if(!wf)break;sb+=i*hist[i];var d=sb/wb-(sum-sb)/wf,v=wb*wf*d*d;if(v>best){best=v;T=i;}}
+    var lab=new Int32Array(n),stack=new Int32Array(n),big=0,bigN=0,id=0;
+    for(i=0;i<n;i++){
+      if(lab[i]||g[i]<=T)continue;
+      id++;var sp=0,cnt=0;stack[sp++]=i;lab[i]=id;
+      while(sp){var q=stack[--sp],qx=q%w;cnt++;
+        if(qx>0&&!lab[q-1]&&g[q-1]>T){lab[q-1]=id;stack[sp++]=q-1;}
+        if(qx<w-1&&!lab[q+1]&&g[q+1]>T){lab[q+1]=id;stack[sp++]=q+1;}
+        if(q>=w&&!lab[q-w]&&g[q-w]>T){lab[q-w]=id;stack[sp++]=q-w;}
+        if(q<n-w&&!lab[q+w]&&g[q+w]>T){lab[q+w]=id;stack[sp++]=q+w;}
+      }
+      if(cnt>bigN){bigN=cnt;big=id;}
+    }
+    if(bigN<n*.15)return null;
+    var ex=[[1e9,0,0],[-1e9,0,0],[-1e9,0,0],[1e9,0,0]],x,y,sides=0,minx=w,maxx=0,miny=h,maxy=0;   // x+y min, x-y max, x+y max, x-y min
+    for(y=0;y<h;y++)for(x=0;x<w;x++){
+      if(lab[y*w+x]!==big)continue;
+      if(x<minx)minx=x;if(x>maxx)maxx=x;if(y<miny)miny=y;if(y>maxy)maxy=y;
+      var a=x+y,b=x-y;
+      if(a<ex[0][0])ex[0]=[a,x,y];if(b>ex[1][0])ex[1]=[b,x,y];if(a>ex[2][0])ex[2]=[a,x,y];if(b<ex[3][0])ex[3]=[b,x,y];
+    }
+    if(minx<2)sides++;if(miny<2)sides++;if(maxx>w-3)sides++;if(maxy>h-3)sides++;
+    if(sides>=3)return null;                               // the sheet fills the frame: nothing to straighten by its outline
+    var Q=ex.map(function(e){return [e[1],e[2]];}),area=0,sign=0,convex=true;
+    for(i=0;i<4;i++){
+      var P0=Q[i],P1=Q[(i+1)%4],P2=Q[(i+2)%4],cr=(P1[0]-P0[0])*(P2[1]-P1[1])-(P1[1]-P0[1])*(P2[0]-P1[0]);
+      area+=P0[0]*P1[1]-P1[0]*P0[1];if(!cr||(sign&&cr*sign<0))convex=false;sign=cr;
+    }
+    area=Math.abs(area)/2;
+    if(!convex||area<n*.15)return null;
+    /* nearly everything of the area lies inside the four corners, and they do not span far more than the area */
+    var out=0;
+    for(y=0;y<h;y+=2)for(x=0;x<w;x+=2){
+      if(lab[y*w+x]!==big)continue;
+      for(i=0;i<4;i++){var A=Q[i],B=Q[(i+1)%4];if(((B[0]-A[0])*(y-A[1])-(B[1]-A[1])*(x-A[0]))*sign<-2){out++;break;}}
+    }
+    if(out*4>bigN*.04||bigN<area*.6)return null;
+    return Q.map(function(q){return [(q[0]+.5)/k,(q[1]+.5)/k];});
+  }
+  /* solves the homography from the corners of a W x H rectangle to the four source points (Gaussian elimination, 8 unknowns) */
+  function homography(Q,W,H){
+    var D=[[0,0],[W,0],[W,H],[0,H]],M=[],i,r,c;
+    for(i=0;i<4;i++){var u=D[i][0],v=D[i][1],x=Q[i][0],y=Q[i][1];M.push([u,v,1,0,0,0,-u*x,-v*x,x]);M.push([0,0,0,u,v,1,-u*y,-v*y,y]);}
+    for(c=0;c<8;c++){
+      var piv=c;for(r=c+1;r<8;r++)if(Math.abs(M[r][c])>Math.abs(M[piv][c]))piv=r;
+      var t=M[c];M[c]=M[piv];M[piv]=t;if(Math.abs(M[c][c])<1e-9)return null;
+      for(r=0;r<8;r++){if(r===c)continue;var f=M[r][c]/M[c][c];if(f)for(var k=c;k<9;k++)M[r][k]-=f*M[c][k];}
+    }
+    return M.map(function(R,j){return R[8]/R[j];});
+  }
+  /* lifts the page out of the photo and maps it to a straight rectangle */
+  function rectify(c,Q){
+    var len=function(a,b){return Math.hypot(a[0]-b[0],a[1]-b[1]);};
+    var W=Math.round((len(Q[0],Q[1])+len(Q[3],Q[2]))/2),H=Math.round((len(Q[0],Q[3])+len(Q[1],Q[2]))/2),h=homography(Q,W,H);
+    if(!h||W<200||H<200)return null;
+    var sw=c.width,sh=c.height,S=c.getContext('2d').getImageData(0,0,sw,sh).data,r=document.createElement('canvas');r.width=W;r.height=H;
+    var x=r.getContext('2d',{willReadFrequently:true}),d=x.createImageData(W,H),D=d.data,o=0;
+    for(var v=0;v<H;v++)for(var u=0;u<W;u++,o+=4){
+      var z=h[6]*u+h[7]*v+1,sx=(h[0]*u+h[1]*v+h[2])/z,sy=(h[3]*u+h[4]*v+h[5])/z,ix=sx|0,iy=sy|0;
+      if(sx<0||sy<0||ix>=sw-1||iy>=sh-1){D[o]=D[o+1]=D[o+2]=D[o+3]=255;continue;}
+      var fx=sx-ix,fy=sy-iy,i0=(iy*sw+ix)*4,i1=i0+4,i2=i0+sw*4,i3=i2+4;
+      for(var ch=0;ch<3;ch++)D[o+ch]=(S[i0+ch]*(1-fx)+S[i1+ch]*fx)*(1-fy)+(S[i2+ch]*(1-fx)+S[i3+ch]*fx)*fy;
+      D[o+3]=255;
+    }
+    x.putImageData(d,0,0);return r;
+  }
+  /* quarter or half turn, deg 90, 180 or 270, optionally scaled down so the longer side is at most lim */
+  function turned(c,deg,lim){
+    var k=lim?Math.min(1,lim/Math.max(c.width,c.height)):1,w=Math.round(c.width*k),h=Math.round(c.height*k),q=deg%180!==0,r=document.createElement('canvas');
+    r.width=q?h:w;r.height=q?w:h;
+    var x=r.getContext('2d',{willReadFrequently:true});x.imageSmoothingQuality='high';x.translate(r.width/2,r.height/2);x.rotate(deg*Math.PI/180);x.drawImage(c,-w/2,-h/2,w,h);
+    return r;
+  }
+  /* grey page from a colour canvas: polarity, light, contrast, skew. Works on a copy, the caller may try the original again. */
+  function cleanPage(c0){
+    var w=c0.width,h=c0.height,c=canvasOf(c0,w,h),x=c.getContext('2d',{willReadFrequently:true});
+    var d=x.getImageData(0,0,w,h),p=d.data,g=new Uint8ClampedArray(w*h),hist=new Uint32Array(256),i,n=w*h;
+    for(i=0;i<n;i++){g[i]=p[i*4]*.299+p[i*4+1]*.587+p[i*4+2]*.114;hist[g[i]]++;}
+    /* light text on a dark sign: invert, the rest of the chain expects dark on light */
+    if(percentile(hist,n,.5)<100)for(i=0;i<n;i++)g[i]=255-g[i];
+    flatten(g,w,h);
+    /* stretch: darkest ink to black, paper to white */
+    hist=new Uint32Array(256);for(i=0;i<n;i++)hist[g[i]]++;
+    var lo=percentile(hist,n,.01),hi=percentile(hist,n,.6);if(hi<=lo+16){lo=0;hi=255;}
+    for(i=0;i<n;i++){g[i]=(g[i]-lo)*255/(hi-lo);p[i*4]=p[i*4+1]=p[i*4+2]=g[i];}
+    x.putImageData(d,0,0);
+    var a=skewAngle(g,w,h);
+    if(!a)return c;
+    var r=document.createElement('canvas');r.width=w;r.height=h;
+    var y=r.getContext('2d');y.fillStyle='#fff';y.fillRect(0,0,w,h);y.translate(w/2,h/2);y.rotate(-a*Math.PI/180);y.imageSmoothingQuality='high';y.drawImage(c,-w/2,-h/2);
+    return r;
+  }
+  function prepImage(file){return loadCanvas(file).then(function(c){var Q=findPage(c),p=Q&&rectify(c,Q);return cleanPage(p||c);});}
+  /* Lines from Tesseract's word boxes. Desk, shadow and paper grain come back as short low-confidence words: words below the
+     limit go, unless that would throw away most of the text (a poor photo keeps what it has, the user can correct it). */
+  function ocrLines(res){
+    var all=[],kept=[],chars=0,keptChars=0,sum=0;
+    (res.data.blocks||[]).forEach(function(bl){(bl.paragraphs||[]).forEach(function(pa){(pa.lines||[]).forEach(function(li){
+      var ws=(li.words||[]).filter(function(w){return /\S/.test(w.text);});
+      /* a real word stays even when Tesseract doubts it: a lost word changes the meaning, a doubtful one can be corrected */
+      var good=ws.filter(function(w){var n=w.text.replace(/[^\p{L}\p{N}]/gu,'').length;return n&&(w.confidence>=50||(n>=3&&w.confidence>=20));});
+      /* a lone scrap on a line of its own is noise even when Tesseract likes it */
+      if(good.length===1&&good[0].text.replace(/[^\p{L}\p{N}]/gu,'').length<3)good=[];
+      all.push(ws.map(function(w){return w.text;}).join(' '));ws.forEach(function(w){chars+=w.text.length;});
+      if(good.length){kept.push(good.map(function(w){return w.text;}).join(' '));good.forEach(function(w){keptChars+=w.text.length;sum+=w.confidence*w.text.length;});}
+    });});});
+    if(!all.length)return {lines:String(res.data.text||'').split(/\n/),conf:res.data.confidence||0};
+    return keptChars>=chars*.3?{lines:kept,conf:sum/keptChars}:{lines:all,conf:res.data.confidence||0};
+  }
+  function readLines(res){
+    var ol=ocrLines(res),lines=ol.lines.map(function(s){return s.trim();}).filter(Boolean),out=[];
+    lines.forEach(function(s){var prev=out[out.length-1];if(prev&&!/[.!?:;…]$/.test(prev)&&/^[a-zäöüßàâçéèêëîïôûùüÿñæœåøąćęłńóśźżčďěňřšťůžа-яёіїєґα-ω]/.test(s))out[out.length-1]=prev+' '+s;else out.push(s);});
+    var text=out.join('\n');
+    return {text:text,conf:Math.round(ol.conf),score:Math.round(ol.conf)*Math.min(text.replace(/[^\p{L}\p{N}]/gu,'').length,120)};
+  }
+  /* A clean reading ends the search at once. Only a poor one costs more: the photo without the outline (the outline may have cut text
+     away), then a quick look at the three other turns. Every step is Tesseract on the phone, so the good case stays the fast one. */
+  function ocr(file,lang,onP){
+    return Promise.all([loadCanvas(file),ocrWorker(lang,onP)]).then(function(r){
+      var c=r[0],w=r[1],Q=findPage(c),page=Q&&rectify(c,Q),how=page?'page':'plain',src=page||c;
+      var read=function(cv){return w.recognize(cleanPage(cv),{},{text:true,blocks:true}).then(function(x){return readLines(x);});};
+      var enough=function(x){return x.conf>=70&&x.text.length>=12;},done=function(x){x.how=how;return x;};
+      return read(src).then(function(a){
+        if(enough(a))return done(a);
+        return (page?read(c):Promise.resolve(null)).then(function(b){
+          if(b&&b.score>a.score){a=b;how='plain';src=c;}
+          if(enough(a))return done(a);
+          var bestDeg=0,top=a.score;
+          return [90,270,180].reduce(function(pr,deg){
+            return pr.then(function(){return read(turned(src,deg,1400));}).then(function(q){if(q.score>top*1.2){top=q.score;bestDeg=deg;}});
+          },Promise.resolve()).then(function(){
+            if(!bestDeg)return done(a);
+            how+='+'+bestDeg;
+            return read(turned(src,bestDeg)).then(function(x){return done(x.score>a.score?x:a);});
+          });
+        });
+      });
+    });
+  }
+  function mtEngine(){
+    if(E.mt)return Promise.resolve(E.mtCall);
+    return man().then(function(m){
+      var e=m.engine.mt||{};
+      return Promise.all([fileGet(engName(e.worker,'mt-worker')),blobUrl(engName(e.glue,'mt-glue'),'text/javascript'),blobUrl(engName(e.wasm,'mt-wasm'),'application/wasm')]);
+    }).then(function(r){
+      if(!r[0])throw new Error('MISSING:mt-worker');
+      var pre='self.__SK_GLUE='+JSON.stringify(r[1])+';self.__SK_WASM='+JSON.stringify(r[2])+';\n';
+      var w=new Worker(URL.createObjectURL(new Blob([pre,new Uint8Array(r[0])],{type:'text/javascript'})));
+      var serial=0,pend={};
+      w.addEventListener('message',function(ev){var d=ev.data||{},p=pend[d.id];if(!p)return;delete pend[d.id];if(d.error)p.rej(Object.assign(new Error(d.error.message),{name:d.error.name}));else p.res(d.result);});
+      w.addEventListener('error',function(ev){Object.keys(pend).forEach(function(k){pend[k].rej(new Error(ev.message||'Worker'));delete pend[k];});});
+      var call=function(name){var args=Array.prototype.slice.call(arguments,1);return new Promise(function(res,rej){var id=++serial;pend[id]={res:res,rej:rej};w.postMessage({id:id,name:name,args:args});});};
+      E.mt=w;E.mtCall=call;E.mtLoaded={};
+      return call('initialize',{cacheSize:0}).then(function(){return call;},function(err){E.mt=null;E.mtCall=null;w.terminate();throw err;});
+    });
+  }
+  function chain(from,to){return from===PIVOT||to===PIVOT?[{from:from,to:to}]:[{from:from,to:PIVOT},{from:PIVOT,to:to}];}
+  function mtLoad(call,pair){
+    var k=pair.from+pair.to;if(E.mtLoaded[k])return Promise.resolve();
+    return man().then(function(m){
+      var x=m.mt&&m.mt[k];if(!x)throw new Error('MISSING:mt-'+k);
+      return Promise.all([fileGet(x.model.name),fileGet(x.lex.name)].concat((x.vocab||[]).map(function(v){return fileGet(v.name);}))).then(function(b){
+        if(b.some(function(y){return !y;}))throw new Error('MISSING:mt-'+k);
+        return call('loadTranslationModel',pair,{model:b[0],shortlist:b[1],vocabs:b.slice(2),qualityModel:null,config:x.config||undefined});
+      }).then(function(){E.mtLoaded[k]=1;});
+    });
+  }
+  function segments(text){
+    var out=[];String(text).split(/\n+/).forEach(function(line){line=line.trim();if(!line)return;(line.match(/[^.!?…]+[.!?…]*["»“”)]*\s*|[.!?…]+\s*/g)||[line]).forEach(function(s){s=s.trim();if(s)out.push(s);});});
+    return out;
+  }
+  function translate(text,from,to){
+    if(from===to){var s=segments(text);return Promise.resolve(s.map(function(x){return {src:x,tgt:x};}));}
+    var c=chain(from,to),seg=segments(text);
+    if(!seg.length)return Promise.resolve([]);
+    return mtEngine().then(function(call){
+      /* keep memory small on phones: at most the two models of this direction plus one more stay loaded */
+      var keep={};c.forEach(function(p){keep[p.from+p.to]=1;});
+      var drop=Object.keys(E.mtLoaded).filter(function(k){return !keep[k];});
+      drop=drop.slice(0,Math.max(0,drop.length-1));
+      return Promise.all(drop.map(function(k){delete E.mtLoaded[k];return call('freeTranslationModel',{from:k.slice(0,2),to:k.slice(2)});})).then(function(){return call;});
+    }).then(function(call){
+      return c.reduce(function(p,pair){return p.then(function(){return mtLoad(call,pair);});},Promise.resolve()).then(function(){
+        return call('translate',{models:c,texts:seg.map(function(s){return {text:s,html:false,qualityScores:false};})});
+      });
+    }).then(function(r){return seg.map(function(s,i){return {src:s,tgt:(r[i]&&r[i].target&&r[i].target.text||'').trim()};});});
+  }
+  /* missing pieces for a direction (labels for the user) */
+  function missing(from,to,withOcr){
+    var need=[];if(withOcr&&installed[from]!=='ok')need.push(from);
+    if(from!==to)chain(from,to).forEach(function(p){var l=p.from===PIVOT?p.to:p.from;if(installed[l]!=='ok'&&need.indexOf(l)<0)need.push(l);});
+    return need;
+  }
+
+  /* ---------- 2. photo & text tab ---------- */
+  var OC={dir:'read',text:'',busy:'',res:null,err:'',conf:null};
+  function dirLangs(){return OC.dir==='read'?{from:st.them,to:st.me}:{from:st.me,to:st.them};}
+  function ocrHTML(){
+    var d=dirLangs(),miss=missing(d.from,d.to,false),missO=missing(d.from,d.from,true);
+    var seg='<div class="skl-seg" role="group">'+['read','write'].map(function(k){var x=k==='read'?{a:st.them,b:st.me}:{a:st.me,b:st.them};
+      return '<button type="button" data-act="dir" data-dir="'+k+'" aria-pressed="'+(OC.dir===k)+'" class="'+(OC.dir===k?'on':'')+'">'+esc(tr(k==='read'?'Lesen':'Schreiben'))+'<small>'+esc(x.a.toUpperCase()+' → '+x.b.toUpperCase())+'</small></button>';}).join('')+'</div>';
+    var need=miss.concat(missO.filter(function(x){return miss.indexOf(x)<0;}));
+    var warn=need.length?'<p class="skl-warn">'+esc(tr('Dafür fehlt ein Sprachpaket:'))+' '+esc(need.map(function(c){return lname(c,uiLang());}).join(', '))+' <button type="button" class="link" data-act="tab" data-tab="packs">'+esc(tr('Zu den Paketen'))+'</button></p>':'';
+    var res='';
+    if(OC.res&&OC.res.length){
+      res='<ol class="skl-res">'+OC.res.map(function(r){return '<li><span lang="'+d.from+'">'+esc(r.src)+'</span><b lang="'+d.to+'">'+esc(r.tgt)+'</b>'+(numbersDiffer(r.src,r.tgt)?'<em class="skl-numwarn" role="note">⚠ '+esc(tr('Zahlen weichen ab, bitte im Original prüfen.'))+'</em>':'')+'</li>';}).join('')+'</ol>'+
+        '<div class="skl-bar"><button type="button" data-act="copy">'+esc(tr('Kopieren'))+'</button><button type="button" data-act="sayres"'+(canSpeak(d.to)?'':' disabled')+'>🔊 '+esc(tr('Vorlesen'))+'</button>'+
+        (OC.dir==='write'?'<button type="button" data-act="showres">'+esc(tr('Groß zeigen'))+'</button>':'')+'</div>'+
+        '<p class="skl-note">'+esc(tr('Maschinelle Übersetzung, auf dem Gerät erstellt. Nicht für Sicherheits- oder Rechtsentscheidungen verwenden.'))+'</p>';
+    }
+    return seg+(photoNote()||warn)+
+      '<div class="skl-photo"><label class="skl-btn"><input type="file" accept="image/*" capture="environment" data-act="photo" hidden>📷 '+esc(tr('Foto aufnehmen'))+'</label>'+
+      '<label class="skl-btn sec"><input type="file" accept="image/*" data-act="photo" hidden>🖼 '+esc(tr('Bild wählen'))+'</label></div>'+
+      '<textarea class="skl-text" data-act="text" rows="5" lang="'+d.from+'" placeholder="'+esc(tr('Text eingeben oder Foto aufnehmen …'))+'">'+esc(OC.text)+'</textarea>'+
+      '<button type="button" class="skl-btn wide" data-act="go"'+(OC.busy?' disabled':'')+'>'+esc(tr('Übersetzen'))+' → '+esc(lname(d.to,uiLang()))+'</button>'+
+      (OC.busy?'<p class="skl-msg" role="status"><span class="skl-spin"></span>'+esc(OC.busy)+'</p>':'')+
+      (OC.conf!=null&&OC.conf<60&&OC.text?'<p class="skl-warn" role="note">'+esc(tr('Text unsicher erkannt. Bitte prüfen oder neu fotografieren.'))+'</p>':'')+
+      (OC.err?'<p class="skl-warn" role="alert">'+esc(OC.err)+'</p>':'')+res;
+  }
+  /* Numbers are where a machine translation does the most harm (doses, times, prices): the same digits must come out again */
+  function numbersDiffer(a,b){
+    function nums(t){return (String(t).match(/\d+(?:[.,:]\d+)*/g)||[]).map(function(x){return x.replace(/[.,:]/g,'').replace(/^0+(?=\d)/,'').replace(/00$/,'')||'0';}).sort().join(' ');}
+    return nums(a)!==nums(b);
+  }
+  function ocrErr(e){
+    var m=String(e&&e.message||e);
+    if(/^MISSING/.test(m)){var d=dirLangs();return tr('Dafür fehlt ein Sprachpaket:')+' '+missing(d.from,d.to,true).map(function(c){return lname(c,uiLang());}).join(', ');}
+    return tr('Fehler')+': '+m;
+  }
+  function runPhoto(file){
+    var d=dirLangs();OC.err='';OC.res=null;OC.conf=null;OC.busy=tr('Text im Bild erkennen …');body();
+    ocr(file,d.from,function(p){var el=root&&root.querySelector('.skl-body .skl-msg');if(el)el.lastChild.nodeValue=tr('Text im Bild erkennen …')+' '+Math.round(p*100)+' %';}).then(function(r){
+      OC.busy='';OC.conf=r.conf;
+      if(!r.text){OC.err=tr('Kein Text im Bild erkannt.');body();return;}
+      OC.text=r.text;return runTranslate();
+    }).catch(function(e){OC.busy='';OC.err=ocrErr(e);body();});
+  }
+  function runTranslate(){
+    var d=dirLangs();if(!OC.text.trim())return Promise.resolve();
+    OC.err='';OC.busy=tr('Übersetzung läuft …');body();
+    return translate(OC.text,d.from,d.to).then(function(r){OC.busy='';OC.res=r;body();}).catch(function(e){OC.busy='';OC.err=ocrErr(e);body();});
+  }
+
+  /* ---------- events ---------- */
+  function onClick(ev){
+    var b=ev.target.closest('[data-act]');if(!b)return;var a=b.getAttribute('data-act');
+    if(b.tagName==='SELECT'||b.tagName==='INPUT'||b.tagName==='TEXTAREA'||b.tagName==='FORM')return;
+    if(a==='tab'){st.tab=b.getAttribute('data-tab');put('tab',st.tab);render();}
+    else if(a==='swap'){var m=st.me,t=st.them;if((o.meLangs||D.langs).indexOf(t)>=0){st.me=t;st.them=m;save();render();}}
+    else if(a==='sit'){st.sit=b.getAttribute('data-sit');body();}
+    else if(a==='show')showPhrase(b.getAttribute('data-id'));
+    else if(a==='fav'){var f=getJ('fav',{}),id=b.getAttribute('data-id');if(f[id])delete f[id];else f[id]=1;put('fav',JSON.stringify(f));if(ov&&!ov.hidden&&ov.contains(b))drawShow();body();}
+    else if(a==='close')close();
+    else if(a==='rot'){SH.rot=!SH.rot;drawShow();}
+    else if(a==='answers'){SH.view='answers';drawShow();}
+    else if(a==='back'){SH.view='say';drawShow();}
+    else if(a==='reply'){var x=D.answers.filter(function(y){return y.id===b.getAttribute('data-id');})[0];if(x){var tl=SH.text?SH.text.tl:st.them,ml=SH.text?SH.text.ml:st.me;SH.reply={me:txt(x,ml),them:txt(x,tl)};SH.view='reply';SH.rot=false;drawShow();}}
+    else if(a==='say'){var lang=b.getAttribute('data-lang'),t2=b.getAttribute('data-text');if(!t2){var p=ov.querySelector('.skl-big');t2=p?p.textContent:'';}speak(t2,lang);}
+    else if(a==='dir'){OC.dir=b.getAttribute('data-dir');OC.res=null;OC.err='';body();}
+    else if(a==='go')runTranslate();
+    else if(a==='copy'){var s=(OC.res||[]).map(function(r){return r.tgt;}).join('\n');(navigator.clipboard&&navigator.clipboard.writeText?navigator.clipboard.writeText(s):Promise.reject()).then(function(){toast(tr('Kopiert.'));},function(){});}
+    else if(a==='sayres'){speak((OC.res||[]).map(function(r){return r.tgt;}).join(' '),dirLangs().to);}
+    else if(a==='showres'){var d=dirLangs();showText((OC.res||[]).map(function(r){return r.tgt;}).join(' '),(OC.res||[]).map(function(r){return r.src;}).join(' '),d.to,d.from);}
+    else if(a==='get')install(b.getAttribute('data-lang')).then(function(){if(st.tab==='packs')drawPacks();});
+    else if(a==='del')remove(b.getAttribute('data-lang'));
+    else if(a==='cancel'){if(ctl){ctl.aborted=true;try{ctl.abort();}catch(e){}}}
+  }
+  function onInput(ev){
+    var b=ev.target,a=b.getAttribute&&b.getAttribute('data-act');if(!a)return;
+    if(a==='q'){st.q=b.value;var pos=b.selectionStart;body();var q=root.querySelector('.skl-q');if(q){q.focus();try{q.setSelectionRange(pos,pos);}catch(e){}}}
+    else if(a==='text')OC.text=b.value;
+    else if(a==='var'){setVar(b.getAttribute('data-k'),b.value);var v=vals(),big=ov.querySelector('.skl-big'),sm=ov.querySelector('.skl-small');
+      if(big&&SH.item){big.textContent=fill(txt(SH.item,st.them),st.them,v);sm.textContent=fill(txt(SH.item,st.me),st.me,v);}}
+  }
+  function onChange(ev){
+    var b=ev.target,a=b.getAttribute&&b.getAttribute('data-act');if(!a)return;
+    if(a==='me'){st.me=b.value;if(st.them===st.me)st.them=null;save();render();}
+    else if(a==='them'){st.them=b.value;save();render();}
+    else if(a==='photo'){var f=b.files&&b.files[0];b.value='';if(f)runPhoto(f);}
+  }
+  function onSubmit(ev){
+    var f=ev.target,a=f.getAttribute('data-act');if(!a)return;ev.preventDefault();
+    if(a==='srcform'){var u=f.querySelector('[data-act="src"]').value.trim();put('packUrl',u);manifest=null;msg='';packsRefresh();}
+    else if(a==='numform'){var n=f.querySelector('input').value.trim();if(!n)return;SH.reply={me:n,them:n};SH.view='reply';SH.rot=false;drawShow();}
+  }
+  function save(){put('me',st.me);if(st.them)put('them',st.them);if(o.onChange)o.onChange({me:st.me,them:st.them});}
+
+  /* ---------- init ---------- */
+  function init(opt){
+    o=opt||{};D=o.data;if(!D||!D.phrases)throw new Error('SkLang: data fehlt');
+    o.key=o.key||'skLang';
+    if(root){root.removeEventListener('click',onClick);root.removeEventListener('input',onInput);root.removeEventListener('change',onChange);root.removeEventListener('submit',onSubmit);}
+    root=o.mount;root.classList.add('skl');
+    var meL=o.meLangs||D.langs;
+    st={me:get('me')||o.me||'de',them:get('them')||(o.them&&o.them[0])||null,tab:get('tab')||o.tab||'phr',sit:'all',q:''};
+    if(meL.indexOf(st.me)<0)st.me=meL.indexOf(o.me)>=0?o.me:meL[0];
+    if(tabs().indexOf(st.tab)<0)st.tab=o.tab||'phr';
+    root.addEventListener('click',onClick);root.addEventListener('input',onInput);root.addEventListener('change',onChange);root.addEventListener('submit',onSubmit);
+    if(!onSubmit.bound){document.addEventListener('submit',function(e){if(ov&&ov.contains(e.target))onSubmit(e);});onSubmit.bound=true;}
+    if('speechSynthesis' in window&&speechSynthesis.addEventListener)speechSynthesis.addEventListener('voiceschanged',function(){if(ov&&!ov.hidden)drawShow();});
+    render();
+    checkInstalled().then(function(){if(st.tab==='ocr')body();});
+    return api;
+  }
+  var api={init:init,
+    setMe:function(l){st.me=l;save();render();},setThem:function(l){st.them=l;save();render();},
+    tab:function(t){st.tab=t;render();},state:function(){return {me:st.me,them:st.them,tab:st.tab,installed:Object.assign({},installed)};},
+    show:showPhrase,close:close,
+    packs:{status:checkInstalled,install:install,remove:remove,refresh:packsRefresh},
+    _test:{numbersDiffer:numbersDiffer,prepImage:prepImage,findPage:findPage,loadCanvas:loadCanvas,segments:segments,chain:chain,needFiles:needFiles,fill:fill,translate:translate,ocr:ocr,missing:missing,mtEngine:mtEngine}};
+  return api;
+})();
+
+/* ---------- language aid: one start for all four apps (DECISIONS 03.11. "Bordsprache in allen Apps ein und dasselbe", F8) ----------
+   Stand-alone: Binnen and Paddel get this file through tools/inland-bord.js, the sea apps through the platform layer.
+   Android shells: tools/lang-bundle.js puts the packs of the area into www/packs and sets window.SK_LANG_BUNDLED={base,langs}. Photo and text then work
+   from the first start without network. Web: phrases only, the photo tab says where it works (decision 4.5). */
+var LANG_PARTNERS={ostsee:['da','sv','pl','ru','en'],'sardinien-korsika':['it','fr','en'],binnen:['nl','pl','cs','en','da','uk','ru'],paddel:['nl','pl','cs','en','da','uk','ru']};   // revier.json langPartners wins
+var LANG_RELEASE='https://github.com/ChristophBauermeister/skipper-ostsee/releases/download/lang-latest';
+var LANG_WEB_NOTE={de:'Foto übersetzen läuft ohne Internet in der Android-App.',en:'Photo translation runs offline in the Android app.',da:'Fotooversættelse kører offline i Android-appen.',sv:'Fotoöversättning körs offline i Android-appen.',
+  pl:'Tłumaczenie zdjęć działa offline w aplikacji na Androida.',nl:'Foto vertalen werkt offline in de Android-app.',cs:'Překlad fotografií funguje offline v aplikaci pro Android.',it:'La traduzione delle foto funziona offline nell’app Android.',fr:'La traduction de photos fonctionne hors ligne dans l’application Android.'};
+/* languages built into this app, none on the web */
+function langBundled(){var B=window.SK_LANG_BUNDLED;return B&&B.base&&B.langs&&B.langs.length?B:null;}
+/* area languages first; languages that are in the app go ahead of those that are not */
+function langOrder(list){var B=langBundled();if(!B)return list;return list.filter(function(c){return B.langs.indexOf(c)>=0;}).concat(list.filter(function(c){return B.langs.indexOf(c)<0;}));}
+/* o: mount, key, ui, t, vars, id (revier id), partners (revier.json), fetchFile + packBase (native download, shells without built-in packs) */
+function langStart(o){
+  var B=langBundled(),a={mount:o.mount,data:DATA_SPRACHE,key:o.key,ui:o.ui,t:o.t,me:o.ui,them:langOrder(o.partners||LANG_PARTNERS[o.id]||['en']),vars:o.vars};
+  if(B){a.bundled=B.base;o.mount.classList.add('skl-bundled');if(B.langs.indexOf(o.ui)<0)a.me=B.langs.indexOf('en')>=0?'en':B.langs[0];}   /* an app language without a pack (Binnen in Danish): English is in every APK */
+  else{a.packBase=o.packBase||'';a.fetchFile=o.fetchFile;if(!a.packBase)a.photoNote=LANG_WEB_NOTE;}
+  return SkLang.init(a);
+}
+
 /* Underway + anchor watch, pure logic. No DOM, no storage, no clock of its own: every call takes the time,
    so the same code runs in the browser, in node tests and, as a reference, for the native Android part.
    Exposes SKIPPER_UNDERWAY.{geo,defaults,normRoute,locate,normEvents,createNavigator,createAnchorWatch,createGeoSource,parseCoord,suggestRadius,toCSV,toGPX}. */
@@ -5182,7 +6163,7 @@ var BD_PAD=!!window.SKIPPER_PADDEL,BD_KEY='skipperBinnen.',   /* load/store of P
   BD={log:null,ctl:null,share:null,lists:null,contact:null,window:null,fix:null,wx:null,wxRaw:null,ev:null,evFor:null,cand:[]};
 /* German and English come with the modules. Other app languages get English, not a German fallback: the modules have no texts for NL, PL, DA, CS yet */
 function bdL(){return LANG==='de'?'de':'en';}
-var BD_EN={'An Bord':'On board','Unterwegs und Ankerwache':'Underway and anchor watch','Bestes Wetterfenster':'Best weather window','Hafen oder Schleuse anfragen':'Ask a harbour or lock',
+var BD_EN={'Foto übersetzen':'Translate a photo','Sätze zeigen':'Show phrases','Sprache':'Language','Maschinenübersetzung, Gerichtsnamen können ungenau sein.':'Machine translation, names of dishes can be inaccurate.','An Bord':'On board','Unterwegs und Ankerwache':'Underway and anchor watch','Bestes Wetterfenster':'Best weather window','Hafen oder Schleuse anfragen':'Ask a harbour or lock',
   'Törn teilen und Überfällig-Erinnerung':'Share trip and overdue reminder','Logbuch':'Logbook','Checklisten':'Checklists',
   'Ohne Route laufen Ankerwache, Logbuch und Checklisten. Für Unterwegs-Modus und Wetterfenster zuerst im Reiter Törn eine Route planen.':'Anchor watch, logbook and checklists work without a route. For underway mode and the weather window, plan a route in the trip tab first.',
   'Erst im Reiter Törn eine Route planen.':'Plan a route in the trip tab first.','Feuerwehr / Rettung':'Fire / rescue','Polizei':'Police','erste':'first','Unterwegs':'Underway','Ohne Route laufen Logbuch und Checklisten. Für Unterwegs-Modus und Wetterfenster zuerst im Reiter Tour eine Route planen.':'Logbook and checklists work without a route. For underway mode and the weather window, plan a route in the tour tab first.','Rastplatz oder Schleuse anfragen':'Ask a rest stop or lock','Tour teilen und Überfällig-Erinnerung':'Share tour and overdue reminder','Erst im Reiter Tour eine Route planen.':'Plan a route in the tour tab first.'};
@@ -5287,6 +6268,20 @@ function bdContactShow(){
   BD.contact=bdMount('bd-contact',function(e){return SKIPPER_CONTACT.mount(e,o);});
 }
 
+/* ---- language aid: the same start as the sea apps (core/platform/lang-boot.js). The kit brings its texts for all app languages itself. ---- */
+function bdLang(){
+  if(BD.langFor===LANG)return;BD.langFor=LANG;
+  try{var b=bdBoat();BD.lang=langStart({mount:$('bd-lang'),key:BD_STORE+'lang',ui:LANG,id:BD_PAD?'paddel':'binnen',vars:{loa:b.loa,beam:b.beam,draft:b.draft}});}
+  catch(e){$('bd-lang').textContent='Nicht verfügbar ('+(e&&e.message||e)+').';}
+}
+function bdToLang(tab){show('scr-bord');bdOpen();BD.lang.tab(tab);var c=$('bdc-lang');c.open=true;c.scrollIntoView({block:'start'});window.scrollBy(0,-70);}
+/* quick button on the first screen, the place people stand at when a menu or a notice is in front of them */
+function bdQuick(){
+  var g=$('btn-gps');if(!g)return;
+  var w=document.createElement('div');w.id='bd-quick-nah';w.innerHTML='<button type="button" class="bd-b" id="bd-photo-nah" data-bd="Foto übersetzen">'+esc(bdT('Foto übersetzen'))+'</button>';
+  g.parentNode.insertBefore(w,g.nextSibling);
+  $('bd-photo-nah').addEventListener('click',function(){bdToLang('ocr');});
+}
 function bdDir(d){return d==null?null:['N','NE','E','SE','S','SW','W','NW'][Math.round(d/45)%8];}
 function bdPlace(f){var best=null,bd=2;(POIS||[]).forEach(function(p){if(!p.n)return;var d=km({la:f.lat,lo:f.lon},p);if(d<bd){bd=d;best=p;}});return best?best.n:'';}
 function bdInit(){
@@ -5300,6 +6295,9 @@ function bdInit(){
   BD.share=bdMount('bd-share',function(el){return SKIPPER_SHARE.mount(el,{lang:L,key:BD_STORE+'share',getBoat:function(){return S.boat;},getPosition:bdPos,getPlan:bdPlan,
     emergency:function(){return [{title:bdT('Feuerwehr / Rettung'),num:'112'},{title:bdT('Polizei'),num:'110'}];},onEmergency:function(){show('scr-notfall');},viewerUrl:BD_VIEWER});});
   BD.lists=bdMount('bd-lists',function(el){return SKIPPER_CHECKLISTS.mount(el,{lang:L,profile:BD_PAD?'paddle':'inland',key:BD_STORE+'checklists',filePrefix:BD_PAD?'skipper-paddel-checklisten':'skipper-binnen-checklisten'});});
+  bdLang();
+  $('bd-photo').addEventListener('click',function(){bdToLang('ocr');});
+  $('bd-phrases').addEventListener('click',function(){bdToLang('phr');});
   $('bd-contact-pick').addEventListener('change',bdContactShow);
   bdContactPaint();bdWindowPaint();
 }
@@ -5311,8 +6309,9 @@ function bdOpen(){
   if(P&&P.length>1)bdWxLoad(P).then(bdWindowPaint);
 }
 try{
+  bdQuick();
   bdLabels();
-  $('lang').addEventListener('change',bdLabels);
+  $('lang').addEventListener('change',function(){bdLabels();bdLang();});
   bdInit();
   document.querySelector('nav button[data-scr="scr-bord"]').addEventListener('click',bdOpen);
   window.SKIPPER_BORD={state:BD,open:bdOpen};
