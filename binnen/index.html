@@ -782,6 +782,7 @@ var POPFS={kind:'opfs',forceWorker:false,
   fontPut:function(f,url,ctl){
     var self=this;
     return fetch(url,{credentials:'omit',signal:ctl.signal}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.arrayBuffer();}).then(function(b){
+      if(f.bytes&&b.byteLength!==f.bytes)throw new Error('Schrift unvollständig – Download unvollständig.');
       return self.fdir().then(function(d){return self.small('skmap-fonts',d,packFontKey(f.name,f.range),new Uint8Array(b));});
     });
   },
@@ -843,7 +844,9 @@ var PNAT={kind:'native',
     }).catch(function(){return null;});
   },
   fontHave:function(f){return this.fs().stat({path:'skmap/fonts/'+packFontKey(f.name,f.range),directory:'DATA'}).then(function(){return true;},function(){return false;});},
-  fontPut:function(f,url,ctl){return this.dl(url,'skmap/fonts/'+packFontKey(f.name,f.range));},
+  fontPut:function(f,url,ctl){var self=this,path='skmap/fonts/'+packFontKey(f.name,f.range);   // a short file counts as installed for good: fontHave only sees that it exists
+    return self.dl(url,path).then(function(r){return f.bytes?self.fs().stat({path:path,directory:'DATA'}).then(function(st){
+      if(st.size===f.bytes)return r;return self.fs().deleteFile({path:path,directory:'DATA'}).catch(function(){}).then(function(){throw new Error('Schrift unvollständig – Download unvollständig.');});}):r;});},
   fontRead:function(name,range){return this.fs().readFile({path:'skmap/fonts/'+packFontKey(name,range),directory:'DATA'}).then(function(r){return packB64(r.data);}).catch(function(){return null;});},
   fetchPack:function(id,e,url,prog,ctl){
     var self=this,part=packPartName(e),path=self.path(id,part),last=0;

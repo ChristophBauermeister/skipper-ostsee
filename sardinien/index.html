@@ -37,10 +37,10 @@
   --bg:#000; --card:#120000; --ink:#ff6a5a; --mute:#d9483a; --line:#6a1212;
   --head:#000; --headink:#ff6a5a; --headmute:#c03a2d;
   --accent:#ff3b2a; --accent-ink:#ff6a5a; --btn:#1c0000; --on:#ff3b2a; --onink:#000;
-  --g:#1c0000; --gt:#ff8a7a; --gb:#ff6a5a; --y:#4a1400; --yt:#ffb3a0; --yb:#ff8a5a; --r:#d41a1a; --rt:#000; --rb:#ff3b2a; --n:#240808; --nt:#d98a80; --i:#1c0000; --it:#ff8a7a;
+  --g:#1c0000; --gt:#ff8a7a; --gb:#ff6a5a; --y:#4a1400; --yt:#ffb3a0; --yb:#ff8a5a; --r:#ff3b2a; --rt:#000; --rb:#ff3b2a; --n:#240808; --nt:#d98a80; --i:#1c0000; --it:#ff8a7a;
   --rose-full:#ff3b2a; --rose-bg:#2a0000; --rose-line:#8a2a22; --wind:#ffd0c8; --swell:#ff9a8a;
   --rose-ok:#b3261e; --rose-part:#5a0f0a; --rose-open:#2a0000; --rose-txt:#ffb4a8; --rose-wind:#ffd0c8; --rose-swell:#ff9a8a;
-  --warnbg:#240000; --warnink:#ff9a8a; --emerg:#d41a1a;
+  --warnbg:#240000; --warnink:#ff9a8a; --emerg:#ff3b2a;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{font-size:16px;-webkit-text-size-adjust:100%}
@@ -191,7 +191,13 @@ nav button .ic{font-size:1.3rem;line-height:1}
 nav button.on{color:var(--headink);border-color:var(--headink)}
 nav button.sos{background:var(--emerg);color:#fff;border-color:var(--emerg)}
 nav button.sos.on{border-color:#fff}
-:root[data-theme="night"] nav button.sos{background:#d41a1a;color:#000}
+:root[data-theme="night"] .posline.warn{color:#ffb3a0}
+/* browser default blue is unreadable on a dark background: phone numbers on the emergency tab are links. Plain element selector: .banner, .hcard and the like keep their own link colour */
+:root[data-theme="night"]{--link:var(--accent-ink)}
+a{color:var(--link,#0000ee)}
+@media (prefers-color-scheme:dark){:root:not([data-theme]){--link:var(--accent-ink)}}
+:root[data-theme="night"] .nbadge.lv-g{background:var(--gb)}:root[data-theme="night"] .nbadge.lv-y{background:var(--yb)}:root[data-theme="night"] .nbadge.lv-r{background:var(--rb)}
+:root[data-theme="night"] nav button.sos{background:#ff3b2a;color:#000}
 :root[data-theme="night"] nav button.sos.on{border-color:#ffb3a0}
 .hidden-svg{position:absolute;width:0;height:0;overflow:hidden}
 #printdoc{display:none}
@@ -1078,8 +1084,9 @@ var I18N_WDDE=['Mo','Di','Mi','Do','Fr','Sa','So'];
 var I18N_WD={da:['ma','ti','on','to','fr','lø','sø'],sv:['mån','tis','ons','tor','fre','lör','sön'],pl:['pn','wt','śr','cz','pt','sb','nd'],en:['Mon','Tue','Wed','Thu','Fri','Sat','Sun']};
 var I18N_FLAG={de:'🇩🇪',da:'🇩🇰',sv:'🇸🇪',pl:'🇵🇱',en:'🇬🇧',it:'🇮🇹',fr:'🇫🇷'};
 function i18nAllowed(l){return !!I18N_LANGS[l]&&REVIER.langs.indexOf(l)>=0;}
-/* device language -> app language: revier.json "langMap" (e.g. nb -> da), unsupported languages fall back to English if the package has it */
-function i18nDevice(nav){var m=(REVIER.langMap||{})[nav]||nav;return i18nAllowed(m)?m:(i18nAllowed('en')?'en':REVIER.defaultLang);}
+/* device language -> app language: revier.json "langMap" (e.g. nb -> da). Unsupported languages use "langFallback", without it English if the
+   package has it. A package whose translation is not reviewed sets "langFallback" to its default language: it is then reached by hand only. */
+function i18nDevice(nav){var m=(REVIER.langMap||{})[nav]||nav;if(i18nAllowed(m))return m;var f=REVIER.langFallback;if(f&&i18nAllowed(f))return f;return i18nAllowed('en')?'en':REVIER.defaultLang;}
 var I18N_DIR={da:{},sv:{},pl:{},en:{}};   // directions stay international (N/NE/E…): single letters are also data codes (E = Einfahrt)
 var I18N={lang:'de',re:null,cache:{},orig:new WeakMap(),done:new WeakMap(),attr:new WeakMap(),obs:null,miss:{}};
 function i18nNameRe(){
@@ -2752,6 +2759,7 @@ var POPFS={kind:'opfs',forceWorker:false,
   fontPut:function(f,url,ctl){
     var self=this;
     return fetch(url,{credentials:'omit',signal:ctl.signal}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.arrayBuffer();}).then(function(b){
+      if(f.bytes&&b.byteLength!==f.bytes)throw new Error('Schrift unvollständig – Download unvollständig.');
       return self.fdir().then(function(d){return self.small('skmap-fonts',d,packFontKey(f.name,f.range),new Uint8Array(b));});
     });
   },
@@ -2813,7 +2821,9 @@ var PNAT={kind:'native',
     }).catch(function(){return null;});
   },
   fontHave:function(f){return this.fs().stat({path:'skmap/fonts/'+packFontKey(f.name,f.range),directory:'DATA'}).then(function(){return true;},function(){return false;});},
-  fontPut:function(f,url,ctl){return this.dl(url,'skmap/fonts/'+packFontKey(f.name,f.range));},
+  fontPut:function(f,url,ctl){var self=this,path='skmap/fonts/'+packFontKey(f.name,f.range);   // a short file counts as installed for good: fontHave only sees that it exists
+    return self.dl(url,path).then(function(r){return f.bytes?self.fs().stat({path:path,directory:'DATA'}).then(function(st){
+      if(st.size===f.bytes)return r;return self.fs().deleteFile({path:path,directory:'DATA'}).catch(function(){}).then(function(){throw new Error('Schrift unvollständig – Download unvollständig.');});}):r;});},
   fontRead:function(name,range){return this.fs().readFile({path:'skmap/fonts/'+packFontKey(name,range),directory:'DATA'}).then(function(r){return packB64(r.data);}).catch(function(){return null;});},
   fetchPack:function(id,e,url,prog,ctl){
     var self=this,part=packPartName(e),path=self.path(id,part),last=0;
@@ -4027,6 +4037,8 @@ function evaluate(raw){
   if(res.pegel&&res.pegel.level==='i')res.info.push(infoItem('pegel','Niedrigwasser',res.pegel.text));
   var best=null;
   res.gates.concat(res.general?[res.general]:[]).forEach(function(c){if(!best||RANK[c.level]>RANK[best.level])best=c;});
+  // Thresholds, gates and harbours only hold inside the area: green must not survive a position outside it.
+  if(res.outOfArea&&best&&best.level==='g')best={id:'area',level:'y',title:'Außerhalb des Törngebiets',text:'Die Bewertung gilt nur für das Törngebiet und ist hier keine Freigabe.'};
   res.overall=best;
   if(s.pos){res.list=rank(s);res.rec=recommend(res.list);}
   res.target=targetInfo(s);
