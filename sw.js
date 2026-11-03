@@ -1,5 +1,5 @@
 /* Offline cache for Skipper-Assistent Ostsee. Cache-first, falls back to network; all errors are swallowed. */
-var CACHE='skipper-ostsee-v2.25.1-20261103-h52fe4ae3';
+var CACHE='skipper-ostsee-v2.26.0-20261103-hbb1cc19b';
 var SHARE='skipper-ostsee-share';   // GPX received through the Web Share Target (kept apart from the app cache so updates do not delete it)
 var FAMILY='skipper-ostsee-v';  // only older versions of THIS app's cache are removed (the other app lives on the same origin)
 var FILES=['./','./index.html','./manifest.webmanifest','./icon.svg','./icon-192.png','./icon-512.png','./icon-180.png'];
