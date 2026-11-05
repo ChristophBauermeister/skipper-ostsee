@@ -1,5 +1,5 @@
 // network first (so updates arrive immediately), cache as offline fallback; with a weak signal the cached copy answers after 4 s, the download goes on for next time
-var CACHE='skipper-paddel-0.6.1';var FILES=['./','./index.html','./manifest.webmanifest','./icon.svg','./icon-192.png','./icon-512.png'];var WAIT=4000;
+var CACHE='skipper-paddel-0.7.1';var FILES=['./','./index.html','./manifest.webmanifest','./icon.svg','./icon-192.png','./icon-512.png'];var WAIT=4000;
 var SHARE='skipper-paddel-share';   // GPX received through the Web Share Target (kept apart from the app cache so updates do not delete it)
 self.addEventListener('install',function(e){e.waitUntil(caches.open(CACHE).then(function(c){return c.addAll(FILES);}).then(function(){return self.skipWaiting();}));});
 self.addEventListener('activate',function(e){e.waitUntil(caches.keys().then(function(k){return Promise.all(k.filter(function(x){return x!==CACHE&&x!==SHARE&&x.indexOf('skipper-paddel-')===0;}).map(function(x){return caches.delete(x);}));}));self.clients.claim();});
