@@ -1,5 +1,5 @@
 /* Offline cache for Skipper-Assistent Sardinien-Korsika. Cache-first, falls back to network; all errors are swallowed. */
-var CACHE='skipper-sardinien-v0.9.0-20261104-h71888089';
+var CACHE='skipper-sardinien-v0.9.0-20261104-h077fe598';
 var SHARE='skipper-sardinien-share';   // GPX received through the Web Share Target (kept apart from the app cache so updates do not delete it)
 var FAMILY='skipper-sardinien-v';  // only older versions of THIS app's cache are removed (the other app lives on the same origin)
 var FILES=['./','./index.html','./manifest.webmanifest','./icon.svg','./icon-192.png','./icon-512.png','./icon-180.png'];
