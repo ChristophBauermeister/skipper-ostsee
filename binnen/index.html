@@ -13,6 +13,8 @@
 <style>
 :root{--bg:#f2f6f7;--card:#fff;--ink:#132a33;--mute:#5b7480;--line:#d5e1e5;--head:#1d5c3f;--headink:#fff;--acc:#1f8a70;--warn:#e0a400;--bad:#c0392b;--good:#1f8a70;--chip:#e7f0f2}
 :root{--on-prim:#fff;--field:#fff;--ok-bg:#e2f4ee;--ok-ink:#11634f;--warn-bg:#fff3cf;--warn-ink:#6e5200;--bad-bg:#fde4e1;--bad-ink:#8e2418;--info-bg:#e7f0f2;--hl:var(--head);--toast:#13233a;--toast-ink:#fff}
+/* Wolkenlotse (core/platform/css/wl.css) names its colours y/r/n/i/on/onink/emerg: bridge to the names above, "n" (unknown) is new (no green) */
+:root{--y:var(--warn-bg);--yt:var(--warn-ink);--r:var(--bad-bg);--rt:var(--bad-ink);--n:#e3e8ea;--nt:#44545c;--i:var(--info-bg);--it:var(--ink);--on:var(--acc);--onink:var(--on-prim);--emerg:var(--bad)}
 /* Day, sun and night for apps outside the core shell (Binnen, Paddel). Same colours as base.css.
    Token names of those apps: --bg --card --ink --mute --line --head --headink --acc --warn --bad --good --chip.
    New tokens for what they hard-code today: --on-prim (text on --head/--acc), --field (inputs, map buttons),
@@ -31,7 +33,7 @@
 .sk-themebtn{min-height:44px;min-width:44px;font-size:1.1rem;border:1.5px solid currentColor;border-radius:10px;background:transparent;color:var(--headink);padding:0 8px;font-weight:700;cursor:pointer}
 
 :root[data-theme]{--toast:var(--ink);--toast-ink:var(--bg)}
-:root[data-theme="night"]{--hl:var(--acc)}
+:root[data-theme="night"]{--hl:var(--acc);--n:#1c0000;--nt:#ff6a5a}
 :root[data-theme] nav button{color:var(--headink)}
 :root[data-theme] nav button.sos,:root[data-theme="night"] .btn[style*="--bad"]{color:var(--on-prim)}
 :root[data-theme="sun"] nav button.on{background:#fff;color:#000;border-color:#fff}
@@ -81,7 +83,12 @@ h2{font-size:1.15rem;margin:14px 0 8px}
 .banner{border-radius:12px;padding:10px 12px;margin:8px 0;font-weight:700}
 .banner a:not(.btn):not(.prim){color:inherit}
 :root[data-theme="night"] .banner a:not(.btn):not(.prim){color:inherit}
-.b-g{background:var(--ok-bg);color:var(--ok-ink)}.b-y{background:var(--warn-bg);color:var(--warn-ink)}.b-r{background:var(--bad-bg);color:var(--bad-ink)}.b-i{background:var(--info-bg);color:var(--ink)}
+.b-g{background:var(--ok-bg);color:var(--ok-ink)}.b-y{background:var(--warn-bg);color:var(--warn-ink)}.b-r{background:var(--bad-bg);color:var(--bad-ink)}.b-i{background:var(--info-bg);color:var(--ink)}.b-n{background:var(--n);color:var(--nt);border:2px dotted var(--line)}
+/* Wolkenlotse: minimal styling for elements core/platform/wl-ui.js emits that the shell has no rule for yet */
+.banner .bt{display:flex;align-items:center;gap:6px}.banner .sym{font-weight:900}.banner .bd{font-weight:400;margin-top:2px}
+.notice{border:2px dashed var(--line);border-radius:10px;padding:8px 10px;margin:8px 0;background:var(--card)}
+.badge.unv{display:inline-block;font-size:.72rem;font-weight:700;border:1px solid currentColor;border-radius:999px;padding:1px 7px;margin-left:4px;color:inherit;background:transparent}
+.infobox{border:1.5px solid var(--line);border-radius:10px;padding:6px 10px;margin:8px 0;background:var(--card)}.infobox summary{cursor:pointer;font-weight:700}.infobox .in{margin-top:6px;font-size:.92rem}
 input,select{width:100%;min-height:44px;border:2px solid var(--line);border-radius:10px;padding:8px 10px;font:inherit;background:var(--field);color:var(--ink)}
 label{font-weight:700;font-size:.85rem;display:block;margin:8px 0 2px}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
@@ -95,6 +102,56 @@ label{font-weight:700;font-size:.85rem;display:block;margin:8px 0 2px}
 .lg{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px;vertical-align:middle}
 .ph{background:var(--warn-bg);color:var(--warn-ink);padding:0 4px;border-radius:4px}
 @media (min-width:900px){.app{max-width:1300px}.cols{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:20px;align-items:start}.cols>.side{position:sticky;top:70px;max-height:calc(100vh - 160px);overflow:auto}#map{height:calc(100vh - 170px)}#mapslot #map{height:48vh;min-height:300px;margin-bottom:8px}#t-side #map{height:calc(100vh - 170px)}.cols>.side{max-height:calc(100vh - 130px)}}
+/* Wolkenlotse / Wetter-Sicherheit – no green: yellow/red only for signals, grey/neutral for "unknown" and "nothing found" */
+#wl-card .wl-meta,.wl-meta{margin-top:6px;font-size:.85rem;opacity:.92}
+.wl-srcs{margin-top:10px;border:1.5px solid var(--line);border-radius:10px;background:var(--card);padding:4px 10px}
+.wl-src{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--line);font-size:.95rem}
+.wl-src:last-child{border-bottom:0}
+.wl-mk{flex:none;display:inline-grid;place-items:center;width:1.7em;height:1.7em;border-radius:50%;font-weight:800;border:2px solid var(--line);background:var(--card);color:var(--ink)}
+.wl-mk.lv-y{background:var(--y);color:var(--yt);border-color:var(--yt)}
+.wl-mk.lv-r{background:var(--r);color:var(--rt);border-color:var(--r)}
+.wl-mk.lv-n{background:var(--n);color:var(--nt);border-style:dotted}
+.wl-mk.lv-i{background:var(--i);color:var(--it);border-color:var(--i)}
+.wl-sub{margin-top:14px;padding-top:2px}
+.wl-sub h3{margin-bottom:6px}
+.wl-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.wl-btns2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.btn.wl-big{min-height:84px;font-size:1.25rem;font-weight:800}
+.wl-run{font-size:1.1rem}
+.wl-run b{font-size:1.6rem;font-variant-numeric:tabular-nums}
+.wl-big-num{display:flex;align-items:baseline;gap:12px;margin-top:10px;flex-wrap:wrap}
+.wl-big-num .n{font-size:2.2rem;font-weight:800;line-height:1;font-variant-numeric:tabular-nums}
+.wl-big-num .l{font-size:1rem}
+.wl-ev{display:flex;flex-direction:column;gap:3px;margin-top:8px;font-size:.92rem;font-variant-numeric:tabular-nums}
+.wl-add{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:6px}
+.wl-add input[type=text],.wl-add select{min-height:48px;font-size:1.05rem;padding:6px 10px;border:2px solid var(--on);border-radius:10px;background:var(--card);color:var(--ink);font-family:inherit}
+.wl-add input[type=text]{flex:1 1 120px;min-width:0}
+.wl-add label{display:flex;flex-direction:column;gap:3px;font-size:.9rem;flex:1 1 140px}
+.wl-add .u{font-weight:700}
+.wl-x{border:0;background:transparent;color:var(--ink);font-size:1rem;min-width:36px;min-height:36px;cursor:pointer;text-decoration:underline}
+.wl-gaps{margin-top:12px;padding:8px 12px;border:2px dotted var(--line);border-radius:10px;background:var(--card);font-size:.93rem}
+.wl-gaps ul{margin:4px 0 0 18px;padding:0}
+.wl-emerg{border-left:6px solid var(--emerg)}
+.wl-cloud{border-left:6px solid var(--line);padding:2px 0 2px 10px;margin-top:8px}
+.wl-cloud.lv-watch{border-left-style:dashed;border-left-color:var(--y)}
+.wl-cloud.lv-danger{border-left-style:solid;border-left-color:var(--r)}
+.wl-cloud p{margin:4px 0}
+.wl-opt{justify-content:space-between;text-align:left;margin-top:8px;min-height:60px}
+.wl-q{font-size:1.15rem;font-weight:800;margin:6px 0}
+.wl-filter{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.wl-filter .btn{width:auto;flex:1 1 70px;min-height:44px}
+.wl-filter .btn[aria-pressed=true]{background:var(--on);color:var(--onink)}
+.wl-photos{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-top:10px}
+.wl-photos figure{margin:0}
+.wl-photos img{width:100%;height:auto;border-radius:8px;border:1.5px solid var(--line)}
+.wl-photos figcaption{font-size:.85rem}
+.wl-file{cursor:pointer;margin-top:8px}
+@media (min-width:700px){
+  #wl-card{display:grid;grid-template-columns:1fr 1fr;gap:0 18px;align-items:start}
+  #wl-card>.banner,#wl-card>.infobox,#wl-card>.wl-srcs,#wl-card>.wl-gaps,#wl-card>.note,#wl-card>details{grid-column:1/-1}
+}
+@media print{#wl-card,#wl-regeln,#wl-emerg{display:none}}
+
 </style>
 </head>
 <body>
@@ -155,6 +212,7 @@ label{font-weight:700;font-size:.85rem;display:block;margin:8px 0 2px}
   <div id="bridges"></div>
   <h2>Wetter</h2>
   <div id="wx"></div>
+  <div id="wl-card"></div>
   <h2>Pegel</h2>
   <div class="note">Aktuelle Wasserstände von PEGELONLINE (WSV). Bei hohem Wasser sinken die Durchfahrtshöhen unter Brücken.</div>
   <div id="pegel"></div>
@@ -223,6 +281,7 @@ label{font-weight:700;font-size:.85rem;display:block;margin:8px 0 2px}
   <button class="btn sec" id="btn-mypos">◎ Meine Position für den Notruf</button>
   <div class="card" id="myposout" style="display:none"></div>
   <div class="note">Am Telefon sagen: Wer ruft an, Gewässer und nächster Ort bzw. Flusskilometer, was ist passiert, wie viele Personen, welches Boot.</div>
+  <div id="wl-emerg"></div>
 </section>
 </div>
 
@@ -248,7 +307,7 @@ function dc(x){return LANG==='en'?String(x):String(x).replace('.',',');}
 function locTok(s){if(LANG==='de'||s==null)return s;return String(s).replace(/(^|[^A-Za-zÄÖÜäöüß])(Feiertage|Feiertag|täglich|geschlossen|Uhr|und|Mo|Di|Mi|Do|Fr|Sa|So)(?![A-Za-zäöüß])/g,function(m,a,w){var v=I18N.tok[w];return a+(v&&v[LANG]!=null?v[LANG]:w);});}
 function trDom(){var w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,null),n;while((n=w.nextNode())){if(n.parentNode.closest('script,#list,#detail,#mdetail,#locks,#bridges,#cats,#legend,#charterbox,#nf-charter,#myposout,#cnt,#srcs,#posline,#mattr,#bootmsg,#lang'))continue;if(n._de==null){var tx=n.nodeValue.trim();if(!tx||!I18N.ui[tx])continue;n._de=tx;n._pre=n.nodeValue.slice(0,n.nodeValue.indexOf(tx));n._post=n.nodeValue.slice(n.nodeValue.indexOf(tx)+tx.length);}n.nodeValue=n._pre+t(n._de)+n._post;}
   document.querySelectorAll('[placeholder]').forEach(function(e){if(e._de==null)e._de=e.getAttribute('placeholder');e.setAttribute('placeholder',t(e._de));});document.documentElement.lang=LANG;}
-var VERSION='0.13.0';
+var VERSION='0.14.0';
 var CATS=[['hafen','Häfen','⚓','#0f6e8c'],['anleger','Anleger','⛵','#4aa3c0'],['tanken','Tanken','⛽','#d35400'],['absaugen','Absaugen','🚽','#8e44ad'],['wasser','Wasser','💧','#2e86de'],
   ['essen','Essen','🍽','#c0392b'],['einkauf','Einkauf','🛒','#27ae60'],['charter','Charter','🛥','#16a085'],['slip','Slip','⤓','#7f8c8d'],['werft','Werft','🔧','#555'],
   ['paddel','Paddeln','🛶','#b7950b'],['rast','Wasserwanderrast','⛺','#6d4c41'],['anker','Ankerplatz','⚓','#34495e'],['gas','Gas','🔥','#e67e22'],['muell','Müll','🗑','#566573']];
@@ -267,7 +326,7 @@ function nearestKm(p){var best=null,bd=1e9;KM.forEach(function(k){var d=km(p,{la
 function kmText(p){var k=nearestKm(p);return k?t('{0} bei km {1}',k.ww,k.km):null;}
 var S={pos:null,cats:{hafen:1,anleger:1,tanken:1,absaugen:1},q:'',sel:null,boat:{}};
 try{S.boat=JSON.parse(load('skipperBinnen.boat')||'{}')||{};}catch(e){S.boat={};}
-try{var p0=JSON.parse(load('skipperBinnen.pos')||'null');if(p0)S.pos=p0;}catch(e){}
+try{var p0=JSON.parse(load('skipperBinnen.pos')||'null');if(p0){p0.lat=p0.la;p0.lon=p0.lo;S.pos=p0;}}catch(e){}
 try{var c0=JSON.parse(load('skipperBinnen.cats')||'null');if(c0)S.cats=c0;}catch(e){}
 
 /* ---------- charter link (Charterakte bridge): #boot=name,len,beam,draft,height&basis=Name&tel=+49...&ret=Hafen ---------- */
@@ -515,7 +574,7 @@ function saveBoot(){
 }
 
 /* ---------- position ---------- */
-function setPos(p){var moved=!S.pos||km(S.pos,p)>2;S.pos=p;if(moved)setTimeout(liveRefresh,0);M.cx=p.lo;M.cy=p.la;M.z=Math.max(M.z,12);store('skipperBinnen.pos',JSON.stringify(p));posLine();renderList();renderLocks();mapRender();}
+function setPos(p){p.lat=p.la;p.lon=p.lo;var moved=!S.pos||km(S.pos,p)>2;S.pos=p;if(moved)setTimeout(liveRefresh,0);M.cx=p.lo;M.cy=p.la;M.z=Math.max(M.z,12);store('skipperBinnen.pos',JSON.stringify(p));posLine();renderList();renderLocks();mapRender();}
 function posLine(){$('posline').textContent=S.pos?(kmText(S.pos)||(t('Position:')+' '+dc(S.pos.la.toFixed(4))+' N, '+dc(S.pos.lo.toFixed(4))+' E')):'';}
 function gps(cb,fail){
   if(!navigator.geolocation){alertNote(t('Kein GPS verfügbar.'));return;}
@@ -777,7 +836,7 @@ function getJSON(url,ms){return new Promise(function(res,rej){var c=window.Abort
 function bft(kmh){var B=[1,6,12,20,29,39,50,62,75,89,103,118];for(var i=0;i<B.length;i++)if(kmh<B[i])return i;return 12;}
 function wxPos(){var p=S.pos||home();return {la:Math.round(p.la*20)/20,lo:Math.round(p.lo*20)/20};}
 function renderWx(w,old){
-  var el=$('wx'),wn=$('wxwarn'),wa=$('wxnah');if(!w){el.innerHTML='<div class="note">'+t('Wetter nicht verfügbar (kein Empfang).')+'</div>';return;}
+  var el=$('wx'),wn=$('wxwarn'),wa=$('wxnah');if(!w){el.innerHTML='<div class="note">'+t('Wetter nicht verfügbar (kein Empfang).')+'</div>';if(typeof wlApplyToWxBanner==='function')wlApplyToWxBanner();return;}
   var c=w.current,g=c.wind_gusts_10m,s=c.wind_speed_10m,H=w.hourly||{},maxg=0,thunder=false,cape=0;(H.wind_gusts_10m||[]).forEach(function(v){maxg=Math.max(maxg,v||0);});(H.weather_code||[]).forEach(function(v){if(v>=95)thunder=true;});(H.cape||[]).forEach(function(v){cape=Math.max(cape,v||0);});
   var lvl=thunder||maxg>=50?'r':(maxg>=29||cape>=800?'y':'g');
   var txt=(thunder?'⚡ '+t('Gewitter in den nächsten 12 Stunden möglich.')+' ':'')+t('Wind {0} Bft, Böen bis {1} Bft (nächste 12 h).',bft(s),bft(maxg));
@@ -785,7 +844,8 @@ function renderWx(w,old){
   var when=new Date(w._t||Date.now()).toLocaleTimeString(LANG==='en'?'en-GB':LANG,{hour:'2-digit',minute:'2-digit'});
   var b='<div class="banner b-'+lvl+'">'+txt+hint+'<div style="font-weight:400;font-size:.78rem">'+(old?t('Kein Empfang – Stand {0}',when):t('Stand {0}',when))+' · Open-Meteo</div></div>';
   el.innerHTML=b+'<div class="note">'+t('Jetzt: Wind {0} km/h, Böen {1} km/h, {2} °C.',Math.round(s),Math.round(g),Math.round(c.temperature_2m))+' <a href="https://www.dwd.de/DE/wetter/warnungen_gemeinden/warnWetter_node.html" target="_blank" rel="noopener">'+t('DWD-Warnungen')+'</a></div>';
-  if(wn)wn.innerHTML=lvl==='g'?'':b;if(wa)wa.innerHTML=lvl==='g'?'':b;}
+  if(wn)wn.innerHTML=lvl==='g'?'':b;if(wa)wa.innerHTML=lvl==='g'?'':b;
+  if(typeof wlApplyToWxBanner==='function')wlApplyToWxBanner();}
 function loadWx(){var p=wxPos(),key='skipperBinnen.wx';
   getJSON('https://api.open-meteo.com/v1/forecast?latitude='+p.la+'&longitude='+p.lo+'&current=wind_speed_10m,wind_gusts_10m,temperature_2m,weather_code&hourly=wind_gusts_10m,weather_code,cape&forecast_hours=12&wind_speed_unit=kmh&timezone=Europe%2FBerlin',8000)
   .then(function(w){w._t=Date.now();store(key,JSON.stringify(w));renderWx(w,false);})
@@ -1445,6 +1505,1128 @@ function gpxParse(text){
   wpts=wpts.slice(0,GPX_LIM.maxWpts);
   return {ok:true,name:name,version:version,legs:legs,wpts:wpts,stats:{points:total,legs:legs.length,wpts:wpts.length,thinned:thinned,ignored:ignored}};
 }
+
+/* =====================================================================
+   WOLKENLOTSE / WETTER-SICHERHEIT – Inland adapter (SPEC docs/wolkenlotse/SPEC_wolkenlotse_modul.md §7.2).
+   Binnen and Paddel have no revier.json/REVIER, no R.gates, no WX/CONST.wx snapshot and no platform URL (PL).
+   This file supplies exactly what the UNCHANGED core/platform/wl-*.js files read, in its own closed scope
+   (same pattern as core/platform/mappack*.js in binnen/src/mappack-shim.js), and raises the shell's own
+   weather banner (#wx, mirrors #wxwarn/#wxnah) – Binnen/Paddel have no R.gates "overall" traffic light.
+   Rules, unchanged from the sea apps: raise only, never lower, never green; unknown = grey; offline works fully;
+   online (official warnings) is additive only and never auto-fetches without a platform URL (none exists yet
+   for Binnen/Paddel -> always a labelled gap, never a false "no warning").
+   Each package's own tools/build.js fills the WLPKG slot below with its literal id ('binnen' resp. 'paddel') and
+   the WLCORE slot with core/platform/wl-{const,logic,store,online,atlas,ui}.js, unchanged, in that order.
+   ===================================================================== */
+window.SKIPPER_WL=(function(){
+  'use strict';
+  var PKG='binnen';
+  var REVIER={
+    id:PKG,
+    storagePrefix:'skipper'+PKG.charAt(0).toUpperCase()+PKG.slice(1),   // skipperBinnen / skipperPaddel – own namespace, does not touch the shell's own skipperBinnen.* keys
+    idb:{db:'skipper-'+PKG},
+    // Binnen/Paddel only ever ADD warning types (wl-const.js wlTightMerge only allows raising the thresholds); flood/high water matters inland (SPEC §6.2)
+    const:{wl:{warn:{types:['flood']}}}
+  };
+  function sk(n){return REVIER.storagePrefix+'.'+n;}
+  var SYM={g:'✔',y:'⚠',r:'✖',n:'?',i:'ℹ'};
+  var CONST={};   // wl-const.js writes CONST.wl=... (display copy); nothing else here reads CONST
+  var I18N={get lang(){return (typeof LANG!=='undefined')?LANG:'de';}};   // wl-ui.js only reads I18N.lang (German-only disclaimer); the shell's own I18N.ui is untouched (different variable, same name, local to this closure)
+  // "Mehr" button of the emergency card (SPEC renderWLEmerg "goto"): the shell navigates with show(), not showScreen(); 'scr-lage' (Ostsee) maps to the home screen here
+  if(typeof window.showScreen!=='function')window.showScreen=function(id){if(typeof show==='function')show(id==='scr-lage'?'scr-nah':id);};
+/* =====================================================================
+   WOLKENLOTSE / WETTER-SICHERHEIT (docs/wolkenlotse/SPEC_wolkenlotse_modul.md) – thresholds.
+   Every threshold carries a source ("src"); "Faustregel" = rule of thumb, shown as such in the UI.
+   The module only ever RAISES the traffic light (y/r), it never produces g. Packages may only tighten (revier.json "const.wl").
+   ===================================================================== */
+var WL_DEFAULT={
+  lightning:{redKm:10,holdMin:30,trendMin:4,trendSpanMin:20,trendDeltaKm:1,maxSec:180,
+    src:'NOAA JetStream (Donner hörbar = in Einschlagreichweite; 30 min nach dem letzten Donner; 3 s je km)',redSrc:'Faustregel',trendSrc:'Faustregel'},
+  pressure:{refMinH:2.5,refMaxH:3.5,latestMaxMin:60,regrMinN:4,regrMinSpanH:2,minGapMin:20,jumpHpa:3,jumpMin:30,min:870,max:1090,
+    slow:0.1,info:-1.6,yellow:-3.6,red:-6.0,riseYellow:6.0,
+    src:'Kategorien: Met Office Coast and sea glossary (slowly 0,1–1,5 · standard 1,6–3,5 · quickly 3,6–6,0 · very rapidly > 6,0 hPa/3 h); Ampelzuordnung: Faustregel'},
+  modelPressure:{yellow:-6.0,info:-1.6,horizonH:6,src:'Faustregel (Modellwert, keine Messung)'},
+  warn:{bufferNm:5,lookAheadH:3,map:{yellow:'y',orange:'r',red:'r'},types:['wind','thunderstorm','fog','coastal','rain'],src:'MeteoAlarm-/DWD-Stufen; Zuordnung zur Ampel: Faustregel'},
+  obs:{validMin:60,src:'Faustregel (Beobachtung des Skippers)'},
+  stale:{summaryFreshMin:60,summaryGapH:6},
+  url:''   // optional override of the platform summary URL (default: derived from the platform URL, wl-<package>.json)
+};
+/* direction in which a value gets STRICTER; keys not listed here cannot be overridden by a package */
+var WL_TIGHT={'lightning.redKm':'max','lightning.holdMin':'max','pressure.info':'max','pressure.yellow':'max','pressure.red':'max','pressure.riseYellow':'min',
+  'modelPressure.yellow':'max','modelPressure.info':'max','warn.bufferNm':'max','warn.lookAheadH':'max','obs.validMin':'max'};
+function wlTightMerge(def,over){
+  var out=JSON.parse(JSON.stringify(def));
+  if(!over||typeof over!=='object')return out;
+  Object.keys(WL_TIGHT).forEach(function(path){
+    var p=path.split('.'),o=over,d=out;
+    for(var i=0;i<p.length-1;i++){o=o&&o[p[i]];d=d[p[i]];}
+    var k=p[p.length-1];
+    if(!o||typeof o[k]!=='number'||!isFinite(o[k]))return;
+    if(WL_TIGHT[path]==='max'?o[k]>d[k]:o[k]<d[k])d[k]=o[k];
+  });
+  if(over.warn&&over.warn.map){['yellow','orange','red'].forEach(function(l){if(over.warn.map[l]==='r')out.warn.map[l]='r';});}   // y -> r allowed, never r -> y
+  if(over.warn&&Array.isArray(over.warn.types))over.warn.types.forEach(function(t){if(typeof t==='string'&&out.warn.types.indexOf(t)<0)out.warn.types.push(t);});   // more warning types may raise, none may be dropped
+  if(typeof over.url==='string')out.url=over.url;
+  return out;
+}
+/* WLC = the effective values the module reads. It is derived from the RAW package override (never from CONST.wl, because
+   sea/const.js merges revier.json "const" a second time and would loosen a tightened value); CONST.wl is a copy for display/tests. */
+var WLC=wlTightMerge(WL_DEFAULT,(REVIER.const||{}).wl);
+function wlResetConst(){CONST.wl=JSON.parse(JSON.stringify(WLC));}
+wlResetConst();
+
+/* =====================================================================
+   WOLKENLOTSE – pure logic (no DOM, no storage). Rules: docs/wolkenlotse/SPEC_wolkenlotse_modul.md
+   - the module returns only y / r / n (never g); a red from elsewhere is never lowered (the gate only adds)
+   - unknown is "n" (grey, "keine Aussage"), never green; no signal is no all-clear
+   - old data must not reassure, but a known danger stays visible until it expires (labelled)
+   ===================================================================== */
+var WL_SEC_KM=0.343;   // speed of sound ≈ 343 m/s -> 3 s per km (NOAA JetStream: divide seconds by 3 for km)
+function wlR(x,d){var f=Math.pow(10,d||0);return Math.round(x*f)/f;}
+function wlNm(km){return km/1.852;}
+function wlAgeText(ms){
+  var m=Math.max(0,Math.floor(ms/60000));
+  if(m<1)return 'gerade eben';
+  if(m<60)return m+' min';
+  var h=Math.floor(m/60);
+  return h+' h'+(m%60?' '+(m%60)+' min':'');
+}
+function wlMs(s){var t=Date.parse(s);return isFinite(t)?t:NaN;}
+function wlSig(o){   // normalised signal
+  return {id:o.id,kind:o.kind,level:o.level,title:o.title,text:o.text,src:o.src||'',rule:o.rule||'Faustregel',
+    observedAt:o.observedAt==null?null:o.observedAt,validUntil:o.validUntil==null?null:o.validUntil,staleAt:o.staleAt==null?null:o.staleAt,
+    origin:o.origin||'device',stale:!!o.stale};
+}
+
+/* ---------- lightning: flash-to-bang ---------- */
+function wlThunderKm(sec){return wlR(sec*WL_SEC_KM,1);}
+function wlLightningValid(ev){return ev&&isFinite(ev.t)&&(ev.kind==='thunder'||ev.kind==='flash');}
+/* events: [{t, kind:'thunder'|'flash', sec:number|null}]. "thunder" = thunder heard (sec = flash-to-bang if measured),
+   "flash" = lightning seen without thunder within wlC.maxSec (distance unknown, > ~60 km).
+   Thunder keeps the signal active for holdMin after the LAST thunder (never shorter). */
+function wlLightning(events,now){
+  var L=WLC.lightning,hold=L.holdMin*60000,act=(events||[]).filter(function(e){return wlLightningValid(e)&&e.t<=now+60000&&now-e.t<hold;}).sort(function(a,b){return a.t-b.t;});
+  if(!act.length)return null;
+  var th=act.filter(function(e){return e.kind==='thunder';});
+  var out={thunder:th.length,events:act,measured:[],level:null,last:null,lastKm:null,minKm:null,until:null,approaching:false,flashOnly:!th.length};
+  if(!th.length){out.last=act[act.length-1];out.until=out.last.t+hold;return out;}
+  out.last=th[th.length-1];out.until=out.last.t+hold;
+  out.measured=th.filter(function(e){return e.sec!=null&&isFinite(e.sec);}).map(function(e){return {t:e.t,sec:e.sec,km:wlThunderKm(e.sec)};});
+  out.level='y';
+  if(out.measured.length){
+    out.minKm=Math.min.apply(null,out.measured.map(function(m){return m.km;}));
+    var lm=out.measured[out.measured.length-1];out.lastKm=lm.km;
+    if(out.minKm<=L.redKm)out.level='r';
+  }
+  // "distance decreasing": at least trendMin measurements within trendSpanMin, linear regression over time; never an all-clear statement in the other direction
+  var win=out.measured.filter(function(m){return m.t>=out.last.t-L.trendSpanMin*60000;});
+  if(win.length>=L.trendMin){
+    var n=win.length,t0=win[0].t,sx=0,sy=0,sxx=0,sxy=0;
+    win.forEach(function(m){var x=(m.t-t0)/60000;sx+=x;sy+=m.km;sxx+=x*x;sxy+=x*m.km;});
+    var den=n*sxx-sx*sx;
+    if(den>0){var slope=(n*sxy-sx*sy)/den,span=(win[n-1].t-t0)/60000;if(slope*span<=-L.trendDeltaKm)out.approaching=true;}
+  }
+  return out;
+}
+function wlLightningSignals(events,now){
+  var a=wlLightning(events,now);if(!a)return [];
+  var L=WLC.lightning,rem=wlAgeText(a.until-now),S=[];
+  if(a.flashOnly){
+    S.push(wlSig({id:'lightning-flash',kind:'obs',level:'i',title:'Blitz gesehen, Donner nicht gehört',text:'Gewitter vermutlich weiter als etwa '+wlR(wlNm(L.maxSec*WL_SEC_KM))+' sm entfernt – kann näher kommen. Keine Entwarnung.',src:L.src,rule:'NOAA',observedAt:a.last.t,validUntil:a.until}));
+    return S;
+  }
+  var txt,title;
+  if(a.lastKm!=null){
+    title=a.level==='r'?'Gewitter sehr nah – gemessen ≈ '+wlR(a.minKm,1).toString().replace('.',',')+' km':'Gewitter in Einschlagreichweite';
+    txt='Letzter Donner '+wlAgeText(now-a.last.t)+' her'+(a.measured.length&&a.measured[a.measured.length-1].t===a.last.t?', Abstand ≈ '+wlR(a.lastKm,1)+' km (≈ '+wlR(wlNm(a.lastKm),1)+' sm)':'')+
+      (a.minKm!=null?'; nächster gemessener Abstand ≈ '+wlR(a.minKm,1)+' km':'')+'. Hörbarer Donner = in Einschlagreichweite. Schutz suchen, bis '+L.holdMin+' min nach dem letzten Donner vergangen sind (noch '+rem+').';
+    if(a.level==='r')txt+=' Abstand ≤ '+L.redKm+' km: rot (Faustregel).';
+  }else{
+    title='Donner gehört – Abstand unbekannt';
+    txt='Letzter Donner '+wlAgeText(now-a.last.t)+' her, nicht gemessen. Hörbarer Donner = in Einschlagreichweite. Schutz suchen, bis '+L.holdMin+' min nach dem letzten Donner vergangen sind (noch '+rem+').';
+  }
+  S.push(wlSig({id:'lightning',kind:'obs',level:a.level,title:title,text:txt,src:L.src,rule:a.level==='r'?'Faustregel':'NOAA',observedAt:a.last.t,validUntil:a.until}));
+  if(a.approaching)S.push(wlSig({id:'lightning-trend',kind:'obs',level:'i',title:'Abstand nimmt ab',text:'Aus den letzten '+a.measured.length+' Messungen nimmt der Abstand ab. Gemessene Abstände schwanken stark (verschiedene Blitze, Reaktionszeit) – kein Hinweis auf Entlastung, falls er wieder steigt.',src:'Faustregel',rule:'Faustregel',observedAt:a.last.t,validUntil:a.until}));
+  return S;
+}
+
+/* ---------- barometer log ---------- */
+function wlBaroOk(e){var P=WLC.pressure;return e&&isFinite(e.t)&&isFinite(e.hpa)&&e.hpa>=P.min&&e.hpa<=P.max;}
+/* plausibility of a NEW entry against the log: range, and a jump > jumpHpa within < jumpMin minutes asks back ("typo?") */
+function wlBaroCheck(list,entry){
+  var P=WLC.pressure;
+  if(!entry||!isFinite(entry.hpa)||entry.hpa<P.min||entry.hpa>P.max)return {ok:false,reason:'range',text:'Luftdruck muss zwischen '+P.min+' und '+P.max+' hPa liegen.'};
+  var prev=(list||[]).filter(function(e){return wlBaroOk(e)&&e.t<=entry.t;}).sort(function(a,b){return b.t-a.t;})[0];
+  if(prev&&entry.t-prev.t<P.jumpMin*60000&&Math.abs(entry.hpa-prev.hpa)>P.jumpHpa)
+    return {ok:false,reason:'jump',prev:prev,text:'Sprung von '+wlR(prev.hpa,1)+' auf '+wlR(entry.hpa,1)+' hPa in '+wlAgeText(entry.t-prev.t)+' – Tippfehler?'};
+  return {ok:true};
+}
+function wlBaroCat(d3){
+  var P=WLC.pressure,a=Math.abs(d3);
+  if(a<P.slow)return 'steady';
+  if(a<=1.5)return 'slow';
+  if(a<=3.5)return 'normal';
+  if(a<=6.0)return 'quick';
+  return 'rapid';
+}
+var WL_CAT_DE={steady:'nahezu unverändert',slow:'langsam',normal:'',quick:'schnell',rapid:'sehr schnell'};
+/* tendency over 3 h. Only if the newest value is <= latestMaxMin old AND a reference lies 2,5–3,5 h before it (scaled to 3 h),
+   or >= 4 values (>= minGapMin apart) span >= 2 h (regression). Values closer than minGapMin to the next one are ignored (reading noise). */
+function wlBaroTrend(list,now){
+  var P=WLC.pressure,es=(list||[]).filter(function(e){return wlBaroOk(e)&&e.t<=now+60000;}).sort(function(a,b){return a.t-b.t;});
+  if(!es.length)return {ok:false,reason:'empty'};
+  var latest=es[es.length-1],ageMin=(now-latest.t)/60000;
+  if(ageMin>P.latestMaxMin)return {ok:false,reason:'stale',ageMin:ageMin,latest:latest};
+  var thin=[latest];
+  for(var i=es.length-2;i>=0;i--){if(thin[thin.length-1].t-es[i].t>=P.minGapMin*60000)thin.push(es[i]);}
+  thin.reverse();
+  var best=null;
+  thin.forEach(function(e){var dt=(latest.t-e.t)/3600000;if(dt>=P.refMinH&&dt<=P.refMaxH&&(!best||Math.abs(dt-3)<Math.abs(best.dt-3)))best={e:e,dt:dt};});
+  var d3=null,method=null,ref=null;
+  if(best){d3=(latest.hpa-best.e.hpa)*3/best.dt;method='ref';ref=best.e;}
+  else{
+    var w=thin.filter(function(e){return latest.t-e.t<=P.refMaxH*3600000;});
+    if(w.length>=P.regrMinN&&(w[w.length-1].t-w[0].t)/3600000>=P.regrMinSpanH){
+      var n=w.length,t0=w[0].t,sx=0,sy=0,sxx=0,sxy=0;
+      w.forEach(function(e){var x=(e.t-t0)/3600000;sx+=x;sy+=e.hpa;sxx+=x*x;sxy+=x*e.hpa;});
+      var den=n*sxx-sx*sx;
+      if(den>0){d3=3*(n*sxy-sx*sy)/den;method='regr';ref=w[0];}
+    }
+  }
+  if(d3==null)return {ok:false,reason:'few',ageMin:ageMin,latest:latest};
+  d3=wlR(d3,1);
+  return {ok:true,d3:d3,cat:wlBaroCat(d3),dir:d3<0?'fall':'rise',method:method,latest:latest,ref:ref,ageMin:ageMin,n:thin.length};
+}
+function wlBaroSignals(list,now){
+  var P=WLC.pressure,tr=wlBaroTrend(list,now),S=[];
+  if(!tr.ok)return {signals:S,trend:tr};
+  var d=tr.d3,lvl=null,title,txt;
+  var amt=wlR(Math.abs(d),1).toString().replace('.',',')+' hPa/3 h';
+  if(d<=P.info){
+    title=(d<P.red?'Luftdruck fällt sehr schnell':d<=P.yellow?'Luftdruck fällt schnell':'Luftdruck fällt')+' ('+amt+')';
+    if(d<P.red){lvl='r';txt='Fall > '+Math.abs(P.red).toString().replace('.',',')+' hPa in 3 h (Met Office: „very rapidly“). Sturm/Böen möglich – Zuflucht ansteuern. Ampelzuordnung: Faustregel.';}
+    else if(d<=P.yellow){lvl='y';txt='Fall von '+Math.abs(P.yellow).toString().replace('.',',')+' bis '+Math.abs(P.red).toString().replace('.',',')+' hPa in 3 h (Met Office: „quickly“). Wetterverschlechterung wahrscheinlich – Ausweichhafen festlegen. Ampelzuordnung: Faustregel.';}
+    else{lvl='i';txt='Fall von '+Math.abs(P.info).toString().replace('.',',')+' bis '+Math.abs(P.yellow).toString().replace('.',',')+' hPa in 3 h (Met Office: „falling“). Hinweis, kein Ampelsignal.';}
+  }else if(d>P.riseYellow){
+    lvl='y';title='Luftdruck steigt sehr schnell ('+amt+')';txt='Kräftige Druckänderung – Böen möglich (Faustregel). Kein Hinweis auf Entlastung.';
+  }
+  if(!lvl)return {signals:S,trend:tr};
+  S.push(wlSig({id:'baro',kind:'obs',level:lvl,title:title,text:txt,src:P.src,rule:lvl==='i'?'Met Office':'Faustregel',observedAt:tr.latest.t,validUntil:tr.latest.t+P.latestMaxMin*60000}));
+  return {signals:S,trend:tr};
+}
+
+/* ---------- model pressure (Open-Meteo pressure_msl; a MODEL value, not a measurement) ---------- */
+/* get(t) -> hPa|null at time t (ms). Windows end at now … now+horizonH; the worst 3-h fall decides. */
+function wlModelPressure(get,now,fetchedAt,maxAgeH,hardAgeH){
+  var M=WLC.modelPressure,ageH=(now-fetchedAt)/3600000;
+  if(!isFinite(ageH))return {ok:false,reason:'none'};
+  if(ageH>hardAgeH)return {ok:false,reason:'old',ageH:ageH};
+  var H=3600000,rows=[],min=null,minT=null,now3=null;
+  for(var k=0;k<=M.horizonH;k++){
+    var e=now+k*H,a=get(e),b=get(e-3*H);
+    if(a==null||b==null)continue;
+    var d=wlR(a-b,1);rows.push({t:e,d:d});
+    if(k===0)now3=d;
+    if(min===null||d<min){min=d;minT=e;}
+  }
+  if(!rows.length)return {ok:false,reason:'none',ageH:ageH};
+  return {ok:true,now3:now3,minD3:min,minT:minT,ageH:ageH,stale:ageH>maxAgeH,pNow:get(now),fetchedAt:fetchedAt};
+}
+function wlModelSignals(mp,now){
+  var M=WLC.modelPressure,S=[];
+  if(!mp||!mp.ok)return S;
+  var old=mp.stale?' (Modellstand '+Math.round(mp.ageH)+' h alt)':'';
+  if(mp.minD3<M.yellow){
+    S.push(wlSig({id:'model-pressure',kind:'model',level:'y',title:'Modell: kräftiger Druckfall',
+      text:'Das Modell (Open-Meteo, keine Messung) rechnet bis '+wlR(mp.minD3,1).toString().replace('.',',')+' hPa in 3 h (Ende '+wlClock(mp.minT)+' Uhr)'+old+'. Mit Barometer und Wetterbericht abgleichen. Ampelzuordnung: Faustregel.',
+      src:M.src,rule:'Faustregel',observedAt:mp.fetchedAt,validUntil:mp.minT,origin:'open-meteo',stale:mp.stale}));
+  }else if(Math.min(mp.minD3,mp.now3==null?0:mp.now3)<=M.info){
+    S.push(wlSig({id:'model-pressure',kind:'model',level:'i',title:'Modell: Luftdruck fällt',
+      text:'Das Modell (Open-Meteo, keine Messung) rechnet '+wlR(Math.min(mp.minD3,mp.now3==null?0:mp.now3),1).toString().replace('.',',')+' hPa in 3 h'+old+'. Hinweis, kein Ampelsignal.',
+      src:M.src,rule:'Faustregel',observedAt:mp.fetchedAt,validUntil:mp.minT,origin:'open-meteo',stale:mp.stale}));
+  }
+  return S;
+}
+function wlClock(t){var d=new Date(t);return (d.getHours()<10?'0':'')+d.getHours()+':'+(d.getMinutes()<10?'0':'')+d.getMinutes();}
+
+/* ---------- geometry: point in area (even-odd over all rings -> holes and multi-part areas work), distance to the edge ---------- */
+function wlRingHas(ring,lat,lon){
+  var inside=false;
+  for(var i=0,j=ring.length-1;i<ring.length;j=i++){
+    var yi=ring[i][0],xi=ring[i][1],yj=ring[j][0],xj=ring[j][1];
+    if(((yi>lat)!==(yj>lat))&&(lon<(xj-xi)*(lat-yi)/(yj-yi)+xi))inside=!inside;
+  }
+  return inside;
+}
+function wlSegDistNm(lat,lon,a,b){
+  var k=Math.cos(lat*Math.PI/180),ax=(a[1]-lon)*k*60,ay=(a[0]-lat)*60,bx=(b[1]-lon)*k*60,by=(b[0]-lat)*60,dx=bx-ax,dy=by-ay,l2=dx*dx+dy*dy,t=l2?Math.max(0,Math.min(1,-(ax*dx+ay*dy)/l2)):0,px=ax+t*dx,py=ay+t*dy;
+  return Math.sqrt(px*px+py*py);
+}
+function wlInAreas(pos,polys,bufferNm,union){   // union: CAP knows no holes, a ring inside a ring must not take the warning off a position
+  var inside=false,dist=Infinity,seen={},hit=[];
+  (polys||[]).forEach(function(r){
+    if(!r||r.length<3)return;
+    var key=JSON.stringify(r);if(seen[key])return;seen[key]=1;
+    if(wlRingHas(r,pos.lat,pos.lon))hit.push(r);
+    for(var i=0,j=r.length-1;i<r.length;j=i++){var d=wlSegDistNm(pos.lat,pos.lon,r[j],r[i]);if(d<dist)dist=d;}
+  });
+  // CAP: the area is the union of its polygons, so overlapping rings all count. Only a ring lying wholly inside another is a hole (nesting depth odd).
+  if(hit.length){
+    var depth=hit.reduce(function(m,r){return Math.max(m,hit.filter(function(o){return o!==r&&r.every(function(p){return wlRingHas(o,p[0],p[1]);});}).length);},0);
+    inside=union||depth%2===0;
+  }
+  return {inside:inside,distNm:inside?0:dist,hit:inside||dist<=bufferNm};
+}
+
+/* ---------- CAP 1.2 (parsing in the browser mirrors platform/wl_collector.py; the collector is the primary path) ---------- */
+var WL_AW_TYPE={1:'wind',2:'snow-ice',3:'thunderstorm',4:'fog',5:'high-temperature',6:'low-temperature',7:'coastal',8:'forest-fire',9:'avalanche',10:'rain',11:'flood',12:'rain',13:'rain'};   // MeteoAlarm awareness_type numbers (consistent with the Home Assistant example "8; forest-fire"; full list not verified at the primary source)
+var WL_AW_LEVEL={2:'yellow',3:'orange',4:'red'};   // "2; yellow; Moderate" · "3; orange; Severe" · "4; red; …" (Home Assistant MeteoAlarm); 1 = green = no warning
+function wlEventType(ev,cat){
+  var s=String(ev||'').toLowerCase();
+  if(/gewitter|thunder|blitz|hagel|hail|tonnerre|orage|temporal|temporale|åska|tordenvejr|burz/.test(s))return 'thunderstorm';
+  if(/küste|coast|sturmflut|storm surge|seegang|marine|côti|costier|kyst|kust|przybrze/.test(s))return 'coastal';
+  if(/nebel|fog|brouillard|nebbia|tåge|dimma|mgł/.test(s))return 'fog';
+  if(/hochwasser|flood|inond|alluv|oversvøm|översvämn|powód/.test(s))return 'flood';
+  if(/wind|sturm|böe|gust|orkan|vent|mistral|libeccio|storm|vind|wiatr/.test(s))return 'wind';
+  if(/regen|rain|niederschlag|pluie|pioggia|nedbør|regn|opad|deszcz|schauer/.test(s))return 'rain';
+  return 'other';
+}
+function wlCapLevel(info,sender){
+  var p=info.params||{},al=p.awareness_level,m;
+  if(al!=null&&(m=String(al).match(/^\s*(\d)/))){return m[1]==='1'?null:(WL_AW_LEVEL[+m[1]]||'yellow');}
+  var sev=String(info.severity||'');
+  if(/dwd/i.test(String(sender||''))||p.WARNCELLID!=null||p.AREA_COLOR!=null)return {Minor:'yellow',Moderate:'orange',Severe:'red',Extreme:'red'}[sev]||null;   // DWD: Minor = gelb, Moderate = orange, Severe = rot, Extreme = violett (treated as red)
+  return {Moderate:'yellow',Severe:'orange',Extreme:'red'}[sev]||null;   // generic CAP severity (SPEC 6.2 fallback); Minor/Unknown are no warning
+}
+function wlCapType(info){
+  var at=info.params&&info.params.awareness_type,m;
+  if(at!=null&&(m=String(at).match(/^\s*(\d+)/))&&WL_AW_TYPE[+m[1]])return WL_AW_TYPE[+m[1]];
+  return wlEventType(info.event,info.category);
+}
+function wlRefKeys(s){return String(s||'').split(/\s+/).filter(Boolean);}
+function wlPolyParse(txt){
+  var pts=String(txt||'').trim().split(/\s+/).map(function(p){var a=p.split(',');return [parseFloat(a[0]),parseFloat(a[1])];}).filter(function(p){return isFinite(p[0])&&isFinite(p[1]);});
+  return pts.length>=3?pts:null;
+}
+/* alerts: [{identifier,sender,sent,status,msgType,references,infos:[{lang,event,category,severity,expires,onset,effective,headline,instruction,params,areas:[{areaDesc,polys,geocodes}]}]}] (see wlCapParse)
+   -> normalised warnings. Ignored: status != Actual (Test/Exercise/System/Draft, they must not cancel anything either), msgType Ack/Error,
+   alerts replaced by Update/Cancel (references), expired alerts; no expires = sent/onset + 6 h (flagged), never "forever". */
+function wlCapWarnings(alerts,now,opts){
+  opts=opts||{};var langs=opts.langs||['de','en'],types=opts.types||null,out=[];
+  var act=(alerts||[]).filter(function(a){return a&&String(a.status||'').toLowerCase()==='actual'&&/^(alert|update|cancel)$/i.test(String(a.msgType||''));});
+  var gone={};
+  act.forEach(function(a){if(/^(update|cancel)$/i.test(a.msgType))wlRefKeys(a.references).forEach(function(k){gone[k]=1;});});
+  act.forEach(function(a){
+    if(/^cancel$/i.test(a.msgType))return;
+    var key=a.sender+','+a.identifier+','+a.sent;
+    if(gone[key])return;
+    var infos=a.infos||[];if(!infos.length)return;
+    var info=null;
+    for(var i=0;i<langs.length&&!info;i++)info=infos.filter(function(x){return String(x.lang||'').toLowerCase().slice(0,2)===langs[i];})[0]||null;
+    info=info||infos[0];
+    var level=wlCapLevel(info,a.sender);if(!level)return;
+    var type=wlCapType(info);if(types&&types.indexOf(type)<0)return;
+    var sent=wlMs(a.sent),onset=wlMs(info.onset||info.effective||a.sent),exp=wlMs(info.expires),inferred=false;
+    if(!isFinite(exp)){exp=(isFinite(onset)?onset:sent)+6*3600000;inferred=true;}
+    if(!(exp>now))return;
+    var areas=[];infos.forEach(function(x){(x.areas||[]).forEach(function(ar){areas.push(ar);});});
+    (info.areas&&info.areas.length?info.areas:areas).forEach(function(ar,ix){
+      out.push({id:a.sender+'|'+a.identifier+'|'+ix,country:opts.country||null,sender:info.senderName||a.sender,event:info.event||'',type:type,level:level,severity:info.severity||'',
+        onset:isFinite(onset)?new Date(onset).toISOString():null,expires:new Date(exp).toISOString(),expiresInferred:inferred,headline:info.headline||info.event||'',
+        instruction:info.instruction||'',lang:info.lang||'',polys:ar.polys&&ar.polys.length?ar.polys:null,areaDesc:ar.areaDesc||''});
+    });
+  });
+  return out;
+}
+function wlCapParse(xml){
+  var doc=new DOMParser().parseFromString(xml,'application/xml');
+  if(doc.getElementsByTagName('parsererror').length)throw new Error('kein gültiges CAP-XML');
+  function kids(el,name){var r=[];for(var c=el.firstElementChild;c;c=c.nextElementSibling)if(c.localName===name)r.push(c);return r;}
+  function txt(el,name){var k=kids(el,name)[0];return k?k.textContent.trim():'';}
+  var als=doc.getElementsByTagNameNS('*','alert'),out=[];
+  for(var i=0;i<als.length;i++){
+    var a=als[i];
+    var o={identifier:txt(a,'identifier'),sender:txt(a,'sender'),sent:txt(a,'sent'),status:txt(a,'status'),msgType:txt(a,'msgType'),references:txt(a,'references'),infos:[]};
+    kids(a,'info').forEach(function(inf){
+      var params={};kids(inf,'parameter').forEach(function(p){params[txt(p,'valueName')]=txt(p,'value');});
+      var info={lang:txt(inf,'language'),event:txt(inf,'event'),category:kids(inf,'category').map(function(c){return c.textContent.trim();}),severity:txt(inf,'severity'),urgency:txt(inf,'urgency'),certainty:txt(inf,'certainty'),
+        onset:txt(inf,'onset'),effective:txt(inf,'effective'),expires:txt(inf,'expires'),headline:txt(inf,'headline'),description:txt(inf,'description'),instruction:txt(inf,'instruction'),senderName:txt(inf,'senderName'),params:params,areas:[]};
+      kids(inf,'area').forEach(function(ar){
+        var gc={};kids(ar,'geocode').forEach(function(g){gc[txt(g,'valueName')]=txt(g,'value');});
+        info.areas.push({areaDesc:txt(ar,'areaDesc'),polys:kids(ar,'polygon').map(function(p){return wlPolyParse(p.textContent);}).filter(Boolean),geocodes:gc});
+      });
+      o.infos.push(info);
+    });
+    out.push(o);
+  }
+  return out;
+}
+
+/* ---------- official warnings at the position (from the platform summary or wlCapWarnings) ---------- */
+/* summary: {type:'skipper-wl',fetchedAt,sources:[{id,country,ok,fetchedAt}],warnings:[…]}. A known active warning stays until its "expires",
+   even if the summary is old (labelled). Unknown / stale warning state is a GAP, never "no warning". */
+function wlWarnSignals(summary,pos,now,countries){
+  var W=WLC.warn,SU=WLC.stale,S=[],G=[];
+  if(!summary){G.push({id:'warn',text:'Warnlage unbekannt – noch kein Abruf der amtlichen Warnungen.'});return {signals:S,gaps:G,ageH:null};}
+  var fa=wlMs(summary.fetchedAt),ageH=isFinite(fa)?(now-fa)/3600000:null;
+  if(ageH==null)G.push({id:'warn',text:'Warnlage unbekannt – Zeitstempel des Warnstands fehlt.'});
+  else if(ageH>SU.summaryGapH)G.push({id:'warn',text:'Warnlage unbekannt – seit '+wlAgeText(now-fa)+' kein Abruf. Bekannte Warnungen gelten bis zu ihrem Ablauf.'});
+  var stale=ageH!=null&&ageH*60>SU.summaryFreshMin;
+  (summary.sources||[]).forEach(function(s){
+    if(countries&&s.country&&countries.indexOf(s.country)<0)return;
+    if(!s.ok)G.push({id:'src-'+s.id,text:'Warnquelle '+(s.country||s.id)+' gestört beim letzten Abruf – Warnlage dort unbekannt. Frühere, noch gültige Warnungen bleiben sichtbar.'});
+    else if(s.unlocated>0)G.push({id:'unloc-'+s.id,text:s.unlocated+' Warnung'+(s.unlocated>1?'en':'')+' ('+(s.country||s.id)+') ohne Gebietsfläche – Zuordnung zur Position unbekannt.'});
+  });
+  if(countries){
+    countries.forEach(function(c){
+      if(!(summary.sources||[]).some(function(s){return s.country===c;}))G.push({id:'nosrc-'+c,text:'Für '+c+' ist keine amtliche Warnquelle eingebunden – Warnlage unbekannt.'});
+    });
+  }
+  if(summary.truncated)G.push({id:'warn-cut',text:'Warnstand unvollständig: Es sind mehr Warnungen gemeldet, als die App speichert. Warnlage unbekannt.'});
+  if(!pos){var act=(summary.warnings||[]).filter(function(w){return wlMs(w.expires)>now;}),reds=act.filter(function(w){return w.level==='red';}).length;if(act.length)G.push({id:'warn-pos',text:'Position fehlt – '+act.length+' gültige amtliche Warnung'+(act.length>1?'en':'')+(reds?', davon '+reds+' rot,':'')+' können nicht zugeordnet werden.'});return {signals:S,gaps:G,ageH:ageH};}
+  (summary.warnings||[]).forEach(function(w){
+    var ex=wlMs(w.expires);if(!(ex>now))return;
+    var on=wlMs(w.onset);if(!isFinite(on))on=now;
+    var polys=w.polys||null,hit;
+    var typeOk=W.types.indexOf(w.type)>=0,lv=typeOk?(W.map[w.level]||'y'):'i';
+    var title='Amtliche Warnung: '+(w.event||w.type)+' ('+({yellow:'gelb',orange:'orange',red:'rot'}[w.level]||w.level)+')';
+    var base=(w.headline&&w.headline!==w.event?w.headline+'. ':'')+(w.areaDesc?'Gebiet: '+w.areaDesc+'. ':'')+'Gültig bis '+wlClock(ex)+' Uhr'+(w.expiresInferred?' (Ablauf nicht angegeben, angenommen)':'')+'. Quelle: '+(w.sender||'amtlicher Dienst')+'.';
+    if(!polys){
+      S.push(wlSig({id:'warn-'+w.id,kind:'official',level:'i',title:title+' – Gebiet nicht lokalisierbar',text:base+' Das Warngebiet liegt nicht als Fläche vor; ob es die Position betrifft, ist unbekannt.',src:w.sender||'',rule:'Quelle',observedAt:fa,validUntil:ex,origin:'platform',stale:stale}));
+      return;
+    }
+    hit=wlInAreas(pos,polys,W.bufferNm,!w.holes);
+    if(!hit.hit)return;
+    if(on>now+W.lookAheadH*3600000)lv='i';
+    var fut=on>now?' Beginn '+wlClock(on)+' Uhr.':'';
+    S.push(wlSig({id:'warn-'+w.id,kind:'official',level:lv,title:title,text:base+fut+(hit.inside?'':' Position ≈ '+wlR(hit.distNm,1)+' sm neben dem Warngebiet (Puffer '+W.bufferNm+' sm).')+(stale?' Warnstand '+wlAgeText(now-fa)+' alt.':'')+' Stufenzuordnung zur Ampel: Faustregel.',
+      src:w.sender||'',rule:'Quelle',observedAt:fa,validUntil:ex,origin:'platform',stale:stale}));
+  });
+  return {signals:S,gaps:G,ageH:ageH};
+}
+
+/* ---------- observations of the skipper (identification help; only after a tap, valid obs.validMin) ---------- */
+function wlObsSignals(obs,now){
+  var O=WLC.obs,S=[];
+  (obs||[]).forEach(function(o){
+    if(!o||!isFinite(o.t)||o.t>now+60000||now-o.t>=O.validMin*60000)return;
+    var arcus=o.kind==='arcus',lvl=arcus?'r':'y';
+    S.push(wlSig({id:'obs-'+o.kind+'-'+o.t,kind:'obs',level:lvl,title:arcus?'Beobachtet: Böenwalze (Arcus)':'Beobachtet: Gewitterwolke (Cumulonimbus)',
+      text:(arcus?'Arcus = Vorderkante eines Gewitters, Böen und Starkregen nah (Met Office/NWS). ':'Gewitter in der Nähe möglich (Beobachtung des Skippers, '+wlAgeText(now-o.t)+' her). ')+'Ampelzuordnung: Faustregel.',src:'Met Office; NWS',rule:'Faustregel',observedAt:o.t,validUntil:o.t+O.validMin*60000}));
+  });
+  return S;
+}
+
+/* ---------- assessment ---------- */
+/* inp: {lightning,baro,obs,summary,pos,countries,model:{get,fetchedAt}|null}; default = current stores (wlInputs in wl-store.js).
+   Returns {level:'y'|'r'|'n'|null, signals[], gaps[], oldest, trend, model}. NEVER 'g'.
+   level 'y'/'r' = at least one raising signal; 'n' = nothing raising but unknown sources (grey, "keine Aussage"); null = nothing relevant and no gaps. */
+function wlAssess(now,inp){
+  now=now==null?Date.now():now;inp=inp||wlInputs(now);
+  var signals=[],gaps=[];
+  signals=signals.concat(wlLightningSignals(inp.lightning,now));
+  var b=wlBaroSignals(inp.baro,now);signals=signals.concat(b.signals);
+  if(!b.trend.ok){
+    if(b.trend.reason==='empty')gaps.push({id:'baro',text:'Kein Barometerwert eingetragen – Drucktrend unbekannt.'});
+    else if(b.trend.reason==='stale')gaps.push({id:'baro',text:'Barometer nachtragen – letzter Wert vor '+wlAgeText(b.trend.ageMin*60000)+', Trend nicht mehr aktuell.'});
+    else gaps.push({id:'baro',text:'Barometer-Trend braucht einen Wert von vor etwa 3 h (2,5–3,5 h) oder mindestens '+WLC.pressure.regrMinN+' Werte über '+WLC.pressure.regrMinSpanH+' h.'});
+  }
+  var mp=null;
+  if(inp.model){
+    mp=wlModelPressure(inp.model.get,now,inp.model.fetchedAt,inp.model.maxAgeH,inp.model.hardAgeH);
+    if(mp.ok)signals=signals.concat(wlModelSignals(mp,now));
+    else gaps.push({id:'model',text:mp.reason==='old'?'Modell-Druck: Wetterstand '+Math.round(mp.ageH)+' h alt, nicht verwendet.':'Modell-Druck nicht verfügbar (Wetterstand ohne Druck – neu laden).'});
+  }else gaps.push({id:'model',text:'Modell-Druck nicht geladen.'});
+  var w=wlWarnSignals(inp.summary,inp.pos,now,inp.countries||null);
+  signals=signals.concat(w.signals);gaps=gaps.concat(w.gaps);
+  signals=signals.concat(wlObsSignals(inp.obs,now));
+  var lv=null;
+  signals.forEach(function(s){if(s.level==='r')lv='r';else if(s.level==='y'&&lv!=='r')lv='y';});
+  if(!lv&&gaps.length)lv='n';
+  var rank={r:0,y:1,i:2};
+  signals.sort(function(x,y){return (rank[x.level]-rank[y.level])||0;});
+  var oldest=null;signals.forEach(function(s){if(s.observedAt!=null&&(oldest===null||s.observedAt<oldest))oldest=s.observedAt;});
+  return {level:lv,signals:signals,gaps:gaps,oldest:oldest,trend:b.trend,model:mp,now:now};
+}
+/* raising signals only (what the traffic-light gate shows) */
+function wlRaising(a){return a?a.signals.filter(function(s){return s.level==='y'||s.level==='r';}):[];}
+
+/* ---------- crossed winds (info only; Faustregel, no all-clear) ---------- */
+/* windFrom: surface wind (true, direction it blows FROM), cloudFrom: direction the high clouds come FROM. Rule as stated by Natural Navigator:
+   back to the surface wind, high clouds moving from left to right -> frontal system / bad weather probably coming (northern hemisphere). */
+function wlCrossWind(windFrom,cloudFrom,lat){
+  if(!isFinite(windFrom)||!isFinite(cloudFrom))return null;
+  if(!(lat>=0))return {level:'i',verdict:'none',text:'Für die Südhalbkugel ist die Regel hier nicht belegt – keine Aussage.'};
+  var d=(((cloudFrom-windFrom)%360)+360)%360;
+  if(d>=45&&d<=135)return {level:'i',verdict:'worse',diff:d,text:'Hohe Wolken ziehen (mit dem Rücken zum Wind) von links nach rechts: deutet auf eine herannahende Front und Verschlechterung hin.'};
+  if(d<=15||d>=345)return {level:'i',verdict:'aligned',diff:d,text:'Hoher und bodennaher Wind aus ähnlicher Richtung: nach dieser Regel keine unmittelbare Änderung. Das ist keine Entwarnung.'};
+  return {level:'i',verdict:'none',diff:d,text:'Kein klares Signal aus dieser Regel. Das ist keine Entwarnung.'};
+}
+
+/* =====================================================================
+   WOLKENLOTSE – storage. Small lists (lightning counter, barometer log, observations) in localStorage via sk('wl.*');
+   the last platform warning state and the photo logbook in a separate IndexedDB "<idb.db>-wl" (works offline, survives restarts).
+   Everything is part of the backup export/import (core/platform/backup.js).
+   ===================================================================== */
+var WLS={lightning:[],baro:[],obs:[],summary:null,flashT:null,photos:[],loaded:false};
+var WL_LIM={lightning:60,baro:80,obs:20,photos:40,lightningKeepH:3,baroKeepH:24,obsKeepH:3,summaryBytes:3000000,warnings:3000,rings:40,points:400};
+function wlLsGet(k){try{var r=load(sk('wl.'+k));return r?JSON.parse(r):null;}catch(e){return null;}}
+function wlLsPut(k){store(sk('wl.'+k),JSON.stringify(WLS[k]));}
+function wlNum(x){return typeof x==='number'&&isFinite(x);}
+/* sanitisers (also used for imports: never trust file content) */
+function wlCleanLightning(a,now){
+  return (Array.isArray(a)?a:[]).filter(function(e){return e&&wlNum(e.t)&&(e.kind==='thunder'||e.kind==='flash')&&e.t<=now+60000&&now-e.t<WL_LIM.lightningKeepH*3600000;})
+    .map(function(e){return {t:Math.round(e.t),kind:e.kind,sec:(e.kind==='thunder'&&wlNum(e.sec)&&e.sec>=0&&e.sec<=WLC.lightning.maxSec)?Math.round(e.sec*10)/10:null};})
+    .sort(function(a,b){return a.t-b.t;}).slice(-WL_LIM.lightning);
+}
+function wlCleanBaro(a,now){
+  return (Array.isArray(a)?a:[]).filter(function(e){return wlBaroOk(e)&&e.t<=now+60000&&now-e.t<WL_LIM.baroKeepH*3600000;})
+    .map(function(e){return {t:Math.round(e.t),hpa:Math.round(e.hpa*10)/10,src:String(e.src||'Bordbarometer').slice(0,30)};})
+    .sort(function(a,b){return a.t-b.t;}).slice(-WL_LIM.baro);
+}
+function wlCleanObs(a,now){
+  return (Array.isArray(a)?a:[]).filter(function(e){return e&&wlNum(e.t)&&(e.kind==='cb'||e.kind==='arcus')&&e.t<=now+60000&&now-e.t<WL_LIM.obsKeepH*3600000;})
+    .map(function(e){return {t:Math.round(e.t),kind:e.kind};}).sort(function(a,b){return a.t-b.t;}).slice(-WL_LIM.obs);
+}
+function wlStr(x,n){return typeof x==='string'?x.slice(0,n):'';}
+/* platform summary: shape check, caps, texts truncated (they are shown through esc() anyway) */
+function wlCleanSummary(o){
+  if(!o||o.type!=='skipper-wl'||o.version!==1||!isFinite(wlMs(o.fetchedAt))||!Array.isArray(o.warnings))return null;
+  var out={type:'skipper-wl',version:1,fetchedAt:o.fetchedAt,pkg:wlStr(o.pkg,40),receivedAt:wlNum(o.receivedAt)?o.receivedAt:null,
+    sources:(Array.isArray(o.sources)?o.sources:[]).filter(function(s){return s&&typeof s==='object';}).slice(0,40).map(function(s){return {id:wlStr(s.id,40),country:wlStr(s.country,3).toUpperCase(),ok:s.ok===true,fetchedAt:wlStr(s.fetchedAt,40),count:wlNum(s.count)?s.count:0,unlocated:wlNum(s.unlocated)?s.unlocated:0,note:wlStr(s.note,200)};}),
+    attribution:wlStr(o.attribution,400),warnings:[],truncated:o.truncated===true||o.warnings.length>WL_LIM.warnings};
+  o.warnings.slice(0,WL_LIM.warnings).forEach(function(w){
+    if(!w||!isFinite(wlMs(w.expires)))return;
+    var polys=null;
+    if(Array.isArray(w.polys)){
+      polys=w.polys.slice(0,WL_LIM.rings).map(function(r){return Array.isArray(r)?r.slice(0,WL_LIM.points).filter(function(p){return Array.isArray(p)&&wlNum(p[0])&&wlNum(p[1])&&Math.abs(p[0])<=90&&Math.abs(p[1])<=180;}):[];}).filter(function(r){return r.length>=3;});
+      // a cut area could miss the position: then the warning counts as not locatable, never as elsewhere
+      if(!polys.length||w.polys.length>WL_LIM.rings||w.polys.some(function(r){return Array.isArray(r)&&r.length>WL_LIM.points;}))polys=null;
+    }
+    out.warnings.push({id:wlStr(w.id,160),country:wlStr(w.country,3).toUpperCase(),sender:wlStr(w.sender,120),event:wlStr(w.event,120),type:wlStr(w.type,24),level:(w.level==='yellow'||w.level==='orange'||w.level==='red')?w.level:'yellow',
+      severity:wlStr(w.severity,16),onset:isFinite(wlMs(w.onset))?w.onset:null,expires:w.expires,expiresInferred:w.expiresInferred===true,headline:wlStr(w.headline,300),instruction:wlStr(w.instruction,600),lang:wlStr(w.lang,8),areaDesc:wlStr(w.areaDesc,200),polys:polys});
+  });
+  return out;
+}
+function wlLoad(now){
+  now=now||Date.now();
+  WLS.lightning=wlCleanLightning(wlLsGet('lightning'),now);WLS.baro=wlCleanBaro(wlLsGet('baro'),now);WLS.obs=wlCleanObs(wlLsGet('obs'),now);
+}
+function wlPrune(now){
+  now=now||Date.now();
+  WLS.lightning=wlCleanLightning(WLS.lightning,now);WLS.baro=wlCleanBaro(WLS.baro,now);WLS.obs=wlCleanObs(WLS.obs,now);
+}
+/* ---- lightning: flash-to-bang ---- */
+function wlFlash(now){now=now||Date.now();wlFlashResolve(now);WLS.flashT=now;}
+/* flash seen > maxSec ago without thunder: store it as "flash without thunder" (info only) */
+function wlFlashResolve(now){
+  if(WLS.flashT!=null&&(now-WLS.flashT)/1000>WLC.lightning.maxSec){
+    WLS.lightning.push({t:WLS.flashT,kind:'flash',sec:null});WLS.flashT=null;wlPrune(now);wlLsPut('lightning');
+  }
+}
+/* thunder heard: with a running flash timer -> measured distance, otherwise unmeasured (still at least yellow) */
+function wlThunder(now,unmeasured){
+  now=now||Date.now();wlFlashResolve(now);
+  var sec=null;
+  if(!unmeasured&&WLS.flashT!=null){sec=Math.round((now-WLS.flashT)/100)/10;if(sec<0.3)sec=0.3;}
+  WLS.flashT=null;
+  WLS.lightning.push({t:now,kind:'thunder',sec:sec});wlPrune(now);wlLsPut('lightning');
+  return {sec:sec,km:sec==null?null:wlThunderKm(sec)};
+}
+function wlLightningUndo(){WLS.lightning.pop();wlLsPut('lightning');}
+function wlLightningClear(){WLS.lightning=[];WLS.flashT=null;wlLsPut('lightning');}
+/* ---- barometer ---- */
+function wlBaroAdd(hpa,t,src,force){
+  t=t==null?Date.now():t;
+  var e={t:t,hpa:Math.round(hpa*10)/10,src:src||'Bordbarometer'},c=wlBaroCheck(WLS.baro,e);
+  if(!c.ok&&!(force&&c.reason==='jump'))return c;
+  WLS.baro.push(e);wlPrune(t);wlLsPut('baro');return {ok:true};
+}
+function wlBaroDel(t){WLS.baro=WLS.baro.filter(function(e){return e.t!==t;});wlLsPut('baro');}
+function wlObsAdd(kind,t){t=t==null?Date.now():t;WLS.obs.push({t:t,kind:kind});wlPrune(t);wlLsPut('obs');}
+function wlObsClear(){WLS.obs=[];wlLsPut('obs');}
+
+/* ---- IndexedDB: last platform state + photo logbook ---- */
+var WLDB={
+  db:null,
+  open:function(){
+    var self=this;if(self.db)return Promise.resolve(self.db);
+    return new Promise(function(res,rej){
+      try{var r=indexedDB.open(REVIER.idb.db+'-wl',1);
+        r.onupgradeneeded=function(){try{r.result.createObjectStore('kv');r.result.createObjectStore('photos',{keyPath:'id'});}catch(e){}};
+        r.onsuccess=function(){self.db=r.result;res(self.db);};r.onerror=function(){rej(r.error);};
+      }catch(e){rej(e);}
+    });
+  },
+  tx:function(store,mode,fn){return this.open().then(function(db){return new Promise(function(res,rej){try{var t=db.transaction(store,mode),st=t.objectStore(store),out=fn(st);t.oncomplete=function(){res(out&&out.result!==undefined?out.result:undefined);};t.onerror=function(){rej(t.error);};t.onabort=function(){rej(t.error);};}catch(e){rej(e);}});});},
+  get:function(k){return this.tx('kv','readonly',function(st){return st.get(k);});},
+  put:function(k,v){return this.tx('kv','readwrite',function(st){return st.put(v,k);});},
+  del:function(k){return this.tx('kv','readwrite',function(st){return st.delete(k);});},
+  photos:function(){return this.tx('photos','readonly',function(st){return st.getAll();}).then(function(a){return (a||[]).sort(function(x,y){return y.t-x.t;});});},
+  photoPut:function(p){return this.tx('photos','readwrite',function(st){return st.put(p);});},
+  photoDel:function(id){return this.tx('photos','readwrite',function(st){return st.delete(id);});}
+};
+function wlSummarySet(o,noSave){
+  var c=wlCleanSummary(o);if(!c)return false;
+  if(c.receivedAt==null)c.receivedAt=Date.now();
+  WLS.summary=c;
+  if(!noSave)WLDB.put('summary',c).catch(function(){});
+  return true;
+}
+function wlSummaryLoad(){
+  return WLDB.get('summary').then(function(o){var c=wlCleanSummary(o);if(c&&!WLS.summary)WLS.summary=c;}).catch(function(){});
+}
+function wlPhotosLoad(){return WLDB.photos().then(function(a){WLS.photos=a;return a;}).catch(function(){WLS.photos=[];return [];});}
+/* ---- backup ---- */
+function wlExportAsync(){
+  return WLDB.photos().catch(function(){return [];}).then(function(ph){
+    return {v:1,lightning:WLS.lightning,baro:WLS.baro,obs:WLS.obs,summary:WLS.summary,
+      photos:ph.slice(0,WL_LIM.photos).map(function(p){return {id:p.id,t:p.t,dir:p.dir||'',note:p.note||'',img:p.img};})};
+  });
+}
+function wlCleanPhoto(p){
+  if(!p||!wlNum(p.t)||typeof p.img!=='string'||!/^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+\/=]+$/.test(p.img)||p.img.length>200000)return null;
+  return {id:wlStr(String(p.id||p.t),40),t:p.t,dir:wlStr(p.dir,40),note:wlStr(p.note,500),img:p.img};
+}
+/* import: merges lists (newer wins per timestamp); old entries expire by their own timestamps, an import can never make data look fresher */
+function wlImport(o){
+  if(!o||typeof o!=='object')return Promise.resolve(0);
+  var now=Date.now(),n=0;
+  function merge(a,b,key){var m={};a.concat(b).forEach(function(e){m[e[key]]=e;});return Object.keys(m).map(function(k){return m[k];});}
+  var l=wlCleanLightning(o.lightning,now),b=wlCleanBaro(o.baro,now),ob=wlCleanObs(o.obs,now);
+  WLS.lightning=wlCleanLightning(merge(WLS.lightning,l,'t'),now);WLS.baro=wlCleanBaro(merge(WLS.baro,b,'t'),now);WLS.obs=wlCleanObs(merge(WLS.obs,ob,'t'),now);
+  wlLsPut('lightning');wlLsPut('baro');wlLsPut('obs');n+=l.length+b.length+ob.length;
+  var ps=[];
+  if(o.summary){var c=wlCleanSummary(o.summary);if(c&&(!WLS.summary||wlMs(c.fetchedAt)>wlMs(WLS.summary.fetchedAt))){c.receivedAt=wlNum(o.summary.receivedAt)?o.summary.receivedAt:now;WLS.summary=c;ps.push(WLDB.put('summary',c).catch(function(){}));n++;}}
+  (Array.isArray(o.photos)?o.photos.slice(0,WL_LIM.photos):[]).forEach(function(p){var c=wlCleanPhoto(p);if(c){ps.push(WLDB.photoPut(c).catch(function(){}));n++;}});
+  return Promise.all(ps).then(function(){return wlPhotosLoad();}).then(function(){return n;});
+}
+/* ---- inputs for wlAssess: stores + position + model pressure of the weather snapshot ---- */
+function wlModelInput(pos){
+  if(typeof WX==='undefined'||!WX||!pos)return null;
+  var fa=Date.parse(WX.fetchedAt);if(!isFinite(fa))return null;
+  var pi=wxPoint(pos.lat,pos.lon),has=Array.isArray(WX.pm)&&pi>=0&&!!WX.pm[pi];
+  return {get:function(t){if(!has)return null;var x=wxAt(pos.lat,pos.lon,t);return x&&!x.none&&x.pm!=null?x.pm:null;},fetchedAt:fa,maxAgeH:CONST.wx.maxAgeH,hardAgeH:CONST.wx.hardAgeH,pointIndex:pi};
+}
+/* posOver: undefined = the app position (S.pos), otherwise the given position (evaluate() of a test state). A region approximation is not a position. */
+function wlInputs(now,posOver){
+  var p=posOver===undefined?(typeof S!=='undefined'?S.pos:null):posOver,pos=(p&&p.src!=='region')?p:null,cs=null;
+  if(pos&&typeof countryOf==='function'){try{cs=countryOf(pos);}catch(e){cs=null;}}
+  return {lightning:WLS.lightning,baro:WLS.baro,obs:WLS.obs,summary:WLS.summary,pos:pos,countries:cs,model:wlModelInput(pos)};
+}
+function wlInit(){
+  wlLoad();
+  wlSummaryLoad().then(function(){if(typeof update==='function')update();});
+  wlPhotosLoad().then(function(){if(typeof renderWL==='function')renderWL();});
+}
+
+/* =====================================================================
+   WOLKENLOTSE – online part. Only GETs of static files; the position is NEVER sent (point-in-polygon runs on the device).
+   - platform summary wl-<package>.json (official warnings, produced by platform/wl_collector.py), URL derived from the platform URL (Törn tab)
+   - model pressure comes with the normal Open-Meteo snapshot (wx.js, field pm) – nothing to fetch here
+   ===================================================================== */
+var WL_NET={busy:false,msg:'',err:null,tried:null};
+function wlSummaryUrl(){
+  if(CONST.wl.url)return CONST.wl.url;
+  if(typeof PL==='undefined'||!PL.plat)return '';
+  return PL.plat.replace(/[^\/]*$/,'wl-'+REVIER.id+'.json');
+}
+function wlFetchSummary(manual){
+  var url=wlSummaryUrl();
+  if(!url){WL_NET.msg='Keine Plattform-URL eingetragen (Törn-Tab → Backup) – amtliche Warnungen werden nicht abgerufen.';WL_NET.err='nourl';if(typeof renderWL==='function')renderWL();return Promise.resolve(false);}
+  if(WL_NET.busy)return Promise.resolve(false);
+  WL_NET.busy=true;WL_NET.tried=Date.now();
+  return fetch(url,{cache:'no-store'}).then(function(r){
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    return r.text();
+  }).then(function(t){
+    if(t.length>WL_LIM.summaryBytes){if(WLS.summary)WLS.summary.truncated=true;throw new Error('Datei zu groß');}   // the big picture is the one that gets lost: it counts as unknown at once
+    var o=JSON.parse(t);o.receivedAt=Date.now();
+    if(!wlSummarySet(o))throw new Error('kein gültiger Warnstand');
+    WL_NET.msg='';WL_NET.err=null;
+    return true;
+  }).catch(function(e){
+    WL_NET.err=String(e&&e.message||e);
+    WL_NET.msg='Warnstand konnte nicht geladen werden ('+WL_NET.err+')'+(WLS.summary?' – letzter Stand von '+wlAgeText(Date.now()-wlMs(WLS.summary.fetchedAt))+' bleibt sichtbar.':'.');
+    return false;
+  }).then(function(ok){
+    WL_NET.busy=false;if(typeof update==='function')update();else if(typeof renderWL==='function')renderWL();return ok;
+  });
+}
+/* automatic refresh: at start and every 15 min while the app is open, only with a platform URL and network; never blocks anything */
+function wlAutoFetch(){
+  if(!wlSummaryUrl()||(typeof navigator!=='undefined'&&navigator.onLine===false))return;
+  var last=Math.max(WLS.summary&&WLS.summary.receivedAt||0,WL_NET.tried||0);   // a failed attempt waits as well, wlTick runs every 15 s
+  if(last&&Date.now()-last<10*60000)return;
+  wlFetchSummary(false);
+}
+
+/* =====================================================================
+   WOLKENLOTSE – cloud atlas, identification help, warning signs. ONLY statements that were checked against a source (QUELLEN.md);
+   every entry carries "src" (key into WL_SRC). Unsourced sentences of the 2026-07 prototype were dropped (docs/wolkenlotse/QUELLEN.md).
+   The identification result is an OBSERVATION of the skipper, never a measurement and never an automatic classification.
+   ===================================================================== */
+var WL_SRC={
+  mocs:{name:'Met Office – Cirrostratus',url:'https://weather.metoffice.gov.uk/learn-about/weather/types-of-weather/clouds/high-clouds/cirrostratus'},
+  momid:{name:'Met Office – Mid-level clouds',url:'https://weather.metoffice.gov.uk/learn-about/weather/types-of-weather/clouds/mid-level-clouds'},
+  moarc:{name:'Met Office – Arcus clouds',url:'https://weather.metoffice.gov.uk/learn-about/weather/types-of-weather/clouds/other-clouds/arcus'},
+  moacc:{name:'Met Office – Altocumulus castellanus',url:'https://www.metoffice.gov.uk/learning/clouds/other-clouds/altocumulus-castellanus'},
+  mogl:{name:'Met Office – Coast and sea glossary',url:'https://weather.metoffice.gov.uk/guides/coast-and-sea/glossary'},
+  nwschart:{name:'NOAA/NWS – Cloud chart',url:'https://www.weather.gov/media/owlie/cloud_chart.pdf'},
+  nwsshelf:{name:'NWS Green Bay – Shelf cloud',url:'https://www.weather.gov/grb/061304_shelfcloud'},
+  ams:{name:'AMS Glossary – Cumulus congestus',url:'https://glossary.ametsoc.org/wiki/cumulus-congestus/'},
+  noaa:{name:'NOAA JetStream – Lightning safety',url:'https://www.noaa.gov/jetstream/lightning-safety'},
+  nwsboat:{name:'NWS – Boating safety: thunderstorms',url:'https://www.weather.gov/safety/safeboating-thunderstorms'},
+  nat:{name:'Natural Navigator – The cross winds rule',url:'https://www.naturalnavigator.com/news/2024/07/the-cross-winds-rule/'},
+  meteoalarm:{name:'MeteoAlarm (EUMETNET)',url:'https://www.meteoalarm.org/'},
+  dwd:{name:'Deutscher Wetterdienst (DWD) – Open Data',url:'https://opendata.dwd.de/weather/alerts/cap/'},
+  openmeteo:{name:'Open-Meteo',url:'https://open-meteo.com/en/docs'}
+};
+/* level: 'info' (description only) | 'watch' (observe, no automatic signal) | 'danger' (offer "Gewitter beobachtet", skipper confirms by tap) */
+var WL_CLOUDS={
+  cirrus:{name:'Federwolken',latin:'Cirrus',group:'hoch',level:'info',src:'nwschart',
+    what:'Gerade, fast gerade oder gekrümmte Fäden, Fasern oder Haken.'},
+  cirrocumulus:{name:'Schäfchen, hoch',latin:'Cirrocumulus',group:'hoch',level:'info',src:'nwschart',
+    what:'Dünne weiße Rippel oder kleine Bällchen, oft zusammen mit Cirrus oder Cirrostratus.'},
+  cirrostratus:{name:'Schleierwolken',latin:'Cirrostratus',group:'hoch',level:'watch',src:'mocs',height:'etwa 20.000–40.000 ft (≈ 6–12 km)',
+    what:'Dünner, durchsichtiger Schleier über Teilen des Himmels oder dem ganzen Himmel; Ringe, Flecken oder Bögen (Halo) um Sonne oder Mond möglich.',
+    meaning:'Cirrostratus nebulosus kündigt meist eine Warmfront an, die innerhalb von etwa 24 Stunden anhaltenden Regen bringt.'},
+  altocumulus:{name:'Schäfchenwolken',latin:'Altocumulus',group:'mittel',level:'info',src:'momid',height:'7.000–18.000 ft (≈ 2–5,5 km)',
+    what:'Kleine Flecken oder Schichten aus Wölkchen, meist rundliche Ballen.',meaning:'Meist bei beständigem Wetter; Niederschlag ist selten und erreicht den Boden meist nicht.'},
+  castellanus:{name:'Altocumulus castellanus',latin:'Altocumulus castellanus',group:'mittel',level:'watch',src:'moacc',height:'7.000–18.000 ft (≈ 2–5,5 km)',
+    what:'Einzelne kleine Wolken, teils mit „Burg“-Türmchen auf der Oberseite.',meaning:'Anzeichen für Labilität; die Türmchen können zu Gewittern (Cumulonimbus) führen und sind oft eine Gewitterwarnung. Daraus folgt noch kein Zeitpunkt.'},
+  altostratus:{name:'Mittelhohe Schicht',latin:'Altostratus',group:'mittel',level:'watch',src:'momid',height:'6.500–20.000 ft (≈ 2–6 km)',
+    what:'Große, dünne, weitgehend strukturlose Schicht in mittlerer Höhe; die Sonne scheint schwach hindurch und wirft womöglich keine Schatten.',
+    meaning:'Zeigt meist einen Wetterwechsel an, bildet sich oft vor einer Warm- oder Okklusionsfront und kann sich zu Nimbostratus verdichten.'},
+  nimbostratus:{name:'Regenschicht',latin:'Nimbostratus',group:'mittel',level:'watch',src:'momid',height:'2.000–10.000 ft (≈ 0,6–3 km)',
+    what:'Dunkle, graue, strukturlose Schicht, dick genug, die Sonne zu verdecken.',meaning:'Bringt anhaltenden Regen. Treten Hagel, Donner oder Blitz auf, handelt es sich um Cumulonimbus.'},
+  stratus:{name:'Schichtwolke',latin:'Stratus',group:'tief',level:'info',src:'nwschart',
+    what:'Geschlossene Schicht oder in Fetzen (Stratus fractus), ohne Niederschlag.'},
+  stratocumulus:{name:'Haufenschichtwolke',latin:'Stratocumulus',group:'tief',level:'info',src:'nwschart',
+    what:'Eine oder mehrere Schichten, nicht aus sich ausbreitendem Cumulus entstanden.'},
+  cumulus:{name:'Haufenwolke',latin:'Cumulus',group:'vertikal',level:'info',src:'nwschart',
+    what:'Dünn und ausgefranst mit sich ständig ändernden Rändern; entsteht bei Schönwetter durch Erwärmung am Tag.'},
+  congestus:{name:'Cumulus congestus',latin:'Cumulus congestus',group:'vertikal',level:'watch',src:'ams',
+    what:'Stark aufquellender Cumulus mit meist scharfen Umrissen, teils mit großer vertikaler Entwicklung.',
+    meaning:'Wird oft zu Cumulonimbus. Entwicklung beobachten; ein glatter, faseriger Gipfel zeigt den Übergang an.'},
+  cumulonimbus:{name:'Gewitterwolke',latin:'Cumulonimbus',group:'vertikal',level:'danger',src:'nwschart',
+    what:'Sehr hoher Gipfel mit ambossförmigem Oberteil; erzeugt Niederschlag.',
+    meaning:'Hörbarer Donner heißt: in Einschlagreichweite (NOAA). Blitzzähler benutzen, Schutz suchen.'},
+  arcus:{name:'Böenwalze (Arcus)',latin:'Arcus',group:'tief',level:'danger',src:'moarc',
+    what:'Niedrige, lange, dünne Wolke bei kräftigen Gewittern: Schelfwolke (am Gewitter hängend) oder Rollwolke (abgesetzt). Sie entsteht, wo die kalte Fallluft des Cumulonimbus am Boden ausfließt.',
+    meaning:'Weist auf kräftig böigen Wind, Starkregen- oder Hagelschauer sowie Donner und Blitz hin; die Schelfwolke geht nach NWS fast immer böigem Wind voraus (nicht zwingend schwerem Wetter).',src2:'nwsshelf'}
+};
+var WL_TREE={q:'Welche Wolke siehst du?',ctx:'Schritt 1 · Stockwerk und Form',opts:[
+  {t:'Hoch, fein, weiß',d:'Fasern, Schleier oder Rippel; Sonne scheint klar hindurch.',next:{q:'Welche Struktur überwiegt?',ctx:'Schritt 2 · Hohe Wolken',opts:[
+    {t:'Fäden, Fasern oder Haken',d:'Einzelne helle Striche',res:'cirrus'},
+    {t:'Schleier über (fast) dem ganzen Himmel',d:'Evtl. Ring (Halo) um Sonne oder Mond',res:'cirrostratus'},
+    {t:'Dünne Rippel oder kleine Bällchen',d:'Oft zusammen mit Cirrus oder Schleier',res:'cirrocumulus'}]}},
+  {t:'Mittelhoch: Ballen oder graue Schicht',d:'Sonne schwach sichtbar oder verdeckt.',next:{q:'Was siehst du genauer?',ctx:'Schritt 2 · Mittelhohe Wolken',opts:[
+    {t:'Flecken oder Schichten aus rundlichen Ballen',d:'Wölkchen',res:'altocumulus'},
+    {t:'Ballen mit „Burg“-Türmchen auf der Oberseite',d:'Einzelne kleine Wolken mit Türmchen',res:'castellanus'},
+    {t:'Graue, strukturlose Schicht',d:'Sonne schwach durchscheinend',res:'altostratus'},
+    {t:'Dunkle, strukturlose Schicht',d:'Sonne verdeckt, Dauerregen',res:'nimbostratus'}]}},
+  {t:'Tief: Schicht oder Schollen',d:'Basis niedrig, Details gut erkennbar.',next:{q:'Wie sieht sie aus?',ctx:'Schritt 2 · Tiefe Wolken',opts:[
+    {t:'Geschlossene graue Schicht oder Fetzen',d:'Ohne Niederschlag',res:'stratus'},
+    {t:'Schollen oder Walzen in Schichten',d:'Mit Lücken oder zusammenhängend',res:'stratocumulus'}]}},
+  {t:'Haufen oder Türme',d:'Quellwolken mit Auftrieb.',next:{q:'Wie weit ist sie gewachsen?',ctx:'Schritt 2 · Quellwolken',opts:[
+    {t:'Dünn, ausgefranst, Ränder ändern sich ständig',d:'Schönwetter-Haufenwolke',res:'cumulus'},
+    {t:'Stark aufquellend, scharfe Umrisse, hoch',d:'Cumulus congestus',res:'congestus'},
+    {t:'Sehr hoher Gipfel mit Amboss, Niederschlag',d:'Blitz oder Donner möglich',res:'cumulonimbus'}]}},
+  {t:'Dunkle niedrige Rolle oder Wand',d:'An der Vorderseite eines Gewitters.',res:'arcus'}
+]};
+/* warning signs: only combinations that sources state; no hour figures */
+var WL_SIGNS=[
+  {title:'Warmfront',items:[
+    {t:'Cirrostratus (Schleier, evtl. Halo) kündigt meist eine Warmfront an, die innerhalb von etwa 24 Stunden anhaltenden Regen bringt.',src:'mocs'},
+    {t:'Altostratus bildet sich oft vor einer Warm- oder Okklusionsfront und kann sich zu Nimbostratus verdichten, der anhaltenden Regen bringt.',src:'momid'}]},
+  {title:'Gewitter',items:[
+    {t:'Altocumulus castellanus (Türmchen) ist ein Anzeichen für Labilität und oft eine Gewitterwarnung.',src:'moacc'},
+    {t:'Cumulus congestus wird oft zu Cumulonimbus.',src:'ams'},
+    {t:'Arcus (Schelf- oder Rollwolke) am Gewitterrand: kräftig böiger Wind, Starkregen oder Hagel, Donner und Blitz.',src:'moarc'},
+    {t:'Hörbarer Donner heißt: du bist in Einschlagreichweite. Schutz suchen, bis 30 Minuten nach dem letzten Donner vergangen sind.',src:'noaa'}]}
+];
+
+/* =====================================================================
+   WOLKENLOTSE – user interface: "Wetter-Sicherheit" section (Lage), card "Gewitter an Bord" (Notfall), "Wolken und Warnzeichen" (Regeln).
+   No green anywhere: signals are yellow/red, "no signal" and "unknown" are grey/neutral. All text goes through esc().
+   Package-independent: fills #wl-card, #wl-emerg and #wl-regeln if they exist (Binnen gets its own slots).
+   ===================================================================== */
+var WL_UI={html:'',tm:null,sig:'',pend:null,wiz:[],atlasF:'',bound:false,photoBusy:false};
+function wlDec(x,d){return String(wlR(x,d==null?1:d)).replace('.',',');}
+function wlTime(t){var d=new Date(t);return (d.getHours()<10?'0':'')+d.getHours()+':'+(d.getMinutes()<10?'0':'')+d.getMinutes();}
+function wlBadge(rule){return rule==='Faustregel'?' <span class="badge unv">Faustregel</span>':'';}
+function wlSrcLink(k){var s=WL_SRC[k];return s?'<a href="'+esc(s.url)+'" target="_blank" rel="noopener" translate="no">'+esc(s.name)+'</a>':'';}
+function wlBanner(level,title,text,meta){return '<div class="banner b-'+level+'"><div class="bt"><span class="sym">'+SYM[level]+'</span>'+esc(title)+'</div><div class="bd">'+esc(text)+(meta?'<div class="wl-meta">'+meta+'</div>':'')+'</div></div>';}
+function wlSigMeta(s,now){
+  var m=[];
+  if(s.src)m.push('Quelle: <span translate="no">'+esc(s.src.length>140?s.src.slice(0,140)+'…':s.src)+'</span>');
+  if(s.observedAt!=null)m.push('Stand: '+esc(wlAgeText(now-s.observedAt))+' alt');
+  if(s.validUntil!=null&&s.validUntil>now)m.push('gültig bis '+wlTime(s.validUntil)+' Uhr');
+  if(s.stale)m.push('<b>veraltet</b>');
+  return m.join(' · ')+(s.rule==='Faustregel'?wlBadge('Faustregel'):'');
+}
+/* status line per source: grey for unknown, ⚠/✖ for signals, "·" for "nothing found" – never a check mark */
+function wlRow(mark,cls,label,text){return '<div class="wl-src"><span class="wl-mk '+cls+'" aria-hidden="true">'+mark+'</span><div><b>'+esc(label)+'</b> '+text+'</div></div>';}
+function wlMark(level){return level==='r'?['✖','lv-r']:level==='y'?['⚠','lv-y']:level==='i'?['ℹ','lv-i']:level==='n'?['?','lv-n']:['·','lv-0'];}
+function wlLevelOf(sigs,idp){var l=null;sigs.forEach(function(s){if(s.id.indexOf(idp)===0){if(s.level==='r')l='r';else if(s.level==='y'&&l!=='r')l='y';else if(s.level==='i'&&!l)l='i';}});return l;}
+
+function wlLightningHTML(now){
+  var a=wlLightning(WLS.lightning,now),h='<div class="wl-sub"><h3>Blitz und Donner</h3>';
+  var fl=WLS.flashT!=null;
+  h+='<div class="wl-btns"><button class="btn wl-big'+(fl?'':' prim')+'" data-wl="flash" aria-label="Blitz gesehen, Zähler starten">⚡ Blitz gesehen</button>'
+    +'<button class="btn wl-big'+(fl?' prim':'')+'" data-wl="thunder" aria-label="Donner gehört, Abstand berechnen">Donner gehört</button></div>';
+  if(fl)h+='<div class="notice wl-run">Blitz gesehen – bei Donner „Donner gehört“ tippen. Zeit: <b id="wl-sec">'+wlDec((now-WLS.flashT)/1000,1)+'</b> s</div>';
+  h+='<button class="btn sm" data-wl="thunder0" style="margin-top:6px">Donner gehört, Blitz nicht gesehen</button>';
+  if(a){
+    var rem=a.until-now;
+    if(a.flashOnly)h+='<div class="note small">Zuletzt Blitz ohne Donner gesehen (vor '+esc(wlAgeText(now-a.last.t))+') – Abstand unbekannt (weiter als etwa '+wlDec(wlNm(WLC.lightning.maxSec*WL_SEC_KM),0)+' sm). Anzeige noch '+esc(wlAgeText(rem))+'.</div>';
+    else{
+      h+='<div class="wl-big-num"><span class="n">'+(a.lastKm!=null?wlDec(a.lastKm,1)+' km':'?')+'</span><span class="l">'+(a.lastKm!=null?'letzter gemessener Abstand ≈ '+wlDec(wlNm(a.lastKm),1)+' sm':'Abstand unbekannt')+'</span></div>';
+      h+='<div class="note">Letzter Donner vor <b>'+esc(wlAgeText(now-a.last.t))+'</b>. <b>Schutz suchen, bis '+WLC.lightning.holdMin+' min nach dem letzten Donner vergangen sind – noch '+esc(wlAgeText(rem))+'</b> (NOAA). Jeder neue Donner startet die Zeit neu.</div>';
+      if(a.approaching)h+='<div class="notice">Der gemessene Abstand nimmt ab (Regression über '+a.measured.length+' Messungen). Das ist ein Hinweis – bei steigenden Werten gibt es keine Entwarnung.</div>';
+    }
+    h+='<div class="wl-ev">'+a.events.slice(-5).reverse().map(function(e){return '<span>'+wlTime(e.t)+' '+(e.kind==='flash'?'Blitz ohne Donner':e.sec!=null?'Donner nach '+wlDec(e.sec,1)+' s ≈ '+wlDec(wlThunderKm(e.sec),1)+' km':'Donner (nicht gemessen)')+'</span>';}).join('')+'</div>';
+    h+='<div class="wl-btns2"><button class="btn sm" data-wl="undo">Letzten Eintrag zurücknehmen</button><button class="btn sm" data-wl="lclear">Zähler zurücksetzen</button></div>';
+  }else h+='<div class="note small">Noch kein Donner gezählt. Kein Eintrag ist keine Entwarnung.</div>';
+  h+='<div class="note small">3 Sekunden Blitz → Donner ≈ 1 km (343 m/s). Hörbarer Donner = in Einschlagreichweite; Abstand ≤ '+WLC.lightning.redKm+' km gilt als rot '+wlBadge('Faustregel')+'. Quelle: '+wlSrcLink('noaa')+'</div></div>';
+  return h;
+}
+function wlBaroHTML(now,a){
+  var tr=a.trend,h='<div class="wl-sub"><h3>Barometer</h3>';
+  h+='<div class="wl-add"><input type="text" inputmode="decimal" id="wl-baro" placeholder="z. B. 1013,2" autocomplete="off" aria-label="Luftdruck in hPa"><span class="u">hPa</span>'
+    +'<select id="wl-bsrc" aria-label="Quelle des Werts"><option>Bordbarometer</option><option>Plotter/Instrument</option></select></div>'
+    +'<button class="btn sm" data-wl="baro-add" style="margin-top:6px">Wert eintragen</button><div id="wl-bmsg"></div>';
+  if(WL_UI.pend)h+='<div class="notice">'+esc(WL_UI.pend.text)+' <button class="btn sm" data-wl="baro-force" style="margin-top:6px">Wert stimmt, trotzdem eintragen</button></div>';
+  if(tr.ok){
+    var ct=WL_CAT_DE[tr.cat]||'';
+    h+='<div class="wl-big-num"><span class="n">'+(tr.d3>0?'+':tr.d3<0?'−':'±')+wlDec(Math.abs(tr.d3),1)+'</span><span class="l">hPa in 3 h · '+(tr.dir==='fall'?'fallend':'steigend')+(ct?' ('+esc(ct)+')':'')+'</span></div>';
+    h+='<div class="note small">aus '+(tr.method==='ref'?'Wert vor '+esc(wlAgeText(tr.latest.t-tr.ref.t))+' (auf 3 h umgerechnet)':'Regression über '+tr.n+' Werte')+'; neuester Wert vor '+esc(wlAgeText(tr.ageMin*60000))+'. Kategorien nach Met Office; Ampelzuordnung '+wlBadge('Faustregel')+'.</div>';
+    if(Math.abs(tr.d3)<1.6)h+='<div class="note small">Unter 1,6 hPa/3 h: im Bereich der Tagesschwankung und Ablesegenauigkeit – kein Anzeichen, aber auch keine Entwarnung.</div>';
+    if(tr.d3>0&&tr.d3<=WLC.pressure.riseYellow)h+='<div class="note small">Steigender Druck ist keine Entwarnung.</div>';
+  }else{
+    var g=a.gaps.filter(function(x){return x.id==='baro';})[0];
+    h+='<div class="note">'+esc(g?g.text:'Trend nicht berechenbar.')+'</div>';
+  }
+  var recent=WLS.baro.slice(-5).reverse();
+  if(recent.length)h+='<div class="wl-ev">'+recent.map(function(e){return '<span>'+wlTime(e.t)+' · '+wlDec(e.hpa,1)+' hPa · '+esc(e.src)+' · vor '+esc(wlAgeText(now-e.t))+' <button class="wl-x" data-wl="baro-del" data-t="'+e.t+'" aria-label="Eintrag löschen">✕</button></span>';}).join('')+'</div>';
+  h+='<div class="note small">Trend nur, wenn der neueste Wert höchstens '+WLC.pressure.latestMaxMin+' min alt ist und ein Wert von vor 2,5–3,5 h vorliegt (oder ≥ '+WLC.pressure.regrMinN+' Werte über ≥ '+WLC.pressure.regrMinSpanH+' h). Werte unter '+WLC.pressure.minGapMin+' min Abstand zählen nicht einzeln. Quelle: '+wlSrcLink('mogl')+'</div></div>';
+  return h;
+}
+function wlModelHTML(now,a){
+  var m=a.model,h='<div class="wl-sub"><h3>Modell-Luftdruck <span class="badge unv">Modell, keine Messung</span></h3>';
+  if(m&&m.ok){
+    var pn=m.pNow;
+    h+='<div class="note">Open-Meteo-Modell an deiner Position'+(pn!=null?': jetzt ≈ '+wlDec(pn,1)+' hPa (Meeresspiegel)':'')+(m.now3!=null?', Änderung der letzten 3 h '+(m.now3>0?'+':m.now3<0?'−':'±')+wlDec(Math.abs(m.now3),1)+' hPa':'')+'; schwächster 3-h-Verlauf bis +'+WLC.modelPressure.horizonH+' h: '+(m.minD3>0?'+':m.minD3<0?'−':'±')+wlDec(Math.abs(m.minD3),1)+' hPa. Modellstand vor '+esc(wlAgeText(m.ageH*3600000))+(m.stale?' – <b>alt</b>':'')+'.</div>';
+    h+='<div class="note small">Das Modell ersetzt kein Barometer und schwächt nie ein gemessenes Signal ab. Beitrag zur Ampel nur Hinweis, außer Fall > '+wlDec(Math.abs(WLC.modelPressure.yellow),1)+' hPa/3 h (gelb, Faustregel). Quelle: '+wlSrcLink('openmeteo')+'</div>';
+  }else{
+    var g=a.gaps.filter(function(x){return x.id==='model';})[0];
+    h+='<div class="note">'+esc(g?g.text:'Nicht verfügbar.')+' Im Törn-Tab „Wetter laden“.</div>';
+  }
+  return h+'</div>';
+}
+function wlWarnHTML(now,a){
+  var s=WLS.summary,h='<div class="wl-sub"><h3>Amtliche Warnungen</h3>';
+  if(s){
+    var fa=wlMs(s.fetchedAt),age=now-fa,old=age/60000>WLC.stale.summaryFreshMin;
+    h+='<div class="note">Warnstand vor <b>'+esc(wlAgeText(age))+'</b>'+(old?' – <b>veraltet</b>':'')+(s.receivedAt?' · abgerufen vor '+esc(wlAgeText(now-s.receivedAt)):'')+'. Position wird nur auf dem Gerät mit den Warngebieten abgeglichen und nie gesendet.</div>';
+    h+='<div class="note small">Quellen: '+s.sources.map(function(x){return '<span translate="no">'+esc(x.country||x.id)+'</span> '+(x.ok?'':'<b>gestört</b>');}).join(' · ')+'</div>';
+    if(s.attribution)h+='<div class="note small" translate="no">'+esc(s.attribution)+'</div>';
+  }else h+='<div class="note">Noch kein Warnstand geladen.</div>';
+  if(typeof WL_NET!=='undefined'&&WL_NET.msg)h+='<div class="notice">'+esc(WL_NET.msg)+'</div>';
+  h+='<button class="btn sm" data-wl="fetch" style="margin-top:6px"'+(WL_NET.busy?' disabled':'')+'>Warnungen aktualisieren</button>';
+  h+='<div class="note small"><b>Seewetterbericht, NAVTEX und UKW bleiben führend.</b> Diese Warnungen sind landbezogen (Gemeinden/Regionen); amtliche Seegebiets-Sturmwarnungen sind darin nicht sicher enthalten – fehlende Seewarnungen sind eine Lücke, keine Entwarnung.</div></div>';
+  return h;
+}
+function wlRowsHTML(now,a){
+  var sg=a.signals,r='';
+  var lm=wlLevelOf(sg,'lightning'),lt=wlLightning(WLS.lightning,now);
+  r+=wlRow(wlMark(lt?(lm||'i'):null)[0],wlMark(lt?(lm||'i'):null)[1],'Blitz',lt?(lt.flashOnly?'Blitz ohne Donner gesehen':'Donner vor '+esc(wlAgeText(now-lt.last.t))+(lt.lastKm!=null?', ≈ '+wlDec(lt.lastKm,1)+' km':', nicht gemessen')):'nichts gezählt');
+  var bs=a.trend,bl=wlLevelOf(sg,'baro');
+  r+=wlRow(wlMark(bs.ok?bl:'n')[0],wlMark(bs.ok?bl:'n')[1],'Barometer',bs.ok?(bs.d3<0?'−':'+')+wlDec(Math.abs(bs.d3),1)+' hPa/3 h, Wert vor '+esc(wlAgeText(bs.ageMin*60000)):(bs.reason==='stale'?'veraltet (vor '+esc(wlAgeText(bs.ageMin*60000))+') – nachtragen':bs.reason==='empty'?'kein Wert eingetragen':'Trend nicht berechenbar'));
+  var mo=a.model,ml=wlLevelOf(sg,'model');
+  r+=wlRow(wlMark(mo&&mo.ok?ml:'n')[0],wlMark(mo&&mo.ok?ml:'n')[1],'Modell-Druck','<span class="badge unv">Modell</span> '+(mo&&mo.ok?(mo.minD3<0?'−':'+')+wlDec(Math.abs(mo.minD3),1)+' hPa/3 h (schwächster Verlauf bis +'+WLC.modelPressure.horizonH+' h)':'nicht verfügbar'));
+  var wl=wlLevelOf(sg,'warn-'),wg=a.gaps.some(function(x){return x.id==='warn'||/^(src|nosrc|unloc)-/.test(x.id)||x.id==='warn-pos';});
+  var ws=sg.filter(function(x){return x.id.indexOf('warn-')===0;});
+  r+=wlRow(wlMark(wg&&!wl?'n':wl)[0],wlMark(wg&&!wl?'n':wl)[1],'Warnungen',WLS.summary?(ws.length?ws.length+' Warnung'+(ws.length>1?'en':'')+' an der Position':'keine an der Position gefunden')+' · Stand vor '+esc(wlAgeText(now-wlMs(WLS.summary.fetchedAt)))+(wg?' · <b>Lücken</b>':''):'Warnlage unbekannt');
+  return '<div class="wl-srcs">'+r+'</div>';
+}
+function renderWL(){
+  var el=$('wl-card');
+  if(el){
+    var now=Date.now();wlFlashResolve(now);
+    var a=wlAssess(now,wlInputs(now)),h='';
+    var keep={baro:$('wl-baro')?$('wl-baro').value:'',src:$('wl-bsrc')?$('wl-bsrc').selectedIndex:0,focus:document.activeElement&&document.activeElement.id};
+    var top=wlRaising(a);
+    if(top.length){
+      top.forEach(function(s){h+=wlBanner(s.level,s.title,s.text,wlSigMeta(s,now));});
+    }else{
+      h+=wlBanner('n',a.level==='n'?'Keine Aussage':'Keine Gefahrensignale',
+        (a.level==='n'?'Nicht alle Quellen sind bekannt (siehe Lücken unten). ':'')+'Aus Wetter-Sicherheit liegt kein Gefahrensignal vor – das ist keine Entwarnung. Beobachten, Wetterbericht und UKW bleiben maßgeblich.','');
+    }
+    a.signals.filter(function(s){return s.level==='i';}).forEach(function(s){h+='<details class="infobox"><summary>ℹ '+esc(s.title)+'</summary><div class="in">'+esc(s.text)+'<div class="wl-meta">'+wlSigMeta(s,now)+'</div></div></details>';});
+    h+=wlRowsHTML(now,a);
+    h+=wlLightningHTML(now)+wlBaroHTML(now,a)+wlModelHTML(now,a)+wlWarnHTML(now,a);
+    var gp=a.gaps.filter(function(g){return g.id!=='baro'&&g.id!=='model';});
+    if(gp.length)h+='<div class="wl-gaps"><b>Lücken (grau = unbekannt, nie grün):</b><ul>'+gp.map(function(g){return '<li>'+esc(g.text)+'</li>';}).join('')+'</ul></div>';
+    h+='<div class="note small">Zusätzliche Sicherheitsschicht: sie kann die Ampel nur anheben, nie senken. Alle Schwellen mit Quelle oder „Faustregel“ stehen im Regeln-Tab.</div>';
+    if(typeof I18N!=='undefined'&&I18N.lang!=='de')h+='<div class="note small i18nnote" translate="no">Übersetzung ausstehend – Wetter-Sicherheit ist nur auf Deutsch verfügbar. / Translation pending – this section is German only.</div>';
+    if(h!==WL_UI.html){   // unchanged markup is not replaced (a typed value or a tap in progress must not be lost to the periodic refresh)
+      WL_UI.html=h;el.innerHTML=h;
+      if($('wl-baro')&&keep.baro)$('wl-baro').value=keep.baro;
+      if($('wl-bsrc'))$('wl-bsrc').selectedIndex=keep.src;
+      if(keep.focus==='wl-baro'&&$('wl-baro'))$('wl-baro').focus();
+    }
+    if(WLS.flashT!=null)wlSecTimer();
+    WL_UI.sig=wlSigOf(a);
+  }
+  renderWLEmerg();
+}
+function wlSigOf(a){return (a.level||'-')+'|'+a.signals.map(function(s){return s.id+s.level;}).join(',')+'|'+a.gaps.map(function(g){return g.id;}).join(',');}
+function renderWLEmerg(){
+  var el=$('wl-emerg');if(!el)return;
+  var now=Date.now(),lt=wlLightning(WLS.lightning,now);
+  var h='<div class="card wl-emerg"><div class="t">Gewitter an Bord</div>';
+  if(lt&&!lt.flashOnly)h+='<div class="banner b-'+lt.level+'"><div class="bt"><span class="sym">'+SYM[lt.level]+'</span>Donner gezählt – noch '+esc(wlAgeText(lt.until-now))+' Schutz behalten</div><div class="bd">Letzter Donner vor '+esc(wlAgeText(now-lt.last.t))+(lt.lastKm!=null?', ≈ '+wlDec(lt.lastKm,1)+' km':'')+'.</div></div>';
+  h+='<ul class="tight">'
+    +'<li>Gewitter möglich: nicht auslaufen. Gewitter in der Nähe erkannt: so schnell wie möglich in den Hafen oder an einen sicheren Schutzort; Abwarten ist besser als Durchfahren, Gewitter sind meist kurz. ('+wlSrcLink('nwsboat')+')</li>'
+    +'<li>Mit Kajüte: drinnen bleiben und Metall sowie Elektrogeräte nicht berühren. Ohne Kajüte: so tief wie möglich im Boot bleiben. ('+wlSrcLink('nwsboat')+')</li>'
+    +'<li>Hörbarer Donner = in Einschlagreichweite. Schutz behalten, bis mindestens 30 Minuten nach dem letzten Donner vergangen sind. ('+wlSrcLink('noaa')+')</li>'
+    +'<li>Ein Blitzschlag kann katastrophal sein, besonders bei Brand oder Ausfall der Elektronik. ('+wlSrcLink('nwsboat')+')</li></ul>'
+    +'<button class="btn sm" data-wl="goto">Blitzzähler und Wetter-Sicherheit öffnen</button>'
+    +'<div class="note small">Quellen: NOAA/NWS (USA). Abstandsgrenze für „rot“ ist eine Faustregel.</div></div>';
+  el.innerHTML=h;
+}
+function wlSecTimer(){
+  if(WL_UI.tm)return;
+  WL_UI.tm=setInterval(function(){
+    var e=$('wl-sec');
+    if(WLS.flashT==null||!e){clearInterval(WL_UI.tm);WL_UI.tm=null;return;}
+    var s=(Date.now()-WLS.flashT)/1000;
+    if(s>WLC.lightning.maxSec){clearInterval(WL_UI.tm);WL_UI.tm=null;wlFlashResolve(Date.now());renderWL();if(typeof update==='function')update();return;}
+    e.textContent=wlDec(s,1);
+  },200);
+}
+function wlTick(){wlAutoFetch();
+  var now=Date.now();wlFlashResolve(now);wlPrune(now);
+  var a=wlAssess(now,wlInputs(now)),sg=wlSigOf(a);
+  var ae=document.activeElement,typing=ae&&ae.tagName==='INPUT'&&$('wl-card')&&$('wl-card').contains(ae)&&ae.value;
+  if(sg!==WL_UI.sig){if(typeof update==='function')update();else renderWL();}
+  else if(!typing&&$('wl-card'))renderWL();
+}
+/* ---------- Regeln: identification help, atlas, warning signs, crossed winds, thresholds, photo logbook ---------- */
+function wlWizNode(){
+  var n=WL_TREE,sel=null;
+  for(var i=0;i<WL_UI.wiz.length;i++){sel=n.opts[WL_UI.wiz[i]];if(!sel){WL_UI.wiz=[];return {node:WL_TREE,sel:null};}if(sel.next)n=sel.next;}
+  return {node:n,sel:sel};
+}
+function wlCloudHTML(id,withBtn){
+  var c=WL_CLOUDS[id];if(!c)return '';
+  var h='<div class="wl-cloud lv-'+c.level+'"><div class="wl-cn"><b>'+esc(c.name)+'</b> <span class="mut" translate="no">'+esc(c.latin)+'</span></div>'
+    +(c.height?'<div class="note small">Höhe: '+esc(c.height)+' (typisch)</div>':'')+'<p>'+esc(c.what)+'</p>'+(c.meaning?'<p>'+esc(c.meaning)+'</p>':'')
+    +'<div class="note small">Quelle: '+wlSrcLink(c.src)+(c.src2?' · '+wlSrcLink(c.src2):'')+'</div>';
+  if(withBtn&&(id==='cumulonimbus'||id==='arcus')){
+    h+='<div class="notice">'+(id==='arcus'?'Böenwalze':'Gewitterwolke')+' beobachtet? Dann kann Wetter-Sicherheit '+(id==='arcus'?'rot':'gelb')+' anzeigen ('+WLC.obs.validMin+' min gültig, Faustregel). Es wird nichts automatisch übernommen.</div>'
+      +'<button class="btn sm" data-wl="obs" data-k="'+(id==='arcus'?'arcus':'cb')+'">Ja, '+(id==='arcus'?'Böenwalze':'Gewitterwolke')+' beobachtet – in Wetter-Sicherheit übernehmen</button>';
+  }
+  return h+'</div>';
+}
+function wlWizHTML(){
+  var w=wlWizNode(),h='';
+  if(w.sel&&w.sel.res){
+    h+='<div class="note small">Ergebnis deiner Beobachtung (keine Messung, keine automatische Bestimmung):</div>'+wlCloudHTML(w.sel.res,true)
+      +'<button class="btn sm" data-wl="wiz-reset" style="margin-top:8px">Neu bestimmen</button><button class="btn sm" data-wl="wiz-back" style="margin-top:6px">← Eine Frage zurück</button>';
+    return h;
+  }
+  h+='<div class="note small">'+esc(w.node.ctx)+'</div><div class="wl-q">'+esc(w.node.q)+'</div>';
+  w.node.opts.forEach(function(o,i){h+='<button class="btn sm wl-opt" data-wl="wiz" data-i="'+i+'"><span><b>'+esc(o.t)+'</b><br><small>'+esc(o.d)+'</small></span><span aria-hidden="true">→</span></button>';});
+  if(WL_UI.wiz.length)h+='<button class="btn sm" data-wl="wiz-back" style="margin-top:6px">← Eine Frage zurück</button>';
+  return h;
+}
+function wlAtlasHTML(){
+  var f=WL_UI.atlasF,h='<div class="wl-filter">'+['','hoch','mittel','tief','vertikal'].map(function(g){return '<button class="btn sm" data-wl="atlasf" data-g="'+g+'" aria-pressed="'+(f===g?'true':'false')+'">'+(g?g.charAt(0).toUpperCase()+g.slice(1):'Alle')+'</button>';}).join('')+'</div>';
+  Object.keys(WL_CLOUDS).forEach(function(id){var c=WL_CLOUDS[id];if(f&&c.group!==f)return;h+='<details><summary>'+esc(c.name)+' · <span translate="no">'+esc(c.latin)+'</span></summary><div class="in">'+wlCloudHTML(id,false)+'</div></details>';});
+  return h;
+}
+function wlSignsHTML(){
+  return WL_SIGNS.map(function(g){return '<h3>'+esc(g.title)+'</h3><ul class="tight">'+g.items.map(function(i){return '<li>'+esc(i.t)+' <span class="note small">('+wlSrcLink(i.src)+')</span></li>';}).join('')+'</ul>';}).join('')
+    +'<div class="note small">Typische Folgen und Zeiten sind stark vom Einzelfall abhängig; hier stehen nur Aussagen mit Quelle, keine Stundenangaben.</div>';
+}
+function wlCrossHTML(){
+  var d8=(typeof DIRS!=='undefined'&&DIRS.length===8)?DIRS:['N','NE','E','SE','S','SW','W','NW'];
+  function sel(id){return '<select id="'+id+'" aria-label="'+(id==='wl-cw'?'Bodenwind aus':'hohe Wolken aus')+'"><option value="">–</option>'+d8.map(function(d,i){return '<option value="'+(i*45)+'">'+d+'</option>';}).join('')+'</select>';}
+  return '<div class="note">Regel (Natural Navigator): Rücken zum Bodenwind (dem Wind, der die tiefsten Wolken bewegt) stehen und beobachten, woher die höchsten Wolken (meist Cirrus) ziehen. Ziehen sie von links nach rechts, kommt wahrscheinlich eine Front mit schlechterem Wetter. '+wlBadge('Faustregel')+'</div>'
+    +'<div class="wl-add"><label>Bodenwind aus '+sel('wl-cw')+'</label><label>Hohe Wolken aus '+sel('wl-cc')+'</label></div><div id="wl-cwout" class="note"></div>'
+    +'<div class="note small">Grenzen: nur Hinweis auf Wahrscheinlichkeiten, zuverlässiger nur zusammen mit weiteren Wolkenzeichen (z. B. Cirrus → Cirrostratus). Wahrer Wind, nicht scheinbarer Wind vom fahrenden Boot. Bei Gewittern, Land-/Seewind und in Düsen oder im Lee von Land kann sie versagen (Hinweis zur Anwendung, nicht aus der Quelle). Die Regel senkt nie die Ampel und gibt keine Entwarnung. Quelle: '+wlSrcLink('nat')+'</div>';
+}
+function wlCrossUpdate(){
+  var w=$('wl-cw'),c=$('wl-cc'),o=$('wl-cwout');if(!w||!c||!o)return;
+  if(w.value===''||c.value===''){o.textContent='';return;}
+  var lat=(typeof S!=='undefined'&&S.pos)?S.pos.lat:(CONST.area?(CONST.area.latMin+CONST.area.latMax)/2:50);
+  var r=wlCrossWind(+w.value,+c.value,lat);
+  o.innerHTML='<b>ℹ '+esc(r.text)+'</b>';
+}
+function wlThresholdsHTML(){
+  var L=WLC.lightning,P=WLC.pressure,M=WLC.modelPressure,W=WLC.warn,O=WLC.obs,ST=WLC.stale;
+  function row(a,b,c){return '<tr><td>'+a+'</td><td>'+b+'</td><td>'+c+'</td></tr>';}
+  var F='<span class="badge unv">Faustregel</span>';
+  return '<table class="tbl small"><tr><th>Schwelle</th><th>Wert</th><th>Quelle</th></tr>'
+    +row('Donner gehört','mindestens gelb','NOAA')
+    +row('Blitz → Donner ≤ '+L.redKm+' km','rot',F)
+    +row('Signal nach letztem Donner',L.holdMin+' min','NOAA')
+    +row('„Abstand nimmt ab“','≥ '+L.trendMin+' Messungen in ≤ '+L.trendSpanMin+' min, Fall ≥ '+L.trendDeltaKm+' km',F+' (nur Hinweis)')
+    +row('Luftdruck fällt','≥ '+wlDec(Math.abs(P.info))+' hPa/3 h Hinweis · ≥ '+wlDec(Math.abs(P.yellow))+' gelb · > '+wlDec(Math.abs(P.red))+' rot','Kategorien Met Office; Ampel '+F)
+    +row('Luftdruck steigt','> '+wlDec(P.riseYellow)+' hPa/3 h gelb (nie Entwarnung)',F)
+    +row('Barometer-Trend','neuester Wert ≤ '+P.latestMaxMin+' min, Bezug 2,5–3,5 h','Regel der App')
+    +row('Modell-Druck','Fall > '+wlDec(Math.abs(M.yellow))+' hPa/3 h in den nächsten '+M.horizonH+' h gelb, sonst Hinweis',F)
+    +row('Amtliche Warnung gelb / orange / rot',({y:'gelb',r:'rot'}[W.map.yellow])+' / '+({y:'gelb',r:'rot'}[W.map.orange])+' / '+({y:'gelb',r:'rot'}[W.map.red]),'MeteoAlarm-/DWD-Stufen; Zuordnung '+F)
+    +row('Warnpuffer um das Warngebiet',W.bufferNm+' sm',F)
+    +row('Beobachtung (Wolkenbestimmung bestätigt)',O.validMin+' min gültig',F)
+    +row('Warnstand frisch / Lücke',ST.summaryFreshMin+' min / '+ST.summaryGapH+' h','Regel der App')
+    +'</table><div class="note small">Paket-Anpassungen dürfen die Schwellen nur verschärfen.</div>';
+}
+function wlPhotosHTML(){
+  var h='<div class="note small">Nur Dokumentation für Crew und Logbuch: Foto mit Zeit, Blickrichtung und Notiz. Es gibt <b>keine automatische Wolkenerkennung</b> und keine Bewertung. Bilder bleiben auf dem Gerät (verkleinert) und sind im Backup enthalten.</div>';
+  h+='<div class="wl-add"><select id="wl-pdir" aria-label="Blickrichtung"><option value="">Richtung?</option>'+['N','NE','E','SE','S','SW','W','NW'].map(function(d){return '<option>'+d+'</option>';}).join('')+'</select><input type="text" id="wl-pnote" placeholder="Notiz (optional)" maxlength="200" aria-label="Notiz zum Foto"></div>'
+    +'<label class="btn sm wl-file">Foto aufnehmen / wählen<input type="file" id="wl-pfile" accept="image/*" capture="environment" hidden></label><div id="wl-pmsg" class="note small"></div>';
+  if(WLS.photos.length)h+='<div class="wl-photos">'+WLS.photos.map(function(p){return '<figure><img src="'+esc(p.img)+'" alt="Foto vom '+esc(wlTime(p.t))+'"><figcaption>'+esc(new Date(p.t).toLocaleDateString('de-DE'))+' '+esc(wlTime(p.t))+(p.dir?' · '+esc(p.dir):'')+(p.note?'<br>'+esc(p.note):'')+'<br><button class="wl-x" data-wl="photo-del" data-id="'+esc(p.id)+'">✕ löschen</button></figcaption></figure>';}).join('')+'</div>';
+  else h+='<div class="note small">Noch keine Fotos.</div>';
+  return h;
+}
+function wlSourcesHTML(){
+  return '<ul class="tight">'+Object.keys(WL_SRC).map(function(k){return '<li>'+wlSrcLink(k)+'</li>';}).join('')+'</ul>'
+    +'<div class="note small">Daten: Amtliche Warnungen © nationale Wetterdienste über MeteoAlarm (EUMETNET) bzw. Deutscher Wetterdienst (Open Data); Modelldruck: Open-Meteo (CC BY 4.0, nicht-kommerziell). Nutzungsbedingungen von MeteoAlarm sind vor kommerziellem Einsatz zu prüfen (docs/wolkenlotse/QUELLEN.md).</div>';
+}
+function renderWLRegeln(){
+  var el=$('wl-regeln');if(!el)return;
+  var h='<h2>Wolken und Warnzeichen</h2><div class="note">Hilfe zur eigenen Beobachtung. Ergebnisse sind keine Messung, keine automatische Bestimmung und enthalten keine Wahrscheinlichkeiten. Es stehen nur Aussagen mit Quelle da; Schwellen sind als Quelle oder „Faustregel“ gekennzeichnet.</div>';
+  h+='<div class="card"><div class="t">Wolke bestimmen</div><div id="wl-wiz">'+wlWizHTML()+'</div></div>';
+  h+='<div class="card"><div class="t">Wolkenatlas</div><div id="wl-atlas">'+wlAtlasHTML()+'</div></div>';
+  h+='<div class="card"><div class="t">Warnzeichen</div>'+wlSignsHTML()+'</div>';
+  h+='<div class="card"><div class="t">Kreuzwindregel (Info)</div>'+wlCrossHTML()+'</div>';
+  h+='<div class="card"><div class="t">Schwellen Wetter-Sicherheit</div>'+wlThresholdsHTML()+'</div>';
+  h+='<div class="card"><div class="t">Foto-Logbuch (ohne Bewertung)</div><div id="wl-photos">'+wlPhotosHTML()+'</div></div>';
+  h+='<div class="card"><div class="t">Quellen Wetter-Sicherheit</div>'+wlSourcesHTML()+'</div>';
+  var pw=$('wl-pdir')?$('wl-pdir').value:'',pn=$('wl-pnote')?$('wl-pnote').value:'',cw=$('wl-cw')?$('wl-cw').value:'',cc=$('wl-cc')?$('wl-cc').value:'';
+  el.innerHTML=h;
+  if($('wl-pdir'))$('wl-pdir').value=pw;if($('wl-pnote'))$('wl-pnote').value=pn;if($('wl-cw'))$('wl-cw').value=cw;if($('wl-cc'))$('wl-cc').value=cc;
+  wlCrossUpdate();
+}
+/* photo: scale to <= 480 px, JPEG 0.6 (about 20–40 kB), keep at most WL_LIM.photos */
+function wlPhotoAdd(file){
+  if(!file||!/^image\//.test(file.type)){return Promise.reject(new Error('keine Bilddatei'));}
+  return new Promise(function(res,rej){
+    var fr=new FileReader();fr.onerror=function(){rej(new Error('Lesefehler'));};
+    fr.onload=function(){
+      var im=new Image();im.onerror=function(){rej(new Error('Bild nicht lesbar'));};
+      im.onload=function(){
+        var k=Math.min(1,480/Math.max(im.width,im.height)),cv=document.createElement('canvas');cv.width=Math.max(1,Math.round(im.width*k));cv.height=Math.max(1,Math.round(im.height*k));
+        cv.getContext('2d').drawImage(im,0,0,cv.width,cv.height);
+        res(cv.toDataURL('image/jpeg',0.6));
+      };
+      im.src=fr.result;
+    };
+    fr.readAsDataURL(file);
+  }).then(function(img){
+    var t=Date.now(),p={id:String(t),t:t,dir:$('wl-pdir')?$('wl-pdir').value:'',note:$('wl-pnote')?$('wl-pnote').value.trim().slice(0,200):'',img:img};
+    return WLDB.photoPut(p).then(function(){return WLDB.photos();}).then(function(all){
+      var drop=all.slice(WL_LIM.photos);return Promise.all(drop.map(function(d){return WLDB.photoDel(d.id);})).then(function(){return wlPhotosLoad();});
+    });
+  });
+}
+/* ---------- events ---------- */
+function wlAct(e){
+  var b=e.target.closest&&e.target.closest('[data-wl]');if(!b)return;
+  var k=b.dataset.wl,now=Date.now();
+  function done(){renderWL();if(typeof update==='function')update();}
+  if(k==='flash'){wlFlash(now);done();return;}
+  if(k==='thunder'){wlThunder(now,false);done();return;}
+  if(k==='thunder0'){wlThunder(now,true);done();return;}
+  if(k==='undo'){wlLightningUndo();done();return;}
+  if(k==='lclear'){if(!confirm('Blitzzähler wirklich zurücksetzen? Die 30-Minuten-Zeit nach dem letzten Donner geht dabei verloren.'))return;wlLightningClear();done();return;}
+  if(k==='baro-add'||k==='baro-force'){
+    var inp=$('wl-baro'),msg=$('wl-bmsg'),src=$('wl-bsrc')?$('wl-bsrc').value:'Bordbarometer';
+    if(k==='baro-force'&&WL_UI.pend){wlBaroAdd(WL_UI.pend.hpa,now,WL_UI.pend.src,true);WL_UI.pend=null;if(inp)inp.value='';done();return;}
+    var v=parseFloat(String(inp.value).replace(',','.'));
+    if(!isFinite(v)){msg.innerHTML='<div class="notice">Bitte einen Luftdruck in hPa eingeben, z. B. 1013,2.</div>';return;}
+    var r=wlBaroAdd(v,now,src,false);
+    if(!r.ok){
+      if(r.reason==='jump'){WL_UI.pend={hpa:v,src:src,text:r.text};renderWL();}
+      else msg.innerHTML='<div class="notice">'+esc(r.text)+'</div>';
+      return;
+    }
+    WL_UI.pend=null;inp.value='';done();return;
+  }
+  if(k==='baro-del'){wlBaroDel(+b.dataset.t);done();return;}
+  if(k==='fetch'){wlFetchSummary(true);renderWL();return;}
+  if(k==='goto'){if(typeof showScreen==='function')showScreen('scr-lage');setTimeout(function(){var c=$('wl-head');if(c)c.scrollIntoView({block:'start',behavior:'smooth'});},30);return;}
+  if(k==='obs'){wlObsAdd(b.dataset.k,now);done();return;}
+  if(k==='wiz'){WL_UI.wiz.push(+b.dataset.i);renderWLRegeln();return;}
+  if(k==='wiz-back'){WL_UI.wiz.pop();renderWLRegeln();return;}
+  if(k==='wiz-reset'){WL_UI.wiz=[];renderWLRegeln();return;}
+  if(k==='atlasf'){WL_UI.atlasF=b.dataset.g||'';renderWLRegeln();return;}
+  if(k==='photo-del'){WLDB.photoDel(b.dataset.id).then(wlPhotosLoad).then(renderWLRegeln).catch(function(){});return;}
+}
+function wlUiInit(){
+  if(WL_UI.bound)return;WL_UI.bound=true;
+  ['wl-card','wl-emerg','wl-regeln'].forEach(function(id){var el=$(id);if(el)el.addEventListener('click',wlAct);});
+  var rg=$('wl-regeln');
+  if(rg){
+    rg.addEventListener('change',function(e){
+      if(e.target.id==='wl-cw'||e.target.id==='wl-cc')wlCrossUpdate();
+      if(e.target.id==='wl-pfile'){
+        var f=e.target.files&&e.target.files[0],m=$('wl-pmsg');
+        if(f){if(m)m.textContent='Speichere …';wlPhotoAdd(f).then(function(){renderWLRegeln();}).catch(function(err){var m2=$('wl-pmsg');if(m2)m2.textContent='Foto nicht gespeichert: '+(err&&err.message||err);});}
+      }
+    });
+    renderWLRegeln();
+  }
+  setInterval(wlTick,15000);
+  wlAutoFetch();
+  WL_NET.tried=WL_NET.tried||Date.now();   // the ticks start their own round from here
+}
+
+  /* ---------- raise the shell's own weather banner (#wx, #wxwarn, #wxnah): never lower, never green, never miss a changed signal ----------
+     Each banner's own level (from wind/gusts/CAPE) is remembered once per render in data-wl-base, so re-evaluating after the Wolkenlotse
+     signal itself expires (e.g. 30 min after the last thunder) correctly reverts to the shell's own level instead of staying stuck raised. */
+  var RANK={r:0,y:1,g:2};
+  function wlRaiseEl(id,level,title,text){
+    var el=(typeof $==='function')?$(id):document.getElementById(id);if(!el)return;
+    var b=el.querySelector('.banner:not(.wl-note)');
+    if(b){
+      if(b.dataset.wlBase==null)b.dataset.wlBase=b.classList.contains('b-r')?'r':b.classList.contains('b-y')?'y':'g';
+      var eff=(level&&RANK[level]<RANK[b.dataset.wlBase])?level:b.dataset.wlBase;
+      b.classList.remove('b-g','b-y','b-r');b.classList.add('b-'+eff);
+    }
+    var n=el.querySelector('.wl-note');
+    if(level){
+      if(!n){n=document.createElement('div');n.className='wl-note';el.appendChild(n);}
+      n.className='banner b-'+level+' wl-note';
+      n.innerHTML='<b>Wetter-Sicherheit:</b> '+esc(title)+' – '+esc(text)+'<div class="note" style="margin-top:4px">Zusätzliches Sicherheitssignal (Blitz, Barometer, amtliche Warnungen) – kann die Ampel nur anheben, nie senken. Faustregel, Details im Abschnitt „Wetter-Sicherheit“.</div>';
+    }else if(n)n.remove();
+  }
+  function applyBanner(){
+    try{
+      var now=Date.now();wlFlashResolve(now);wlPrune(now);
+      var pos=(typeof S!=='undefined'&&S.pos&&S.pos.lat!=null&&S.pos.lon!=null)?{lat:S.pos.lat,lon:S.pos.lon}:null;
+      var a=wlAssess(now,wlInputs(now,pos));
+      var up=wlRaising(a),top=up.length?up[0]:null;
+      ['wx','wxwarn','wxnah'].forEach(function(id){wlRaiseEl(id,top&&top.level,top&&top.title,top&&top.text);});
+      return a;
+    }catch(e){if(window.console)console.error('Wetter-Sicherheit:',e);return null;}
+  }
+  /* wl-ui.js calls update() when it exists (wlAct done(), wlTick on a changed signature); the shell itself has no such hook */
+  function update(){applyBanner();if(typeof renderWL==='function')try{renderWL();}catch(e){}}
+  function boot(){
+    try{wlInit();}catch(e){if(window.console)console.error('Wetter-Sicherheit (Laden):',e);}
+    try{if(typeof wlUiInit==='function')wlUiInit();}catch(e){if(window.console)console.error('Wetter-Sicherheit (UI):',e);}
+    try{if(typeof renderWL==='function')renderWL();}catch(e){if(window.console)console.error('Wetter-Sicherheit (Anzeige):',e);}   // wlUiInit() itself only binds clicks and starts the 15 s tick; the card must show something from the first render, not just the first tick
+    applyBanner();
+  }
+  boot();
+  window.wlApplyToWxBanner=applyBanner;   // renderWx() calls this itself after every render (binnen/src/app.html)
+  return {assess:function(){return wlAssess(Date.now(),wlInputs(Date.now()));},raiseBanner:applyBanner,wlThunder:wlThunder,wlFlash:wlFlash,wlBaroAdd:wlBaroAdd,WLS:WLS,WLC:WLC};
+})();
 
 function init(){
   readCharterLink();
