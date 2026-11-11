@@ -1,0 +1,161 @@
+{
+ "stand": "2026-11-11",
+ "reviere": [
+  {
+   "id": "berlin-brandenburg",
+   "name": "Berlin, Brandenburg, Mecklenburgische Seenplatte",
+   "bbox": [
+    51.3,
+    11.2,
+    53.8,
+    14.8
+   ],
+   "file": "berlin-brandenburg.a8ad3ecb7d28.json",
+   "hash": "a8ad3ecb7d28",
+   "size": 3203086
+  },
+  {
+   "id": "mecklenburg-vorpommern",
+   "name": "Mecklenburg-Vorpommern (Elde, Peene, Warnow, Schwerin)",
+   "bbox": [
+    53,
+    10.5,
+    54.6,
+    14.5
+   ],
+   "file": "mecklenburg-vorpommern.19c95b12212f.json",
+   "hash": "19c95b12212f",
+   "size": 1687987
+  },
+  {
+   "id": "elbe-saale",
+   "name": "Elbe (Hamburg–Dresden), Saale, Elbe-Havel-Kanal",
+   "bbox": [
+    50.6,
+    9.6,
+    53.7,
+    14.5
+   ],
+   "file": "elbe-saale.dab1be32da36.json",
+   "hash": "dab1be32da36",
+   "size": 5221404
+  },
+  {
+   "id": "nordwest",
+   "name": "Nordwest (Weser, Ems, Hunte, Küstenkanal, Mittellandkanal West)",
+   "bbox": [
+    51.8,
+    6.6,
+    53.9,
+    10.6
+   ],
+   "file": "nordwest.6c51d1b98b8f.json",
+   "hash": "6c51d1b98b8f",
+   "size": 2860644
+  },
+  {
+   "id": "rhein-ruhr",
+   "name": "Niederrhein, Ruhr, westdeutsche Kanäle",
+   "bbox": [
+    50.6,
+    5.8,
+    52.4,
+    8.8
+   ],
+   "file": "rhein-ruhr.d5ed3f5e948c.json",
+   "hash": "d5ed3f5e948c",
+   "size": 1660733
+  },
+  {
+   "id": "mittelrhein-mosel",
+   "name": "Mittelrhein, Mosel, Saar, Lahn",
+   "bbox": [
+    49,
+    6,
+    50.9,
+    8.4
+   ],
+   "file": "mittelrhein-mosel.8df526fbb6fc.json",
+   "hash": "8df526fbb6fc",
+   "size": 1439483
+  },
+  {
+   "id": "oberrhein-neckar",
+   "name": "Oberrhein, Neckar",
+   "bbox": [
+    47.5,
+    7.4,
+    49.9,
+    10
+   ],
+   "file": "oberrhein-neckar.ea9764e39efb.json",
+   "hash": "ea9764e39efb",
+   "size": 2312626
+  },
+  {
+   "id": "main-donau",
+   "name": "Main (ab Mainz), Main-Donau-Kanal, Donau",
+   "bbox": [
+    48.2,
+    8.2,
+    50.6,
+    13.9
+   ],
+   "file": "main-donau.2bee78e9f2be.json",
+   "hash": "2bee78e9f2be",
+   "size": 3744417
+  },
+  {
+   "id": "bayern-seen",
+   "name": "Bayerische Seen und Bodensee",
+   "bbox": [
+    47.2,
+    8.9,
+    48.4,
+    13.1
+   ],
+   "file": "bayern-seen.3978afef0eee.json",
+   "hash": "3978afef0eee",
+   "size": 1484284
+  },
+  {
+   "id": "schleswig-holstein",
+   "name": "Schleswig-Holstein (Nord-Ostsee-Kanal, Eider, Elbe-Lübeck-Kanal, Trave, Schlei, Holsteinische Seen)",
+   "bbox": [
+    53.3,
+    8,
+    55.1,
+    11.4
+   ],
+   "file": "schleswig-holstein.d6c3e00186c3.json",
+   "hash": "d6c3e00186c3",
+   "size": 1564651
+  },
+  {
+   "id": "weserbergland-hessen",
+   "name": "Oberweser, Fulda, Werra, Edersee",
+   "bbox": [
+    50.5,
+    8.6,
+    52.1,
+    10.4
+   ],
+   "file": "weserbergland-hessen.ba0348988c00.json",
+   "hash": "ba0348988c00",
+   "size": 776335
+  },
+  {
+   "id": "thueringen-sachsen",
+   "name": "Thüringen und Sachsen (Talsperren, Oberlausitz)",
+   "bbox": [
+    50.2,
+    10,
+    51.6,
+    15.1
+   ],
+   "file": "thueringen-sachsen.b4b2028efa3b.json",
+   "hash": "b4b2028efa3b",
+   "size": 1640723
+  }
+ ]
+}
