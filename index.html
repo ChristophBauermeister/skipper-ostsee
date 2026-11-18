@@ -1752,7 +1752,7 @@ function wxAt(lat,lon,t){
   if(ws==null||wg==null)return {none:true};
   return {ws:ws,wg:Math.max(ws,wg),wd:dir('wd'),wc:near('wc'),vis:lin('vis'),wh:lin('wh'),wdir:dir('wdir'),wp:lin('wp'),pm:lin('pm'),p:p};
 }
-function wxAgeH(now){return WX?((now||Date.now())-Date.parse(WX.fetchedAt))/3600000:null;}
+function wxAgeH(now){if(!WX)return null;var a=((now||Date.now())-Date.parse(WX.fetchedAt))/3600000;return isFinite(a)?a:Infinity;} // Zeitstempel fehlt/ungueltig -> unendlich alt, nie frisch
 function wxUrls(){
   var la=WXGRID.points.map(function(p){return p[0];}).join(','),lo=WXGRID.points.map(function(p){return p[1];}).join(',');
   return {forecast:CONST.wx.forecastUrl+'?latitude='+la+'&longitude='+lo+'&hourly='+CONST.wx.hourly+'&wind_speed_unit=kn&forecast_days='+CONST.wx.days+'&past_hours='+CONST.wx.pastHours+'&timezone=GMT',
@@ -1776,7 +1776,7 @@ function wxFromOpenMeteo(fc,ma,fetchedAt){
   }
   return snap;
 }
-function wxValid(o){return !!o&&o.type===SNAP+'-wx'&&o.version===1&&Array.isArray(o.points)&&isFinite(o.t0)&&o.hours>0&&Array.isArray(o.ws);}
+function wxValid(o){return !!o&&o.type===SNAP+'-wx'&&o.version===1&&Array.isArray(o.points)&&isFinite(o.t0)&&o.hours>0&&Array.isArray(o.ws)&&isFinite(Date.parse(o.fetchedAt));}
 function wxSet(snap){WX=snap;WXP=null;}
 
 function wxLoadOnline(){
@@ -9363,10 +9363,10 @@ function renderWxPrev(){
   var el=$('wxprev');if(!el)return;
   var P=wxPreview(),b=$('btn-wxfill');
   var age=wxAgeH();
-  if(P&&age>CONST.wx.hardAgeH){el.innerHTML='<div class="notice">Wetterstand '+Math.round(age)+' h alt – zu alt für die Lage. Im Törn-Tab neu laden.</div>';b.className='btn sm';b.textContent='Aus Wetterstand übernehmen (jetzt, an der Position)';return;}
+  if(P&&!(age<=CONST.wx.hardAgeH)){el.innerHTML='<div class="notice">'+(isFinite(age)?'Wetterstand '+Math.round(age)+' h alt':'Wetterstand ohne gültigen Zeitstempel')+' – zu alt für die Lage. Im Törn-Tab neu laden.</div>';b.className='btn sm';b.textContent='Aus Wetterstand übernehmen (jetzt, an der Position)';return;}
   if(!P){el.innerHTML='';b.className='btn sm';b.textContent='Aus Wetterstand übernehmen (jetzt, an der Position)';return;}
   var x=P.x,g=Math.max(Math.round(x.wg),Math.round(x.ws)),same=S.dir===(x.wd==null?S.dir:wxDir8(x.wd))&&S.windTrue===Math.round(x.ws)&&S.gust===g;
-  var h='<div class="wxprev"><div class="note small">Modell-Vorhersage an deiner Position (Open-Meteo, Stand '+dmyLocal(Date.parse(P.fetchedAt))+' '+hhmmLocal(Date.parse(P.fetchedAt))+') – kein amtlicher Seewetterbericht'+(age>CONST.wx.maxAgeH?' · <b>⚠ '+Math.round(age)+' h alt</b>':'')+'</div>';
+  var h='<div class="wxprev"><div class="note small">Modell-Vorhersage an deiner Position (Open-Meteo, Stand '+dmyLocal(Date.parse(P.fetchedAt))+' '+hhmmLocal(Date.parse(P.fetchedAt))+') – kein amtlicher Seewetterbericht'+(!(age<=CONST.wx.maxAgeH)?' · <b>⚠ '+(isFinite(age)?Math.round(age)+' h alt':'Zeit unbekannt')+'</b>':'')+'</div>';
   h+='<div class="now">jetzt '+(x.wd==null?'':'aus '+wxDir8(x.wd)+' ')+Math.round(x.ws)+' kn, Böen '+g+' kn'+(x.wh!=null?', Welle '+fm(Math.round(x.wh*10)/10)+' m'+(x.wp!=null?' / '+Math.round(x.wp)+' s':''):'')+'</div>';
   if(P.trend.length)h+='<div class="tr">Trend (Wind/Böen kn): '+P.trend.map(function(t){return '+'+t.h+' h '+wxShort(t.x);}).join(' · ')+'</div>';
   if(P.gmax!=null&&P.gmax>=g+4)h+='<div class="tr"><b>⚠ zunehmend: Böen bis '+Math.round(P.gmax)+' kn um '+hhmmLocal(P.gmaxT)+'</b></div>';
@@ -10485,7 +10485,7 @@ function wxStateHTML(){
   var age=wxAgeH(),src={'open-meteo':'Open-Meteo','plattform':'Plattform-Backup','import':'Import'}[WX.source]||WX.source;
   var to=WX.t0+(WX.hours-1)*3600000,lab=utcToLocal('12:00',Date.now()).label;
   var t='Wetterstand <b>'+hhmmLocal(Date.parse(WX.fetchedAt))+' '+lab+', '+dmyLocal(Date.parse(WX.fetchedAt))+'</b> ('+src+') · '+WX.points.length+' Punkte · bis '+dmyLocal(to)+' '+hhmmLocal(to)+(WX.wh?'':' · <b>ohne Seegang</b>');
-  if(age>CONST.wx.maxAgeH)t+='<div class="notice">Wetterstand '+Math.round(age)+' h alt – neu laden.</div>';
+  if(!(age<=CONST.wx.maxAgeH))t+='<div class="notice">'+(isFinite(age)?'Wetterstand '+Math.round(age)+' h alt':'Wetterstand ohne gültigen Zeitstempel')+' – neu laden.</div>';
   return t;
 }
 function dmyLocal(ms){var p=localParts(ms);return pad(p.d)+'.'+pad(p.m)+'.';}
