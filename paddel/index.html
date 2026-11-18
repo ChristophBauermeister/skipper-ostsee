@@ -368,6 +368,7 @@ function locTok(s){if(LANG==='de'||s==null)return s;return String(s).replace(/(^
 function trDom(){var w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,null),n;while((n=w.nextNode())){if(n.parentNode.closest('script,#list,#detail,#mdetail,#locks,#bridges,#cats,#legend,#charterbox,#nf-charter,#myposout,#cnt,#srcs,#posline,#mattr,#bootmsg,#lang'))continue;if(n._de==null){var tx=n.nodeValue.trim();if(!tx||!I18N.ui[tx])continue;n._de=tx;n._pre=n.nodeValue.slice(0,n.nodeValue.indexOf(tx));n._post=n.nodeValue.slice(n.nodeValue.indexOf(tx)+tx.length);}n.nodeValue=n._pre+t(n._de)+n._post;}
   document.querySelectorAll('[placeholder]').forEach(function(e){if(e._de==null)e._de=e.getAttribute('placeholder');e.setAttribute('placeholder',t(e._de));});document.documentElement.lang=LANG;}
 var VERSION='0.14.0';
+var WX_FORECAST_URL='https://api.open-meteo.com/v1/forecast';
 var CATS=[['hafen','Häfen','⚓','#0f6e8c'],['anleger','Anleger','⛵','#4aa3c0'],['tanken','Tanken','⛽','#d35400'],['absaugen','Absaugen','🚽','#8e44ad'],['wasser','Wasser','💧','#2e86de'],
   ['essen','Essen','🍽','#c0392b'],['einkauf','Einkauf','🛒','#27ae60'],['charter','Charter','🛥','#16a085'],['slip','Slip','⤓','#7f8c8d'],['werft','Werft','🔧','#555'],
   ['paddel','Paddeln','🛶','#b7950b'],['rast','Wasserwanderrast','⛺','#6d4c41'],['anker','Ankerplatz','⚓','#34495e'],['gas','Gas','🔥','#e67e22'],['muell','Müll','🗑','#566573']];
@@ -921,8 +922,8 @@ function renderWx(w,old){
   if(wn)wn.innerHTML=lvl==='g'?'':b;if(wa)wa.innerHTML=lvl==='g'?'':b;
   if(typeof wlApplyToWxBanner==='function')wlApplyToWxBanner();}
 function loadWx(){var p=wxPos(),key='skipperBinnen.wx';
-  getJSON('https://api.open-meteo.com/v1/forecast?latitude='+p.la+'&longitude='+p.lo+'&current=wind_speed_10m,wind_gusts_10m,temperature_2m,weather_code&hourly=wind_gusts_10m,weather_code,cape&forecast_hours=12&wind_speed_unit=kmh&timezone=Europe%2FBerlin',8000)
-  .then(function(w){w._t=Date.now();store(key,JSON.stringify(w));renderWx(w,false);})
+  getJSON(WX_FORECAST_URL+'?latitude='+p.la+'&longitude='+p.lo+'&current=wind_speed_10m,wind_gusts_10m,temperature_2m,weather_code&hourly=wind_gusts_10m,weather_code,cape&forecast_hours=12&wind_speed_unit=kmh&timezone=Europe%2FBerlin',8000)
+  .then(function(w){if(!w||typeof w.current!=='object'||!w.current)throw new Error('wx');w._t=Date.now();store(key,JSON.stringify(w));renderWx(w,false);})
   .catch(function(){var w=null;try{w=JSON.parse(load(key)||'null');}catch(e){}renderWx(w&&Date.now()-w._t<6*3600000?w:null,true);});}
 function renderPegel(){
   var el=$('pegel');if(!PEGEL.length){el.innerHTML='<div class="note">'+t('Keine Pegeldaten enthalten.')+'</div>';return;}
@@ -7994,8 +7995,8 @@ function bdWxLoad(P){
   var p=bdWxPoint(P),key=BD_KEY+'wx72',old=BD.wxRaw;
   if(!old){try{old=JSON.parse(load(key)||'null');}catch(e){old=null;}if(old)bdWxSet(old);}
   if(old&&old._p===p.la+','+p.lo&&Date.now()-old._t<3600000)return Promise.resolve();
-  return getJSON('https://api.open-meteo.com/v1/forecast?latitude='+p.la+'&longitude='+p.lo+'&hourly=wind_speed_10m,wind_gusts_10m,wind_direction_10m,weather_code,cape,visibility&forecast_hours=72&wind_speed_unit=kmh&timezone=Europe%2FBerlin',8000)
-    .then(function(j){j._t=Date.now();j._p=p.la+','+p.lo;store(key,JSON.stringify(j));bdWxSet(j);}).catch(function(){});
+  return getJSON((typeof WX_FORECAST_URL==='string'?WX_FORECAST_URL:'https://api.open-meteo.com/v1/forecast')+'?latitude='+p.la+'&longitude='+p.lo+'&hourly=wind_speed_10m,wind_gusts_10m,wind_direction_10m,weather_code,cape,visibility&forecast_hours=72&wind_speed_unit=kmh&timezone=Europe%2FBerlin',8000)
+    .then(function(j){if(!j||typeof j.hourly!=='object'||!j.hourly)throw new Error('wx');j._t=Date.now();j._p=p.la+','+p.lo;store(key,JSON.stringify(j));bdWxSet(j);}).catch(function(){});
 }
 /* the traffic light of the shell caps the window, read from its banner: never greener than the app says elsewhere */
 function bdLight(){var b=document.querySelector('#wx .banner');if(!b)return undefined;return b.classList.contains('b-r')?'r':b.classList.contains('b-y')?'y':b.classList.contains('b-g')?'g':undefined;}
