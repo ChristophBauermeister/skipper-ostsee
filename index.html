@@ -2,6 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://tile.openstreetmap.org https://tiles.openseamap.org; connect-src 'self' https: data: blob: skfont: pmtiles:; font-src 'self' data:; worker-src 'self' blob:; child-src 'self' blob:; object-src 'none'; base-uri 'self'; frame-src 'none'; form-action 'self'">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1451,7 +1452,27 @@ var SYM={g:'✔',y:'⚠',r:'✖',n:'?',i:'ℹ'};
 var ST_LABEL={g:'geschützt',y:'eingeschränkt',r:'nicht geeignet',n:'unbekannt'};
 function $(id){return document.getElementById(id);}
 function esc(t){return String(t).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
-function store(k,v){try{localStorage.setItem(k,v);}catch(e){}}
+/* store() returns true only if the value was written. A failed write (storage full, blocked) is never silent:
+   a red notice stays on screen, because plan, anchor and profile would otherwise be lost at the next start unnoticed. */
+function storeFail(k){
+  try{
+    if(typeof document==='undefined'||!document.body)return;
+    var en=typeof I18N!=='undefined'&&I18N&&I18N.lang&&I18N.lang!=='de',el=document.getElementById('storefail');
+    if(!el){
+      el=document.createElement('div');el.id='storefail';el.setAttribute('role','alert');
+      el.style.cssText='position:fixed;left:0;right:0;top:0;z-index:99999;background:#b00020;color:#fff;padding:10px 14px;font:600 14px/1.35 sans-serif;text-align:center';
+      var m=document.createElement('span'),x=document.createElement('button');
+      x.type='button';x.id='storefail-x';x.textContent='OK';x.style.cssText='margin-left:12px;padding:2px 10px;font:inherit';
+      x.addEventListener('click',function(){el.hidden=true;});
+      el.appendChild(m);el.appendChild(x);document.body.appendChild(el);
+    }
+    el.hidden=false;
+    el.firstChild.textContent=en?'WARNING: Data could NOT be saved (storage full or blocked). Changes will be lost when the app restarts.':'ACHTUNG: Daten konnten NICHT gespeichert werden (Speicher voll oder gesperrt). Änderungen gehen beim Neustart der App verloren.';
+    el.setAttribute('data-key',String(k));
+  }catch(e){}
+}
+window.skStoreFail=storeFail;
+function store(k,v){try{localStorage.setItem(k,v);return true;}catch(e){storeFail(k);return false;}}
 function load(k){try{return localStorage.getItem(k);}catch(e){return null;}}
 function linkTel(t){return esc(t).replace(/\+\d[\d ]{4,}\d/g,function(m){return '<a href="tel:'+m.replace(/\s+/g,'')+'">'+m+'</a>';});}
 
@@ -3788,34 +3809,54 @@ function doExport(){
     dl();
   });
 }
+var IMPORT_MAX_BYTES=64*1024*1024;
+function impOwn(o,k){return Object.prototype.hasOwnProperty.call(o,k);}
+/* a setting from a backup is taken over only if it passes the same checks as the boat profile; anything else is dropped (null/default) */
+function impSetting(k,v){
+  if(k==='season')return (v==='auto'||v==='sommer'||v==='vor')?v:undefined;
+  if(k==='motorMode')return (v==='nie'||v==='flaute'||v==='kreuz')?v:undefined;
+  if(k==='kids')return typeof v==='boolean'?v:undefined;
+  var n=typeof v==='number'&&isFinite(v)?v:null;
+  if(k==='limGust')return n!==null&&n>=8&&n<=60?Math.round(n):null;
+  if(k==='limSea')return n!==null&&n>=0.25&&n<=4?Math.round(n*4)/4:null;
+  if(k==='motorSpeed')return n!==null&&n>0?Math.min(n,15):undefined;
+  return undefined;
+}
 function doImportText(txt){
+  if(typeof txt==='string'&&txt.length>IMPORT_MAX_BYTES){wxMsg('Import: Datei zu groß, nichts übernommen.','r');return Promise.resolve(false);}
   var o;try{o=JSON.parse(txt);}catch(e){wxMsg('Import: keine gültige JSON-Datei.','r');return Promise.resolve(false);}
   var list=[];
   if(o&&o.type===SNAP+'-backup'&&o.version===1)list=(Array.isArray(o.wx)?o.wx:[]).filter(wxValid);
   else if(wxValid(o))list=[o];
   else{wxMsg('Import: Datei ist kein '+REVIER.appName.replace(' ','-')+'-Backup.','r');return Promise.resolve(false);}
+  // nothing usable inside: say so (red), never "0 imported" in green
+  var bs0=(o&&o.settings)||{},hasNotes=!!o.notes&&typeof o.notes==='object'&&Object.keys(o.notes).length>0;
+  if(!list.length&&!o.wl&&!planValid(o.plan)&&!o.gpxImport&&!hasNotes&&!o.logbook&&!o.checklists&&!(bs0.boat&&typeof bs0.boat==='object')&&!(bs0.lang&&typeof bs0.lang==='object')&&!(bs0.toern&&bs0.toern.plat)){
+    wxMsg('Import: Die Datei enthält keine übernehmbaren Daten, nichts übernommen.','r');return Promise.resolve(false);}
   // everything that can fail first, so a damaged file changes nothing
   var wlP;
   try{wlP=(o.wl&&typeof wlImport==='function')?wlImport(o.wl):Promise.resolve(0);}catch(e){wxMsg('Import: Datei beschädigt, nichts übernommen ('+(e&&e.message||e)+').','r');return Promise.resolve(false);}   // Wetter-Sicherheit: lightning counter, barometer log, observations, last platform warning state, photo logbook
-  if(planValid(o.plan)){PL.plan=o.plan;store(sk('plan'),JSON.stringify(o.plan));}
+  var warn=[],planOk=planValid(o.plan);
+  if(planOk){PL.plan=o.plan;store(sk('plan'),JSON.stringify(o.plan));}else if(o.plan)warn.push('Plan im Backup ungültig, nicht übernommen.');
   if(o.gpxImport&&typeof gpxiSanitize==='function'){var gi=gpxiSanitize(o.gpxImport);if(gi){GPXI=gi;GPXI_EV=null;gpxiSave();if(MAP.svg)mapRoute();}}   // imported GPX route (re-validated)
-  if(o.notes&&typeof o.notes==='object'){Object.keys(o.notes).forEach(function(k){var a=NOTES[k],b=o.notes[k];if(BY_ID[k]&&b&&(!a||(b.t||0)>(a.t||0)))NOTES[k]=b;});saveNotes();}
+  if(o.notes&&typeof o.notes==='object'){Object.keys(o.notes).forEach(function(k){if(!impOwn(BY_ID,k))return;var a=impOwn(NOTES,k)?NOTES[k]:null,b=o.notes[k];if(b&&typeof b==='object'&&!Array.isArray(b)&&(!a||(b.t||0)>(a.t||0)))NOTES[k]=b;});saveNotes();}
   if(o.settings&&o.settings.toern&&o.settings.toern.plat&&!PL.plat){PL.plat=o.settings.toern.plat;$('p-plat').value=PL.plat;savePL();}
-  bordRestore('log',o.logbook);bordRestore('lists',o.checklists);
+  if(!bordRestore('log',o.logbook))warn.push('Logbuch NICHT übernommen.');
+  if(!bordRestore('lists',o.checklists))warn.push('Checklisten NICHT übernommen.');
   if(o.settings&&o.settings.lang)['fav','vals'].forEach(function(k){var v=o.settings.lang[k];if(typeof v==='string'&&!load(sk('lang.'+k)))store(sk('lang.'+k),v);});   // language aid: own list and values, packs stay out of the backup
   // boat data: taken over on a device without own profile (reinstall); an existing profile stays, the skipper gets told, depth verdicts hang on it
   var bs=o.settings||{},boatNote='';
   if(bs.boat&&typeof bs.boat==='object'){
     if(!load(sk('profile'))){
       S.boat=normBoat(bs.boat);if(num(bs.speed))S.speed=num(bs.speed);if(num(bs.maxLegH))S.maxLegH=num(bs.maxLegH);if(num(bs.maxNightH))S.maxNightH=num(bs.maxNightH);if(typeof bs.daylight==='boolean')S.daylight=bs.daylight;
-      ['limGust','limSea','kids','season','motorMode','motorSpeed'].forEach(function(k){if(bs[k]!==undefined)S[k]=bs[k];});   // own limits are safety settings too
+      ['limGust','limSea','kids','season','motorMode','motorSpeed'].forEach(function(k){if(bs[k]===undefined)return;var v=impSetting(k,bs[k]);if(v!==undefined)S[k]=v;else if(k==='limGust'||k==='limSea')S[k]=null;});   // own limits are safety settings too
       saveProfile();if(typeof bootToUI==='function')bootToUI();boatNote=' Bootsdaten übernommen, bitte im Boot-Tab prüfen.';
     }else if(JSON.stringify(normBoat(bs.boat))!==JSON.stringify(S.boat))boatNote=' Bootsdaten des Backups nicht übernommen: Die Daten im Boot-Tab gelten weiter, bitte prüfen.';
   }
   if(list.length){var nw=list.slice().sort(function(a,b){return a.fetchedAt<b.fetchedAt?-1:1;}),nl=nw[nw.length-1];if(!WX||!(Date.parse(WX.fetchedAt)>Date.parse(nl.fetchedAt)))wxSet(nl);}   // an old backup never replaces a newer forecast
   return Promise.all(list.map(function(sn){return wxStore(sn);}).concat([wlP])).then(function(){
     if(typeof update==='function')update();
-    wxMsg('Import: '+list.length+' Wetterstand/-stände'+(o.plan?' und Plan':'')+(o.gpxImport&&GPXI?' und importierte Route':'')+' übernommen.'+boatNote,boatNote?'y':'g');renderWxState();renderPlan();return true;});
+    wxMsg('Import: '+list.length+' Wetterstand/-stände'+(planOk?' und Plan':'')+(o.gpxImport&&GPXI?' und importierte Route':'')+' übernommen.'+boatNote+(warn.length?' '+warn.join(' '):''),(boatNote||warn.length)?'y':'g');renderWxState();renderPlan();return true;});
 }
 function offlineState(){
   var el=$('offlinestate'),proto=location.protocol;
@@ -5121,7 +5162,7 @@ var SkBack=(function(){
   function createAnchorWatch(opt,emit){
     var o=merge(defaults.anchor,opt);emit=emit||function(){};
     var S=blank();
-    function blank(){return {anchor:null,src:null,radiusM:o.radiusM,active:false,startT:null,alarm:null,snooze:{},run:null,lastFixT:null,lastUsable:null,lastUsableT:null,pending:null,lastStamp:null,last:null,dist:null,
+    function blank(){return {anchor:null,src:null,radiusM:o.radiusM,active:false,startT:null,alarm:null,snooze:{},run:null,lastFixT:null,lastUsable:null,lastUsableT:null,pending:null,lastStamp:null,last:null,dist:null,restoreError:null,
       warn:{gps_poor:false,gps_blind:false,trend:false},log:[],events:[],batt:{},lastTrendT:null,trendN:0,trend:{state:'unknown'}};}
     function ev(t,kind,data){S.events.push(merge({t:t,kind:kind},data));if(S.events.length>o.eventMax)S.events.shift();}
     function log(f,d,flag){
@@ -5138,7 +5179,7 @@ var SkBack=(function(){
     }
     function setAnchor(p,src,t){
       var q=point(p);if(!q)return false;
-      S.anchor={lat:q.lat,lon:q.lon};S.src=src||S.src||'manual';S.run=null;S.pending=null;
+      S.anchor={lat:q.lat,lon:q.lon};S.src=src||S.src||'manual';S.run=null;S.pending=null;S.restoreError=null;
       ev(t||0,'anchor_set',{lat:q.lat,lon:q.lon,src:S.src});
       return true;
     }
@@ -5158,11 +5199,11 @@ var SkBack=(function(){
     }
     /* returns 'off','dup','stale','poor','outlier' or 'ok' */
     function update(f){
-      if(!S.active||!f||!isN(f.lat)||!isN(f.lon))return 'off';
+      if(!S.active||!f||!isN(f.lat)||!isN(f.lon)||Math.abs(f.lat)>90||Math.abs(f.lon)>180)return 'off';
       if(f.stamp!=null){if(f.stamp===S.lastStamp)return 'dup';if(f.t-f.stamp>o.staleFixMs)return 'stale';S.lastStamp=f.stamp;}
       S.lastFixT=f.t;S.last=f;
       var d=distM(S.anchor,f),acc=f.acc;
-      if(!isN(acc)||acc>S.radiusM*o.poorRatio){setWarn('gps_poor',true,f.t,{acc:acc});S.dist=d;log(f,d,'p');return 'poor';}
+      if(!isN(acc)||acc<0||acc>S.radiusM*o.poorRatio){setWarn('gps_poor',true,f.t,{acc:acc});S.dist=d;log(f,d,'p');return 'poor';}
       var u=S.lastUsable;
       if(u){
         var dt=Math.max(1,(f.t-u.t)/1000),jump=distM(u,f)-acc-(u.acc||0);
@@ -5205,13 +5246,23 @@ var SkBack=(function(){
       return {state:directed?'directed':'swing',riseM:Math.round(rise),bearing:Math.round(bearing(c[0],c[2]))};
     }
     function status(now){
-      return {anchor:S.anchor,src:S.src,radiusM:S.radiusM,active:S.active,alarm:S.alarm,warn:S.warn,dist:S.dist,last:S.last,lastFixT:S.lastFixT,trend:S.trend,outsideFixes:S.run?S.run.n:0,
+      return {anchor:S.anchor,src:S.src,radiusM:S.radiusM,active:S.active,restoreError:S.restoreError,alarm:S.alarm,warn:S.warn,dist:S.dist,last:S.last,lastFixT:S.lastFixT,trend:S.trend,outsideFixes:S.run?S.run.n:0,
         accLimitM:S.radiusM*o.poorRatio,sinceFixMs:S.active?(now||0)-(S.lastFixT!=null?S.lastFixT:S.startT):null};
     }
     return {setAnchor:setAnchor,setRadius:setRadius,start:start,stop:stop,ack:ack,update:update,tick:tick,setBattery:setBattery,status:status,trend:trend,
       log:function(){return S.log;},events:function(){return S.events;},
       serialize:function(){return {anchor:S.anchor,src:S.src,radiusM:S.radiusM,active:S.active,startT:S.startT,log:S.log,events:S.events};},
-      restore:function(d,t){if(!d)return;S=blank();S.anchor=d.anchor||null;S.src=d.src||null;S.radiusM=d.radiusM||o.radiusM;S.log=d.log||[];S.events=d.events||[];if(d.active&&S.anchor){S.active=true;S.startT=t;ev(t,'resume');}}
+      /* true = saved state usable. A saved active watch with a damaged anchor is NOT resumed (it could never alarm): status().restoreError says why. */
+      restore:function(d,t){
+        if(!d)return false;
+        S=blank();
+        var q=d.anchor?point(d.anchor):null,wasActive=!!d.active;
+        S.radiusM=(isN(d.radiusM)&&d.radiusM>0)?d.radiusM:o.radiusM;
+        S.src=d.src||null;S.log=Array.isArray(d.log)?d.log:[];S.events=Array.isArray(d.events)?d.events:[];
+        if(q){S.anchor={lat:q.lat,lon:q.lon};if(wasActive){S.active=true;S.startT=t;ev(t,'resume');}return true;}
+        if(wasActive||d.anchor){S.restoreError='anchor_invalid';ev(t||0,'restore_failed',{why:'anchor_invalid'});return false;}
+        return true;
+      },
     };
   }
 
@@ -5292,7 +5343,7 @@ var SkBack=(function(){
     w_poor:['GPS ungenau (± {0} m, nötig ≤ {1} m). Diese Positionen zählen nicht. Handy an freie Sicht legen.','GPS inaccurate (± {0} m, need ≤ {1} m). These positions do not count. Move the phone to open sky.'],
     w_blind:['Seit über 2 Minuten keine brauchbare Position: Die Wache sieht gerade nichts.','No usable position for over 2 minutes: the watch is blind right now.'],
     w_gap:['App war {0} Min. im Hintergrund: In dieser Zeit lief keine Wache.','App was in the background for {0} min: no watch during that time.'],
-    w_audio:['Alarmton noch nicht freigegeben. Einmal hier tippen.','Alarm sound not enabled yet. Tap here once.'],w_resumed:['Wache nach Neustart fortgesetzt. Prüfen, ob der Ankerpunkt stimmt.','Watch resumed after restart. Check the anchor point.'],
+    w_audio:['Alarmton noch nicht freigegeben. Einmal hier tippen.','Alarm sound not enabled yet. Tap here once.'],w_resumed:['Wache nach Neustart fortgesetzt. Prüfen, ob der Ankerpunkt stimmt.','Watch resumed after restart. Check the anchor point.'],w_restore_failed:['ACHTUNG: Gespeicherter Ankerpunkt ist beschädigt. Die Ankerwache ist NICHT aktiv. Ankerpunkt neu setzen und Wache neu starten.','WARNING: The saved anchor point is damaged. The anchor watch is NOT active. Set the anchor again and restart the watch.'],
     al_drag:['ANKER PRÜFEN','CHECK ANCHOR'],al_drag_d:['Außerhalb des Kreises: {0} m vom Ankerpunkt (Radius {1} m).','Outside the circle: {0} m from the anchor point (radius {1} m).'],
     al_gps:['GPS-VERLUST','GPS LOST'],al_gps_d:['Seit {0} s keine Position. Die Wache sieht nichts.','No position for {0} s. The watch is blind.'],
     al_batt:['AKKU NIEDRIG','BATTERY LOW'],al_batt_d:['Noch {0} %. Ladegerät anschließen, sonst endet die Wache.','{0} % left. Connect the charger or the watch will end.'],
@@ -5314,7 +5365,7 @@ var SkBack=(function(){
   function svg(tag,attr){var e=document.createElementNS('http://www.w3.org/2000/svg',tag);for(var k in attr)e.setAttribute(k,attr[k]);return e;}
   function store(key){return {
     get:function(){try{return JSON.parse(localStorage.getItem(key)||'null');}catch(e){return null;}},
-    set:function(v){try{localStorage.setItem(key,JSON.stringify(v));}catch(e){}}
+    set:function(v){try{localStorage.setItem(key,JSON.stringify(v));return true;}catch(e){if(window.skStoreFail)window.skStoreFail(key);return false;}}
   };}
 
   /* Sound and vibration. Web audio follows the media volume, silent mode can mute it; only the native part reaches the alarm channel. */
@@ -5583,6 +5634,7 @@ var SkBack=(function(){
       if(s.warn.gps_poor&&s.last)w.push(['uw-warn',t('w_poor',s.last.acc==null?'?':Math.round(s.last.acc),Math.floor(s.accLimitM))]);
       if(s.warn.trend)w.push(['uw-warn',t('tr_directed',s.trend.riseM,s.trend.bearing)]);
       if(gapMin)w.push(['uw-warn',t('w_gap',gapMin),function(){gapMin=null;paintAnchor();}]);
+      if(s.restoreError)w.push(['uw-warn',t('w_restore_failed')]);
       if(resumed)w.push(['',t('w_resumed'),function(){resumed=false;paintAnchor();}]);
       while(ui.anWarns.firstChild)ui.anWarns.removeChild(ui.anWarns.firstChild);
       w.forEach(function(x){var n=h(x[2]?'button':'div',{'class':'uw-ban '+x[0],text:x[1]});if(x[2]){n.type='button';n.addEventListener('click',x[2]);}ui.anWarns.appendChild(n);});
@@ -10724,7 +10776,7 @@ function initToern(){
   $('btn-wxplat').addEventListener('click',function(){wxLoadPlatform(false);});
   $('btn-plan').addEventListener('click',doPlan);
   $('btn-export').addEventListener('click',doExport);
-  $('f-import').addEventListener('change',function(){var f=this.files&&this.files[0];if(!f)return;var r=new FileReader();r.onload=function(){doImportText(String(r.result));};r.readAsText(f);this.value='';});
+  $('f-import').addEventListener('change',function(){var f=this.files&&this.files[0];if(!f)return;if(f.size>IMPORT_MAX_BYTES){wxMsg('Import: Datei zu groß, nichts übernommen.','r');this.value='';return;}var r=new FileReader();r.onload=function(){doImportText(String(r.result));};r.readAsText(f);this.value='';});
   $('p-excl').addEventListener('click',function(e){var b=e.target.closest('[data-unexcl]');if(!b)return;PL.exclude=(PL.exclude||[]).filter(function(x){return x!==b.dataset.unexcl;});savePL();renderExcl();});
   $('planres').addEventListener('click',function(e){
     var a=e.target.closest('[data-pavoid]');if(a){planAvoid(a.dataset.pavoid);return;}
@@ -10783,7 +10835,8 @@ function bordL(){return I18N.lang==='de'?'de':'en';}
 /* German and English the modules bring themselves; only the other app languages go through the app dictionary */
 function bordTr(f){return I18N.lang==='de'||I18N.lang==='en'?undefined:f;}
 function bordBackup(k){try{var u=BORD[k];return u&&u.exportBackup?u.exportBackup():null;}catch(e){return null;}}
-function bordRestore(k,v){try{var u=BORD[k];if(v&&u&&u.importBackup)u.importBackup(v);}catch(e){}}
+/* true = restored or nothing to restore; false = restore failed (the caller must say so, never report success) */
+function bordRestore(k,v){try{var u=BORD[k];if(v&&u&&u.importBackup)u.importBackup(v);return true;}catch(e){return false;}}
 function bordHarbour(){
   var now=Date.now(),legs=(PL.plan?planLegs(PL.plan):[]).filter(function(x){return x.leg.sim.arr>now;}),h=legs.length?BY_ID[legs[0].leg.to]:null;
   if(!h&&S.pos&&S.pos.src!=='region')h=nearestOf(S.pos,DATA).item;

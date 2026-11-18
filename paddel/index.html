@@ -2,6 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://tile.openstreetmap.org https://tiles.openseamap.org; connect-src 'self' https: data: blob: skfont: pmtiles:; font-src 'self' data:; worker-src 'self' blob:; child-src 'self' blob:; object-src 'none'; base-uri 'self'; frame-src 'none'; form-action 'self'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0d4f6c">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -4972,7 +4973,7 @@ var SkThunder=(function(){
   function createAnchorWatch(opt,emit){
     var o=merge(defaults.anchor,opt);emit=emit||function(){};
     var S=blank();
-    function blank(){return {anchor:null,src:null,radiusM:o.radiusM,active:false,startT:null,alarm:null,snooze:{},run:null,lastFixT:null,lastUsable:null,lastUsableT:null,pending:null,lastStamp:null,last:null,dist:null,
+    function blank(){return {anchor:null,src:null,radiusM:o.radiusM,active:false,startT:null,alarm:null,snooze:{},run:null,lastFixT:null,lastUsable:null,lastUsableT:null,pending:null,lastStamp:null,last:null,dist:null,restoreError:null,
       warn:{gps_poor:false,gps_blind:false,trend:false},log:[],events:[],batt:{},lastTrendT:null,trendN:0,trend:{state:'unknown'}};}
     function ev(t,kind,data){S.events.push(merge({t:t,kind:kind},data));if(S.events.length>o.eventMax)S.events.shift();}
     function log(f,d,flag){
@@ -4989,7 +4990,7 @@ var SkThunder=(function(){
     }
     function setAnchor(p,src,t){
       var q=point(p);if(!q)return false;
-      S.anchor={lat:q.lat,lon:q.lon};S.src=src||S.src||'manual';S.run=null;S.pending=null;
+      S.anchor={lat:q.lat,lon:q.lon};S.src=src||S.src||'manual';S.run=null;S.pending=null;S.restoreError=null;
       ev(t||0,'anchor_set',{lat:q.lat,lon:q.lon,src:S.src});
       return true;
     }
@@ -5009,11 +5010,11 @@ var SkThunder=(function(){
     }
     /* returns 'off','dup','stale','poor','outlier' or 'ok' */
     function update(f){
-      if(!S.active||!f||!isN(f.lat)||!isN(f.lon))return 'off';
+      if(!S.active||!f||!isN(f.lat)||!isN(f.lon)||Math.abs(f.lat)>90||Math.abs(f.lon)>180)return 'off';
       if(f.stamp!=null){if(f.stamp===S.lastStamp)return 'dup';if(f.t-f.stamp>o.staleFixMs)return 'stale';S.lastStamp=f.stamp;}
       S.lastFixT=f.t;S.last=f;
       var d=distM(S.anchor,f),acc=f.acc;
-      if(!isN(acc)||acc>S.radiusM*o.poorRatio){setWarn('gps_poor',true,f.t,{acc:acc});S.dist=d;log(f,d,'p');return 'poor';}
+      if(!isN(acc)||acc<0||acc>S.radiusM*o.poorRatio){setWarn('gps_poor',true,f.t,{acc:acc});S.dist=d;log(f,d,'p');return 'poor';}
       var u=S.lastUsable;
       if(u){
         var dt=Math.max(1,(f.t-u.t)/1000),jump=distM(u,f)-acc-(u.acc||0);
@@ -5056,13 +5057,23 @@ var SkThunder=(function(){
       return {state:directed?'directed':'swing',riseM:Math.round(rise),bearing:Math.round(bearing(c[0],c[2]))};
     }
     function status(now){
-      return {anchor:S.anchor,src:S.src,radiusM:S.radiusM,active:S.active,alarm:S.alarm,warn:S.warn,dist:S.dist,last:S.last,lastFixT:S.lastFixT,trend:S.trend,outsideFixes:S.run?S.run.n:0,
+      return {anchor:S.anchor,src:S.src,radiusM:S.radiusM,active:S.active,restoreError:S.restoreError,alarm:S.alarm,warn:S.warn,dist:S.dist,last:S.last,lastFixT:S.lastFixT,trend:S.trend,outsideFixes:S.run?S.run.n:0,
         accLimitM:S.radiusM*o.poorRatio,sinceFixMs:S.active?(now||0)-(S.lastFixT!=null?S.lastFixT:S.startT):null};
     }
     return {setAnchor:setAnchor,setRadius:setRadius,start:start,stop:stop,ack:ack,update:update,tick:tick,setBattery:setBattery,status:status,trend:trend,
       log:function(){return S.log;},events:function(){return S.events;},
       serialize:function(){return {anchor:S.anchor,src:S.src,radiusM:S.radiusM,active:S.active,startT:S.startT,log:S.log,events:S.events};},
-      restore:function(d,t){if(!d)return;S=blank();S.anchor=d.anchor||null;S.src=d.src||null;S.radiusM=d.radiusM||o.radiusM;S.log=d.log||[];S.events=d.events||[];if(d.active&&S.anchor){S.active=true;S.startT=t;ev(t,'resume');}}
+      /* true = saved state usable. A saved active watch with a damaged anchor is NOT resumed (it could never alarm): status().restoreError says why. */
+      restore:function(d,t){
+        if(!d)return false;
+        S=blank();
+        var q=d.anchor?point(d.anchor):null,wasActive=!!d.active;
+        S.radiusM=(isN(d.radiusM)&&d.radiusM>0)?d.radiusM:o.radiusM;
+        S.src=d.src||null;S.log=Array.isArray(d.log)?d.log:[];S.events=Array.isArray(d.events)?d.events:[];
+        if(q){S.anchor={lat:q.lat,lon:q.lon};if(wasActive){S.active=true;S.startT=t;ev(t,'resume');}return true;}
+        if(wasActive||d.anchor){S.restoreError='anchor_invalid';ev(t||0,'restore_failed',{why:'anchor_invalid'});return false;}
+        return true;
+      },
     };
   }
 
@@ -5146,7 +5157,7 @@ var SkThunder=(function(){
     w_poor:['GPS ungenau (± {0} m, nötig ≤ {1} m). Diese Positionen zählen nicht. Handy an freie Sicht legen.','GPS inaccurate (± {0} m, need ≤ {1} m). These positions do not count. Move the phone to open sky.'],
     w_blind:['Seit über 2 Minuten keine brauchbare Position: Die Wache sieht gerade nichts.','No usable position for over 2 minutes: the watch is blind right now.'],
     w_gap:['App war {0} Min. im Hintergrund: In dieser Zeit lief keine Wache.','App was in the background for {0} min: no watch during that time.'],
-    w_audio:['Alarmton noch nicht freigegeben. Einmal hier tippen.','Alarm sound not enabled yet. Tap here once.'],w_resumed:['Wache nach Neustart fortgesetzt. Prüfen, ob der Ankerpunkt stimmt.','Watch resumed after restart. Check the anchor point.'],
+    w_audio:['Alarmton noch nicht freigegeben. Einmal hier tippen.','Alarm sound not enabled yet. Tap here once.'],w_resumed:['Wache nach Neustart fortgesetzt. Prüfen, ob der Ankerpunkt stimmt.','Watch resumed after restart. Check the anchor point.'],w_restore_failed:['ACHTUNG: Gespeicherter Ankerpunkt ist beschädigt. Die Ankerwache ist NICHT aktiv. Ankerpunkt neu setzen und Wache neu starten.','WARNING: The saved anchor point is damaged. The anchor watch is NOT active. Set the anchor again and restart the watch.'],
     al_drag:['ANKER PRÜFEN','CHECK ANCHOR'],al_drag_d:['Außerhalb des Kreises: {0} m vom Ankerpunkt (Radius {1} m).','Outside the circle: {0} m from the anchor point (radius {1} m).'],
     al_gps:['GPS-VERLUST','GPS LOST'],al_gps_d:['Seit {0} s keine Position. Die Wache sieht nichts.','No position for {0} s. The watch is blind.'],
     al_batt:['AKKU NIEDRIG','BATTERY LOW'],al_batt_d:['Noch {0} %. Ladegerät anschließen, sonst endet die Wache.','{0} % left. Connect the charger or the watch will end.'],
@@ -5168,7 +5179,7 @@ var SkThunder=(function(){
   function svg(tag,attr){var e=document.createElementNS('http://www.w3.org/2000/svg',tag);for(var k in attr)e.setAttribute(k,attr[k]);return e;}
   function store(key){return {
     get:function(){try{return JSON.parse(localStorage.getItem(key)||'null');}catch(e){return null;}},
-    set:function(v){try{localStorage.setItem(key,JSON.stringify(v));}catch(e){}}
+    set:function(v){try{localStorage.setItem(key,JSON.stringify(v));return true;}catch(e){if(window.skStoreFail)window.skStoreFail(key);return false;}}
   };}
 
   /* Sound and vibration. Web audio follows the media volume, silent mode can mute it; only the native part reaches the alarm channel. */
@@ -5437,6 +5448,7 @@ var SkThunder=(function(){
       if(s.warn.gps_poor&&s.last)w.push(['uw-warn',t('w_poor',s.last.acc==null?'?':Math.round(s.last.acc),Math.floor(s.accLimitM))]);
       if(s.warn.trend)w.push(['uw-warn',t('tr_directed',s.trend.riseM,s.trend.bearing)]);
       if(gapMin)w.push(['uw-warn',t('w_gap',gapMin),function(){gapMin=null;paintAnchor();}]);
+      if(s.restoreError)w.push(['uw-warn',t('w_restore_failed')]);
       if(resumed)w.push(['',t('w_resumed'),function(){resumed=false;paintAnchor();}]);
       while(ui.anWarns.firstChild)ui.anWarns.removeChild(ui.anWarns.firstChild);
       w.forEach(function(x){var n=h(x[2]?'button':'div',{'class':'uw-ban '+x[0],text:x[1]});if(x[2]){n.type='button';n.addEventListener('click',x[2]);}ui.anWarns.appendChild(n);});
