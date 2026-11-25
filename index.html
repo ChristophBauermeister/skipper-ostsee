@@ -49,7 +49,7 @@ body{font-family:ui-sans-serif,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",
 .disp{font-family:"Arial Narrow","Helvetica Neue Condensed","Avenir Next Condensed",ui-sans-serif,sans-serif}
 .app{max-width:680px;margin:0 auto}
 button{font:inherit;color:inherit;touch-action:manipulation}
-header{position:sticky;top:0;z-index:20;background:var(--head);color:var(--headink);padding:8px 14px 8px;border-bottom:2px solid var(--line)}
+header{position:sticky;top:0;z-index:20;background:var(--head);color:var(--headink);padding:calc(8px + var(--safe-area-inset-top,env(safe-area-inset-top))) calc(14px + var(--safe-area-inset-right,env(safe-area-inset-right))) 8px calc(14px + var(--safe-area-inset-left,env(safe-area-inset-left)));border-bottom:2px solid var(--line)}
 .hrow1{display:flex;align-items:center;gap:8px}
 header h1{font-size:1rem;letter-spacing:.05em;text-transform:uppercase;font-weight:700;flex:1;line-height:1.2}
 .themebtn{min-height:44px;min-width:44px;font-size:20px;border:1.5px solid var(--headmute);border-radius:10px;background:transparent;color:var(--headink);padding:0 10px;font-weight:700;cursor:pointer}
@@ -68,6 +68,9 @@ h2:first-child{margin-top:4px}
 h3{font-size:1rem;margin:12px 0 4px}
 p,.note{font-size:1rem;line-height:1.5}
 .note{color:var(--mute);margin-top:6px}
+.foldv{font-weight:400;color:var(--mute)}
+.wl-fold>.in>.wl-sub{margin-top:0}
+.wl-fold>.in>.wl-sub>h3:first-child{display:none}
 .small{font-size:.875rem}
 .card{background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:13px 14px;margin-top:12px}
 .card .t{font-weight:800;letter-spacing:.04em;text-transform:uppercase;font-size:1rem}
@@ -188,7 +191,7 @@ table.tbl{width:100%;border-collapse:collapse;margin-top:8px;font-size:1rem}
 ul.tight{padding-left:20px;line-height:1.55}
 ul.tight li{margin-bottom:6px}
 a,details{overflow-wrap:anywhere}   /* long source links must not widen the page, also inside closed details */
-nav{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;background:var(--head);padding:6px 6px calc(6px + env(safe-area-inset-bottom));border-top:2px solid var(--line);gap:6px}
+nav{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;background:var(--head);padding:6px 6px calc(6px + var(--safe-area-inset-bottom,env(safe-area-inset-bottom)));border-top:2px solid var(--line);gap:6px}
 nav button{flex:1;min-height:56px;background:transparent;border:2px solid transparent;border-radius:10px;color:var(--headmute);font-weight:800;font-size:.85rem;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px}
 nav button .ic{font-size:1.3rem;line-height:1}
 nav button.on{color:var(--headink);border-color:var(--headink)}
@@ -252,7 +255,7 @@ nav button{position:relative}
 .i18nnote{display:none;color:var(--mute);font-style:italic}
 :root:not([lang="de"]) .i18nnote{display:block}
 .onblang{font-size:1.5rem;display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:6px 0 4px}
-.updbar{position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top));z-index:70;min-height:52px;border:0;border-radius:10px;background:#f2c200;color:#17324a;font:inherit;font-weight:700;font-size:1rem;box-shadow:0 4px 16px rgba(0,0,0,.3);cursor:pointer}
+.updbar{position:fixed;left:8px;right:8px;top:calc(8px + var(--safe-area-inset-top,env(safe-area-inset-top)));z-index:70;min-height:52px;border:0;border-radius:10px;background:#f2c200;color:#17324a;font:inherit;font-weight:700;font-size:1rem;box-shadow:0 4px 16px rgba(0,0,0,.3);cursor:pointer}
 .exchips{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
 .exchips button{border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:16px;padding:6px 10px;font:inherit;font-size:.92rem;cursor:pointer;text-decoration:line-through}
 .pedit{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
@@ -264,12 +267,12 @@ nav button{position:relative}
 .sharebox textarea{width:100%;min-height:9em;font:inherit;font-size:.9rem;padding:8px;border:2px solid var(--on);border-radius:8px;background:var(--card);color:var(--ink);margin-top:6px}
 body{font-family:"Atkinson Hyperlegible",ui-sans-serif,system-ui,sans-serif;font-size:1rem}
 .disp{font-family:inherit}
-header{border-bottom:0;padding:10px 14px 10px}
+header{border-bottom:0;padding:calc(10px + var(--safe-area-inset-top,env(safe-area-inset-top))) calc(14px + var(--safe-area-inset-right,env(safe-area-inset-right))) 10px calc(14px + var(--safe-area-inset-left,env(safe-area-inset-left)))}
 header h1{text-transform:none;letter-spacing:0;font-size:1.05rem;font-weight:700;color:var(--headmute)}
 .posline{font-size:1.15rem;font-weight:700;font-variant-numeric:tabular-nums;margin-top:2px}
 .chip-head{border-radius:6px;margin-top:8px}
 h2{text-transform:none;letter-spacing:0;font-size:1.3rem;font-weight:700;margin:28px 0 10px;display:flex;align-items:center;gap:10px}
-h2 .step{flex:none;display:inline-grid;place-items:center;width:1.6em;height:1.6em;border-radius:50%;border:2px solid var(--ink);font-size:.8em;line-height:1;font-variant-numeric:tabular-nums}
+h2 .step,#det-ziel .step{flex:none;display:inline-grid;place-items:center;width:1.6em;height:1.6em;border-radius:50%;border:2px solid var(--ink);font-size:.8em;line-height:1;font-variant-numeric:tabular-nums}
 .card{border-radius:8px;border-width:1px}
 .card .t{text-transform:none;letter-spacing:0;font-weight:700;font-size:1.05rem;color:var(--mute)}
 .badge{text-transform:none;letter-spacing:0;border-radius:6px;font-weight:700}
@@ -286,7 +289,7 @@ summary{font-weight:700}
 .banner{border-radius:8px}
 .banner .bt{letter-spacing:0}
 table.tbl,table.wp{font-variant-numeric:tabular-nums}
-nav{background:var(--head);border-top:0;gap:4px;padding:6px 4px calc(6px + env(safe-area-inset-bottom))}
+nav{background:var(--head);border-top:0;gap:4px;padding:6px 4px calc(6px + var(--safe-area-inset-bottom,env(safe-area-inset-bottom)))}
 nav button{text-transform:none;letter-spacing:0;font-size:.78rem;font-weight:700;border-radius:10px;border-width:0}
 nav button.on{background:var(--headink);color:var(--head)}
 :root[data-theme="night"] nav button.on{background:var(--on);color:var(--onink)}
@@ -308,7 +311,7 @@ table.wp th{text-transform:none;letter-spacing:0}
 :root{--mapsea:#f4f9fb;--mapland:#ecdfae;--maplandline:#a3925a}
 @media (prefers-color-scheme:dark){:root:not([data-theme]){--mapsea:#0f2232;--mapland:#2f3c2c;--maplandline:#5a6d52}}
 :root[data-theme="night"]{--mapsea:#000;--mapland:#1a0000;--maplandline:#6a1212}
-.tmap{position:relative;margin-top:12px;border:1px solid var(--line);border-radius:8px;overflow:hidden;height:min(62vh,460px);background:var(--mapsea)}
+.tmap{position:relative;margin-top:12px;border:1px solid var(--line);border-radius:8px;overflow:hidden;height:min(40vh,340px);background:var(--mapsea)}
 .tmap-svg{width:100%;height:100%;display:block;touch-action:none;cursor:grab;font-family:inherit}
 .tmap .tmap-gl{position:absolute!important;left:0;top:0;right:0;bottom:0;pointer-events:none;background:#9ccfe8}
 .tmap .tmap-gl canvas{pointer-events:none}
@@ -342,7 +345,7 @@ table.wp th{text-transform:none;letter-spacing:0}
 .zlegend i{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:4px;vertical-align:-1px}
 .onb{position:fixed;inset:0;z-index:60;background:rgba(8,18,28,.6);display:flex;align-items:flex-end;justify-content:center}
 .onb[hidden]{display:none}
-.onbc{background:var(--bg);color:var(--ink);width:100%;max-width:560px;max-height:94vh;overflow:auto;border-radius:16px 16px 0 0;padding:18px 16px calc(20px + env(safe-area-inset-bottom))}
+.onbc{background:var(--bg);color:var(--ink);width:100%;max-width:560px;max-height:94vh;overflow:auto;border-radius:16px 16px 0 0;padding:18px 16px calc(20px + var(--safe-area-inset-bottom,env(safe-area-inset-bottom)))}
 .onbc h2{margin-top:4px}
 .onbc .onbstep{font-size:.9rem;font-weight:700;color:var(--mute)}
 .onbc .onbsum{background:var(--shoal);border-radius:8px;padding:10px 12px;margin:8px 0;font-variant-numeric:tabular-nums;line-height:1.5}
@@ -376,10 +379,17 @@ dl.gloss dt{font-weight:800;margin-top:8px}dl.gloss dd{margin:2px 0 0}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 /* iPhone/iPad: Safari zooms into any form field under 16px on focus; hint banner for the home-screen install (ios.js) */
 @supports (-webkit-touch-callout:none){select,textarea,input:not([type=checkbox]):not([type=radio]):not([type=range]){font-size:max(16px,1em)!important}}
-.ioshint{position:fixed;left:8px;right:8px;bottom:calc(92px + env(safe-area-inset-bottom));z-index:65;background:#17324a;color:#fff;border-radius:12px;padding:12px 14px;box-shadow:0 4px 16px rgba(0,0,0,.35);font-size:.95rem;line-height:1.4}
+.ioshint{position:fixed;left:8px;right:8px;bottom:calc(92px + var(--safe-area-inset-bottom,env(safe-area-inset-bottom)));z-index:65;background:#17324a;color:#fff;border-radius:12px;padding:12px 14px;box-shadow:0 4px 16px rgba(0,0,0,.35);font-size:.95rem;line-height:1.4}
 .ioshint .btn{display:block;margin:10px 0 0 auto;min-height:44px}
 /* built-in packs: the kit has no way to add a language to them yet (REGISTRY), its link to the pack tab would end nowhere */
 .skl-bundled .skl-warn button[data-tab="packs"]{display:none}
+/* S5: Notfall und Boot bleiben bei 360 px unter drei Bildschirmen (CI mit anderen Schriften misst etwa 25 px mehr als lokal). Nur Abstaende, Touch-Ziele bleiben >= 44 px. */
+#scr-boot .fgrid{gap:6px}
+#scr-boot select,#scr-boot input[type=text]{min-height:48px}
+#scr-notfall h2{margin-top:16px;margin-bottom:6px}
+#scr-notfall h2:first-child{margin-top:4px}
+#scr-notfall .mayday{line-height:1.5}
+#scr-notfall .mayday div{padding:2px 0}
 /* Wolkenlotse / Wetter-Sicherheit – no green: yellow/red only for signals, grey/neutral for "unknown" and "nothing found" */
 #wl-card .wl-meta,.wl-meta{margin-top:6px;font-size:.85rem;opacity:.92}
 .wl-srcs{margin-top:10px;border:1.5px solid var(--line);border-radius:10px;background:var(--card);padding:4px 10px}
@@ -452,6 +462,19 @@ nav button .ic{font-size:1.2rem}
 .lamp{display:inline-block;min-width:1.6em;text-align:center;font-weight:800;border-radius:6px;padding:0 4px}
 .lamp.g{background:var(--g);color:var(--gt)}
 .lamp.y{background:var(--y);color:var(--yt)}
+
+.hcard details.hmore{margin-top:10px}
+.hcard .hwide>.btn.sm{width:auto;display:inline-block;min-height:40px;padding:6px 12px;margin-right:4px}
+#det-ziel>summary .step{margin-right:10px;vertical-align:middle}
+#scr-lage h2{margin:18px 0 8px}
+#scr-lage .switch{min-height:50px;padding:4px 12px;margin-top:6px}
+#btn-wxfill{min-height:44px;padding:6px 10px;font-size:.9rem}
+#scr-lage .presets{margin-top:6px}
+#scr-lage .knrow{margin-top:6px !important}
+#scr-lage .btn.prim,#scr-lage h3{margin-top:6px}
+#dirgrid .tog{min-height:46px}
+#scr-lage .note.small{margin-top:4px}
+#zmap{height:min(62vh,460px)}
 /* Bordsprache (lang-kit.js). Colours come from the host: core tokens (--card --ink --i --r …) or theme-kit tokens
    (--card --ink --acc --field --bad-bg …); without either the fallbacks below apply. Day, sun and night follow the host. */
 .skl{--skl-bg:var(--card,#fff);--skl-ink:var(--ink,#12141f);--skl-mute:var(--mute,#4a4e60);--skl-line:var(--line,#c9cbc2);
@@ -884,7 +907,6 @@ html.skl-lock,html.skl-lock body{overflow:hidden}
 
   <h2><span class="step">1</span>Position</h2>
   <button class="btn prim" id="btn-gps">◎ GPS-Position holen</button>
-  <div class="note small">Der Standort wird nur für deine Position genutzt und bleibt auf dem Gerät. Android fragt beim ersten Mal nach der Berechtigung.</div>
   <div class="note" id="gpsmsg">GPS funktioniert auch ohne Mobilfunk. Falls nicht verfügbar: manuell vom Plotter oder Revier wählen.</div>
   <details id="det-manual"><summary>Manuell vom Plotter (Grad + Dezimalminuten)</summary>
     <div class="in">
@@ -898,9 +920,10 @@ html.skl-lock,html.skl-lock body{overflow:hidden}
       </div>
       <button class="btn sm" id="btn-manual" style="margin-top:10px">Position übernehmen</button>
       <div class="note small" id="manualmsg">Beispiel: 54 | 22.6 und 10 | 58.8 (Grad | Dezimalminuten, nördl. Breite, östl. Länge).</div>
+      <div class="note small">Der Standort wird nur für deine Position genutzt und bleibt auf dem Gerät. Android fragt beim ersten Mal nach der Berechtigung.</div>
     </div>
   </details>
-  <details id="det-reg" open><summary>Oder Revier wählen (Näherung)</summary>
+  <details id="det-reg"><summary>Oder Revier wählen (Näherung)</summary>
     <div class="in">
       <select id="regselect" class="regselect" aria-label="Revier wählen"><option value="">— Revier wählen —</option></select>
       <div class="note small">Position = Mittelpunkt der Häfen dieses Reviers – nur eine Näherung.</div>
@@ -924,7 +947,8 @@ html.skl-lock,html.skl-lock body{overflow:hidden}
   <div class="note small">Böen entscheiden, nicht der Mittelwind. Schnellwahl oder ± (lange drücken = schnell). Werte aus Seewetterbericht, UKW oder NAVTEX.</div>
   <div class="notice" id="gustnotice" style="display:none"></div>
 
-  <h3 style="margin-top:14px">Seegang aus</h3>
+  <details id="fold-sea"><summary>Seegang und Pegel<span class="foldv" id="fv-sea"></span></summary><div class="in">
+  <h3>Seegang aus</h3>
   <div class="grid4" id="seadirgrid"></div>
   <div class="knrow" style="margin-top:10px">
     <div class="knbox"><div class="lbl">Seegang Höhe</div><div class="val" id="seaval">0,0 <small>m</small></div>
@@ -941,8 +965,10 @@ html.skl-lock,html.skl-lock body{overflow:hidden}
     <a href="https://www.dmi.dk/" target="_blank" rel="noopener">DMI</a> (DK, Vandstand) ·
     <a href="https://www.smhi.se/data/hav-och-havsmiljo/havsvattenstand" target="_blank" rel="noopener">SMHI Havsvattenstånd</a> (SE) ·
     UKW-Seewetter und NAVTEX melden Abweichungen vom Mittelwasser. Links brauchen Netz.</div></details>
+  </div></details>
 
-  <h3 style="margin-top:14px">Kurs zum Wind</h3>
+  <details id="fold-misc"><summary>Kurs zum Wind, Sicht, Starkwind<span class="foldv" id="fv-misc"></span></summary><div class="in">
+  <h3>Kurs zum Wind</h3>
   <div class="grid2" id="coursegrid"></div>
   <div class="note small" id="coursemode"></div>
   <button class="btn sm" id="btn-cauto" style="display:none;margin-top:6px">Automatik</button>
@@ -950,6 +976,7 @@ html.skl-lock,html.skl-lock body{overflow:hidden}
   <div class="grid3" id="sichtgrid"></div>
   <h3 style="margin-top:14px">Starkwind seit &gt; 12 h aus</h3>
   <div class="grid4" id="longgrid"></div>
+  </div></details>
 
   <label class="switch"><input type="checkbox" id="gewitter"><span>Gewitter erwartet<small>Mindestens gelb</small></span></label>
   <label class="switch"><input type="checkbox" id="kids"><span>Kinder an Bord<small>Schwellen −3 kn (Standard: aus)</small></span></label>
@@ -958,7 +985,7 @@ html.skl-lock,html.skl-lock body{overflow:hidden}
   <h2 id="wl-head"><span class="step">3</span>Wetter-Sicherheit</h2>
   <div id="wl-card"></div>
 
-  <h2><span class="step">4</span>Ziel (optional)</h2>
+  <details id="det-ziel"><summary><span class="step">4</span>Ziel (optional)<span class="foldv" id="fv-ziel"></span></summary><div class="in">
   <input type="search" id="tsearch" placeholder="Hafen suchen, z. B. Rønne" autocomplete="off" aria-label="Zielhafen suchen" class="regselect">
   <div id="tsug"></div>
   <details id="det-tmanual"><summary>Oder Ziel manuell (Grad + Dezimalminuten)</summary>
@@ -977,6 +1004,7 @@ html.skl-lock,html.skl-lock body{overflow:hidden}
   </details>
   <div class="note" id="tcur"></div>
   <button class="btn sm" id="btn-tclear" style="display:none;margin-top:6px">Ziel löschen</button>
+  </div></details>
 
   <h2 id="h-bew"><span class="step">5</span>Bewertung</h2>
   <div id="result"></div>
@@ -1017,18 +1045,15 @@ html.skl-lock,html.skl-lock body{overflow:hidden}
 <section class="screen" id="scr-notfall">
   <h2 style="color:var(--emerg)">Notfall</h2>
   <div class="dsc"><div class="bt">UKW-DSC-Distress zuerst</div>
-    <p style="margin-top:4px"><b>Rote DSC-Distress-Taste (unter der Klappe) gedrückt halten, bis das Gerät sendet</b> – meist 3–5 s, siehe Gerätehandbuch → danach MAYDAY auf <b>CH 16</b> sprechen.</p>
-    <p class="note">MMSI muss im Gerät programmiert sein.</p></div>
+    <p style="margin-top:4px"><b>Rote DSC-Distress-Taste (unter der Klappe) gedrückt halten, bis das Gerät sendet</b> – meist 3–5 s, siehe Gerätehandbuch → danach MAYDAY auf <b>CH 16</b> sprechen. <span class="note">MMSI muss im Gerät programmiert sein.</span></p></div>
 
   <div id="wl-emerg"></div>
 
   <div class="note i18nnote">Übersetzung ungeprüft. Notruf international auf Englisch absetzen, wenn unsicher.</div>
   <div class="note" id="nf-area"></div>
   <div id="nf-nums"></div>
-  <div class="note small">Reihenfolge nach den nächstgelegenen Häfen – keine Feststellung der Zuständigkeit. Über DSC und CH 16 erreichst du immer die zuständige Rettungsleitstelle.</div>
 
-  <h2>Meine Position (für den Notruf)</h2>
-  <button class="btn prim" id="btn-mypos" style="min-height:64px">◎ Meine Position</button>
+  <button class="btn prim" id="btn-mypos" style="min-height:56px">◎ Meine Position für den Notruf</button>
   <div id="myposout" class="card" style="display:none"></div>
 
   <h2 id="h-mayday">MAYDAY – zum Vorlesen</h2>
@@ -1038,42 +1063,42 @@ html.skl-lock,html.skl-lock body{overflow:hidden}
       <div><label for="f-nature">Art der Not</label><select id="f-nature"><option value="">– wählen –</option></select></div>
       <div><label for="f-art">Details (optional)</label><input type="text" id="f-art" autocomplete="off" placeholder="z. B. Mast gebrochen, Ruder ausgefallen"></div>
     </div>
-    <div class="note small">Name, Rufzeichen und MMSI kommen aus dem Boot-Tab. Gelb = noch auszufüllen.</div>
+    <div class="note small">Name, Rufzeichen, MMSI aus dem Boot-Tab. Gelb = auszufüllen.</div>
     <div class="mayday" id="maydaytext"></div>
     <div class="note small" id="maydaypos"></div>
   </div>
   <div class="card" id="panpancard"><div class="t">PAN PAN – Dringlichkeit</div>
-    <p style="margin-top:4px">Dringlichkeit: sehr dringende Meldung zur Sicherheit von Schiff oder Person, <b>ohne</b> unmittelbare Gefahr. Eigenes Schema: gerufen wird „ALL STATIONS“ (dreimal) oder eine bestimmte Station. Medizinische Beratung läuft als PAN PAN, die Meldung selbst auf einem Arbeitskanal.</p>
-    <p><b>MAYDAY statt PAN PAN</b>, wenn Schiff oder Person in ernster und unmittelbarer Gefahr sind und sofort Hilfe brauchen – auch bei einem lebensbedrohlichen medizinischen Notfall. Dann oben bei „Art der Not“ „Sonstiges (unbestimmt)“ wählen und den Notfall in den Details beschreiben.</p>
+    <p><b>MAYDAY statt PAN PAN</b> bei ernster, unmittelbarer Gefahr, wenn sofort Hilfe nötig ist – auch medizinisch.</p>
+    <details><summary>PAN PAN-Meldung vorbereiten</summary><div class="in">
+    <p>Dringlichkeit: sehr dringende Meldung zur Sicherheit von Schiff oder Person, <b>ohne</b> unmittelbare Gefahr. Eigenes Schema: gerufen wird „ALL STATIONS“ (dreimal) oder eine bestimmte Station. Medizinische Beratung läuft als PAN PAN, die Meldung selbst auf einem Arbeitskanal.</p>
     <div class="fields">
       <div><label for="f-pp-station">Gerufene Station</label><input type="text" id="f-pp-station" autocomplete="off" placeholder="leer = ALL STATIONS"></div>
       <div><label for="f-pp-reason">Anlass</label><select id="f-pp-reason"><option value="">Sonstige Dringlichkeit</option><option value="medical">Medizinische Beratung</option></select></div>
       <div><label for="f-pp-ch">Arbeitskanal (bei medizinischer Beratung)</label><input type="text" inputmode="numeric" id="f-pp-ch" autocomplete="off"></div>
       <div><label for="f-pp-text">Dringlichkeitsmeldung</label><input type="text" id="f-pp-text" autocomplete="off" placeholder="z. B. Motorausfall, treiben auf Untiefe zu"></div>
     </div>
-    <div class="mayday" id="panpantext"></div></div>
+    <div class="mayday" id="panpantext"></div></div></details></div>
 
-  <h2>Funk, Wetter, Stellen</h2>
-  <div id="funk"></div>
+  <details id="funk-fold"><summary>Funk, Wetter, Stellen</summary><div class="in"><div id="funk"></div></div></details>
 </section>
 <!-- ============ REGELN ============ -->
 <section class="screen" id="scr-regeln">
   <h2>Regeln und Schwellen</h2>
   <div class="note" id="rg-intro"></div>
-  <div class="card"><div class="t">Reff-Plan (scheinbarer Wind)</div><div id="rg-reff"></div></div>
-  <div class="card"><div class="t">Ampel unterwegs (Böen wahr)</div><div id="rg-traffic"></div></div>
-  <div class="card"><div class="t">Zufluchtsort-Status</div><div id="rg-harbor"></div></div>
-  <div class="card"><div class="t">Revier-Gates</div><div id="rg-gates"></div></div>
-  <div class="card"><div class="t">Pegel</div><div id="rg-pegel"></div></div>
-  <div class="card"><div class="t">Feste Hindernisse &lt; 26 m</div><div id="rg-bridges"></div></div>
-  <div class="card"><div class="t">Klappbrücken, Dreh- und Schiebebrücken</div><div id="rg-opening"></div></div>
-  <div class="card"><div class="t">Schießgebiete</div><div id="rg-firing"></div></div>
-  <div class="card"><div class="t">Nationalpark- und Schutzgebietsregeln</div><div id="rg-np"></div></div>
+  <details><summary>Reff-Plan (scheinbarer Wind)</summary><div class="in"><div id="rg-reff"></div></div></details>
+  <details><summary>Ampel unterwegs (Böen wahr)</summary><div class="in"><div id="rg-traffic"></div></div></details>
+  <details><summary>Zufluchtsort-Status</summary><div class="in"><div id="rg-harbor"></div></div></details>
+  <details><summary>Revier-Gates</summary><div class="in"><div id="rg-gates"></div></div></details>
+  <details><summary>Pegel</summary><div class="in"><div id="rg-pegel"></div></div></details>
+  <details><summary>Feste Hindernisse &lt; 26 m</summary><div class="in"><div id="rg-bridges"></div></div></details>
+  <details><summary>Klappbrücken, Dreh- und Schiebebrücken</summary><div class="in"><div id="rg-opening"></div></div></details>
+  <details><summary>Schießgebiete</summary><div class="in"><div id="rg-firing"></div></div></details>
+  <details><summary>Nationalpark- und Schutzgebietsregeln</summary><div class="in"><div id="rg-np"></div></div></details>
   <div id="wl-regeln"></div>
-  <div class="card"><div class="t">Gefahrengebiete nach Land</div><div id="rg-hazards"></div></div>
-  <div class="card" id="glossary"><div class="t">Begriffe</div><div id="rg-glossary"></div></div>
-  <div class="card"><div class="t">Bekannte Datenlücken</div><div id="rg-gaps"></div></div>
-  <div class="card"><div class="t">Datenstand</div><div id="rg-data"></div></div>
+  <details><summary>Gefahrengebiete nach Land</summary><div class="in"><div id="rg-hazards"></div></div></details>
+  <details id="glossary"><summary>Begriffe</summary><div class="in"><div id="rg-glossary"></div></div></details>
+  <details><summary>Bekannte Datenlücken</summary><div class="in"><div id="rg-gaps"></div></div></details>
+  <details><summary>Datenstand</summary><div class="in"><div id="rg-data"></div></div></details>
   <div class="card" style="border-color:var(--accent)"><div class="t">Wichtig</div>
     <p class="disc" style="margin-top:6px"></p></div>
 </section>
@@ -1123,7 +1148,7 @@ html.skl-lock,html.skl-lock body{overflow:hidden}
     <p>Entwicklung: ein Produkt von <b>AIxion Systems</b></p>
     <p><a href="https://christophbauermeister.github.io/skipper-ostsee/legal/impressum.html" target="_blank" rel="noopener">Impressum</a> · <a href="https://christophbauermeister.github.io/skipper-ostsee/legal/datenschutz.html" target="_blank" rel="noopener">Datenschutzerklärung</a></p>
     <p class="note small">Planungshilfe. Ersetzt weder Seekarte, Revierführer noch amtlichen Seewetterbericht. Entscheidung liegt beim Skipper.</p>
-    <button class="btn sm" id="btn-onb" style="margin:8px 0">Einführung erneut zeigen</button>
+    <button class="btn sm" id="btn-onb" style="margin:2px 0">Einführung erneut zeigen</button>
     <p class="i18nnote">Übersetzung ungeprüft – im Zweifel gilt die deutsche Fassung. Hafenhinweise und Quellen bleiben im Original.</p>
     <details><summary>Quellen und Lizenzen</summary><div class="in note small">
       <p>Wetter: Open-Meteo.com, Modelle u. a. DWD ICON / ICON-Wave (CC BY 4.0).</p>
@@ -1218,10 +1243,12 @@ html.skl-lock,html.skl-lock body{overflow:hidden}
     <div class="note small">GPX: eine Route je Segeltag mit Wegpunkten, die Häfen als Wegpunkte. Für Navionics, OpenCPN oder den Plotter – dort auf der Seekarte prüfen.</div>
   </div>
   <div id="gpximpbox">
+    <details><summary>GPX importieren (Route, Track)</summary><div class="in">
     <div class="grid2" style="margin-top:8px"><label class="btn sm" for="f-gpx">GPX importieren</label><button class="btn sm" id="btn-gpxclear" style="display:none">Import löschen</button></div>
     <input type="file" id="f-gpx" accept=".gpx,application/gpx+xml" style="display:none">
-    <div id="gpximpmsg"></div>
     <div class="note small">GPX-Datei (Route, Track, Wegpunkte; GPX 1.0 und 1.1) von Navionics, OpenCPN, dem Plotter oder aus einem früheren Export laden. Die Linie erscheint gestrichelt auf der Karte und wird nur als Planungshilfe bewertet. Zuletzt importierte Route bleibt auf dem Gerät und im Backup (Export JSON).</div>
+    </div></details>
+    <div id="gpximpmsg"></div>
     <div id="gpximpres"></div>
   </div>
   <div id="planres"></div>
@@ -2631,11 +2658,13 @@ function wlRowsHTML(now,a){
   r+=wlRow(wlMark(wg&&!wl?'n':wl)[0],wlMark(wg&&!wl?'n':wl)[1],'Warnungen',WLS.summary?(ws.length?ws.length+' Warnung'+(ws.length>1?'en':'')+' an der Position':'keine an der Position gefunden')+' · Stand vor '+esc(wlAgeText(now-wlMs(WLS.summary.fetchedAt)))+(wg?' · <b>Lücken</b>':''):'Warnlage unbekannt');
   return '<div class="wl-srcs">'+r+'</div>';
 }
+function wlFold(title,inner,open){return '<details class="wl-fold" data-wlf="'+esc(title)+'"'+(open?' open':'')+'><summary>'+esc(title)+'</summary><div class="in">'+inner+'</div></details>';}
 function renderWL(){
   var el=$('wl-card');
   if(el){
     var now=Date.now();wlFlashResolve(now);
     var a=wlAssess(now,wlInputs(now)),h='';
+    var wlOpen=Array.prototype.map.call(el.querySelectorAll('details[data-wlf][open]'),function(d){return d.getAttribute('data-wlf');});
     var keep={baro:$('wl-baro')?$('wl-baro').value:'',src:$('wl-bsrc')?$('wl-bsrc').selectedIndex:0,focus:document.activeElement&&document.activeElement.id};
     var top=wlRaising(a);
     if(top.length){
@@ -2645,14 +2674,15 @@ function renderWL(){
         (a.level==='n'?'Nicht alle Quellen sind bekannt (siehe Lücken unten). ':'')+'Aus Wetter-Sicherheit liegt kein Gefahrensignal vor – das ist keine Entwarnung. Beobachten, Wetterbericht und UKW bleiben maßgeblich.','');
     }
     a.signals.filter(function(s){return s.level==='i';}).forEach(function(s){h+='<details class="infobox"><summary>ℹ '+esc(s.title)+'</summary><div class="in">'+esc(s.text)+'<div class="wl-meta">'+wlSigMeta(s,now)+'</div></div></details>';});
-    h+=wlRowsHTML(now,a);
-    h+=wlLightningHTML(now)+wlBaroHTML(now,a)+wlModelHTML(now,a)+wlWarnHTML(now,a);
+    var rowsH=wlRowsHTML(now,a);
+    h+=wlFold('Blitz zählen, Barometer, Modell, Warnungen',wlLightningHTML(now)+wlBaroHTML(now,a)+wlModelHTML(now,a)+wlWarnHTML(now,a)+'<div class="note small">Zusätzliche Sicherheitsschicht: sie kann die Ampel nur anheben, nie senken. Alle Schwellen mit Quelle oder „Faustregel“ stehen im Regeln-Tab.</div>',WLS.flashT!=null||!!WL_UI.pend);
     var gp=a.gaps.filter(function(g){return g.id!=='baro'&&g.id!=='model';});
-    if(gp.length)h+='<div class="wl-gaps"><b>Lücken (grau = unbekannt, nie grün):</b><ul>'+gp.map(function(g){return '<li>'+esc(g.text)+'</li>';}).join('')+'</ul></div>';
-    h+='<div class="note small">Zusätzliche Sicherheitsschicht: sie kann die Ampel nur anheben, nie senken. Alle Schwellen mit Quelle oder „Faustregel“ stehen im Regeln-Tab.</div>';
+    var gapH=gp.length?'<div class="wl-gaps"><b>Lücken (grau = unbekannt, nie grün):</b><ul>'+gp.map(function(g){return '<li>'+esc(g.text)+'</li>';}).join('')+'</ul></div>':'';
+    h+=wlFold('Quellenstatus und Lücken'+(gp.length?' ('+gp.length+')':''),rowsH+gapH,false);
     if(typeof I18N!=='undefined'&&I18N.lang!=='de')h+='<div class="note small i18nnote" translate="no">Übersetzung ausstehend – Wetter-Sicherheit ist nur auf Deutsch verfügbar. / Translation pending – this section is German only.</div>';
     if(h!==WL_UI.html){   // unchanged markup is not replaced (a typed value or a tap in progress must not be lost to the periodic refresh)
       WL_UI.html=h;el.innerHTML=h;
+      Array.prototype.forEach.call(el.querySelectorAll('details[data-wlf]'),function(d){if(wlOpen.indexOf(d.getAttribute('data-wlf'))>=0)d.open=true;});
       if($('wl-baro')&&keep.baro)$('wl-baro').value=keep.baro;
       if($('wl-bsrc'))$('wl-bsrc').selectedIndex=keep.src;
       if(keep.focus==='wl-baro'&&$('wl-baro'))$('wl-baro').focus();
@@ -2668,13 +2698,15 @@ function renderWLEmerg(){
   var now=Date.now(),lt=wlLightning(WLS.lightning,now);
   var h='<div class="card wl-emerg"><div class="t">Gewitter an Bord</div>';
   if(lt&&!lt.flashOnly)h+='<div class="banner b-'+lt.level+'"><div class="bt"><span class="sym">'+SYM[lt.level]+'</span>Donner gezählt – noch '+esc(wlAgeText(lt.until-now))+' Schutz behalten</div><div class="bd">Letzter Donner vor '+esc(wlAgeText(now-lt.last.t))+(lt.lastKm!=null?', ≈ '+wlDec(lt.lastKm,1)+' km':'')+'.</div></div>';
+  var wasOpen=!!el.querySelector('details[open]');
   h+='<ul class="tight">'
-    +'<li>Gewitter möglich: nicht auslaufen. Gewitter in der Nähe erkannt: so schnell wie möglich in den Hafen oder an einen sicheren Schutzort; Abwarten ist besser als Durchfahren, Gewitter sind meist kurz. ('+wlSrcLink('nwsboat')+')</li>'
+    +'<li>Gewitter möglich: nicht auslaufen. Gewitter in der Nähe erkannt: so schnell wie möglich in den Hafen oder an einen sicheren Schutzort; Abwarten ist besser als Durchfahren, Gewitter sind meist kurz. ('+wlSrcLink('nwsboat')+')</li></ul>'
+    +'<details'+(wasOpen?' open':'')+'><summary>Weiteres Verhalten bei Gewitter</summary><div class="in"><ul class="tight">'
     +'<li>Mit Kajüte: drinnen bleiben und Metall sowie Elektrogeräte nicht berühren. Ohne Kajüte: so tief wie möglich im Boot bleiben. ('+wlSrcLink('nwsboat')+')</li>'
     +'<li>Hörbarer Donner = in Einschlagreichweite. Schutz behalten, bis mindestens 30 Minuten nach dem letzten Donner vergangen sind. ('+wlSrcLink('noaa')+')</li>'
     +'<li>Ein Blitzschlag kann katastrophal sein, besonders bei Brand oder Ausfall der Elektronik. ('+wlSrcLink('nwsboat')+')</li></ul>'
-    +'<button class="btn sm" data-wl="goto">Blitzzähler und Wetter-Sicherheit öffnen</button>'
-    +'<div class="note small">Quellen: NOAA/NWS (USA). Abstandsgrenze für „rot“ ist eine Faustregel.</div></div>';
+    +'<div class="note small">Quellen: NOAA/NWS (USA). Abstandsgrenze für „rot“ ist eine Faustregel.</div></div></details>'
+    +'<button class="btn sm" data-wl="goto">Blitzzähler und Wetter-Sicherheit öffnen</button></div>';
   el.innerHTML=h;
 }
 function wlSecTimer(){
@@ -2780,15 +2812,17 @@ function wlSourcesHTML(){
 function renderWLRegeln(){
   var el=$('wl-regeln');if(!el)return;
   var h='<h2>Wolken und Warnzeichen</h2><div class="note">Hilfe zur eigenen Beobachtung. Ergebnisse sind keine Messung, keine automatische Bestimmung und enthalten keine Wahrscheinlichkeiten. Es stehen nur Aussagen mit Quelle da; Schwellen sind als Quelle oder „Faustregel“ gekennzeichnet.</div>';
-  h+='<div class="card"><div class="t">Wolke bestimmen</div><div id="wl-wiz">'+wlWizHTML()+'</div></div>';
-  h+='<div class="card"><div class="t">Wolkenatlas</div><div id="wl-atlas">'+wlAtlasHTML()+'</div></div>';
-  h+='<div class="card"><div class="t">Warnzeichen</div>'+wlSignsHTML()+'</div>';
-  h+='<div class="card"><div class="t">Kreuzwindregel (Info)</div>'+wlCrossHTML()+'</div>';
-  h+='<div class="card"><div class="t">Schwellen Wetter-Sicherheit</div>'+wlThresholdsHTML()+'</div>';
-  h+='<div class="card"><div class="t">Foto-Logbuch (ohne Bewertung)</div><div id="wl-photos">'+wlPhotosHTML()+'</div></div>';
-  h+='<div class="card"><div class="t">Quellen Wetter-Sicherheit</div>'+wlSourcesHTML()+'</div>';
+  h+='<details class="wl-fold"><summary>Wolke bestimmen</summary><div class="in"><div id="wl-wiz">'+wlWizHTML()+'</div></div></details>';
+  h+='<details class="wl-fold"><summary>Wolkenatlas</summary><div class="in"><div id="wl-atlas">'+wlAtlasHTML()+'</div></div></details>';
+  h+='<details class="wl-fold"><summary>Warnzeichen</summary><div class="in">'+wlSignsHTML()+'</div></details>';
+  h+='<details class="wl-fold"><summary>Kreuzwindregel (Info)</summary><div class="in">'+wlCrossHTML()+'</div></details>';
+  h+='<details class="wl-fold"><summary>Schwellen Wetter-Sicherheit</summary><div class="in">'+wlThresholdsHTML()+'</div></details>';
+  h+='<details class="wl-fold"><summary>Foto-Logbuch (ohne Bewertung)</summary><div class="in"><div id="wl-photos">'+wlPhotosHTML()+'</div></div></details>';
+  h+='<details class="wl-fold"><summary>Quellen Wetter-Sicherheit</summary><div class="in">'+wlSourcesHTML()+'</div></details>';
   var pw=$('wl-pdir')?$('wl-pdir').value:'',pn=$('wl-pnote')?$('wl-pnote').value:'',cw=$('wl-cw')?$('wl-cw').value:'',cc=$('wl-cc')?$('wl-cc').value:'';
+  var wasOpen=Array.prototype.map.call(el.querySelectorAll('details.wl-fold[open]'),function(d){return d.firstChild.textContent;});
   el.innerHTML=h;
+  Array.prototype.forEach.call(el.querySelectorAll('details.wl-fold'),function(d){if(wasOpen.indexOf(d.firstChild.textContent)>=0)d.open=true;});
   if($('wl-pdir'))$('wl-pdir').value=pw;if($('wl-pnote'))$('wl-pnote').value=pn;if($('wl-cw'))$('wl-cw').value=cw;if($('wl-cc'))$('wl-cc').value=cc;
   wlCrossUpdate();
 }
@@ -8092,7 +8126,7 @@ deepMerge(CONST,REVIER.const||{});
 /* ---- UI state (S): inputs of the Lage tab, filters, boat ---- */
 var S={pos:null,dir:null,windTrue:null,gust:null,seaDir:null,seaH:0,pegel:0,sicht:'gut',gewitter:false,longWind:null,kids:false,trend:false,
   course:'am Wind',courseMode:'auto',target:null,speed:CONST.speed,maxLegH:null,maxNightH:CONST.plan.maxNightH,motorMode:'nie',motorSpeed:CONST.plan.motorSpeed,daylight:true,season:'auto',limGust:null,limSea:null,boat:Object.assign({},DEFAULT_BOAT),now:null,
-  fl:{refuge:true,fits:false,open:false,fav:false,countries:REVIER.countries.reduce(function(o,c){o[c]=true;return o;},{}),region:''},show:40,confirmed:false};
+  fl:{refuge:true,fits:false,open:false,fav:false,countries:REVIER.countries.reduce(function(o,c){o[c]=true;return o;},{}),region:''},show:2,confirmed:false};
 /* ---- target: rhumb line, course to wind (v1.4) ---- */
 var WIND_DEG={N:0,NE:45,E:90,SE:135,S:180,SW:225,W:270,NW:315};
 function rhumb(a,b){
@@ -9173,14 +9207,16 @@ function harborCard(it,s,opts){
   var body='<div class="hwide"><div class="sectors">'+sectorText(h)+((h.swellOpen&&h.swellOpen.length)?' · <span style="color:var(--swell)"><b>≈ Schwell/See offen:</b></span> '+h.swellOpen.join(' '):'')+((h.entranceOpen&&h.entranceOpen.length)?' · <b>Ansteuerung offen:</b> '+h.entranceOpen.join(' '):'')+'</div>';
   body+='<div class="hmeta" style="margin-top:4px">Tiefe '+esc(depthText(h))+' · '+esc(seasonText(h))+'</div>';
   if(R.hooks.cardBridges)body+=R.hooks.cardBridges(h);
+  if(!(opts&&opts.noTarget))body+='<button class="btn sm" data-target="'+esc(h.id)+'" style="margin-top:8px">'+(s.target&&s.target.id===h.id?'✔ Ziel (löschen)':'Als Ziel')+'</button>';
+  body+=' <button class="btn sm" data-fav="'+esc(h.id)+'" aria-pressed="'+(favOn(h.id)?'true':'false')+'" style="margin-top:8px">'+(favOn(h.id)?'★ Gemerkt':'☆ Merken')+'</button>';
+  body+=' <button class="btn sm" data-ask="'+esc(h.id)+'" style="margin-top:8px">Anfragen</button>';
+  body+='<details class="hmore"><summary>Mehr zum Hafen</summary><div class="in">';
   if(R.hooks.cardExtra)body+=R.hooks.cardExtra(h,s,it);   // package block (anchorage details, protected areas, links)
   body+='<div class="hmeta" style="margin-top:4px">'+esc(vhf)+' · '+tel+(ref.length?' · '+esc(ref.join(' · ')):'')+'</div>';
   body+='<div style="margin-top:5px">'+verBadges(h)+'</div>';
   body+=amenitiesHTML(h)+timelineHTML(h,s)+noteHTML(h);
-  if(!(opts&&opts.noTarget))body+='<button class="btn sm" data-target="'+esc(h.id)+'" style="margin-top:8px">'+(s.target&&s.target.id===h.id?'✔ Ziel (löschen)':'Als Ziel')+'</button>';
-  body+=' <button class="btn sm" data-fav="'+esc(h.id)+'" aria-pressed="'+(favOn(h.id)?'true':'false')+'" style="margin-top:8px">'+(favOn(h.id)?'★ Gemerkt':'☆ Merken')+'</button>';
-  body+=' <button class="btn sm" data-ask="'+esc(h.id)+'" style="margin-top:8px">Anfragen</button> <button class="btn sm" data-photo style="margin-top:8px">Foto übersetzen</button>';
-  body+='<details><summary>Hinweise und Quelle</summary><div class="in small"><p class="i18nnote">Originaltext der Datenquelle (nicht übersetzt).</p><p translate="no">'+esc(h.note||'')+'</p><p class="hmeta">Quelle: <span translate="no">'+esc(h.src||'–')+'</span></p></div></details></div>';
+  body+='<button class="btn sm" data-photo style="margin-top:8px">Foto übersetzen</button>';
+  body+='<details><summary>Hinweise und Quelle</summary><div class="in small"><p class="i18nnote">Originaltext der Datenquelle (nicht übersetzt).</p><p translate="no">'+esc(h.note||'')+'</p><p class="hmeta">Quelle: <span translate="no">'+esc(h.src||'–')+'</span></p></div></details></div></details></div>';
   return '<div class="hcard lv-'+lv+'">'+head+'<div class="hside">'+roseSVG(h,s)+'</div><div>'+reasons+'</div>'+body+'</div>';
 }
 /* ---- Zuflucht ---- */
@@ -9197,7 +9233,7 @@ function renderZuflucht(res){
     'Sortiert nach Entfernung (Luftlinie, Seeweg ist länger). Fahrtzeit = Mindestzeit bei '+nm1(s.speed)+' kn. Bei Tiefe „?“ bleibt der Hafen sichtbar – Seekarte prüfen.';
   if(s.target)$('zinfo').innerHTML+=' <b>Ziel: '+esc(s.target.name)+'</b> (Lage-Tab, „Ziel löschen“).';
   (function(){var tot=DATA.length,bel=0,pl=0,ab=0,own=0,o={};try{o=JSON.parse(load(sk('own'))||'{}')||{};}catch(e){}DATA.forEach(function(h){if(h.refugeLevel==='belegt')bel++;else if(h.refugeLevel==='plan')pl++;else if(h.refugeLevel)ab++;});
-    $('zinfo').innerHTML+='<div class="note small" style="margin-top:4px">'+gl('datenstufe','Datenstufen')+': '+bel+' von '+tot+' Häfen mit belegter Zuflucht-Eignung, '+pl+' aus dem Hafenplan, '+ab+' nur Grenzfall/Notfall, '+(tot-bel-pl-ab)+' ohne Einstufung (zählen nicht als Zuflucht).</div>';})();
+    $('zinfo').innerHTML+='<details class="fold-note"><summary>Datenstufen</summary><div class="note small">'+gl('datenstufe','Datenstufen')+': '+bel+' von '+tot+' Häfen mit belegter Zuflucht-Eignung, '+pl+' aus dem Hafenplan, '+ab+' nur Grenzfall/Notfall, '+(tot-bel-pl-ab)+' ohne Einstufung (zählen nicht als Zuflucht).</div></details>';})();
   var all=allItems(res),list=filterList(all,S.fl,s);
   $('zcount').textContent=list.length+' von '+DATA.length+' Häfen';
   ZM.items=list;if(ZM.sel&&!list.some(function(x){return x.h.id===ZM.sel;})){ZM.sel=null;$('zpick').innerHTML='';}
@@ -9205,12 +9241,12 @@ function renderZuflucht(res){
   if(ZM.view==='map')zmRender();
   var o='',n=Math.min(S.show,list.length);
   for(var i=0;i<n;i++)o+=harborCard(list[i],s);
-  if(list.length>n)o+='<button class="btn sm moreb" id="zmore">Weitere '+Math.min(40,list.length-n)+' anzeigen ('+(list.length-n)+' übrig)</button>';
+  if(list.length>n)o+='<button class="btn sm moreb" id="zmore">Weitere '+Math.min(10,list.length-n)+' anzeigen ('+(list.length-n)+' übrig)</button>';
   if(!list.length)o+='<div class="banner b-n"><div class="bt"><span class="sym">?</span>Keine Treffer</div><div class="bd">Mit diesen Filtern ist kein Hafen übrig. Filter lockern.</div></div>';
-  o+='<div class="legend"><b>Rose:</b> grün = geschützt · hellgrün schraffiert = eingeschränkt · grau = offen · gestrichelt = unbekannt · Mitte = Urteil für den aktuellen Wind (✓ / ! / ✕) · dunkler Pfeil = Wind · blauer Punkt = Seegang · ≈ = Schwell/See offen · Quadrat = Ansteuerung offen.</div>';
+  o+='<details class="legend"><summary>Legende der Rose</summary><div class="in"><b>Rose:</b> grün = geschützt · hellgrün schraffiert = eingeschränkt · grau = offen · gestrichelt = unbekannt · Mitte = Urteil für den aktuellen Wind (✓ / ! / ✕) · dunkler Pfeil = Wind · blauer Punkt = Seegang · ≈ = Schwell/See offen · Quadrat = Ansteuerung offen.</div></details>';
   o+='<div class="note small">'+esc(DISCLAIMER)+'</div>';
   $('zlist').innerHTML=o;
-  var mb=$('zmore');if(mb)mb.addEventListener('click',function(){S.show+=40;update();});
+  var mb=$('zmore');if(mb)mb.addEventListener('click',function(){S.show+=10;update();});
   $('f-refuge').setAttribute('aria-pressed',S.fl.refuge?'true':'false');
   $('f-fits').setAttribute('aria-pressed',S.fl.fits?'true':'false');
   $('f-open').setAttribute('aria-pressed',S.fl.open?'true':'false');
@@ -9474,6 +9510,12 @@ function buildInputs(){
   });
   var bp=$('b-profile');PROFILES.forEach(function(p){var o=document.createElement('option');o.value=p.id;o.textContent=p.label;bp.appendChild(o);});
 }
+function foldInfo(did,vid,parts){   // a folded input block shows its non-default values and opens once when they appear
+  var d=$(did),v=$(vid);if(!d||!v)return;
+  var t=parts.length?' – '+parts.join(', '):'';
+  if(t&&!v.textContent)d.open=true;
+  v.textContent=t;
+}
 function syncInputs(){
   document.querySelectorAll('[data-dir]').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.dir===S.dir?'true':'false');});
   document.querySelectorAll('[data-sdir]').forEach(function(b){b.setAttribute('aria-pressed',(b.dataset.sdir||null)===S.seaDir?'true':'false');});
@@ -9485,6 +9527,9 @@ function syncInputs(){
   $('seaval').innerHTML=fm(S.seaH).replace(/^(\d)$/,'$1,0')+' <small>m</small>';
   if($('pegelval'))$('pegelval').innerHTML=fsig(S.pegel)+' <small>cm</small>';
   $('kids').checked=S.kids;$('trend').checked=S.trend;$('gewitter').checked=S.gewitter;$('b-kids').checked=S.kids;
+  foldInfo('fold-sea','fv-sea',[S.seaDir?'aus '+S.seaDir:'',S.seaH>0?fm(S.seaH).replace(/^(\d)$/,'$1,0')+' m':'',S.pegel?fsig(S.pegel)+' cm':''].filter(Boolean));
+  foldInfo('det-ziel','fv-ziel',S.target?[S.target.name]:[]);
+  foldInfo('fold-misc','fv-misc',[S.course!=='am Wind'?S.course:'',S.sicht!=='gut'?(S.sicht==='nebel'?'Nebel':'mäßige Sicht'):'',S.longWind?'Starkwind aus '+S.longWind:''].filter(Boolean));
   $('regselect').value=(S.pos&&S.pos.src==='region')?S.pos.regKey:'';
 }
 var notice='';
@@ -9562,19 +9607,19 @@ function renderNotfall(res){
   var nums=R.hooks.emergencyNumbers?R.hooks.emergencyNumbers(s.pos):[],ord=s.pos?countryOf(s.pos):[];
   // numbers of the countries at the position first, then 112, then the remaining countries folded away
   var near=[],far=[];
-  nums.forEach(function(n){(!s.pos||ord.indexOf(n.country)>=0?near:far).push(n);});
+  nums.forEach(function(n,i){(s.pos?ord.indexOf(n.country)>=0:i<1?true:false)?near.push(n):far.push(n);});   // without a position: the first stays open, the rest is one tap away
   function nrow(n){var tel=n.tel||(telHref(n.num)||'').replace(/^tel:/,'');
     return '<a class="bigbtn" href="tel:'+esc(tel)+'"><span class="n sm disp">'+esc(n.num)+'</span><span class="l"><b>'+esc(n.title)+'</b> · '+esc(n.country)+'<br>'+esc(n.sub)+'</span></a>';}
   var h='';
   near.forEach(function(n){h+=nrow(n);});
-  h+='<a class="bigbtn alt" href="tel:112"><span class="n disp">112</span><span class="l"><b>Europanotruf</b><br>Nur mit Mobilfunknetz, küstennah – auf See oft keins. Primär UKW.</span></a>';
-  if(far.length){h+='<details><summary>Weitere Länder</summary><div class="in">';far.forEach(function(n){h+=nrow(n);});h+='</div></details>';}
+  h+='<a class="bigbtn alt" href="tel:112"><span class="n disp">112</span><span class="l"><b>Europanotruf</b><br>Nur mit Mobilfunk – auf See oft kein Netz. Primär UKW.</span></a>';
+  if(far.length){h+='<details><summary>'+(s.pos?'Weitere Länder':'Notrufnummern weiterer Länder')+'</summary><div class="in">';far.forEach(function(n){h+=nrow(n);});h+='<div class="note small">Reihenfolge nach den nächstgelegenen Häfen – keine Feststellung der Zuständigkeit. Über DSC und CH 16 erreichst du immer die zuständige Rettungsleitstelle.</div></div></details>';}else h+='<div class="note small">Reihenfolge nach den nächstgelegenen Häfen – keine Feststellung der Zuständigkeit. Über DSC und CH 16 erreichst du immer die zuständige Rettungsleitstelle.</div>';
   $('nf-nums').innerHTML=h;
   var groups=radioGroups(now),order=s.pos?countryOf(s.pos):[];
   groups.sort(function(a,b){var ia=order.indexOf(a.code),ib=order.indexOf(b.code);ia=ia<0?99:ia;ib=ib<0?99:ib;return ia-ib;});
   var f='';
   groups.forEach(function(g,gi){
-    f+='<details'+(gi===0?' open':'')+'><summary>'+esc(g.name)+' ('+g.code+')</summary><div class="in">';
+    f+='<details'+(gi===0&&s.pos?' open':'')+'><summary>'+esc(g.name)+' ('+g.code+')</summary><div class="in">';
     g.blocks.forEach(function(b){
       if(b.title&&b.title!==g.name)f+='<h3>'+esc(b.title)+'</h3>';
       b.lines.forEach(function(l){
@@ -10281,7 +10326,7 @@ function gpxiHTML(){
 }
 function renderGpxImport(){
   var el=$('gpximpres');if(!el)return;
-  var clr=$('btn-gpxclear');if(clr)clr.style.display=GPXI?'':'none';
+  var clr=$('btn-gpxclear');if(clr)clr.style.display=GPXI?'':'none';if(GPXI&&clr){var gd=clr.closest('details');if(gd&&!gd.open)gd.open=true;}
   el.innerHTML=GPXI?gpxiHTML():'';
 }
 
@@ -10956,12 +11001,12 @@ function init(){
   $('onbc').addEventListener('click',function(e){var lb=e.target.closest('[data-onblang]');if(lb){i18nSet(lb.dataset.onblang);onbRender();return;}var b=e.target.closest('[data-onb]');if(b&&!b.disabled)onbAction(b.dataset.onb);});
   $('btn-onb').addEventListener('click',function(){onbOpen(0);});
   if(load(sk('zview'))==='map')setTimeout(function(){setZView('map');},0);
-  $('f-refuge').addEventListener('click',function(){S.fl.refuge=!S.fl.refuge;S.show=40;update();});
-  $('f-fits').addEventListener('click',function(){S.fl.fits=!S.fl.fits;S.show=40;update();});
-  $('f-open').addEventListener('click',function(){S.fl.open=!S.fl.open;S.show=40;update();});
-  $('f-fav').addEventListener('click',function(){S.fl.fav=!S.fl.fav;if(S.fl.fav)S.fl.refuge=false;S.show=40;update();});   // a remembered place need not be a refuge
-  document.querySelectorAll('[data-fc]').forEach(function(b){b.addEventListener('click',function(){S.fl.countries[b.dataset.fc]=S.fl.countries[b.dataset.fc]===false;S.show=40;update();});});
-  $('f-region').addEventListener('change',function(){S.fl.region=$('f-region').value;S.show=40;update();});
+  $('f-refuge').addEventListener('click',function(){S.fl.refuge=!S.fl.refuge;S.show=2;update();});
+  $('f-fits').addEventListener('click',function(){S.fl.fits=!S.fl.fits;S.show=2;update();});
+  $('f-open').addEventListener('click',function(){S.fl.open=!S.fl.open;S.show=2;update();});
+  $('f-fav').addEventListener('click',function(){S.fl.fav=!S.fl.fav;if(S.fl.fav)S.fl.refuge=false;S.show=2;update();});   // a remembered place need not be a refuge
+  document.querySelectorAll('[data-fc]').forEach(function(b){b.addEventListener('click',function(){S.fl.countries[b.dataset.fc]=S.fl.countries[b.dataset.fc]===false;S.show=2;update();});});
+  $('f-region').addEventListener('change',function(){S.fl.region=$('f-region').value;S.show=2;update();});
   ['b-type','b-loa','b-beam','b-draft','b-margin','b-mast','b-bmargin','b-lwl','b-fuel','b-tank','b-speed','b-maxleg','b-maxnight','b-motor','b-motorspeed','b-season','b-name','b-call','b-mmsi','b-kids','b-daylight','b-limgust','b-limsea'].forEach(function(id){
     $(id).addEventListener(id==='b-type'||id==='b-season'||id==='b-kids'||id==='b-daylight'||id==='b-motor'?'change':'input',function(){bootFromUI(id);});
   });
