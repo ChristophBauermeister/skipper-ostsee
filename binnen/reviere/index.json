@@ -8,11 +8,11 @@
    53.8,
    14.8
   ],
-  "bytes": 3096098,
-  "pois": 6019,
+  "bytes": 3100174,
+  "pois": 6051,
   "locks": 182,
-  "bridges": 2863,
-  "nodes": 16346,
+  "bridges": 2864,
+  "nodes": 16340,
   "pegel": 221
  },
  {
@@ -24,11 +24,11 @@
    54.6,
    14.5
   ],
-  "bytes": 1344549,
-  "pois": 4081,
+  "bytes": 1345946,
+  "pois": 4097,
   "locks": 54,
-  "bridges": 993,
-  "nodes": 6776,
+  "bridges": 995,
+  "nodes": 6767,
   "pegel": 106
  },
  {
@@ -40,12 +40,12 @@
    53.7,
    14.5
   ],
-  "bytes": 4239403,
-  "pois": 9148,
+  "bytes": 4244538,
+  "pois": 9178,
   "locks": 240,
-  "bridges": 5534,
-  "nodes": 24012,
-  "pegel": 281
+  "bridges": 5544,
+  "nodes": 23997,
+  "pegel": 282
  },
  {
   "id": "nordwest",
@@ -56,10 +56,10 @@
    53.9,
    10.6
   ],
-  "bytes": 1984977,
-  "pois": 4871,
+  "bytes": 1987176,
+  "pois": 4877,
   "locks": 167,
-  "bridges": 3915,
+  "bridges": 3919,
   "nodes": 13235,
   "pegel": 164
  },
@@ -72,11 +72,11 @@
    52.4,
    8.8
   ],
-  "bytes": 1033230,
-  "pois": 2361,
-  "locks": 57,
-  "bridges": 1610,
-  "nodes": 6274,
+  "bytes": 1045592,
+  "pois": 2365,
+  "locks": 58,
+  "bridges": 1675,
+  "nodes": 6346,
   "pegel": 60
  },
  {
@@ -88,11 +88,11 @@
    50.9,
    8.4
   ],
-  "bytes": 815971,
+  "bytes": 815851,
   "pois": 2018,
   "locks": 61,
   "bridges": 760,
-  "nodes": 4306,
+  "nodes": 4307,
   "pegel": 72
  },
  {
@@ -104,11 +104,11 @@
    49.9,
    10.0
   ],
-  "bytes": 1166130,
-  "pois": 3691,
+  "bytes": 1168318,
+  "pois": 3718,
   "locks": 71,
-  "bridges": 1600,
-  "nodes": 6196,
+  "bridges": 1595,
+  "nodes": 6195,
   "pegel": 50
  },
  {
@@ -120,11 +120,11 @@
    50.6,
    13.9
   ],
-  "bytes": 1951288,
-  "pois": 4572,
+  "bytes": 1954224,
+  "pois": 4590,
   "locks": 168,
-  "bridges": 3390,
-  "nodes": 13439,
+  "bridges": 3391,
+  "nodes": 13447,
   "pegel": 74
  },
  {
@@ -136,11 +136,11 @@
    48.4,
    13.1
   ],
-  "bytes": 656420,
-  "pois": 2518,
+  "bytes": 656593,
+  "pois": 2520,
   "locks": 1,
-  "bridges": 738,
-  "nodes": 3267,
+  "bridges": 735,
+  "nodes": 3275,
   "pegel": 2
  },
  {
@@ -152,8 +152,8 @@
    55.1,
    11.4
   ],
-  "bytes": 1201876,
-  "pois": 4257,
+  "bytes": 1203511,
+  "pois": 4259,
   "locks": 51,
   "bridges": 1490,
   "nodes": 6220,
@@ -168,11 +168,11 @@
    52.1,
    10.4
   ],
-  "bytes": 376738,
-  "pois": 825,
+  "bytes": 377276,
+  "pois": 827,
   "locks": 14,
-  "bridges": 663,
-  "nodes": 2961,
+  "bridges": 666,
+  "nodes": 2964,
   "pegel": 22
  },
  {
@@ -184,11 +184,11 @@
    51.6,
    15.1
   ],
-  "bytes": 897407,
-  "pois": 1887,
+  "bytes": 899538,
+  "pois": 1895,
   "locks": 32,
-  "bridges": 1436,
-  "nodes": 6232,
+  "bridges": 1441,
+  "nodes": 6234,
   "pegel": 15
  }
 ]
