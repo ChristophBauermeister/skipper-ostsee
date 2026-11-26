@@ -10,9 +10,9 @@
     53.8,
     14.8
    ],
-   "file": "berlin-brandenburg.1b1264c92e3b.json",
-   "hash": "1b1264c92e3b",
-   "size": 3212599
+   "file": "berlin-brandenburg.9b8222230a01.json",
+   "hash": "9b8222230a01",
+   "size": 3211848
   },
   {
    "id": "mecklenburg-vorpommern",
@@ -23,9 +23,9 @@
     54.6,
     14.5
    ],
-   "file": "mecklenburg-vorpommern.b1de7ea83c7c.json",
-   "hash": "b1de7ea83c7c",
-   "size": 1690128
+   "file": "mecklenburg-vorpommern.a9be007863c6.json",
+   "hash": "a9be007863c6",
+   "size": 1689816
   },
   {
    "id": "elbe-saale",
@@ -36,9 +36,9 @@
     53.7,
     14.5
    ],
-   "file": "elbe-saale.2e84c23571af.json",
-   "hash": "2e84c23571af",
-   "size": 5233587
+   "file": "elbe-saale.d4dc5a05c003.json",
+   "hash": "d4dc5a05c003",
+   "size": 5233484
   },
   {
    "id": "nordwest",
@@ -49,9 +49,9 @@
     53.9,
     10.6
    ],
-   "file": "nordwest.d9447c7b565d.json",
-   "hash": "d9447c7b565d",
-   "size": 2864188
+   "file": "nordwest.58047c52d741.json",
+   "hash": "58047c52d741",
+   "size": 2865725
   },
   {
    "id": "rhein-ruhr",
@@ -62,9 +62,9 @@
     52.4,
     8.8
    ],
-   "file": "rhein-ruhr.92a1efb30321.json",
-   "hash": "92a1efb30321",
-   "size": 1665258
+   "file": "rhein-ruhr.6db810666adc.json",
+   "hash": "6db810666adc",
+   "size": 1665765
   },
   {
    "id": "mittelrhein-mosel",
@@ -75,9 +75,9 @@
     50.9,
     8.4
    ],
-   "file": "mittelrhein-mosel.800661f2ffe8.json",
-   "hash": "800661f2ffe8",
-   "size": 1441641
+   "file": "mittelrhein-mosel.d6cbe2aa2035.json",
+   "hash": "d6cbe2aa2035",
+   "size": 1441314
   },
   {
    "id": "oberrhein-neckar",
@@ -88,9 +88,9 @@
     49.9,
     10
    ],
-   "file": "oberrhein-neckar.bd7e726d3215.json",
-   "hash": "bd7e726d3215",
-   "size": 2313695
+   "file": "oberrhein-neckar.31eff02a32c3.json",
+   "hash": "31eff02a32c3",
+   "size": 2313970
   },
   {
    "id": "main-donau",
@@ -101,9 +101,9 @@
     50.6,
     13.9
    ],
-   "file": "main-donau.3c71e4cd21f7.json",
-   "hash": "3c71e4cd21f7",
-   "size": 3745621
+   "file": "main-donau.0763d1d4844f.json",
+   "hash": "0763d1d4844f",
+   "size": 3746965
   },
   {
    "id": "bayern-seen",
@@ -114,9 +114,9 @@
     48.4,
     13.1
    ],
-   "file": "bayern-seen.f868c9c389c5.json",
-   "hash": "f868c9c389c5",
-   "size": 1485985
+   "file": "bayern-seen.bc6640e481cd.json",
+   "hash": "bc6640e481cd",
+   "size": 1485845
   },
   {
    "id": "schleswig-holstein",
@@ -127,9 +127,9 @@
     55.1,
     11.4
    ],
-   "file": "schleswig-holstein.746c068be21f.json",
-   "hash": "746c068be21f",
-   "size": 1565461
+   "file": "schleswig-holstein.9f68a4bfe77e.json",
+   "hash": "9f68a4bfe77e",
+   "size": 1566852
   },
   {
    "id": "weserbergland-hessen",
@@ -140,9 +140,9 @@
     52.1,
     10.4
    ],
-   "file": "weserbergland-hessen.1bebc92ebc20.json",
-   "hash": "1bebc92ebc20",
-   "size": 776820
+   "file": "weserbergland-hessen.9b4b7e2469ff.json",
+   "hash": "9b4b7e2469ff",
+   "size": 776767
   },
   {
    "id": "thueringen-sachsen",
@@ -153,9 +153,9 @@
     51.6,
     15.1
    ],
-   "file": "thueringen-sachsen.4e846ceb50fa.json",
-   "hash": "4e846ceb50fa",
-   "size": 1646056
+   "file": "thueringen-sachsen.c8abae5d209c.json",
+   "hash": "c8abae5d209c",
+   "size": 1646222
   }
  ]
 }
