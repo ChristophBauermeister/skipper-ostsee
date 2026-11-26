@@ -432,6 +432,7 @@ function cardHTML(p){
   return h+'</div>';
 }
 function telLink(t){var m=/\+?\d[\d \-\/]{4,}\d/.exec(String(t||''));return m?'tel:'+m[0].replace(/[ \-\/]/g,''):null;}
+function telAct(v,label,cls){var h=telLink(v);return v?'<div class="acts">'+(h?'<a'+(cls?' class="'+cls+'"':'')+' href="'+h+'">'+label+'</a>':'<span class="meta">'+label+': '+esc(v)+'</span>')+'</div>':'';}
 function webLink(w){w=String(w||'').split(/[;\s]/)[0];if(!w)return null;return /^https?:/i.test(w)?w:'https://'+w;}
 function actions(p){
   var a=[],tl=telLink(p.tel),w=webLink(p.web),m=p.mail?String(p.mail).split(/[;\s]/)[0]:null;
@@ -627,8 +628,8 @@ function bridgeHTML(b){
 function renderBoot(){
   var b=S.boat;$('b-name').value=b.name||'';$('b-type').value=b.type||'';['len','beam','draft','height','heightmax','weight','ps','lph','speed'].forEach(function(k){$('b-'+k).value=b[k]!=null?String(b[k]).replace('.',','):'';});$('b-fuel').value=b.fuel||'diesel';
   var c=b.charter,cb=$('charterbox'),nf=$('nf-charter');
-  if(c&&(c.basis||c.tel)){cb.style.display='block';cb.innerHTML='<div class="t">'+t('Charterboot')+'</div><div>'+esc(c.basis||'')+(c.ret?' · '+t('Rückgabe: {0}',esc(c.ret)):'')+'</div>'+(c.tel?'<div class="acts"><a href="'+telLink(c.tel)+'">'+t('Charterbasis anrufen')+'</a></div>':'');
-    nf.style.display='block';nf.innerHTML='<div class="t">'+t('Charterbasis')+'</div><div>'+esc(c.basis||'')+'</div>'+(c.notfall?'<div class="acts"><a class="prim" href="'+telLink(c.notfall)+'">'+t('Notfallnummer der Basis')+'</a></div>':'');}
+  if(c&&(c.basis||c.tel)){cb.style.display='block';cb.innerHTML='<div class="t">'+t('Charterboot')+'</div><div>'+esc(c.basis||'')+(c.ret?' · '+t('Rückgabe: {0}',esc(c.ret)):'')+'</div>'+telAct(c.tel,t('Charterbasis anrufen'));
+    nf.style.display='block';nf.innerHTML='<div class="t">'+t('Charterbasis')+'</div><div>'+esc(c.basis||'')+'</div>'+telAct(c.notfall,t('Notfallnummer der Basis'),'prim');}
   else{cb.style.display='none';nf.style.display='none';}
 }
 function saveBoot(){
@@ -2954,8 +2955,8 @@ renderBoot=function(){
   $('p-spd').value=dc(p.spd);$('p-day').value=p.day;$('p-pers').value=p.pers;$('p-boats').value=p.boats;$('p-kg').value=b.kg!=null?dc(b.kg):'';
   $('p-lvl').value=p.lvl;$('p-wagen').checked=p.wagen;$('p-kids').checked=p.kids;
   var c=b.charter,cb=$('charterbox'),nf=$('nf-charter');
-  if(c&&(c.basis||c.tel)){cb.style.display='block';cb.innerHTML='<div class="t">'+t('Leihboot')+'</div><div>'+esc(c.basis||'')+(c.ret?' · '+t('Rückgabe: {0}',esc(c.ret)):'')+'</div>'+(c.tel?'<div class="acts"><a href="'+telLink(c.tel)+'">'+t('Verleih anrufen')+'</a></div>':'');
-    nf.style.display='block';nf.innerHTML='<div class="t">'+t('Kanuverleih')+'</div><div>'+esc(c.basis||'')+'</div>'+(c.notfall?'<div class="acts"><a class="prim" href="'+telLink(c.notfall)+'">'+t('Notfallnummer des Verleihs')+'</a></div>':'');}
+  if(c&&(c.basis||c.tel)){cb.style.display='block';cb.innerHTML='<div class="t">'+t('Leihboot')+'</div><div>'+esc(c.basis||'')+(c.ret?' · '+t('Rückgabe: {0}',esc(c.ret)):'')+'</div>'+telAct(c.tel,t('Verleih anrufen'));
+    nf.style.display='block';nf.innerHTML='<div class="t">'+t('Kanuverleih')+'</div><div>'+esc(c.basis||'')+'</div>'+telAct(c.notfall,t('Notfallnummer des Verleihs'),'prim');}
   else{cb.style.display='none';nf.style.display='none';}
 };
 saveBoot=function(){
@@ -6432,17 +6433,18 @@ var SkThunder=(function(){
     book.rec.legId = null;
     return l;
   }
-  /* The tracker. rec = {legId, last, rest, moved}. Returns 'start', 'stop', 'move' or null; the caller adds weather and saves. */
+  /* The tracker. rec = {legId, last, rest, moved, seen}. Returns 'start', 'stop', 'move' or null; the caller adds weather and saves. */
   function ingest(book, fix, opt) {
     var cfg = Object.assign({}, CFG, opt || {}), rec = book.rec;
     if (!rec || !validFix(fix)) return null;
     if (fix.acc != null && fix.acc > cfg.maxAccM) return null;
     var f = { lat: +fix.lat, lon: +fix.lon, t: +fix.t, acc: fix.acc == null ? null : +fix.acc };
     if (!rec.last) { rec.last = f; rec.rest = f; rec.moved = f.t; return null; }
-    var dt = f.t - rec.last.t;
-    if (dt <= 0) return null;
+    var dt = f.t - rec.last.t, pause = f.t - Math.max(rec.last.t, rec.seen || 0);   // pause: since the last usable fix, moving or not
+    if (dt <= 0 || pause <= 0) return null;
     var step = distM(rec.last, f), kn = step / NM_M / (dt / HOUR);
-    if (kn > cfg.maxKn && dt < cfg.gapMin * MIN) return null;   // outlier: the old point stays the reference
+    if (kn > cfg.maxKn && pause < cfg.gapMin * MIN) return null;   // outlier: the old point stays the reference
+    rec.seen = f.t;
     var leg = rec.legId ? book.legs.filter(function (x) { return x.id === rec.legId; })[0] : null, ev = null;
     if (!leg) {
       var fromRest = distM(rec.rest, f), span = f.t - rec.rest.t;
@@ -6459,7 +6461,7 @@ var SkThunder=(function(){
     }
     var minStep = Math.max(cfg.minStepM, f.acc || 0);
     if (step >= minStep) {
-      if (dt >= cfg.gapMin * MIN) leg.gaps = (leg.gaps || 0) + 1;
+      if (pause >= cfg.gapMin * MIN) leg.gaps = (leg.gaps || 0) + 1;
       leg.distNm += step / NM_M;
       leg.track.push([f.lat, f.lon, Math.round(f.t / 1000)]);
       rec.last = f; rec.moved = f.t; leg.updatedAt = f.t; ev = 'move';
