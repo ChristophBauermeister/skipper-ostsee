@@ -2094,12 +2094,12 @@ var WL_AW_TYPE={1:'wind',2:'snow-ice',3:'thunderstorm',4:'fog',5:'high-temperatu
 var WL_AW_LEVEL={2:'yellow',3:'orange',4:'red'};   // "2; yellow; Moderate" · "3; orange; Severe" · "4; red; …" (Home Assistant MeteoAlarm); 1 = green = no warning
 function wlEventType(ev,cat){
   var s=String(ev||'').toLowerCase();
-  if(/gewitter|thunder|blitz|hagel|hail|tonnerre|orage|temporal|temporale|åska|tordenvejr|burz/.test(s))return 'thunderstorm';
+  if(/gewitter|thunder|lightning|blitz|fulmin|foudre|hagel|hail|tonnerre|orage|temporal|temporale|åska|tordenvejr|burz/.test(s))return 'thunderstorm';
   if(/küste|coast|sturmflut|storm surge|seegang|marine|côti|costier|kyst|kust|przybrze/.test(s))return 'coastal';
   if(/nebel|fog|brouillard|nebbia|tåge|dimma|mgł/.test(s))return 'fog';
   if(/hochwasser|flood|inond|alluv|oversvøm|översvämn|powód/.test(s))return 'flood';
-  if(/wind|sturm|böe|gust|orkan|vent|mistral|libeccio|storm|vind|wiatr/.test(s))return 'wind';
-  if(/regen|rain|niederschlag|pluie|pioggia|nedbør|regn|opad|deszcz|schauer/.test(s))return 'rain';
+  if(/wind|sturm|böe|\bgust|orkan|\bvent|mistral|libeccio|storm|vind|wiatr/.test(s))return 'wind';
+  if(/regen|\brain|niederschlag|pluie|pioggia|nedbør|regn|opad|deszcz|schauer/.test(s))return 'rain';
   return 'other';
 }
 function wlCapLevel(info,sender){
