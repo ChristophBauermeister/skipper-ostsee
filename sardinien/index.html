@@ -1308,7 +1308,7 @@ var CONST={
 deepMerge(CONST,REVIER.const||{});
 /* ---------- small helpers ---------- */
 function isNum(x){return typeof x==='number'&&isFinite(x);}
-function num(x){if(x===null||x===undefined||x==='')return null;var n=Number(String(x).replace(',','.'));return isFinite(n)?n:null;}
+function num(x){if(typeof x==='number')return isFinite(x)?x:null;if(x===null||x===undefined)return null;var s=String(x).trim().replace(',','.');if(!/^[+-]?(\d+\.?\d*|\.\d+)(e[+-]?\d+)?$/i.test(s))return null;var n=Number(s);return isFinite(n)?n:null;}   // blank, hex, 'Infinity' -> null: a lone space in the draught field must not become 0 m
 function pad(n){return (n<10?'0':'')+n;}
 function fm(x){return String(Math.round(x*100)/100).replace('.',',');}        // metres, up to 2 decimals
 function fmr(x){var s=fm(x);return s.indexOf(',')<0?s+',0':s;}   // reserve: at least one decimal
