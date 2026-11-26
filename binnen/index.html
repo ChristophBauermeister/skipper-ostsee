@@ -1601,6 +1601,7 @@ var WL_SEC_KM=0.343;   // speed of sound ≈ 343 m/s -> 3 s per km (NOAA JetStre
 function wlR(x,d){var f=Math.pow(10,d||0);return Math.round(x*f)/f;}
 function wlNm(km){return km/1.852;}
 function wlAgeText(ms){
+  if(!isFinite(ms))return 'unbekannt';   /* broken or missing timestamp: say so instead of "NaN h" */
   var m=Math.max(0,Math.floor(ms/60000));
   if(m<1)return 'gerade eben';
   if(m<60)return m+' min';
@@ -7324,13 +7325,15 @@ function bdDark(legs){
   });
   return out;
 }
+function bdDayStart(dep,k){var d=new Date(dep);d.setDate(d.getDate()+k);return d.getTime();}   /* same clock time k days later, also across a DST change */
+function bdLocalDate(ms){var d=new Date(ms),z=function(n){return (n<10?'0':'')+n;};return d.getFullYear()+'-'+z(d.getMonth()+1)+'-'+z(d.getDate());}   /* device date, not the UTC date */
 function bdDaylight(){
   var box=$('t-out');if(!box||!S.route)return;
   var first=box.querySelector('.card'),old=$('bd-daylight');if(!first)return;
   var P=bdLine();if(!P||P.length<2)return;
   BD.sunAt=P[P.length-1];
   var dep=$('t-dep')&&$('t-dep').value?new Date($('t-dep').value).getTime():defDep().getTime(),legs=[];
-  if(BD_PAD)[].forEach.call(box.querySelectorAll('.stage'),function(c,k){var m=/(\d+) [a-z]+ (\d+) min/.exec((c.querySelector('.meta')||{}).textContent||'');if(m)legs.push({label:bdT('Tag')+' '+(k+1)+': ',start:dep+k*86400000,hours:+m[1]+m[2]/60});});
+  if(BD_PAD)[].forEach.call(box.querySelectorAll('.stage'),function(c,k){var m=/(\d+) [a-z]+ (\d+) min/.exec((c.querySelector('.meta')||{}).textContent||'');if(m)legs.push({label:bdT('Tag')+' '+(k+1)+': ',start:bdDayStart(dep,k),hours:+m[1]+m[2]/60});});
   else if(!(S.route.days>1))legs.push({label:'',start:dep,hours:bdHours(P)});   /* several days: the stages of the shell, their start times are the skipper's */
   var D=bdDark(legs),txt=D.map(function(x){return x.long?x.label+bdT('Länger unterwegs als das Tageslicht reicht: auf mehrere Tage teilen.'):x.rise?x.label+bdT('Abfahrt')+' '+bdClock(x.start)+', '+bdT('Sonnenaufgang')+' '+bdClock(x.rise)+'.':x.label+bdT('Ankunft etwa')+' '+bdClock(x.end)+', '+bdT('Sonnenuntergang')+' '+bdClock(x.set)+'.';}).join(' ');
   if((old&&old.textContent)===(txt&&txt+' '+bdT('Vorher klären: Beleuchtung, Betriebszeiten der Schleusen, Liegeplatz.')))return;
@@ -7369,7 +7372,7 @@ function bdBackupRestore(text){
   return keys.length;
 }
 function bdBackupSave(){
-  var msg=$('bd-bk-msg'),b=bdBackupData(),name='skipper-binnen-daten-'+b.at.slice(0,10)+'.json',text=JSON.stringify(b),C=window.Capacitor,P=C&&C.isNativePlatform&&C.isNativePlatform()&&C.Plugins||null,
+  var msg=$('bd-bk-msg'),b=bdBackupData(),name='skipper-binnen-daten-'+bdLocalDate(Date.parse(b.at))+'.json',text=JSON.stringify(b),C=window.Capacitor,P=C&&C.isNativePlatform&&C.isNativePlatform()&&C.Plugins||null,
     done=function(){msg.textContent=bdT('Sicherung erstellt, Einträge:')+' '+Object.keys(b.data).length;},bad=function(){msg.textContent=bdT('Sicherung nicht erstellt.');};
   /* the WebView of the Android shell ignores a[download]: file plus share sheet, as the F modules do */
   if(P&&P.Filesystem&&P.Share)return P.Filesystem.writeFile({path:name,data:text,directory:'CACHE',encoding:'utf8'}).then(function(r){return P.Share.share({title:name,url:r.uri,dialogTitle:name});}).then(done).catch(bad);

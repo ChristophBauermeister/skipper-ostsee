@@ -1862,6 +1862,7 @@ var WL_SEC_KM=0.343;   // speed of sound ≈ 343 m/s -> 3 s per km (NOAA JetStre
 function wlR(x,d){var f=Math.pow(10,d||0);return Math.round(x*f)/f;}
 function wlNm(km){return km/1.852;}
 function wlAgeText(ms){
+  if(!isFinite(ms))return 'unbekannt';   /* broken or missing timestamp: say so instead of "NaN h" */
   var m=Math.max(0,Math.floor(ms/60000));
   if(m<1)return 'gerade eben';
   if(m<60)return m+' min';
@@ -2908,7 +2909,7 @@ function klimaFromArchive(resps,month,years,fetchedAt){
     if(!n)throw new Error('Archiv: keine Daten für Punkt '+(p+1));
     out.ws.push(ws.map(function(a){var m=med(a);return m==null?null:Math.round(m*10)/10;}));
     out.wg.push(wg.map(function(a){var m=med(a);return m==null?null:Math.round(m*10)/10;}));
-    out.wd.push(u.map(function(x,h){return (x===0&&v[h]===0)?null:Math.round(((Math.atan2(x,v[h])/r)+360)%360);}));
+    out.wd.push(u.map(function(x,h){return (x===0&&v[h]===0)?null:Math.round((Math.atan2(x,v[h])/r+360)%360)%360;}));
     out.temp.push(ts.map(function(x,h){return tn[h]?Math.round(x/tn[h]*10)/10:null;}));
     out.hist.push(hist);out.dir8.push(d8.map(function(x){return Math.round(x/n*1000);}));out.th.push(Math.round(th/n*1000));out.n.push(n);out.nDay.push(nDay);
   }
@@ -10533,6 +10534,7 @@ function defaultStart(){
   if(S.pos){var best=null,bd=Infinity;DATA.forEach(function(h){if(!inNet(h.id)||h.type==='nothafen'||!protKnown(h))return;var d=haversineNm(S.pos,h);if(d<bd){bd=d;best=h.id;}});if(best&&bd<=CONST.farNm)return best;}
   return BY_ID[CONST.plan.defaultStart]?CONST.plan.defaultStart:null;
 }
+function nextDayStr(ymd){var d=new Date(ymd+'T00:00:00Z');d.setUTCDate(d.getUTCDate()+1);return d.toISOString().slice(0,10);}   /* pure date arithmetic, independent of the device time zone */
 function todayStr(ms){var p=localParts(ms||Date.now());return p.y+'-'+pad(p.m)+'-'+pad(p.d);}
 function savePL(){store(sk('toern'),JSON.stringify({mode:PL.mode,start:PL.start,target:PL.target,days:PL.days,depHour:PL.depHour,plat:PL.plat||'',targetNm:PL.targetNm||null,nights:PL.nights||0,afterNight:PL.afterNight||'11',wxMode:PL.wxMode||'vorhersage',date:PL.date||null,vias:(PL.vias||[]).filter(Boolean),viaDay:PL.viaDay||{},exclude:(PL.exclude||[]).slice(0,CONST.plan.maxExclude)}));}
 function loadPL(){var raw=load(sk('toern'));if(!raw)return;try{var o=JSON.parse(raw);
@@ -10588,7 +10590,7 @@ function planKlima(opt,K){
   return r;
 }
 function whatIfHTML(){var ml=S.maxLegH||CONST.plan.maxLegH;return '<div class="note small" style="margin-top:6px">Was wäre wenn: <button class="btn sm" data-wi="day">1 Tag später starten</button> '+(ml<CONST.plan.maxLegMax?'<button class="btn sm" data-wi="leg">Etappe max. '+Math.min(CONST.plan.maxLegMax,ml+2)+' h (statt '+(S.maxLegH?ml+' h':'bis Sonnenuntergang')+')</button>':'')+'</div>';}
-function whatIf(k){if(k==='day'){var d=new Date((PL.date||todayStr())+'T12:00:00');d.setDate(d.getDate()+1);PL.date=d.toISOString().slice(0,10);$('p-date').value=PL.date;savePL();}
+function whatIf(k){if(k==='day'){PL.date=nextDayStr(PL.date||todayStr());$('p-date').value=PL.date;savePL();}
   else if(k==='leg'){var ml=Math.min(CONST.plan.maxLegMax,(S.maxLegH||CONST.plan.maxLegH)+2);$('b-maxleg').value=String(ml);S.maxLegH=ml;saveProfile();}
   doPlan();}
 function doPlan(){
