@@ -4568,6 +4568,14 @@ var SkLang=(function(){
   function ocrWorker(lang,onP){
     var code=L[lang].ocr;E.ocrProg=onP;
     if(E.ocr&&E.ocrLang===code)return Promise.resolve(E.ocr);
+    /* one start at a time: two photos in quick succession would each build a worker, and the first one would never be terminated */
+    var p=(E.ocrQ||Promise.resolve()).catch(function(){}).then(function(){
+      if(E.ocr&&E.ocrLang===code)return E.ocr;
+      return ocrStart(code);
+    });
+    E.ocrQ=p;return p;
+  }
+  function ocrStart(code){
     return man().then(function(m){
       var oc=m.ocr&&m.ocr[code];if(!oc)throw new Error('MISSING:ocr-'+code);
       return Promise.all([tesseract(),fileGet(oc.name),blobUrl(engName(m.engine.ocr.worker,'ocr-worker'),'text/javascript'),blobUrl(engName(m.engine.ocr.core&&m.engine.ocr.core[ocrCoreVariant()],'ocr-core'),'text/javascript')]);
@@ -4954,7 +4962,7 @@ var SkLang=(function(){
     tab:function(t){st.tab=t;render();},state:function(){return {me:st.me,them:st.them,tab:st.tab,installed:Object.assign({},installed)};},
     show:showPhrase,close:close,
     packs:{status:checkInstalled,install:install,remove:remove,refresh:packsRefresh},
-    _test:{numbersDiffer:numbersDiffer,prepImage:prepImage,findPage:findPage,loadCanvas:loadCanvas,segments:segments,chain:chain,needFiles:needFiles,fill:fill,translate:translate,ocr:ocr,missing:missing,mtEngine:mtEngine}};
+    _test:{numbersDiffer:numbersDiffer,prepImage:prepImage,findPage:findPage,loadCanvas:loadCanvas,segments:segments,chain:chain,needFiles:needFiles,fill:fill,translate:translate,ocr:ocr,missing:missing,mtEngine:mtEngine,ocrWorker:ocrWorker}};
   return api;
 })();
 var SkTripBanner=(function(){
@@ -5319,6 +5327,7 @@ var SkBack=(function(){
     s=String(s==null?'':s).trim();if(!s)return null;
     var hemi=(s.match(/[NSEWOnsewo]/)||[''])[0].toUpperCase(),n=s.replace(/,/g,'.').match(/\d+(?:\.\d+)?/g);
     if(!n||n.length>3)return null;
+    if(hemi&&(isLat?/[EWO]/.test(hemi):/[NS]/.test(hemi)))return null; // N/S only for latitude, E/W/O only for longitude
     var v=+n[0],m=n.length>1?+n[1]:0,sec=n.length>2?+n[2]:0;
     if(m>=60||sec>=60)return null;
     v+=m/60+sec/3600;
